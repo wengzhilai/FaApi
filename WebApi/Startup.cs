@@ -14,15 +14,16 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
-using FaApi.Comon;
+using WebApi.Comon;
 using Swashbuckle.AspNetCore.Swagger;
 using System.IO;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using System.Reflection;
-using FaApi.Unit;
+using WebApi.Unit;
+using Helper;
 
-namespace FaApi
+namespace WebApi
 {
     public class Startup
     {
@@ -84,7 +85,7 @@ namespace FaApi
                 });
                 options.IgnoreObsoleteActions();
                 options.DocInclusionPredicate((docName, description) => true);
-                options.IncludeXmlComments(_hostingEnvironment.ContentRootPath+"/bin/Debug/netcoreapp2.2/FaApi.xml");
+                options.IncludeXmlComments(_hostingEnvironment.ContentRootPath+"/bin/Debug/netcoreapp2.2/WebApi.xml");
                 options.DescribeAllEnumsAsStrings();
                 options.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
             });

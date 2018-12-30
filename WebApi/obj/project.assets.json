@@ -4988,6 +4988,21 @@
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
       },
+      "Helper/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "MongoDB.Bson": "2.7.2",
+          "MongoDB.Driver": "2.7.2",
+          "MongoDB.Driver.Core": "2.7.2"
+        },
+        "compile": {
+          "bin/placeholder/Helper.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Helper.dll": {}
+        }
+      },
       "IRepository/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
@@ -13472,6 +13487,11 @@
         "system.xml.xpath.xdocument.nuspec"
       ]
     },
+    "Helper/1.0.0": {
+      "type": "project",
+      "path": "../Helper/Helper.csproj",
+      "msbuildProject": "../Helper/Helper.csproj"
+    },
     "IRepository/1.0.0": {
       "type": "project",
       "path": "../IRepository/IRepository.csproj",
@@ -13487,6 +13507,7 @@
     ".NETCoreApp,Version=v2.2": [
       "Autofac.Configuration >= 4.1.0",
       "Autofac.Extensions.DependencyInjection >= 4.3.1",
+      "Helper >= 1.0.0",
       "IRepository >= 1.0.0",
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
@@ -13508,9 +13529,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/FaApi.csproj",
-      "projectName": "FaApi",
-      "projectPath": "/Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/FaApi.csproj",
+      "projectUniqueName": "/Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/WebApi.csproj",
+      "projectName": "WebApi",
+      "projectPath": "/Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/WebApi.csproj",
       "packagesPath": "/Users/wengzhilai/.nuget/packages/",
       "outputPath": "/Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/obj/",
       "projectStyle": "PackageReference",
@@ -13529,6 +13550,9 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
+            "/Users/wengzhilai/Desktop/dotnet/FaApi/Helper/Helper.csproj": {
+              "projectPath": "/Users/wengzhilai/Desktop/dotnet/FaApi/Helper/Helper.csproj"
+            },
             "/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/IRepository.csproj": {
               "projectPath": "/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/IRepository.csproj"
             },

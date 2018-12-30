@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 
-namespace FaApi.Unit
+namespace WebApi.Unit
 {
     [ApiExplorerSettings(IgnoreApi=true)]
     public class RuntimeHelper

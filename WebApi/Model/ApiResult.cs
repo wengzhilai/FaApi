@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FaApi.Model
+namespace WebApi.Model
 {
     public class ApiResult
     {

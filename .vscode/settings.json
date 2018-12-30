@@ -1,0 +1,10 @@
+{
+    "explorer.confirmDelete": false,
+    "window.zoomLevel": 0,
+    "files.exclude": {
+        "**/bin": true,
+        "**/obj": true,
+        ".gitignore":true,
+        // ".vscode":true,
+    }
+}

@@ -1,4 +1,4 @@
-using FaApi.Model;
+using WebApi.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FaApi.Comon
+namespace WebApi.Comon
 {
     /// <summary>
     /// 处理出错的中间件

@@ -1,6 +1,5 @@
-using Microsoft.Extensions.Configuration;
 
-namespace FaApi.Comon
+namespace Helper
 {
     /// <summary>
     /// 读取AppSetting文件

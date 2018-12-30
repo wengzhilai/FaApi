@@ -4,16 +4,52 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace FaApi.Comon
+namespace Helper
 {
-public static class TMongodbHelper<T> where T : class, new()
+    public static class MongodbClient<T> where T : class
+    {
+        #region +MongodbInfoClient 获取mongodb实例
+        /// <summary>
+        /// 获取mongodb实例
+        /// </summary>
+        /// <param name="host">连接字符串，库，表</param>
+        /// <returns></returns>
+        public static IMongoCollection<T> MongodbInfoClient()
+        {
+            MongodbHost host = AppSettingsManager.MongoSettings;
+            MongoClient client = new MongoClient(host.Connection);
+            var dataBase = client.GetDatabase(host.DataBase);
+            return dataBase.GetCollection<T>(host.Table);
+        }
+        #endregion
+    }
+
+    public class MongodbHost
+    {
+
+        /// <summary>
+        /// 连接字符串
+        /// </summary>
+        public string Connection { get; set; }
+        /// <summary>
+        /// 库
+        /// </summary>
+        public string DataBase { get; set; }
+        /// <summary>
+        /// 表
+        /// </summary>
+        public string Table { get; set; }
+
+    }
+
+    public static class TMongodbHelper<T> where T : class, new()
     {
         #region +Add 添加一条数据
         /// <summary>
         /// 添加一条数据
         /// </summary>
         /// <param name="t">添加的实体</param>
-        
+
         /// <returns></returns>
         public static int Add(T t)
         {
@@ -35,7 +71,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// 异步添加一条数据
         /// </summary>
         /// <param name="t">添加的实体</param>
-        
+
         /// <returns></returns>
         public static async Task<int> AddAsync(T t)
         {
@@ -56,7 +92,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 批量插入
         /// </summary>
-        
+
         /// <param name="t">实体集合</param>
         /// <returns></returns>
         public static int InsertMany(List<T> t)
@@ -78,7 +114,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 异步批量插入
         /// </summary>
-        
+
         /// <param name="t">实体集合</param>
         /// <returns></returns>
         public static async Task<int> InsertManyAsync(List<T> t)
@@ -101,7 +137,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// 修改一条数据
         /// </summary>
         /// <param name="t">添加的实体</param>
-        
+
         /// <returns></returns>
         public static UpdateResult Update(T t, string id)
         {
@@ -132,7 +168,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// 异步修改一条数据
         /// </summary>
         /// <param name="t">添加的实体</param>
-        
+
         /// <returns></returns>
         public static async Task<UpdateResult> UpdateAsync(T t, string id)
         {
@@ -163,7 +199,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// 批量修改数据
         /// </summary>
         /// <param name="dic">要修改的字段</param>
-        
+
         /// <param name="filter">修改条件</param>
         /// <returns></returns>
         public static UpdateResult UpdateManay(Dictionary<string, string> dic, FilterDefinition<T> filter)
@@ -195,7 +231,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// 异步批量修改数据
         /// </summary>
         /// <param name="dic">要修改的字段</param>
-        
+
         /// <param name="filter">修改条件</param>
         /// <returns></returns>
         public static async Task<UpdateResult> UpdateManayAsync(Dictionary<string, string> dic, FilterDefinition<T> filter)
@@ -226,7 +262,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 删除一条数据
         /// </summary>
-        
+
         /// <param name="id">objectId</param>
         /// <returns></returns>
         public static DeleteResult Delete(string id)
@@ -249,7 +285,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 异步删除一条数据
         /// </summary>
-        
+
         /// <param name="id">objectId</param>
         /// <returns></returns>
         public static async Task<DeleteResult> DeleteAsync(string id)
@@ -273,7 +309,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 删除一条数据
         /// </summary>
-        
+
         /// <param name="filter">删除的条件</param>
         /// <returns></returns>
         public static DeleteResult DeleteMany(FilterDefinition<T> filter)
@@ -295,7 +331,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 异步删除多条数据
         /// </summary>
-        
+
         /// <param name="filter">删除的条件</param>
         /// <returns></returns>
         public static async Task<DeleteResult> DeleteManyAsync(FilterDefinition<T> filter)
@@ -317,7 +353,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 根据条件获取总数
         /// </summary>
-        
+
         /// <param name="filter">条件</param>
         /// <returns></returns>
         public static long Count(FilterDefinition<T> filter)
@@ -338,7 +374,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 异步根据条件获取总数
         /// </summary>
-        
+
         /// <param name="filter">条件</param>
         /// <returns></returns>
         public static async Task<long> CountAsync(FilterDefinition<T> filter)
@@ -359,7 +395,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 根据id查询一条数据
         /// </summary>
-        
+
         /// <param name="id">objectid</param>
         /// <param name="field">要查询的字段，不写时查询全部</param>
         /// <returns></returns>
@@ -396,7 +432,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 异步根据id查询一条数据
         /// </summary>
-        
+
         /// <param name="id">objectid</param>
         /// <returns></returns>
         public static async Task<T> FindOneAsync(string id, string[] field = null)
@@ -472,7 +508,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 异步查询集合
         /// </summary>
-        
+
         /// <param name="filter">查询条件</param>
         /// <param name="field">要查询的字段,不写时查询全部</param>
         /// <param name="sort">要排序的字段</param>
@@ -512,7 +548,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 分页查询集合
         /// </summary>
-        
+
         /// <param name="filter">查询条件</param>
         /// <param name="pageIndex">当前页</param>
         /// <param name="pageSize">页容量</param>
@@ -561,7 +597,7 @@ public static class TMongodbHelper<T> where T : class, new()
         /// <summary>
         /// 异步分页查询集合
         /// </summary>
-        
+
         /// <param name="filter">查询条件</param>
         /// <param name="pageIndex">当前页</param>
         /// <param name="pageSize">页容量</param>

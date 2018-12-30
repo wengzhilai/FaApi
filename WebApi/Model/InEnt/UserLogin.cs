@@ -1,4 +1,4 @@
-namespace FaApi.Model.InEnt
+namespace WebApi.Model.InEnt
 {
     public class UserLogin
     {

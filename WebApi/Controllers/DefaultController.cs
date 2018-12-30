@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FaApi.Comon;
-using FaApi.Model;
+using WebApi.Comon;
+using WebApi.Model;
 using IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +12,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace FaApi.Controllers
+namespace WebApi.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

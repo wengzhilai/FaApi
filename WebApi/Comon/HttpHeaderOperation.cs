@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FaApi.Comon
+namespace WebApi.Comon
 {
     /// <summary>
     /// 
