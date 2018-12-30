@@ -6,7 +6,7 @@ namespace IRepository
 {
     public interface IUserRepository 
     {
-        string Test();
+        string UserLogin();
 
     }
 }
