@@ -95,10 +95,10 @@ namespace FaApi
             //注册所有模块module
             builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
             //获取所有的程序集
-            var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
-
+            // var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
+            Assembly amy = Assembly.LoadFrom(_hostingEnvironment.ContentRootPath+"/../Repository/bin/Debug/netstandard2.0/Repository.dll"); 
             //注册仓储，所有IRepository接口到Repository的映射
-            builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository") && !t.Name.StartsWith("I")).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(amy).Where(t => t.Name.EndsWith("Repository") && !t.Name.StartsWith("I")).AsImplementedInterfaces();
             //注册服务，所有IApplicationService到ApplicationService的映射
             builder.Populate(services);
             ApplicationContainer = builder.Build();

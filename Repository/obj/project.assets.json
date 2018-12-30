@@ -25,6 +25,26 @@
         "build": {
           "build/netstandard2.0/NETStandard.Library.targets": {}
         }
+      },
+      "IRepository/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/IRepository.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/IRepository.dll": {}
+        }
+      },
+      "Models/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/Models.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Models.dll": {}
+        }
       }
     }
   },
@@ -171,10 +191,22 @@
         "netstandard.library.2.0.3.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
+    },
+    "IRepository/1.0.0": {
+      "type": "project",
+      "path": "../IRepository/IRepository.csproj",
+      "msbuildProject": "../IRepository/IRepository.csproj"
+    },
+    "Models/1.0.0": {
+      "type": "project",
+      "path": "../Models/Models.csproj",
+      "msbuildProject": "../Models/Models.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
+      "IRepository >= 1.0.0",
+      "Models >= 1.0.0",
       "NETStandard.Library >= 2.0.3"
     ]
   },
@@ -205,7 +237,14 @@
       },
       "frameworks": {
         "netstandard2.0": {
-          "projectReferences": {}
+          "projectReferences": {
+            "/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/IRepository.csproj": {
+              "projectPath": "/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/IRepository.csproj"
+            },
+            "/Users/wengzhilai/Desktop/dotnet/FaApi/Models/Models.csproj": {
+              "projectPath": "/Users/wengzhilai/Desktop/dotnet/FaApi/Models/Models.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
