@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\IRepository\IRepository.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Helper\Helper.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

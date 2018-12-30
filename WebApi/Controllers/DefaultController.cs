@@ -50,7 +50,7 @@ namespace WebApi.Controllers
             // var field = new[] { "UserName", "Password"};
             // var res = TMongodbHelper<User>.FindList(filter,field);
             // return res.Count().ToString();
-            return user.Test();
+            return user.UserLogin();
         }
 
         // GET api/values
