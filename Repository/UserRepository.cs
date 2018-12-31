@@ -12,7 +12,7 @@ namespace Repository
 {
     public class UserRepository : IUserRepository
     {
-        public List<User> UserLogin(){
+        public List<User> UserLogin(string username,string password){
             var tmp= MongoContext.All<User>().ToList();
             return tmp;
         }
