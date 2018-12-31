@@ -51,6 +51,9 @@ namespace WebApi
             //自动初始化MongoSettings实例并且映射MongodbHost里的配置
             services.Configure<MongodbHost>(Configuration.GetSection("MongoSettings"));
             Configuration.Bind("MongoSettings", AppSettingsManager.MongoSettings);
+            Configuration.Bind("Logging", AppSettingsManager.Logging);
+            //配置mongodb的Helper
+            MongoContext.Initialize(AppSettingsManager.MongoSettings.Connection);
 
             #region JWT认证
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));

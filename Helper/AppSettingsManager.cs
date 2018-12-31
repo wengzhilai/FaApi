@@ -17,10 +17,29 @@ namespace Helper
         /// <returns></returns>
         public static JwtSettings JwtSettings = new JwtSettings();
 
+        /// <summary>
+        /// log4net配置
+        /// </summary>
+        /// <returns></returns>
+        public static Logging Logging = new Logging();
+
     }
 
 
+    public class Logging{
+        public string Log4netConfigPath { get; set; }
+        public LogLevel LogLevel { get; set; }
 
+    }
+
+    public class LogLevel
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
+        public string Default { get; set; }
+    }
 
     /// <summary>
     /// jwt配置

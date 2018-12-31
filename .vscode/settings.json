@@ -4,7 +4,7 @@
     "files.exclude": {
         "**/bin": false,
         "**/obj": true,
-        ".gitignore":true,
+        ".gitignore":false,
         // ".vscode":true,
     }
 }

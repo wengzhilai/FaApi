@@ -26,7 +26,7 @@ namespace WebApi.Controllers
         }
         
         [HttpGet]
-        public string Index()
+        public List<User>  Index()
         {
             User u=new User();
             u.UserName="asfda";
@@ -50,6 +50,7 @@ namespace WebApi.Controllers
             // var field = new[] { "UserName", "Password"};
             // var res = TMongodbHelper<User>.FindList(filter,field);
             // return res.Count().ToString();
+            Helper.LogHelper.logInfo<DefaultController>("测试错误");
             return user.UserLogin();
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Models.Entity
 {
-    public partial class FaBulletin
+    public partial class FaBulletin:MongodbEntity
     {
         public FaBulletin()
         {

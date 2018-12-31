@@ -12,11 +12,9 @@ namespace Repository
 {
     public class UserRepository : IUserRepository
     {
-        public string UserLogin(){
-            MongoContext.Initialize(AppSettingsManager.MongoSettings.Connection);
-            MongoContext.Insert<User>(new User(){UserName="1111",Password="2222"});
+        public List<User> UserLogin(){
             var tmp= MongoContext.All<User>().ToList();
-            return tmp.Count().ToString();
+            return tmp;
         }
     }
 }

@@ -1,9 +1,0 @@
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/bin/Debug/netstandard2.0/IRepository.deps.json
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/bin/Debug/netstandard2.0/IRepository.dll
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/bin/Debug/netstandard2.0/IRepository.pdb
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/obj/Debug/netstandard2.0/IRepository.csprojAssemblyReference.cache
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/obj/Debug/netstandard2.0/IRepository.csproj.CoreCompileInputs.cache
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/obj/Debug/netstandard2.0/IRepository.AssemblyInfoInputs.cache
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/obj/Debug/netstandard2.0/IRepository.AssemblyInfo.cs
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/obj/Debug/netstandard2.0/IRepository.dll
-/Users/wengzhilai/Desktop/dotnet/FaApi/IRepository/obj/Debug/netstandard2.0/IRepository.pdb

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Models.Entity
 {
-    public partial class FaAppVersion
+    public partial class FaAppVersion:MongodbEntity
     {
         public int Id { get; set; }
         public decimal IsNew { get; set; }
