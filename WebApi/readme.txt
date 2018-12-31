@@ -10,7 +10,7 @@ mongoimport -u fa -p fa --db fa --collection fa_login --type csv --headerline --
 mongoimport -u fa -p fa --db fa --collection fa_user --type csv --headerline --ignoreBlanks --file ~/ExportCsv/fa_user.csv
 
 
-Scaffold-DbContext "server=45.32.134.176;userid=FA;pwd=abcdef1234;port=3306;database=fa;sslmode=none;" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Force
+dotnet ef dbcontext scaffold "server=45.32.134.176;userid=FA;pwd=abcdef1234;port=3306;database=fa;sslmode=none;" "Pomelo.EntityFrameworkCore.Mysql" -o Models
 
 
 Install-Package MySql.Data.EntityFrameworkCore -Pre

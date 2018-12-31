@@ -15,60 +15,60 @@
 //         {
 //         }
 
-//         public virtual DbSet<FaAppVersion> FaAppVersion { get; set; }
-//         public virtual DbSet<FaBulletin> FaBulletin { get; set; }
-//         public virtual DbSet<FaBulletinFile> FaBulletinFile { get; set; }
-//         public virtual DbSet<FaBulletinLog> FaBulletinLog { get; set; }
-//         public virtual DbSet<FaBulletinReview> FaBulletinReview { get; set; }
-//         public virtual DbSet<FaBulletinRole> FaBulletinRole { get; set; }
-//         public virtual DbSet<FaBulletinType> FaBulletinType { get; set; }
-//         public virtual DbSet<FaConfig> FaConfig { get; set; }
-//         public virtual DbSet<FaDbServer> FaDbServer { get; set; }
-//         public virtual DbSet<FaDbServerType> FaDbServerType { get; set; }
-//         public virtual DbSet<FaDistrict> FaDistrict { get; set; }
-//         public virtual DbSet<FaDynasty> FaDynasty { get; set; }
-//         public virtual DbSet<FaElder> FaElder { get; set; }
-//         public virtual DbSet<FaEventFiles> FaEventFiles { get; set; }
-//         public virtual DbSet<FaExportLog> FaExportLog { get; set; }
-//         public virtual DbSet<FaFamily> FaFamily { get; set; }
-//         public virtual DbSet<FaFiles> FaFiles { get; set; }
-//         public virtual DbSet<FaFlow> FaFlow { get; set; }
-//         public virtual DbSet<FaFlowFlownode> FaFlowFlownode { get; set; }
-//         public virtual DbSet<FaFlowFlownodeFlow> FaFlowFlownodeFlow { get; set; }
-//         public virtual DbSet<FaFlowFlownodeRole> FaFlowFlownodeRole { get; set; }
-//         public virtual DbSet<FaFunction> FaFunction { get; set; }
-//         public virtual DbSet<FaLog> FaLog { get; set; }
-//         public virtual DbSet<FaLogin> FaLogin { get; set; }
-//         public virtual DbSet<FaLoginHistory> FaLoginHistory { get; set; }
-//         public virtual DbSet<FaMessage> FaMessage { get; set; }
-//         public virtual DbSet<FaMessageType> FaMessageType { get; set; }
-//         public virtual DbSet<FaModule> FaModule { get; set; }
-//         public virtual DbSet<FaOauth> FaOauth { get; set; }
-//         public virtual DbSet<FaOauthLogin> FaOauthLogin { get; set; }
-//         public virtual DbSet<FaQuery> FaQuery { get; set; }
-//         public virtual DbSet<FaRole> FaRole { get; set; }
-//         public virtual DbSet<FaRoleConfig> FaRoleConfig { get; set; }
-//         public virtual DbSet<FaRoleFunction> FaRoleFunction { get; set; }
-//         public virtual DbSet<FaRoleModule> FaRoleModule { get; set; }
-//         public virtual DbSet<FaRoleQueryAuthority> FaRoleQueryAuthority { get; set; }
-//         public virtual DbSet<FaScript> FaScript { get; set; }
-//         public virtual DbSet<FaScriptGroupList> FaScriptGroupList { get; set; }
-//         public virtual DbSet<FaScriptTask> FaScriptTask { get; set; }
-//         public virtual DbSet<FaScriptTaskLog> FaScriptTaskLog { get; set; }
-//         public virtual DbSet<FaSmsSend> FaSmsSend { get; set; }
-//         public virtual DbSet<FaTask> FaTask { get; set; }
-//         public virtual DbSet<FaTaskFlow> FaTaskFlow { get; set; }
-//         public virtual DbSet<FaTaskFlowHandle> FaTaskFlowHandle { get; set; }
-//         public virtual DbSet<FaTaskFlowHandleFiles> FaTaskFlowHandleFiles { get; set; }
-//         public virtual DbSet<FaTaskFlowHandleUser> FaTaskFlowHandleUser { get; set; }
-//         public virtual DbSet<FaUpdataLog> FaUpdataLog { get; set; }
-//         public virtual DbSet<FaUser> FaUser { get; set; }
-//         public virtual DbSet<FaUserDistrict> FaUserDistrict { get; set; }
-//         public virtual DbSet<FaUserEvent> FaUserEvent { get; set; }
-//         public virtual DbSet<FaUserFile> FaUserFile { get; set; }
-//         public virtual DbSet<FaUserFriend> FaUserFriend { get; set; }
-//         public virtual DbSet<FaUserInfo> FaUserInfo { get; set; }
-//         public virtual DbSet<FaUserRole> FaUserRole { get; set; }
+//         public virtual DbSet<fa_app_version> fa_app_version { get; set; }
+//         public virtual DbSet<fa_bulletin> fa_bulletin { get; set; }
+//         public virtual DbSet<fa_bulletin_file> fa_bulletin_file { get; set; }
+//         public virtual DbSet<fa_bulletin_log> fa_bulletin_log { get; set; }
+//         public virtual DbSet<fa_bulletin_review> fa_bulletin_review { get; set; }
+//         public virtual DbSet<fa_bulletin_role> fa_bulletin_role { get; set; }
+//         public virtual DbSet<fa_bulletin_type> fa_bulletin_type { get; set; }
+//         public virtual DbSet<fa_config> fa_config { get; set; }
+//         public virtual DbSet<fa_db_server> fa_db_server { get; set; }
+//         public virtual DbSet<fa_db_server_type> fa_db_server_type { get; set; }
+//         public virtual DbSet<fa_district> fa_district { get; set; }
+//         public virtual DbSet<fa_dynasty> fa_dynasty { get; set; }
+//         public virtual DbSet<fa_elder> fa_elder { get; set; }
+//         public virtual DbSet<fa_event_files> fa_event_files { get; set; }
+//         public virtual DbSet<fa_export_log> fa_export_log { get; set; }
+//         public virtual DbSet<fa_family> fa_family { get; set; }
+//         public virtual DbSet<fa_files> fa_files { get; set; }
+//         public virtual DbSet<fa_flow> fa_flow { get; set; }
+//         public virtual DbSet<fa_flow_flownode> fa_flow_flownode { get; set; }
+//         public virtual DbSet<fa_flow_flownode_flow> fa_flow_flownode_flow { get; set; }
+//         public virtual DbSet<fa_flow_flownode_role> fa_flow_flownode_role { get; set; }
+//         public virtual DbSet<fa_function> fa_function { get; set; }
+//         public virtual DbSet<fa_log> fa_log { get; set; }
+//         public virtual DbSet<fa_login> fa_login { get; set; }
+//         public virtual DbSet<fa_login_history> fa_login_history { get; set; }
+//         public virtual DbSet<fa_message> fa_message { get; set; }
+//         public virtual DbSet<fa_message_type> fa_message_type { get; set; }
+//         public virtual DbSet<fa_module> fa_module { get; set; }
+//         public virtual DbSet<fa_oauth> fa_oauth { get; set; }
+//         public virtual DbSet<fa_oauth_login> fa_oauth_login { get; set; }
+//         public virtual DbSet<fa_query> fa_query { get; set; }
+//         public virtual DbSet<fa_role> fa_role { get; set; }
+//         public virtual DbSet<fa_role_config> fa_role_config { get; set; }
+//         public virtual DbSet<fa_role_function> fa_role_function { get; set; }
+//         public virtual DbSet<fa_role_module> fa_role_module { get; set; }
+//         public virtual DbSet<fa_role_query_authority> fa_role_query_authority { get; set; }
+//         public virtual DbSet<fa_script> fa_script { get; set; }
+//         public virtual DbSet<fa_script_group_list> fa_script_group_list { get; set; }
+//         public virtual DbSet<fa_script_task> fa_script_task { get; set; }
+//         public virtual DbSet<fa_script_task_log> fa_script_task_log { get; set; }
+//         public virtual DbSet<fa_sms_send> fa_sms_send { get; set; }
+//         public virtual DbSet<fa_task> fa_task { get; set; }
+//         public virtual DbSet<fa_task_flow> fa_task_flow { get; set; }
+//         public virtual DbSet<fa_task_flow_handle> fa_task_flow_handle { get; set; }
+//         public virtual DbSet<fa_task_flow_handle_files> fa_task_flow_handle_files { get; set; }
+//         public virtual DbSet<fa_task_flow_handle_user> fa_task_flow_handle_user { get; set; }
+//         public virtual DbSet<fa_updata_log> fa_updata_log { get; set; }
+//         public virtual DbSet<fa_user> fa_user { get; set; }
+//         public virtual DbSet<fa_user_district> fa_user_district { get; set; }
+//         public virtual DbSet<fa_user_event> fa_user_event { get; set; }
+//         public virtual DbSet<fa_user_file> fa_user_file { get; set; }
+//         public virtual DbSet<fa_user_friend> fa_user_friend { get; set; }
+//         public virtual DbSet<fa_user_info> fa_user_info { get; set; }
+//         public virtual DbSet<fa_user_role> fa_user_role { get; set; }
 
 //         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 //         {
@@ -81,2238 +81,1433 @@
 
 //         protected override void OnModelCreating(ModelBuilder modelBuilder)
 //         {
-//             modelBuilder.Entity<FaAppVersion>(entity =>
+//             modelBuilder.Entity<fa_app_version>(entity =>
 //             {
-//                 entity.ToTable("fa_app_version");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.IS_NEW).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.IsNew)
-//                     .HasColumnName("IS_NEW")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(1000)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(1000)");
-
-//                 entity.Property(e => e.Type)
+//                 entity.Property(e => e.TYPE)
 //                     .IsRequired()
-//                     .HasColumnName("TYPE")
 //                     .HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.UpdateTime)
-//                     .HasColumnName("UPDATE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.UPDATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.UpdateUrl)
-//                     .HasColumnName("UPDATE_URL")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.UPDATE_URL).HasColumnType("varchar(200)");
 //             });
 
-//             modelBuilder.Entity<FaBulletin>(entity =>
+//             modelBuilder.Entity<fa_bulletin>(entity =>
 //             {
-//                 entity.ToTable("fa_bulletin");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.AUTO_PEN).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.AutoPen)
-//                     .HasColumnName("AUTO_PEN")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.CONTENT).HasColumnType("text");
 
-//                 entity.Property(e => e.Content)
-//                     .HasColumnName("CONTENT")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.CREATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.CreateTime)
-//                     .HasColumnName("CREATE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.ISSUE_DATE).HasColumnType("datetime");
 
-//                 entity.Property(e => e.IsImport)
-//                     .HasColumnName("IS_IMPORT")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_IMPORT).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.IsShow)
-//                     .HasColumnName("IS_SHOW")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_SHOW).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.IsUrgent)
-//                     .HasColumnName("IS_URGENT")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_URGENT).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.IssueDate)
-//                     .HasColumnName("ISSUE_DATE")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.PIC).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.Pic)
-//                     .HasColumnName("PIC")
+//                 entity.Property(e => e.PUBLISHER)
+//                     .IsRequired()
 //                     .HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.Publisher)
+//                 entity.Property(e => e.REGION)
 //                     .IsRequired()
-//                     .HasColumnName("PUBLISHER")
-//                     .HasColumnType("varchar(255)");
-
-//                 entity.Property(e => e.Region)
-//                     .IsRequired()
-//                     .HasColumnName("REGION")
 //                     .HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Title)
+//                 entity.Property(e => e.TITLE)
 //                     .IsRequired()
-//                     .HasColumnName("TITLE")
 //                     .HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.TypeCode)
-//                     .HasColumnName("TYPE_CODE")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.TYPE_CODE).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.UpdateTime)
-//                     .HasColumnName("UPDATE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.UPDATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 //             });
 
-//             modelBuilder.Entity<FaBulletinFile>(entity =>
+//             modelBuilder.Entity<fa_bulletin_file>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.BulletinId, e.FileId })
+//                 entity.HasKey(e => new { e.BULLETIN_ID, e.FILE_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_bulletin_file");
-
-//                 entity.HasIndex(e => e.FileId)
+//                 entity.HasIndex(e => e.FILE_ID)
 //                     .HasName("FK_FA_BULLETIN_FILE_REF_FILE");
 
-//                 entity.Property(e => e.BulletinId)
-//                     .HasColumnName("BULLETIN_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.BULLETIN_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FileId)
-//                     .HasColumnName("FILE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FILE_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Bulletin)
-//                     .WithMany(p => p.FaBulletinFile)
-//                     .HasForeignKey(d => d.BulletinId)
+//                 entity.HasOne(d => d.BULLETIN_)
+//                     .WithMany(p => p.fa_bulletin_file)
+//                     .HasForeignKey(d => d.BULLETIN_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_bulletin_file_ibfk_1");
 
-//                 entity.HasOne(d => d.File)
-//                     .WithMany(p => p.FaBulletinFile)
-//                     .HasForeignKey(d => d.FileId)
+//                 entity.HasOne(d => d.FILE_)
+//                     .WithMany(p => p.fa_bulletin_file)
+//                     .HasForeignKey(d => d.FILE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_bulletin_file_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaBulletinLog>(entity =>
+//             modelBuilder.Entity<fa_bulletin_log>(entity =>
 //             {
-//                 entity.ToTable("fa_bulletin_log");
-
-//                 entity.HasIndex(e => e.BulletinId)
+//                 entity.HasIndex(e => e.BULLETIN_ID)
 //                     .HasName("FK_BULLETIN_LOG_REF_BULLETIN");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.BulletinId)
-//                     .HasColumnName("BULLETIN_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.BULLETIN_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.LookTime)
-//                     .HasColumnName("LOOK_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.LOOK_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Bulletin)
-//                     .WithMany(p => p.FaBulletinLog)
-//                     .HasForeignKey(d => d.BulletinId)
+//                 entity.HasOne(d => d.BULLETIN_)
+//                     .WithMany(p => p.fa_bulletin_log)
+//                     .HasForeignKey(d => d.BULLETIN_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_bulletin_log_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaBulletinReview>(entity =>
+//             modelBuilder.Entity<fa_bulletin_review>(entity =>
 //             {
-//                 entity.ToTable("fa_bulletin_review");
-
-//                 entity.HasIndex(e => e.BulletinId)
+//                 entity.HasIndex(e => e.BULLETIN_ID)
 //                     .HasName("FK_FA_BULLETIN_REVIEW_REF_BULL");
 
-//                 entity.HasIndex(e => e.ParentId)
+//                 entity.HasIndex(e => e.PARENT_ID)
 //                     .HasName("FK_FA_BULLETIN_RE_REF_REVIEW");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.AddTime)
-//                     .HasColumnName("ADD_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.ADD_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.BulletinId)
-//                     .HasColumnName("BULLETIN_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.BULLETIN_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Content)
-//                     .HasColumnName("CONTENT")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.CONTENT).HasColumnType("text");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.ParentId)
-//                     .HasColumnName("PARENT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.PARENT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Status)
+//                 entity.Property(e => e.STATUS)
 //                     .IsRequired()
-//                     .HasColumnName("STATUS")
 //                     .HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.StatusTime)
-//                     .HasColumnName("STATUS_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.STATUS_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Bulletin)
-//                     .WithMany(p => p.FaBulletinReview)
-//                     .HasForeignKey(d => d.BulletinId)
+//                 entity.HasOne(d => d.BULLETIN_)
+//                     .WithMany(p => p.fa_bulletin_review)
+//                     .HasForeignKey(d => d.BULLETIN_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_bulletin_review_ibfk_1");
 
-//                 entity.HasOne(d => d.Parent)
-//                     .WithMany(p => p.InverseParent)
-//                     .HasForeignKey(d => d.ParentId)
+//                 entity.HasOne(d => d.PARENT_)
+//                     .WithMany(p => p.InversePARENT_)
+//                     .HasForeignKey(d => d.PARENT_ID)
 //                     .HasConstraintName("fa_bulletin_review_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaBulletinRole>(entity =>
+//             modelBuilder.Entity<fa_bulletin_role>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.BulletinId, e.RoleId })
+//                 entity.HasKey(e => new { e.BULLETIN_ID, e.ROLE_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_bulletin_role");
-
-//                 entity.HasIndex(e => e.RoleId)
+//                 entity.HasIndex(e => e.ROLE_ID)
 //                     .HasName("FK_FA_BULLETIN_ROLE_REF_ROLE");
 
-//                 entity.Property(e => e.BulletinId)
-//                     .HasColumnName("BULLETIN_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.BULLETIN_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.RoleId)
-//                     .HasColumnName("ROLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ROLE_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Bulletin)
-//                     .WithMany(p => p.FaBulletinRole)
-//                     .HasForeignKey(d => d.BulletinId)
+//                 entity.HasOne(d => d.BULLETIN_)
+//                     .WithMany(p => p.fa_bulletin_role)
+//                     .HasForeignKey(d => d.BULLETIN_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_bulletin_role_ibfk_1");
 
-//                 entity.HasOne(d => d.Role)
-//                     .WithMany(p => p.FaBulletinRole)
-//                     .HasForeignKey(d => d.RoleId)
+//                 entity.HasOne(d => d.ROLE_)
+//                     .WithMany(p => p.fa_bulletin_role)
+//                     .HasForeignKey(d => d.ROLE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_bulletin_role_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaBulletinType>(entity =>
+//             modelBuilder.Entity<fa_bulletin_type>(entity =>
 //             {
-//                 entity.ToTable("fa_bulletin_type");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(80)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(80)");
 //             });
 
-//             modelBuilder.Entity<FaConfig>(entity =>
+//             modelBuilder.Entity<fa_config>(entity =>
 //             {
-//                 entity.ToTable("fa_config");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ADD_TIEM).HasColumnType("datetime");
 
-//                 entity.Property(e => e.AddTiem)
-//                     .HasColumnName("ADD_TIEM")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.ADD_USER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.AddUserId)
-//                     .HasColumnName("ADD_USER_ID")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.Code)
+//                 entity.Property(e => e.CODE)
 //                     .IsRequired()
-//                     .HasColumnName("CODE")
 //                     .HasColumnType("varchar(32)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.Region)
+//                 entity.Property(e => e.REGION)
 //                     .IsRequired()
-//                     .HasColumnName("REGION")
 //                     .HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.Type)
-//                     .HasColumnName("TYPE")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.TYPE).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Value)
-//                     .HasColumnName("VALUE")
-//                     .HasColumnType("varchar(300)");
+//                 entity.Property(e => e.VALUE).HasColumnType("varchar(300)");
 //             });
 
-//             modelBuilder.Entity<FaDbServer>(entity =>
+//             modelBuilder.Entity<fa_db_server>(entity =>
 //             {
-//                 entity.ToTable("fa_db_server");
-
-//                 entity.HasIndex(e => e.DbTypeId)
+//                 entity.HasIndex(e => e.DB_TYPE_ID)
 //                     .HasName("FK_FA_DB_SERVER_REF_TYPE");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.DbLink)
-//                     .HasColumnName("DB_LINK")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.DBNAME).HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.DbTypeId)
-//                     .HasColumnName("DB_TYPE_ID")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.Dbname)
-//                     .HasColumnName("DBNAME")
-//                     .HasColumnType("varchar(20)");
-
-//                 entity.Property(e => e.Dbuid)
+//                 entity.Property(e => e.DBUID)
 //                     .IsRequired()
-//                     .HasColumnName("DBUID")
 //                     .HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.Ip)
+//                 entity.Property(e => e.DB_LINK).HasColumnType("varchar(200)");
+
+//                 entity.Property(e => e.DB_TYPE_ID).HasColumnType("int(11)");
+
+//                 entity.Property(e => e.IP)
 //                     .IsRequired()
-//                     .HasColumnName("IP")
 //                     .HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.Nickname)
-//                     .HasColumnName("NICKNAME")
+//                 entity.Property(e => e.NICKNAME).HasColumnType("varchar(32)");
+
+//                 entity.Property(e => e.PASSWORD)
+//                     .IsRequired()
 //                     .HasColumnType("varchar(32)");
 
-//                 entity.Property(e => e.Password)
+//                 entity.Property(e => e.PORT).HasColumnType("int(11)");
+
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(500)");
+
+//                 entity.Property(e => e.TO_PATH_D).HasColumnType("varchar(300)");
+
+//                 entity.Property(e => e.TO_PATH_M).HasColumnType("varchar(300)");
+
+//                 entity.Property(e => e.TYPE)
 //                     .IsRequired()
-//                     .HasColumnName("PASSWORD")
-//                     .HasColumnType("varchar(32)");
-
-//                 entity.Property(e => e.Port)
-//                     .HasColumnName("PORT")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(500)");
-
-//                 entity.Property(e => e.ToPathD)
-//                     .HasColumnName("TO_PATH_D")
-//                     .HasColumnType("varchar(300)");
-
-//                 entity.Property(e => e.ToPathM)
-//                     .HasColumnName("TO_PATH_M")
-//                     .HasColumnType("varchar(300)");
-
-//                 entity.Property(e => e.Type)
-//                     .IsRequired()
-//                     .HasColumnName("TYPE")
 //                     .HasColumnType("varchar(10)");
 
-//                 entity.HasOne(d => d.DbType)
-//                     .WithMany(p => p.FaDbServer)
-//                     .HasForeignKey(d => d.DbTypeId)
+//                 entity.HasOne(d => d.DB_TYPE_)
+//                     .WithMany(p => p.fa_db_server)
+//                     .HasForeignKey(d => d.DB_TYPE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_db_server_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaDbServerType>(entity =>
+//             modelBuilder.Entity<fa_db_server_type>(entity =>
 //             {
-//                 entity.ToTable("fa_db_server_type");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(20)");
-
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(500)");
 //             });
 
-//             modelBuilder.Entity<FaDistrict>(entity =>
+//             modelBuilder.Entity<fa_district>(entity =>
 //             {
-//                 entity.ToTable("fa_district");
-
-//                 entity.HasIndex(e => e.ParentId)
+//                 entity.HasIndex(e => e.PARENT_ID)
 //                     .HasName("FK_FA_DISTRICT_REF_DISTRICT");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Code)
-//                     .HasColumnName("CODE")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.CODE).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.IdPath)
-//                     .HasColumnName("ID_PATH")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.ID_PATH).HasColumnType("varchar(200)");
 
-//                 entity.Property(e => e.InUse)
-//                     .HasColumnName("IN_USE")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IN_USE).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.LevelId)
-//                     .HasColumnName("LEVEL_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.LEVEL_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.ParentId)
-//                     .HasColumnName("PARENT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.PARENT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Region)
+//                 entity.Property(e => e.REGION)
 //                     .IsRequired()
-//                     .HasColumnName("REGION")
 //                     .HasColumnType("varchar(10)");
 
-//                 entity.HasOne(d => d.Parent)
-//                     .WithMany(p => p.InverseParent)
-//                     .HasForeignKey(d => d.ParentId)
+//                 entity.HasOne(d => d.PARENT_)
+//                     .WithMany(p => p.InversePARENT_)
+//                     .HasForeignKey(d => d.PARENT_ID)
 //                     .HasConstraintName("fa_district_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaDynasty>(entity =>
+//             modelBuilder.Entity<fa_dynasty>(entity =>
 //             {
-//                 entity.ToTable("fa_dynasty");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(20)");
 //             });
 
-//             modelBuilder.Entity<FaElder>(entity =>
+//             modelBuilder.Entity<fa_elder>(entity =>
 //             {
-//                 entity.ToTable("fa_elder");
-
-//                 entity.HasIndex(e => e.FamilyId)
+//                 entity.HasIndex(e => e.FAMILY_ID)
 //                     .HasName("FK_FA_ELDER_REF_FAMILY");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FamilyId)
-//                     .HasColumnName("FAMILY_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FAMILY_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(2)");
 
-//                 entity.Property(e => e.Sort)
-//                     .HasColumnName("SORT")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.SORT).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Family)
-//                     .WithMany(p => p.FaElder)
-//                     .HasForeignKey(d => d.FamilyId)
+//                 entity.HasOne(d => d.FAMILY_)
+//                     .WithMany(p => p.fa_elder)
+//                     .HasForeignKey(d => d.FAMILY_ID)
 //                     .HasConstraintName("fa_elder_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaEventFiles>(entity =>
+//             modelBuilder.Entity<fa_event_files>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.EventId, e.FilesId })
+//                 entity.HasKey(e => new { e.EVENT_ID, e.FILES_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_event_files");
-
-//                 entity.HasIndex(e => e.FilesId)
+//                 entity.HasIndex(e => e.FILES_ID)
 //                     .HasName("FK_FA_EVENT_FILES_REF_FILES");
 
-//                 entity.Property(e => e.EventId)
-//                     .HasColumnName("EVENT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.EVENT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FilesId)
-//                     .HasColumnName("FILES_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FILES_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Event)
-//                     .WithMany(p => p.FaEventFiles)
-//                     .HasForeignKey(d => d.EventId)
+//                 entity.HasOne(d => d.EVENT_)
+//                     .WithMany(p => p.fa_event_files)
+//                     .HasForeignKey(d => d.EVENT_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_event_files_ibfk_1");
 
-//                 entity.HasOne(d => d.Files)
-//                     .WithMany(p => p.FaEventFiles)
-//                     .HasForeignKey(d => d.FilesId)
+//                 entity.HasOne(d => d.FILES_)
+//                     .WithMany(p => p.fa_event_files)
+//                     .HasForeignKey(d => d.FILES_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_event_files_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaExportLog>(entity =>
+//             modelBuilder.Entity<fa_export_log>(entity =>
 //             {
-//                 entity.ToTable("fa_export_log");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.EXPORT_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.ExportTime)
-//                     .HasColumnName("EXPORT_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.LOGIN_NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.LoginName)
-//                     .HasColumnName("LOGIN_NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.SQL_CONTENT).HasColumnType("text");
 
-//                 entity.Property(e => e.SqlContent)
-//                     .HasColumnName("SQL_CONTENT")
-//                     .HasColumnType("text");
-
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 //             });
 
-//             modelBuilder.Entity<FaFamily>(entity =>
+//             modelBuilder.Entity<fa_family>(entity =>
 //             {
-//                 entity.ToTable("fa_family");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(20)");
 //             });
 
-//             modelBuilder.Entity<FaFiles>(entity =>
+//             modelBuilder.Entity<fa_files>(entity =>
 //             {
-//                 entity.ToTable("fa_files");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FILE_TYPE).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.FileType)
-//                     .HasColumnName("FILE_TYPE")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.LENGTH).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Length)
-//                     .HasColumnName("LENGTH")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.Path)
+//                 entity.Property(e => e.PATH)
 //                     .IsRequired()
-//                     .HasColumnName("PATH")
 //                     .HasColumnType("varchar(200)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(2000)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(2000)");
 
-//                 entity.Property(e => e.UploadTime)
-//                     .HasColumnName("UPLOAD_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.UPLOAD_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.Url)
-//                     .HasColumnName("URL")
-//                     .HasColumnType("varchar(254)");
+//                 entity.Property(e => e.URL).HasColumnType("varchar(254)");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 //             });
 
-//             modelBuilder.Entity<FaFlow>(entity =>
+//             modelBuilder.Entity<fa_flow>(entity =>
 //             {
-//                 entity.ToTable("fa_flow");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.FlowType)
+//                 entity.Property(e => e.FLOW_TYPE)
 //                     .IsRequired()
-//                     .HasColumnName("FLOW_TYPE")
 //                     .HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.Region)
-//                     .HasColumnName("REGION")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.REGION).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.XY)
-//                     .HasColumnName("X_Y")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.X_Y).HasColumnType("varchar(500)");
 //             });
 
-//             modelBuilder.Entity<FaFlowFlownode>(entity =>
+//             modelBuilder.Entity<fa_flow_flownode>(entity =>
 //             {
-//                 entity.ToTable("fa_flow_flownode");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.HANDLE_URL).HasColumnType("varchar(200)");
 
-//                 entity.Property(e => e.HandleUrl)
-//                     .HasColumnName("HANDLE_URL")
-//                     .HasColumnType("varchar(200)");
-
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.ShowUrl)
-//                     .HasColumnName("SHOW_URL")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.SHOW_URL).HasColumnType("varchar(200)");
 //             });
 
-//             modelBuilder.Entity<FaFlowFlownodeFlow>(entity =>
+//             modelBuilder.Entity<fa_flow_flownode_flow>(entity =>
 //             {
-//                 entity.ToTable("fa_flow_flownode_flow");
-
-//                 entity.HasIndex(e => e.FlowId)
+//                 entity.HasIndex(e => e.FLOW_ID)
 //                     .HasName("FK_FA_FLOWNODE_FLOW_REF_FLOW");
 
-//                 entity.HasIndex(e => e.FromFlownodeId)
+//                 entity.HasIndex(e => e.FROM_FLOWNODE_ID)
 //                     .HasName("FK_FA_FLOWNODE_FLOW_REF_NODE");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Assigner)
-//                     .HasColumnName("ASSIGNER")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.ASSIGNER).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.ExpireHour)
-//                     .HasColumnName("EXPIRE_HOUR")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.EXPIRE_HOUR).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FlowId)
-//                     .HasColumnName("FLOW_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FLOW_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FromFlownodeId)
-//                     .HasColumnName("FROM_FLOWNODE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FROM_FLOWNODE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Handle)
-//                     .HasColumnName("HANDLE")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.HANDLE).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(20)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.Status)
-//                     .HasColumnName("STATUS")
-//                     .HasColumnType("varchar(20)");
+//                 entity.Property(e => e.STATUS).HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.ToFlownodeId)
-//                     .HasColumnName("TO_FLOWNODE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.TO_FLOWNODE_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Flow)
-//                     .WithMany(p => p.FaFlowFlownodeFlow)
-//                     .HasForeignKey(d => d.FlowId)
+//                 entity.HasOne(d => d.FLOW_)
+//                     .WithMany(p => p.fa_flow_flownode_flow)
+//                     .HasForeignKey(d => d.FLOW_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_flow_flownode_flow_ibfk_1");
 
-//                 entity.HasOne(d => d.FromFlownode)
-//                     .WithMany(p => p.FaFlowFlownodeFlow)
-//                     .HasForeignKey(d => d.FromFlownodeId)
+//                 entity.HasOne(d => d.FROM_FLOWNODE_)
+//                     .WithMany(p => p.fa_flow_flownode_flow)
+//                     .HasForeignKey(d => d.FROM_FLOWNODE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_flow_flownode_flow_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaFlowFlownodeRole>(entity =>
+//             modelBuilder.Entity<fa_flow_flownode_role>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.FlowId, e.RoleId })
+//                 entity.HasKey(e => new { e.FLOW_ID, e.ROLE_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_flow_flownode_role");
-
-//                 entity.HasIndex(e => e.RoleId)
+//                 entity.HasIndex(e => e.ROLE_ID)
 //                     .HasName("FK_FA_FLOW_REF_ROLE");
 
-//                 entity.Property(e => e.FlowId)
-//                     .HasColumnName("FLOW_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FLOW_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.RoleId)
-//                     .HasColumnName("ROLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ROLE_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Flow)
-//                     .WithMany(p => p.FaFlowFlownodeRole)
-//                     .HasForeignKey(d => d.FlowId)
+//                 entity.HasOne(d => d.FLOW_)
+//                     .WithMany(p => p.fa_flow_flownode_role)
+//                     .HasForeignKey(d => d.FLOW_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_flow_flownode_role_ibfk_2");
 
-//                 entity.HasOne(d => d.Role)
-//                     .WithMany(p => p.FaFlowFlownodeRole)
-//                     .HasForeignKey(d => d.RoleId)
+//                 entity.HasOne(d => d.ROLE_)
+//                     .WithMany(p => p.fa_flow_flownode_role)
+//                     .HasForeignKey(d => d.ROLE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_flow_flownode_role_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaFunction>(entity =>
+//             modelBuilder.Entity<fa_function>(entity =>
 //             {
-//                 entity.ToTable("fa_function");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.CLASS_NAME).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.ClassName)
-//                     .HasColumnName("CLASS_NAME")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.DLL_NAME).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.DllName)
-//                     .HasColumnName("DLL_NAME")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.FULL_NAME).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.FullName)
-//                     .HasColumnName("FULL_NAME")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.METHOD_NAME).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.MethodName)
-//                     .HasColumnName("METHOD_NAME")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.NAMESPACE).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.Namespace)
-//                     .HasColumnName("NAMESPACE")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(100)");
-
-//                 entity.Property(e => e.XmlNote)
-//                     .HasColumnName("XML_NOTE")
-//                     .HasColumnType("varchar(254)");
+//                 entity.Property(e => e.XML_NOTE).HasColumnType("varchar(254)");
 //             });
 
-//             modelBuilder.Entity<FaLog>(entity =>
+//             modelBuilder.Entity<fa_log>(entity =>
 //             {
-//                 entity.ToTable("fa_log");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ADD_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.AddTime)
-//                     .HasColumnName("ADD_TIME")
-//                     .HasColumnType("datetime");
-
-//                 entity.Property(e => e.ModuleName)
+//                 entity.Property(e => e.MODULE_NAME)
 //                     .IsRequired()
-//                     .HasColumnName("MODULE_NAME")
 //                     .HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 //             });
 
-//             modelBuilder.Entity<FaLogin>(entity =>
+//             modelBuilder.Entity<fa_login>(entity =>
 //             {
-//                 entity.ToTable("fa_login");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.EMAIL_ADDR).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.EmailAddr)
-//                     .HasColumnName("EMAIL_ADDR")
-//                     .HasColumnType("varchar(255)");
+//                 entity.Property(e => e.FAIL_COUNT).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FailCount)
-//                     .HasColumnName("FAIL_COUNT")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.IS_LOCKED).HasColumnType("int(1)");
 
-//                 entity.Property(e => e.IsLocked)
-//                     .HasColumnName("IS_LOCKED")
-//                     .HasColumnType("int(1)");
+//                 entity.Property(e => e.LOCKED_REASON).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.LockedReason)
-//                     .HasColumnName("LOCKED_REASON")
-//                     .HasColumnType("varchar(255)");
+//                 entity.Property(e => e.LOGIN_NAME).HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.LoginName)
-//                     .HasColumnName("LOGIN_NAME")
-//                     .HasColumnType("varchar(20)");
+//                 entity.Property(e => e.PASSWORD).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.PassUpdateDate)
-//                     .HasColumnName("PASS_UPDATE_DATE")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.PASS_UPDATE_DATE).HasColumnType("datetime");
 
-//                 entity.Property(e => e.Password)
-//                     .HasColumnName("PASSWORD")
-//                     .HasColumnType("varchar(255)");
+//                 entity.Property(e => e.PHONE_NO).HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.PhoneNo)
-//                     .HasColumnName("PHONE_NO")
-//                     .HasColumnType("varchar(20)");
+//                 entity.Property(e => e.VERIFY_CODE).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.VerifyCode)
-//                     .HasColumnName("VERIFY_CODE")
-//                     .HasColumnType("varchar(10)");
-
-//                 entity.Property(e => e.VerifyTime)
-//                     .HasColumnName("VERIFY_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.VERIFY_TIME).HasColumnType("datetime");
 //             });
 
-//             modelBuilder.Entity<FaLoginHistory>(entity =>
+//             modelBuilder.Entity<fa_login_history>(entity =>
 //             {
-//                 entity.ToTable("fa_login_history");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.LOGIN_HISTORY_TYPE).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.LoginHistoryType)
-//                     .HasColumnName("LOGIN_HISTORY_TYPE")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.LOGIN_HOST).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.LoginHost)
-//                     .HasColumnName("LOGIN_HOST")
-//                     .HasColumnType("varchar(255)");
+//                 entity.Property(e => e.LOGIN_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.LoginTime)
-//                     .HasColumnName("LOGIN_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.LOGOUT_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.LogoutTime)
-//                     .HasColumnName("LOGOUT_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.MESSAGE).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.Message)
-//                     .HasColumnName("MESSAGE")
-//                     .HasColumnType("varchar(255)");
-
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 //             });
 
-//             modelBuilder.Entity<FaMessage>(entity =>
+//             modelBuilder.Entity<fa_message>(entity =>
 //             {
-//                 entity.ToTable("fa_message");
-
-//                 entity.HasIndex(e => e.MessageTypeId)
+//                 entity.HasIndex(e => e.MESSAGE_TYPE_ID)
 //                     .HasName("FK_FA_MESSAGE_REF_MESSAGE_TYPE");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.AllRoleId)
-//                     .HasColumnName("ALL_ROLE_ID")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.ALL_ROLE_ID).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.Content)
-//                     .HasColumnName("CONTENT")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.CONTENT).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.CreateTime)
-//                     .HasColumnName("CREATE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.CREATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.CreateUserid)
-//                     .HasColumnName("CREATE_USERID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.CREATE_USERID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.CreateUsername)
-//                     .HasColumnName("CREATE_USERNAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.CREATE_USERNAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.DistrictId)
-//                     .HasColumnName("DISTRICT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.DISTRICT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.KeyId)
-//                     .HasColumnName("KEY_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.KEY_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.MessageTypeId)
-//                     .HasColumnName("MESSAGE_TYPE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.MESSAGE_TYPE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.PushType)
-//                     .HasColumnName("PUSH_TYPE")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.PUSH_TYPE).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Status)
-//                     .HasColumnName("STATUS")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.STATUS).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Title)
-//                     .HasColumnName("TITLE")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.TITLE).HasColumnType("varchar(100)");
 
-//                 entity.HasOne(d => d.MessageType)
-//                     .WithMany(p => p.FaMessage)
-//                     .HasForeignKey(d => d.MessageTypeId)
+//                 entity.HasOne(d => d.MESSAGE_TYPE_)
+//                     .WithMany(p => p.fa_message)
+//                     .HasForeignKey(d => d.MESSAGE_TYPE_ID)
 //                     .HasConstraintName("fa_message_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaMessageType>(entity =>
+//             modelBuilder.Entity<fa_message_type>(entity =>
 //             {
-//                 entity.ToTable("fa_message_type");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.IS_USE).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.IsUse)
-//                     .HasColumnName("IS_USE")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(500)");
-
-//                 entity.Property(e => e.TableName)
-//                     .HasColumnName("TABLE_NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.TABLE_NAME).HasColumnType("varchar(50)");
 //             });
 
-//             modelBuilder.Entity<FaModule>(entity =>
+//             modelBuilder.Entity<fa_module>(entity =>
 //             {
-//                 entity.ToTable("fa_module");
-
-//                 entity.HasIndex(e => e.ParentId)
+//                 entity.HasIndex(e => e.PARENT_ID)
 //                     .HasName("FK_FA_MODULE_REF_MODULE");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Code)
-//                     .HasColumnName("CODE")
-//                     .HasColumnType("varchar(20)");
+//                 entity.Property(e => e.CODE).HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.Description)
-//                     .HasColumnName("DESCRIPTION")
-//                     .HasColumnType("varchar(2000)");
+//                 entity.Property(e => e.DESCRIPTION).HasColumnType("varchar(2000)");
 
-//                 entity.Property(e => e.DesktopRole)
-//                     .HasColumnName("DESKTOP_ROLE")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.DESKTOP_ROLE).HasColumnType("varchar(200)");
 
 //                 entity.Property(e => e.H).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.ImageUrl)
-//                     .HasColumnName("IMAGE_URL")
-//                     .HasColumnType("varchar(2000)");
+//                 entity.Property(e => e.IMAGE_URL).HasColumnType("varchar(2000)");
 
-//                 entity.Property(e => e.IsDebug)
-//                     .HasColumnName("IS_DEBUG")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_DEBUG).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.IsHide)
-//                     .HasColumnName("IS_HIDE")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_HIDE).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.Location)
-//                     .HasColumnName("LOCATION")
-//                     .HasColumnType("varchar(2000)");
+//                 entity.Property(e => e.LOCATION).HasColumnType("varchar(2000)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(60)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(60)");
 
-//                 entity.Property(e => e.ParentId)
-//                     .HasColumnName("PARENT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.PARENT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.ShowOrder)
-//                     .HasColumnName("SHOW_ORDER")
-//                     .HasColumnType("decimal(2,0)");
+//                 entity.Property(e => e.SHOW_ORDER).HasColumnType("decimal(2,0)");
 
 //                 entity.Property(e => e.W).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Parent)
-//                     .WithMany(p => p.InverseParent)
-//                     .HasForeignKey(d => d.ParentId)
+//                 entity.HasOne(d => d.PARENT_)
+//                     .WithMany(p => p.InversePARENT_)
+//                     .HasForeignKey(d => d.PARENT_ID)
 //                     .HasConstraintName("fa_module_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaOauth>(entity =>
+//             modelBuilder.Entity<fa_oauth>(entity =>
 //             {
-//                 entity.ToTable("fa_oauth");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.LOGIN_URL).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.LoginUrl)
-//                     .HasColumnName("LOGIN_URL")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.REG_URL).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.RegUrl)
-//                     .HasColumnName("REG_URL")
-//                     .HasColumnType("varchar(500)");
-
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(500)");
 //             });
 
-//             modelBuilder.Entity<FaOauthLogin>(entity =>
+//             modelBuilder.Entity<fa_oauth_login>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.OauthId, e.LoginId })
+//                 entity.HasKey(e => new { e.OAUTH_ID, e.LOGIN_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_oauth_login");
-
-//                 entity.HasIndex(e => e.LoginId)
+//                 entity.HasIndex(e => e.LOGIN_ID)
 //                     .HasName("FK_FA_OAUTH_REF_LOGIN");
 
-//                 entity.Property(e => e.OauthId)
-//                     .HasColumnName("OAUTH_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.OAUTH_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.LoginId)
-//                     .HasColumnName("LOGIN_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.LOGIN_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Login)
-//                     .WithMany(p => p.FaOauthLogin)
-//                     .HasForeignKey(d => d.LoginId)
+//                 entity.HasOne(d => d.LOGIN_)
+//                     .WithMany(p => p.fa_oauth_login)
+//                     .HasForeignKey(d => d.LOGIN_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_oauth_login_ibfk_1");
 
-//                 entity.HasOne(d => d.Oauth)
-//                     .WithMany(p => p.FaOauthLogin)
-//                     .HasForeignKey(d => d.OauthId)
+//                 entity.HasOne(d => d.OAUTH_)
+//                     .WithMany(p => p.fa_oauth_login)
+//                     .HasForeignKey(d => d.OAUTH_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_oauth_login_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaQuery>(entity =>
+//             modelBuilder.Entity<fa_query>(entity =>
 //             {
-//                 entity.ToTable("fa_query");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.AUTO_LOAD).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.AutoLoad)
-//                     .HasColumnName("AUTO_LOAD")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.CHARTS_CFG).HasColumnType("text");
 
-//                 entity.Property(e => e.ChartsCfg)
-//                     .HasColumnName("CHARTS_CFG")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.CHARTS_TYPE).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.ChartsType)
-//                     .HasColumnName("CHARTS_TYPE")
-//                     .HasColumnType("varchar(50)");
-
-//                 entity.Property(e => e.Code)
+//                 entity.Property(e => e.CODE)
 //                     .IsRequired()
-//                     .HasColumnName("CODE")
 //                     .HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.DbServerId)
-//                     .HasColumnName("DB_SERVER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.DB_SERVER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FiltrLevel)
-//                     .HasColumnName("FILTR_LEVEL")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.FILTR_LEVEL).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.FiltrStr)
-//                     .HasColumnName("FILTR_STR")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.FILTR_STR).HasColumnType("text");
 
-//                 entity.Property(e => e.HeardBtn)
-//                     .HasColumnName("HEARD_BTN")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.HEARD_BTN).HasColumnType("text");
 
-//                 entity.Property(e => e.InParaJson)
-//                     .HasColumnName("IN_PARA_JSON")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.IN_PARA_JSON).HasColumnType("text");
 
-//                 entity.Property(e => e.IsDebug)
-//                     .HasColumnName("IS_DEBUG")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_DEBUG).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.JsStr)
-//                     .HasColumnName("JS_STR")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.JS_STR).HasColumnType("text");
 
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.NewData)
-//                     .HasColumnName("NEW_DATA")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.NEW_DATA).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.PageSize)
-//                     .HasColumnName("PAGE_SIZE")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.PAGE_SIZE).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.QueryCfgJson)
-//                     .HasColumnName("QUERY_CFG_JSON")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.QUERY_CFG_JSON).HasColumnType("text");
 
-//                 entity.Property(e => e.QueryConf)
-//                     .HasColumnName("QUERY_CONF")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.QUERY_CONF).HasColumnType("text");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.REMARK).HasColumnType("text");
 
-//                 entity.Property(e => e.ReportScript)
-//                     .HasColumnName("REPORT_SCRIPT")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.REPORT_SCRIPT).HasColumnType("text");
 
-//                 entity.Property(e => e.RowsBtn)
-//                     .HasColumnName("ROWS_BTN")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.ROWS_BTN).HasColumnType("text");
 
-//                 entity.Property(e => e.ShowCheckbox)
-//                     .HasColumnName("SHOW_CHECKBOX")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.SHOW_CHECKBOX).HasColumnType("decimal(1,0)");
 //             });
 
-//             modelBuilder.Entity<FaRole>(entity =>
+//             modelBuilder.Entity<fa_role>(entity =>
 //             {
-//                 entity.ToTable("fa_role");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(80)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(80)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(255)");
-
-//                 entity.Property(e => e.Type)
-//                     .HasColumnName("TYPE")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.TYPE).HasColumnType("int(11)");
 //             });
 
-//             modelBuilder.Entity<FaRoleConfig>(entity =>
+//             modelBuilder.Entity<fa_role_config>(entity =>
 //             {
-//                 entity.ToTable("fa_role_config");
-
-//                 entity.HasIndex(e => e.RoleId)
+//                 entity.HasIndex(e => e.ROLE_ID)
 //                     .HasName("FK_FA_ROLE_CONFIG_REF_ROLE");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.RoleId)
-//                     .HasColumnName("ROLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ROLE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Type)
-//                     .HasColumnName("TYPE")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.TYPE).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Value)
-//                     .HasColumnName("VALUE")
-//                     .HasColumnType("varchar(300)");
+//                 entity.Property(e => e.VALUE).HasColumnType("varchar(300)");
 
-//                 entity.HasOne(d => d.Role)
-//                     .WithMany(p => p.FaRoleConfig)
-//                     .HasForeignKey(d => d.RoleId)
+//                 entity.HasOne(d => d.ROLE_)
+//                     .WithMany(p => p.fa_role_config)
+//                     .HasForeignKey(d => d.ROLE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_role_config_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaRoleFunction>(entity =>
+//             modelBuilder.Entity<fa_role_function>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.FunctionId, e.RoleId })
+//                 entity.HasKey(e => new { e.FUNCTION_ID, e.ROLE_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_role_function");
-
-//                 entity.HasIndex(e => e.RoleId)
+//                 entity.HasIndex(e => e.ROLE_ID)
 //                     .HasName("FK_FA_ROLE_FUNCTION_REF_ROLE");
 
-//                 entity.Property(e => e.FunctionId)
-//                     .HasColumnName("FUNCTION_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FUNCTION_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.RoleId)
-//                     .HasColumnName("ROLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ROLE_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Function)
-//                     .WithMany(p => p.FaRoleFunction)
-//                     .HasForeignKey(d => d.FunctionId)
+//                 entity.HasOne(d => d.FUNCTION_)
+//                     .WithMany(p => p.fa_role_function)
+//                     .HasForeignKey(d => d.FUNCTION_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_role_function_ibfk_1");
 
-//                 entity.HasOne(d => d.Role)
-//                     .WithMany(p => p.FaRoleFunction)
-//                     .HasForeignKey(d => d.RoleId)
+//                 entity.HasOne(d => d.ROLE_)
+//                     .WithMany(p => p.fa_role_function)
+//                     .HasForeignKey(d => d.ROLE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_role_function_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaRoleModule>(entity =>
+//             modelBuilder.Entity<fa_role_module>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.RoleId, e.ModuleId })
+//                 entity.HasKey(e => new { e.ROLE_ID, e.MODULE_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_role_module");
-
-//                 entity.HasIndex(e => e.ModuleId)
+//                 entity.HasIndex(e => e.MODULE_ID)
 //                     .HasName("FK_FA_ROLE_MODULE_REF_MODULE");
 
-//                 entity.Property(e => e.RoleId)
-//                     .HasColumnName("ROLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ROLE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.ModuleId)
-//                     .HasColumnName("MODULE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.MODULE_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Module)
-//                     .WithMany(p => p.FaRoleModule)
-//                     .HasForeignKey(d => d.ModuleId)
+//                 entity.HasOne(d => d.MODULE_)
+//                     .WithMany(p => p.fa_role_module)
+//                     .HasForeignKey(d => d.MODULE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_role_module_ibfk_1");
 
-//                 entity.HasOne(d => d.Role)
-//                     .WithMany(p => p.FaRoleModule)
-//                     .HasForeignKey(d => d.RoleId)
+//                 entity.HasOne(d => d.ROLE_)
+//                     .WithMany(p => p.fa_role_module)
+//                     .HasForeignKey(d => d.ROLE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_role_module_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaRoleQueryAuthority>(entity =>
+//             modelBuilder.Entity<fa_role_query_authority>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.RoleId, e.QueryId })
+//                 entity.HasKey(e => new { e.ROLE_ID, e.QUERY_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_role_query_authority");
-
-//                 entity.HasIndex(e => e.QueryId)
+//                 entity.HasIndex(e => e.QUERY_ID)
 //                     .HasName("FK_FA_ROLE_QUERY_REF_QUERY");
 
-//                 entity.Property(e => e.RoleId)
-//                     .HasColumnName("ROLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ROLE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.QueryId)
-//                     .HasColumnName("QUERY_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.QUERY_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.NoAuthority)
-//                     .HasColumnName("NO_AUTHORITY")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.NO_AUTHORITY).HasColumnType("varchar(200)");
 
-//                 entity.HasOne(d => d.Query)
-//                     .WithMany(p => p.FaRoleQueryAuthority)
-//                     .HasForeignKey(d => d.QueryId)
+//                 entity.HasOne(d => d.QUERY_)
+//                     .WithMany(p => p.fa_role_query_authority)
+//                     .HasForeignKey(d => d.QUERY_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_role_query_authority_ibfk_1");
 
-//                 entity.HasOne(d => d.Role)
-//                     .WithMany(p => p.FaRoleQueryAuthority)
-//                     .HasForeignKey(d => d.RoleId)
+//                 entity.HasOne(d => d.ROLE_)
+//                     .WithMany(p => p.fa_role_query_authority)
+//                     .HasForeignKey(d => d.ROLE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_role_query_authority_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaScript>(entity =>
+//             modelBuilder.Entity<fa_script>(entity =>
 //             {
-//                 entity.ToTable("fa_script");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
-
-//                 entity.Property(e => e.BodyHash)
+//                 entity.Property(e => e.BODY_HASH)
 //                     .IsRequired()
-//                     .HasColumnName("BODY_HASH")
 //                     .HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.BodyText)
+//                 entity.Property(e => e.BODY_TEXT)
 //                     .IsRequired()
-//                     .HasColumnName("BODY_TEXT")
 //                     .HasColumnType("text");
 
-//                 entity.Property(e => e.Code)
+//                 entity.Property(e => e.CODE)
 //                     .IsRequired()
-//                     .HasColumnName("CODE")
 //                     .HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.DisableReason)
-//                     .HasColumnName("DISABLE_REASON")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.DISABLE_REASON).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.IsGroup)
-//                     .HasColumnName("IS_GROUP")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_GROUP).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.Name)
+//                 entity.Property(e => e.NAME)
 //                     .IsRequired()
-//                     .HasColumnName("NAME")
 //                     .HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.Region)
-//                     .HasColumnName("REGION")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.REGION).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.RunArgs)
-//                     .HasColumnName("RUN_ARGS")
-//                     .HasColumnType("varchar(255)");
+//                 entity.Property(e => e.RUN_ARGS).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.RunData)
+//                 entity.Property(e => e.RUN_DATA)
 //                     .IsRequired()
-//                     .HasColumnName("RUN_DATA")
 //                     .HasColumnType("varchar(20)")
 //                     .HasDefaultValueSql("'0'");
 
-//                 entity.Property(e => e.RunWhen)
-//                     .HasColumnName("RUN_WHEN")
-//                     .HasColumnType("varchar(30)");
+//                 entity.Property(e => e.RUN_WHEN).HasColumnType("varchar(30)");
 
-//                 entity.Property(e => e.ServiceFlag)
-//                     .HasColumnName("SERVICE_FLAG")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.SERVICE_FLAG).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.Status)
-//                     .HasColumnName("STATUS")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.STATUS).HasColumnType("varchar(10)");
 //             });
 
-//             modelBuilder.Entity<FaScriptGroupList>(entity =>
+//             modelBuilder.Entity<fa_script_group_list>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.ScriptId, e.GroupId })
+//                 entity.HasKey(e => new { e.SCRIPT_ID, e.GROUP_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_script_group_list");
-
-//                 entity.HasIndex(e => e.GroupId)
+//                 entity.HasIndex(e => e.GROUP_ID)
 //                     .HasName("FK_FA_GROUP_LIST_REF_SCRIPT");
 
-//                 entity.Property(e => e.ScriptId)
-//                     .HasColumnName("SCRIPT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.SCRIPT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.GroupId)
-//                     .HasColumnName("GROUP_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.GROUP_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.OrderIndex)
-//                     .HasColumnName("ORDER_INDEX")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ORDER_INDEX).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Group)
-//                     .WithMany(p => p.FaScriptGroupList)
-//                     .HasForeignKey(d => d.GroupId)
+//                 entity.HasOne(d => d.GROUP_)
+//                     .WithMany(p => p.fa_script_group_list)
+//                     .HasForeignKey(d => d.GROUP_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_script_group_list_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaScriptTask>(entity =>
+//             modelBuilder.Entity<fa_script_task>(entity =>
 //             {
-//                 entity.ToTable("fa_script_task");
-
-//                 entity.HasIndex(e => e.ScriptId)
+//                 entity.HasIndex(e => e.SCRIPT_ID)
 //                     .HasName("FK_FA_SCRIPT_TASK_REF_SCRIPT");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.BodyHash)
+//                 entity.Property(e => e.BODY_HASH)
 //                     .IsRequired()
-//                     .HasColumnName("BODY_HASH")
 //                     .HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.BodyText)
+//                 entity.Property(e => e.BODY_TEXT)
 //                     .IsRequired()
-//                     .HasColumnName("BODY_TEXT")
 //                     .HasColumnType("text");
 
-//                 entity.Property(e => e.DisableDate)
-//                     .HasColumnName("DISABLE_DATE")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.DISABLE_DATE).HasColumnType("datetime");
 
-//                 entity.Property(e => e.DisableReason)
-//                     .HasColumnName("DISABLE_REASON")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.DISABLE_REASON).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.DslType)
-//                     .HasColumnName("DSL_TYPE")
-//                     .HasColumnType("varchar(255)");
+//                 entity.Property(e => e.DSL_TYPE).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.EndTime)
-//                     .HasColumnName("END_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.END_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.GroupId)
-//                     .HasColumnName("GROUP_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.GROUP_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.LogType)
-//                     .HasColumnName("LOG_TYPE")
+//                 entity.Property(e => e.LOG_TYPE)
 //                     .HasColumnType("decimal(1,0)")
 //                     .HasDefaultValueSql("'0'");
 
-//                 entity.Property(e => e.Region)
-//                     .HasColumnName("REGION")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.REGION).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.ReturnCode)
-//                     .HasColumnName("RETURN_CODE")
+//                 entity.Property(e => e.RETURN_CODE)
 //                     .HasColumnType("varchar(10)")
 //                     .HasDefaultValueSql("'0'");
 
-//                 entity.Property(e => e.RunArgs)
-//                     .HasColumnName("RUN_ARGS")
-//                     .HasColumnType("varchar(255)");
+//                 entity.Property(e => e.RUN_ARGS).HasColumnType("varchar(255)");
 
-//                 entity.Property(e => e.RunData)
+//                 entity.Property(e => e.RUN_DATA)
 //                     .IsRequired()
-//                     .HasColumnName("RUN_DATA")
 //                     .HasColumnType("varchar(20)")
 //                     .HasDefaultValueSql("'0'");
 
-//                 entity.Property(e => e.RunState)
+//                 entity.Property(e => e.RUN_STATE)
 //                     .IsRequired()
-//                     .HasColumnName("RUN_STATE")
 //                     .HasColumnType("varchar(10)")
 //                     .HasDefaultValueSql("'0'");
 
-//                 entity.Property(e => e.RunWhen)
-//                     .HasColumnName("RUN_WHEN")
-//                     .HasColumnType("varchar(30)");
+//                 entity.Property(e => e.RUN_WHEN).HasColumnType("varchar(30)");
 
-//                 entity.Property(e => e.ScriptId)
-//                     .HasColumnName("SCRIPT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.SCRIPT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.ServiceFlag)
-//                     .HasColumnName("SERVICE_FLAG")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.SERVICE_FLAG).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.StartTime)
-//                     .HasColumnName("START_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.START_TIME).HasColumnType("datetime");
 
-//                 entity.HasOne(d => d.Script)
-//                     .WithMany(p => p.FaScriptTask)
-//                     .HasForeignKey(d => d.ScriptId)
+//                 entity.HasOne(d => d.SCRIPT_)
+//                     .WithMany(p => p.fa_script_task)
+//                     .HasForeignKey(d => d.SCRIPT_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_script_task_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaScriptTaskLog>(entity =>
+//             modelBuilder.Entity<fa_script_task_log>(entity =>
 //             {
-//                 entity.ToTable("fa_script_task_log");
-
-//                 entity.HasIndex(e => e.ScriptTaskId)
+//                 entity.HasIndex(e => e.SCRIPT_TASK_ID)
 //                     .HasName("FK_FA_SCRIPT_TASK_LOG_REF_TASK");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.LogTime)
-//                     .HasColumnName("LOG_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.LOG_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.LogType)
-//                     .HasColumnName("LOG_TYPE")
+//                 entity.Property(e => e.LOG_TYPE)
 //                     .HasColumnType("decimal(1,0)")
 //                     .HasDefaultValueSql("'1'");
 
-//                 entity.Property(e => e.Message)
-//                     .HasColumnName("MESSAGE")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.MESSAGE).HasColumnType("text");
 
-//                 entity.Property(e => e.ScriptTaskId)
-//                     .HasColumnName("SCRIPT_TASK_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.SCRIPT_TASK_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.SqlText)
-//                     .HasColumnName("SQL_TEXT")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.SQL_TEXT).HasColumnType("text");
 
-//                 entity.HasOne(d => d.ScriptTask)
-//                     .WithMany(p => p.FaScriptTaskLog)
-//                     .HasForeignKey(d => d.ScriptTaskId)
+//                 entity.HasOne(d => d.SCRIPT_TASK_)
+//                     .WithMany(p => p.fa_script_task_log)
+//                     .HasForeignKey(d => d.SCRIPT_TASK_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_script_task_log_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaSmsSend>(entity =>
+//             modelBuilder.Entity<fa_sms_send>(entity =>
 //             {
-//                 entity.HasKey(e => e.Guid)
+//                 entity.HasKey(e => e.GUID)
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_sms_send");
+//                 entity.Property(e => e.GUID).HasColumnType("char(32)");
 
-//                 entity.Property(e => e.Guid)
-//                     .HasColumnName("GUID")
-//                     .HasColumnType("char(32)");
+//                 entity.Property(e => e.ADD_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.AddTime)
-//                     .HasColumnName("ADD_TIME")
-//                     .HasColumnType("datetime");
-
-//                 entity.Property(e => e.Content)
+//                 entity.Property(e => e.CONTENT)
 //                     .IsRequired()
-//                     .HasColumnName("CONTENT")
 //                     .HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.MessageId)
-//                     .HasColumnName("MESSAGE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.MESSAGE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.PhoneNo)
+//                 entity.Property(e => e.PHONE_NO)
 //                     .IsRequired()
-//                     .HasColumnName("PHONE_NO")
 //                     .HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.SendTime)
-//                     .HasColumnName("SEND_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.SEND_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.Stauts)
-//                     .HasColumnName("STAUTS")
-//                     .HasColumnType("varchar(15)");
+//                 entity.Property(e => e.STAUTS).HasColumnType("varchar(15)");
 
-//                 entity.Property(e => e.TryNum)
-//                     .HasColumnName("TRY_NUM")
+//                 entity.Property(e => e.TRY_NUM)
 //                     .HasColumnType("int(11)")
 //                     .HasDefaultValueSql("'0'");
 //             });
 
-//             modelBuilder.Entity<FaTask>(entity =>
+//             modelBuilder.Entity<fa_task>(entity =>
 //             {
-//                 entity.ToTable("fa_task");
-
-//                 entity.HasIndex(e => e.FlowId)
+//                 entity.HasIndex(e => e.FLOW_ID)
 //                     .HasName("FK_FA_FLOW_TASK_REF_FLOW");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.CreateTime)
-//                     .HasColumnName("CREATE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.CREATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.CreateUser)
-//                     .HasColumnName("CREATE_USER")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.CREATE_USER).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.CreateUserName)
-//                     .HasColumnName("CREATE_USER_NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.CREATE_USER_NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.DealTime)
-//                     .HasColumnName("DEAL_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.DEAL_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.EndTime)
-//                     .HasColumnName("END_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.END_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.FlowId)
-//                     .HasColumnName("FLOW_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FLOW_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.KeyId)
-//                     .HasColumnName("KEY_ID")
-//                     .HasColumnType("varchar(32)");
+//                 entity.Property(e => e.KEY_ID).HasColumnType("varchar(32)");
 
-//                 entity.Property(e => e.Region)
-//                     .HasColumnName("REGION")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.REGION).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.REMARK).HasColumnType("text");
 
-//                 entity.Property(e => e.RoleIdStr)
-//                     .HasColumnName("ROLE_ID_STR")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.ROLE_ID_STR).HasColumnType("varchar(200)");
 
-//                 entity.Property(e => e.StartTime)
-//                     .HasColumnName("START_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.START_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.Status)
-//                     .HasColumnName("STATUS")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.STATUS).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.StatusTime)
-//                     .HasColumnName("STATUS_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.STATUS_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.TaskName)
-//                     .HasColumnName("TASK_NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.TASK_NAME).HasColumnType("varchar(50)");
 
-//                 entity.HasOne(d => d.Flow)
-//                     .WithMany(p => p.FaTask)
-//                     .HasForeignKey(d => d.FlowId)
+//                 entity.HasOne(d => d.FLOW_)
+//                     .WithMany(p => p.fa_task)
+//                     .HasForeignKey(d => d.FLOW_ID)
 //                     .HasConstraintName("fa_task_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaTaskFlow>(entity =>
+//             modelBuilder.Entity<fa_task_flow>(entity =>
 //             {
-//                 entity.ToTable("fa_task_flow");
-
-//                 entity.HasIndex(e => e.ParentId)
+//                 entity.HasIndex(e => e.PARENT_ID)
 //                     .HasName("FK_FA_TASK_FLOW_REF_TASK_FLOW");
 
-//                 entity.HasIndex(e => e.TaskId)
+//                 entity.HasIndex(e => e.TASK_ID)
 //                     .HasName("FK_FA_TASK_FLOW_REF_TASK");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.AcceptTime)
-//                     .HasColumnName("ACCEPT_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.ACCEPT_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.DealStatus)
-//                     .HasColumnName("DEAL_STATUS")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.DEAL_STATUS).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.DealTime)
-//                     .HasColumnName("DEAL_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.DEAL_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.EqualId)
-//                     .HasColumnName("EQUAL_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.EQUAL_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.ExpireTime)
-//                     .HasColumnName("EXPIRE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.EXPIRE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.FlownodeId)
-//                     .HasColumnName("FLOWNODE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FLOWNODE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.HandleUrl)
-//                     .HasColumnName("HANDLE_URL")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.HANDLE_URL).HasColumnType("varchar(200)");
 
-//                 entity.Property(e => e.HandleUserId)
-//                     .HasColumnName("HANDLE_USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.HANDLE_USER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.IsHandle)
-//                     .HasColumnName("IS_HANDLE")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.IS_HANDLE).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.LevelId)
-//                     .HasColumnName("LEVEL_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.LEVEL_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(100)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(100)");
 
-//                 entity.Property(e => e.ParentId)
-//                     .HasColumnName("PARENT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.PARENT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.RoleIdStr)
-//                     .HasColumnName("ROLE_ID_STR")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.ROLE_ID_STR).HasColumnType("varchar(200)");
 
-//                 entity.Property(e => e.ShowUrl)
-//                     .HasColumnName("SHOW_URL")
-//                     .HasColumnType("varchar(200)");
+//                 entity.Property(e => e.SHOW_URL).HasColumnType("varchar(200)");
 
-//                 entity.Property(e => e.StartTime)
-//                     .HasColumnName("START_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.START_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.TaskId)
-//                     .HasColumnName("TASK_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.TASK_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Parent)
-//                     .WithMany(p => p.InverseParent)
-//                     .HasForeignKey(d => d.ParentId)
+//                 entity.HasOne(d => d.PARENT_)
+//                     .WithMany(p => p.InversePARENT_)
+//                     .HasForeignKey(d => d.PARENT_ID)
 //                     .HasConstraintName("fa_task_flow_ibfk_2");
 
-//                 entity.HasOne(d => d.Task)
-//                     .WithMany(p => p.FaTaskFlow)
-//                     .HasForeignKey(d => d.TaskId)
+//                 entity.HasOne(d => d.TASK_)
+//                     .WithMany(p => p.fa_task_flow)
+//                     .HasForeignKey(d => d.TASK_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_task_flow_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaTaskFlowHandle>(entity =>
+//             modelBuilder.Entity<fa_task_flow_handle>(entity =>
 //             {
-//                 entity.ToTable("fa_task_flow_handle");
-
-//                 entity.HasIndex(e => e.TaskFlowId)
+//                 entity.HasIndex(e => e.TASK_FLOW_ID)
 //                     .HasName("FK_TASK_FLOW_HANDLE_REF_FLOW");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Content)
+//                 entity.Property(e => e.CONTENT)
 //                     .IsRequired()
-//                     .HasColumnName("CONTENT")
 //                     .HasColumnType("varchar(2000)");
 
-//                 entity.Property(e => e.DealTime)
-//                     .HasColumnName("DEAL_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.DEAL_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.DealUserId)
-//                     .HasColumnName("DEAL_USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.DEAL_USER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.DealUserName)
+//                 entity.Property(e => e.DEAL_USER_NAME)
 //                     .IsRequired()
-//                     .HasColumnName("DEAL_USER_NAME")
 //                     .HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.TaskFlowId)
-//                     .HasColumnName("TASK_FLOW_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.TASK_FLOW_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.TaskFlow)
-//                     .WithMany(p => p.FaTaskFlowHandle)
-//                     .HasForeignKey(d => d.TaskFlowId)
+//                 entity.HasOne(d => d.TASK_FLOW_)
+//                     .WithMany(p => p.fa_task_flow_handle)
+//                     .HasForeignKey(d => d.TASK_FLOW_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_task_flow_handle_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaTaskFlowHandleFiles>(entity =>
+//             modelBuilder.Entity<fa_task_flow_handle_files>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.FlowHandleId, e.FilesId })
+//                 entity.HasKey(e => new { e.FLOW_HANDLE_ID, e.FILES_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_task_flow_handle_files");
-
-//                 entity.HasIndex(e => e.FilesId)
+//                 entity.HasIndex(e => e.FILES_ID)
 //                     .HasName("FK_FLOW_HANDLE_REF_FILES");
 
-//                 entity.Property(e => e.FlowHandleId)
-//                     .HasColumnName("FLOW_HANDLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FLOW_HANDLE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FilesId)
-//                     .HasColumnName("FILES_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FILES_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Files)
-//                     .WithMany(p => p.FaTaskFlowHandleFiles)
-//                     .HasForeignKey(d => d.FilesId)
+//                 entity.HasOne(d => d.FILES_)
+//                     .WithMany(p => p.fa_task_flow_handle_files)
+//                     .HasForeignKey(d => d.FILES_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_task_flow_handle_files_ibfk_1");
 
-//                 entity.HasOne(d => d.FlowHandle)
-//                     .WithMany(p => p.FaTaskFlowHandleFiles)
-//                     .HasForeignKey(d => d.FlowHandleId)
+//                 entity.HasOne(d => d.FLOW_HANDLE_)
+//                     .WithMany(p => p.fa_task_flow_handle_files)
+//                     .HasForeignKey(d => d.FLOW_HANDLE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_task_flow_handle_files_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaTaskFlowHandleUser>(entity =>
+//             modelBuilder.Entity<fa_task_flow_handle_user>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.TaskFlowId, e.HandleUserId })
+//                 entity.HasKey(e => new { e.TASK_FLOW_ID, e.HANDLE_USER_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_task_flow_handle_user");
+//                 entity.Property(e => e.TASK_FLOW_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.TaskFlowId)
-//                     .HasColumnName("TASK_FLOW_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.HANDLE_USER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.HandleUserId)
-//                     .HasColumnName("HANDLE_USER_ID")
-//                     .HasColumnType("int(11)");
-
-//                 entity.HasOne(d => d.TaskFlow)
-//                     .WithMany(p => p.FaTaskFlowHandleUser)
-//                     .HasForeignKey(d => d.TaskFlowId)
+//                 entity.HasOne(d => d.TASK_FLOW_)
+//                     .WithMany(p => p.fa_task_flow_handle_user)
+//                     .HasForeignKey(d => d.TASK_FLOW_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_task_flow_handle_user_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaUpdataLog>(entity =>
+//             modelBuilder.Entity<fa_updata_log>(entity =>
 //             {
-//                 entity.ToTable("fa_updata_log");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.CREATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.CreateTime)
-//                     .HasColumnName("CREATE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.CREATE_USER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.CreateUserId)
-//                     .HasColumnName("CREATE_USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.CREATE_USER_NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.CreateUserName)
-//                     .HasColumnName("CREATE_USER_NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.NEW_CONTENT).HasColumnType("text");
 
-//                 entity.Property(e => e.NewContent)
-//                     .HasColumnName("NEW_CONTENT")
-//                     .HasColumnType("text");
+//                 entity.Property(e => e.OLD_CONTENT).HasColumnType("text");
 
-//                 entity.Property(e => e.OldContent)
-//                     .HasColumnName("OLD_CONTENT")
-//                     .HasColumnType("text");
-
-//                 entity.Property(e => e.TableName)
-//                     .HasColumnName("TABLE_NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.TABLE_NAME).HasColumnType("varchar(50)");
 //             });
 
-//             modelBuilder.Entity<FaUser>(entity =>
+//             modelBuilder.Entity<fa_user>(entity =>
 //             {
-//                 entity.ToTable("fa_user");
-
-//                 entity.HasIndex(e => e.DistrictId)
+//                 entity.HasIndex(e => e.DISTRICT_ID)
 //                     .HasName("FK_FA_USER_REF_DISTRICT");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.CreateTime)
-//                     .HasColumnName("CREATE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.CREATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.DistrictId)
-//                     .HasColumnName("DISTRICT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.DISTRICT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.IconFilesId)
-//                     .HasColumnName("ICON_FILES_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ICON_FILES_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.IsLocked)
-//                     .HasColumnName("IS_LOCKED")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_LOCKED).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.LastActiveTime)
-//                     .HasColumnName("LAST_ACTIVE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.LAST_ACTIVE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.LastLoginTime)
-//                     .HasColumnName("LAST_LOGIN_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.LAST_LOGIN_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.LastLogoutTime)
-//                     .HasColumnName("LAST_LOGOUT_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.LAST_LOGOUT_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.LoginCount)
-//                     .HasColumnName("LOGIN_COUNT")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.LOGIN_COUNT).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.LoginName)
-//                     .HasColumnName("LOGIN_NAME")
-//                     .HasColumnType("varchar(20)");
+//                 entity.Property(e => e.LOGIN_NAME).HasColumnType("varchar(20)");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(80)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(80)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(2000)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(2000)");
 
-//                 entity.HasOne(d => d.District)
-//                     .WithMany(p => p.FaUser)
-//                     .HasForeignKey(d => d.DistrictId)
+//                 entity.HasOne(d => d.DISTRICT_)
+//                     .WithMany(p => p.fa_user)
+//                     .HasForeignKey(d => d.DISTRICT_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_user_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaUserDistrict>(entity =>
+//             modelBuilder.Entity<fa_user_district>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.UserId, e.DistrictId })
+//                 entity.HasKey(e => new { e.USER_ID, e.DISTRICT_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_user_district");
-
-//                 entity.HasIndex(e => e.DistrictId)
+//                 entity.HasIndex(e => e.DISTRICT_ID)
 //                     .HasName("FK_FA_USER_DISTRICT_REF_DIST");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.DistrictId)
-//                     .HasColumnName("DISTRICT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.DISTRICT_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.District)
-//                     .WithMany(p => p.FaUserDistrict)
-//                     .HasForeignKey(d => d.DistrictId)
+//                 entity.HasOne(d => d.DISTRICT_)
+//                     .WithMany(p => p.fa_user_district)
+//                     .HasForeignKey(d => d.DISTRICT_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_user_district_ibfk_1");
 
-//                 entity.HasOne(d => d.User)
-//                     .WithMany(p => p.FaUserDistrict)
-//                     .HasForeignKey(d => d.UserId)
+//                 entity.HasOne(d => d.USER_)
+//                     .WithMany(p => p.fa_user_district)
+//                     .HasForeignKey(d => d.USER_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_user_district_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaUserEvent>(entity =>
+//             modelBuilder.Entity<fa_user_event>(entity =>
 //             {
-//                 entity.ToTable("fa_user_event");
-
-//                 entity.HasIndex(e => e.UserId)
+//                 entity.HasIndex(e => e.USER_ID)
 //                     .HasName("FK_FA_USER_EVENT_REF_USER");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Address)
-//                     .HasColumnName("ADDRESS")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.ADDRESS).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.Content)
-//                     .HasColumnName("CONTENT")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.CONTENT).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.HappenTime)
-//                     .HasColumnName("HAPPEN_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.HAPPEN_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.Name)
-//                     .HasColumnName("NAME")
-//                     .HasColumnType("varchar(50)");
+//                 entity.Property(e => e.NAME).HasColumnType("varchar(50)");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.User)
-//                     .WithMany(p => p.FaUserEvent)
-//                     .HasForeignKey(d => d.UserId)
+//                 entity.HasOne(d => d.USER_)
+//                     .WithMany(p => p.fa_user_event)
+//                     .HasForeignKey(d => d.USER_ID)
 //                     .HasConstraintName("fa_user_event_ibfk_1");
 //             });
 
-//             modelBuilder.Entity<FaUserFile>(entity =>
+//             modelBuilder.Entity<fa_user_file>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.UserId, e.FileId })
+//                 entity.HasKey(e => new { e.USER_ID, e.FILE_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_user_file");
-
-//                 entity.HasIndex(e => e.FileId)
+//                 entity.HasIndex(e => e.FILE_ID)
 //                     .HasName("FK_FA_USER_FILE_REF_FILE");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FileId)
-//                     .HasColumnName("FILE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FILE_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.File)
-//                     .WithMany(p => p.FaUserFile)
-//                     .HasForeignKey(d => d.FileId)
+//                 entity.HasOne(d => d.FILE_)
+//                     .WithMany(p => p.fa_user_file)
+//                     .HasForeignKey(d => d.FILE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_user_file_ibfk_1");
 
-//                 entity.HasOne(d => d.User)
-//                     .WithMany(p => p.FaUserFile)
-//                     .HasForeignKey(d => d.UserId)
+//                 entity.HasOne(d => d.USER_)
+//                     .WithMany(p => p.fa_user_file)
+//                     .HasForeignKey(d => d.USER_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_user_file_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaUserFriend>(entity =>
+//             modelBuilder.Entity<fa_user_friend>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.UserId, e.FriendId })
+//                 entity.HasKey(e => new { e.USER_ID, e.FRIEND_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_user_friend");
-
-//                 entity.HasIndex(e => e.FriendId)
+//                 entity.HasIndex(e => e.FRIEND_ID)
 //                     .HasName("FK_FA_FRIEND_REF_USER");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FriendId)
-//                     .HasColumnName("FRIEND_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FRIEND_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Friend)
-//                     .WithMany(p => p.FaUserFriend)
-//                     .HasForeignKey(d => d.FriendId)
+//                 entity.HasOne(d => d.FRIEND_)
+//                     .WithMany(p => p.fa_user_friend)
+//                     .HasForeignKey(d => d.FRIEND_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_user_friend_ibfk_1");
 
-//                 entity.HasOne(d => d.User)
-//                     .WithMany(p => p.FaUserFriend)
-//                     .HasForeignKey(d => d.UserId)
+//                 entity.HasOne(d => d.USER_)
+//                     .WithMany(p => p.fa_user_friend)
+//                     .HasForeignKey(d => d.USER_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("fa_user_friend_ibfk_2");
 //             });
 
-//             modelBuilder.Entity<FaUserInfo>(entity =>
+//             modelBuilder.Entity<fa_user_info>(entity =>
 //             {
-//                 entity.ToTable("fa_user_info");
+//                 entity.Property(e => e.ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Id)
-//                     .HasColumnName("ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ALIAS).HasColumnType("varchar(10)");
 
-//                 entity.Property(e => e.Alias)
-//                     .HasColumnName("ALIAS")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.AUTHORITY).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Authority)
-//                     .HasColumnName("AUTHORITY")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.BIRTHDAY_PLACE).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.BirthdayPlace)
-//                     .HasColumnName("BIRTHDAY_PLACE")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.BIRTHDAY_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.BirthdayTime)
-//                     .HasColumnName("BIRTHDAY_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.CONSORT_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.ConsortId)
-//                     .HasColumnName("CONSORT_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.COUPLE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.CoupleId)
-//                     .HasColumnName("COUPLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.CREATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.CreateTime)
-//                     .HasColumnName("CREATE_TIME")
-//                     .HasColumnType("datetime");
-
-//                 entity.Property(e => e.CreateUserId)
-//                     .HasColumnName("CREATE_USER_ID")
+//                 entity.Property(e => e.CREATE_USER_ID)
 //                     .HasColumnType("int(11)")
 //                     .HasDefaultValueSql("'1'");
 
-//                 entity.Property(e => e.CreateUserName)
+//                 entity.Property(e => e.CREATE_USER_NAME)
 //                     .IsRequired()
-//                     .HasColumnName("CREATE_USER_NAME")
 //                     .HasColumnType("varchar(50)")
 //                     .HasDefaultValueSql("'admin'");
 
-//                 entity.Property(e => e.DiedPlace)
-//                     .HasColumnName("DIED_PLACE")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.DIED_PLACE).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.DiedTime)
-//                     .HasColumnName("DIED_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.DIED_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.ElderId)
-//                     .HasColumnName("ELDER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ELDER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FamilyId)
-//                     .HasColumnName("FAMILY_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FAMILY_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.FatherId)
-//                     .HasColumnName("FATHER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.FATHER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.IsLive)
-//                     .HasColumnName("IS_LIVE")
-//                     .HasColumnType("decimal(1,0)");
+//                 entity.Property(e => e.IS_LIVE).HasColumnType("decimal(1,0)");
 
-//                 entity.Property(e => e.LevelId)
-//                     .HasColumnName("LEVEL_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.LEVEL_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.LevelName)
-//                     .HasColumnName("LEVEL_NAME")
-//                     .HasColumnType("varchar(2)");
+//                 entity.Property(e => e.LEVEL_NAME).HasColumnType("varchar(2)");
 
-//                 entity.Property(e => e.MotherId)
-//                     .HasColumnName("MOTHER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.MOTHER_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.Remark)
-//                     .HasColumnName("REMARK")
-//                     .HasColumnType("varchar(500)");
+//                 entity.Property(e => e.REMARK).HasColumnType("varchar(500)");
 
-//                 entity.Property(e => e.Sex)
-//                     .HasColumnName("SEX")
-//                     .HasColumnType("varchar(2)");
+//                 entity.Property(e => e.SEX).HasColumnType("varchar(2)");
 
-//                 entity.Property(e => e.Status)
+//                 entity.Property(e => e.STATUS)
 //                     .IsRequired()
-//                     .HasColumnName("STATUS")
 //                     .HasColumnType("varchar(10)")
 //                     .HasDefaultValueSql("'正常'");
 
-//                 entity.Property(e => e.UpdateTime)
-//                     .HasColumnName("UPDATE_TIME")
-//                     .HasColumnType("datetime");
+//                 entity.Property(e => e.UPDATE_TIME).HasColumnType("datetime");
 
-//                 entity.Property(e => e.UpdateUserId)
-//                     .HasColumnName("UPDATE_USER_ID")
+//                 entity.Property(e => e.UPDATE_USER_ID)
 //                     .HasColumnType("int(11)")
 //                     .HasDefaultValueSql("'1'");
 
-//                 entity.Property(e => e.UpdateUserName)
+//                 entity.Property(e => e.UPDATE_USER_NAME)
 //                     .IsRequired()
-//                     .HasColumnName("UPDATE_USER_NAME")
 //                     .HasColumnType("varchar(50)")
 //                     .HasDefaultValueSql("'admin'");
 
-//                 entity.Property(e => e.YearsType)
-//                     .HasColumnName("YEARS_TYPE")
-//                     .HasColumnType("varchar(10)");
+//                 entity.Property(e => e.YEARS_TYPE).HasColumnType("varchar(10)");
 //             });
 
-//             modelBuilder.Entity<FaUserRole>(entity =>
+//             modelBuilder.Entity<fa_user_role>(entity =>
 //             {
-//                 entity.HasKey(e => new { e.RoleId, e.UserId })
+//                 entity.HasKey(e => new { e.ROLE_ID, e.USER_ID })
 //                     .HasName("PRIMARY");
 
-//                 entity.ToTable("fa_user_role");
-
-//                 entity.HasIndex(e => e.UserId)
+//                 entity.HasIndex(e => e.USER_ID)
 //                     .HasName("FK_FA_USER_ROLE_REF_USER");
 
-//                 entity.Property(e => e.RoleId)
-//                     .HasColumnName("ROLE_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.ROLE_ID).HasColumnType("int(11)");
 
-//                 entity.Property(e => e.UserId)
-//                     .HasColumnName("USER_ID")
-//                     .HasColumnType("int(11)");
+//                 entity.Property(e => e.USER_ID).HasColumnType("int(11)");
 
-//                 entity.HasOne(d => d.Role)
-//                     .WithMany(p => p.FaUserRole)
-//                     .HasForeignKey(d => d.RoleId)
+//                 entity.HasOne(d => d.ROLE_)
+//                     .WithMany(p => p.fa_user_role)
+//                     .HasForeignKey(d => d.ROLE_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("FK_FA_USER_ROLE_REF_ROLE");
 
-//                 entity.HasOne(d => d.User)
-//                     .WithMany(p => p.FaUserRole)
-//                     .HasForeignKey(d => d.UserId)
+//                 entity.HasOne(d => d.USER_)
+//                     .WithMany(p => p.fa_user_role)
+//                     .HasForeignKey(d => d.USER_ID)
 //                     .OnDelete(DeleteBehavior.ClientSetNull)
 //                     .HasConstraintName("FK_FA_USER_ROLE_REF_USER");
 //             });
