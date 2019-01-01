@@ -11,6 +11,7 @@ using Models;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Models.Entity;
 
 namespace WebApi.Controllers
 {
@@ -26,7 +27,7 @@ namespace WebApi.Controllers
         }
         
         [HttpGet]
-        public string Index()
+        public Result<fa_user> Index()
         {
             User u=new User();
             u.UserName="asfda";
@@ -50,8 +51,7 @@ namespace WebApi.Controllers
             // var field = new[] { "UserName", "Password"};
             // var res = TMongodbHelper<User>.FindList(filter,field);
             // return res.Count().ToString();
-            Helper.LogHelper.logInfo<DefaultController>("测试错误");
-            return "user.UserLogin()";
+            return user.UserLogin("18180770313","123456");
         }
 
         // GET api/values

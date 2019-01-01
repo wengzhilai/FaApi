@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Models.Entity
 {
-    public partial class fa_login
+    public partial class fa_login : MongodbEntity
     {
         public fa_login()
         {
@@ -11,9 +11,9 @@ namespace Models.Entity
         }
 
         public int ID { get; set; }
-        public string LOGIN_NAME { get; set; }
+        public Int64 LOGIN_NAME { get; set; }
         public string PASSWORD { get; set; }
-        public string PHONE_NO { get; set; }
+        public Int64 PHONE_NO { get; set; }
         public string EMAIL_ADDR { get; set; }
         public string VERIFY_CODE { get; set; }
         public DateTime? VERIFY_TIME { get; set; }

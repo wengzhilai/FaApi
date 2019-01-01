@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Models;
+using Models.Entity;
 
 namespace IRepository
 {
@@ -13,7 +14,7 @@ namespace IRepository
         /// <param name="username">用户名</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        List<User> UserLogin(string username,string password);
+        Result<fa_user> UserLogin(string username,string password);
 
     }
 }

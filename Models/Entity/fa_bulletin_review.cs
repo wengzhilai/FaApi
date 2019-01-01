@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Models.Entity
 {
-    public partial class fa_bulletin_review
+    public partial class fa_bulletin_review : MongodbEntity
     {
         public fa_bulletin_review()
         {

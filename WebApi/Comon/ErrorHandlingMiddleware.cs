@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Models;
 
 namespace WebApi.Comon
 {
@@ -74,7 +75,7 @@ namespace WebApi.Comon
 　　　　 //异常错误信息捕获，将错误信息用Json方式返回
         private static Task HandleExceptionAsync(HttpContext context, int statusCode, string msg)
         {
-            var result = JsonConvert.SerializeObject(new ApiResult() { Success=false,Msg=msg,Type= statusCode.ToString() });
+            var result = JsonConvert.SerializeObject(new Result() { IsSuccess=false,Msg=msg,Code= statusCode.ToString() });
             context.Response.ContentType = "application/json;charset=utf-8";
             return context.Response.WriteAsync(result);
         }

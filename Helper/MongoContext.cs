@@ -82,6 +82,11 @@ namespace Helper
         /// <returns>Query documents of collection</returns>
         public static IQueryable<T> All<T>() where T : MongodbEntity
         {
+            // var collection= _db.GetCollection<BsonDocument>("fa_login");
+            // var filter = new BsonDocument();
+            // var tmp= collection.Find(filter).ToList();
+            // string json = tmp.ToJson();
+            // var user = JsonConvert.DeserializeObject<T>(json);
             return _db.GetCollection<T>(typeof(T).Name).AsQueryable();
         }
 
