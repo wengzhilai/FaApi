@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         }
         
         [HttpGet]
-        public Result<fa_user> Index()
+        public Result<FaUserEntity> Index()
         {
             //2.要修改的字段内容
             // List<User> userList=new List<User>();

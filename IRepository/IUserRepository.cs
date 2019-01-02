@@ -14,7 +14,7 @@ namespace IRepository
         /// <param name="username">用户名</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        Result<fa_user> UserLogin(string username,string password);
+        Result<FaUserEntity> UserLogin(string username,string password);
 
     }
 }

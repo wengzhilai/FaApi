@@ -91,15 +91,6 @@ namespace Models.Entity
         [Display(Name = "备注")]
         [Column]
         public string REMARK { get; set; }
-        /// <summary>
-        /// REGION
-        /// </summary>
-        [Required]
-        [StringLength(10)]
-        [Display(Name = "REGION")]
-        [Column]
-        public string REGION { get; set; }
-
 
     }
 }

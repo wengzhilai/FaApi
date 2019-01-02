@@ -15,24 +15,27 @@ namespace Repository
 {
     public class UserRepository : IUserRepository
     {
-        IDbConnection connection = new MySqlConnection("server=45.32.134.176;userid=FA;pwd=abcdef1234;port=3306;database=fa;sslmode=none;");
-        public Result<fa_user> UserLogin(string username, string password)
+        public Result<FaUserEntity> UserLogin(string username, string password)
         {
-            Result<fa_user> reObj = new Result<fa_user>();
-
-            FaLoginEntity user=new FaLoginEntity();
-            user.LOGIN_NAME="asdfasdfasgdasdfasdfasdfasdfasgdasdfasdfasdfasdfasgdasdfasdfasdfasdfasgdasdfasdfasdfasdfasgdasdfasdf";
-
-            ModelHelper<FaLoginEntity> helper=new ModelHelper<FaLoginEntity>(user);
-            var errList=helper.Validate();
-            if (errList.Count() > 0)
+            Result<FaUserEntity> reObj = new Result<FaUserEntity>();
+            DapperHelper<FaLoginEntity> dapper=new DapperHelper<FaLoginEntity>();
+            var dict=new {LOGIN_NAME=username};
+            var login= dapper.Single(dict);
+            if (login != null)
             {
-                new ExceptionExtend(string.Join(",", errList.Select(x => x.ErrorMessage)));
+                if (login.PASSWORD.ToLower().Equals(Helper.StringHelp.Get32MD5One(password).ToLower()))
+                {
+                    reObj.Data = new DapperHelper<FaUserEntity>().Single(dict);
+                }
+                else
+                {
+                    reObj.Msg = "密码错误";
+                }
             }
-           
-            string slq=helper.GetFindAllSql();
-            var query = connection.Query<FaLoginEntity>(slq);
-
+            else
+            {
+                reObj.Msg = "用户名不存在";
+            }
             return reObj;
         }
     }

@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Dapper;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -106,10 +107,37 @@ namespace Helper
             return _Dirct;
         }
 
+
+        
+        /// <summary>
+        /// 获取Dapper的动态参数
+        /// </summary>
+        /// <param name="saveFieldList"></param>
+        /// <param name="ignoreFieldList"></param>
+        /// <returns></returns>
+        public DynamicParameters GetDynamicParameters(List<string> saveFieldList = null, List<string> ignoreFieldList = null)
+        {
+            DynamicParameters reField = new DynamicParameters();
+            Type type = typeof(T);
+            PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
+            foreach (PropertyInfo proInfo in PropertyList)
+            {
+                object[] attrsPi = proInfo.GetCustomAttributes(true);
+                foreach (object obj in attrsPi)
+                {
+                    if (obj is DisplayAttribute)//定义了Display属性的字段为字数库字段
+                    {
+                        reField.Add(proInfo.Name, proInfo.GetValue(inEnt, null));
+                        continue;
+                    }
+                }
+            }
+            return reField;
+        }
         public string GetGetStr(List<string> saveFieldList = null, List<string> ignoreFieldList = null)
         {
             var dictList = GetDirct(saveFieldList, ignoreFieldList);
-            string reStr = string.Join("&",dictList.Select(x => x.Key + "=" + x.Value.ToString()).ToArray());
+            string reStr = string.Join("&", dictList.Select(x => x.Key + "=" + x.Value.ToString()).ToArray());
             return reStr;
         }
 
@@ -393,15 +421,15 @@ namespace Helper
         /// </summary>
         /// <param name="filterList"></param>
         /// <returns></returns>
-        public string GetSingleSql(List<string> filterList,string orderByStr="")
+        public string GetSingleSql(List<string> filterList, string orderByStr = "")
         {
             string key = GetKeyField();
 
-            string sql = "SELECT top 1 {0} FROM {1} WHERE {2} {3}";
+            string sql = "SELECT {0} FROM {1} WHERE {2} {3}";
             if (filterList == null || filterList.Count() == 0)
             {
-                sql = "SELECT top 1 {0} FROM {1} {2}";
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(),orderByStr);
+                sql = "SELECT  {0} FROM {1} {2}";
+                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), orderByStr);
             }
             else
             {
@@ -417,7 +445,7 @@ namespace Helper
         public string GetSingleSql()
         {
             string key = GetKeyField();
-            string sql = "SELECT top 1 {0} FROM {1} WHERE {2}=@{2}";
+            string sql = "SELECT  {0} FROM {1} WHERE {2}=@{2}";
             sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), key);
             return sql;
         }
@@ -425,14 +453,14 @@ namespace Helper
         public string GetSingleSql(string whereStr = "")
         {
             string key = GetKeyField();
-            string sql = "SELECT top 1 {0} FROM {1} WHERE {2}=@{2}";
+            string sql = "SELECT  {0} FROM {1} WHERE {2}=@{2}";
             if (string.IsNullOrEmpty(whereStr))
             {
                 sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), key);
             }
             else
             {
-                sql = "SELECT top 1 {0} FROM {1} WHERE {2}";
+                sql = "SELECT  {0} FROM {1} WHERE {2}";
                 sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), whereStr);
 
             }
