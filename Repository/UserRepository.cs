@@ -1,39 +1,38 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using Helper;
 using IRepository;
 using Models;
 using System.Linq;
 using Models.Entity;
+using MySql.Data.MySqlClient;
+using Dapper;
+using System.Data;
 
 namespace Repository
 {
     public class UserRepository : IUserRepository
     {
+        IDbConnection connection = new MySqlConnection("server=45.32.134.176;userid=FA;pwd=abcdef1234;port=3306;database=fa;sslmode=none;");
         public Result<fa_user> UserLogin(string username, string password)
         {
             Result<fa_user> reObj = new Result<fa_user>();
-            // var tmp = MongoContext.Get<fa_login>(x => x.LOGIN_NAME.Equals(username));
-            var allLogin=MongoContext.All<fa_login>();
-            var tmp = MongoContext.All<fa_login>().SingleOrDefault(x => x.LOGIN_NAME.Equals(username));
-            if (tmp != null)
+
+            FaLoginEntity user=new FaLoginEntity();
+            user.LOGIN_NAME="asdfasdfasgdasdfasdfasdfasdfasgdasdfasdfasdfasdfasgdasdfasdfasdfasdfasgdasdfasdfasdfasdfasgdasdfasdf";
+
+            ModelHelper<FaLoginEntity> helper=new ModelHelper<FaLoginEntity>(user);
+            var errList=helper.Validate();
+            if (errList.Count() > 0)
             {
-                if (tmp.PASSWORD.Equals(Helper.StringHelp.Get32MD5One(password)))
-                {
-                    reObj.Data = MongoContext.Get<fa_user>(x => x.LOGIN_NAME == username);
-                }
-                else
-                {
-                    reObj.Msg = "密码错误";
-                }
+                new ExceptionExtend(string.Join(",", errList.Select(x => x.ErrorMessage)));
             }
-            else
-            {
-                reObj.Msg = "用户名不存在";
-            }
+           
+            string slq=helper.GetFindAllSql();
+            var query = connection.Query<FaLoginEntity>(slq);
+
             return reObj;
         }
     }

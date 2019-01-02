@@ -37,8 +37,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public string Index()
         {
-            return AppSettingsManager.MongoSettings.DataBase;
-            // return "home-index";
+            return "home-index";
         }
         [HttpGet]
         [AllowAnonymous]

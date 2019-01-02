@@ -22,6 +22,7 @@ using Autofac;
 using System.Reflection;
 using WebApi.Unit;
 using Helper;
+using Newtonsoft.Json.Serialization;
 
 namespace WebApi
 {
@@ -48,13 +49,7 @@ namespace WebApi
         {
             //初始化注入IOptions<T>
             // services.AddOptions();
-            //自动初始化MongoSettings实例并且映射MongodbHost里的配置
-            services.Configure<MongodbHost>(Configuration.GetSection("MongoSettings"));
-            Configuration.Bind("MongoSettings", AppSettingsManager.MongoSettings);
             Configuration.Bind("Logging", AppSettingsManager.Logging);
-            //配置mongodb的Helper
-            MongoContext.Initialize(AppSettingsManager.MongoSettings.Connection);
-
             #region JWT认证
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             Configuration.Bind("JwtSettings", AppSettingsManager.JwtSettings);
@@ -73,7 +68,7 @@ namespace WebApi
             });
             
             #endregion
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
             
             #region  添加SwaggerUI
             services.AddSwaggerGen(options =>

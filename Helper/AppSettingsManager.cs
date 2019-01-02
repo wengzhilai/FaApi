@@ -6,10 +6,6 @@ namespace Helper
     /// </summary>
     public class AppSettingsManager
     {
-        /// <summary>
-        /// 获取mongodb设置
-        /// </summary>
-        public static MongodbHost MongoSettings = new MongodbHost();
         
         /// <summary>
         /// 获取jwt配置

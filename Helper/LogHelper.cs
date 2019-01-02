@@ -54,5 +54,52 @@ namespace Helper
             }
             return false;
         }
+
+
+
+         #region 输出错误日志到Log4Net
+        /// <summary>
+        /// 输出错误日志到Log4Net
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="ex"></param>
+        public static void WriteLog<T>(Exception ex)
+        {
+            if (!initLog4net()){
+                return;
+            }
+            log4net.ILog log = log4net.LogManager.GetLogger(typeof(T));
+            log.Error("Error", ex);
+        }
+        /// <summary>
+        /// 输出错误日志到Log4Net
+        /// </summary>
+        /// <param name="ex"></param>
+        public static void WriteErrorLog<T>(string msg)
+        {
+            if (!initLog4net()){
+                return;
+            }
+            log4net.ILog log = log4net.LogManager.GetLogger(typeof(T));
+            Exception ec = new Exception(msg);
+            log.Error("Error", ec);
+            //log.ErrorFormat(msg);
+        }
+        #endregion
+
+        #region 输出记录日志到Log4Net
+        /// <summary>
+        /// 输出记录日志到Log4Net
+        /// </summary>
+        /// <param name="msg"></param>
+        public static void WriteLog<T>(string msg)
+        {
+            if (!initLog4net()){
+                return;
+            }
+            log4net.ILog log = log4net.LogManager.GetLogger(typeof(T));
+            log.Info(msg);
+        }
+        #endregion
     }
 }
