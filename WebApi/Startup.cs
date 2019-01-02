@@ -26,9 +26,17 @@ using Newtonsoft.Json.Serialization;
 
 namespace WebApi
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="hostingEnvironment"></param>
         public Startup(IConfiguration configuration,IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
@@ -36,8 +44,16 @@ namespace WebApi
         }
 
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
         public IConfiguration Configuration { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
         public IContainer ApplicationContainer { get; private set; }
 
         /// <summary>
@@ -106,7 +122,11 @@ namespace WebApi
 
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())

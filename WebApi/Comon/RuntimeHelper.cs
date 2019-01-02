@@ -8,6 +8,9 @@ using System.Runtime.Loader;
 
 namespace WebApi.Unit
 {
+    /// <summary>
+    /// 获取所有Dll
+    /// </summary>
     [ApiExplorerSettings(IgnoreApi=true)]
     public class RuntimeHelper
     {
@@ -31,17 +34,26 @@ namespace WebApi.Unit
                 }
                 catch (Exception ex)
                 {
-                    //
+                    Helper.LogHelper.WriteErrorLog<RuntimeHelper>(ex.ToString());
                 }
             }
             return list;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="assemblyName"></param>
+        /// <returns></returns>
         public static Assembly GetAssembly(string assemblyName)
         {
             return GetAllAssemblies().FirstOrDefault(f => f.FullName.Contains(assemblyName));
         }
 
+        /// <summary>
+        /// 获取所有类型
+        /// </summary>
+        /// <returns></returns>
         public static IList<Type> GetAllTypes()
         {
             List<Type> list = new List<Type>();
@@ -73,6 +85,12 @@ namespace WebApi.Unit
             return list;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <param name="baseInterfaceType"></param>
+        /// <returns></returns>
         public static Type GetImplementType(string typeName, Type baseInterfaceType)
         {
             return GetAllTypes().FirstOrDefault(t =>
