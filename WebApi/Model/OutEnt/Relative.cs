@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Models;
 
 namespace WebApi.Model.InEnt
 {
@@ -7,15 +8,23 @@ namespace WebApi.Model.InEnt
     /// </summary>
     public class Relative
     {
+        public Relative() {
+            ItemList = new List<FaUserInfoRelativeItem>();
+            ElderList = new List<FA_ELDER>();
+            RelativeList = new List<KV>();
+        }
+
         /// <summary>
-        /// 所有人
+        /// 展示所有用户
         /// </summary>
-        /// <value></value>
-        public List<dynamic> ItemList { get; set; }
+        public IList<FaUserInfoRelativeItem> ItemList { get; set; }
         /// <summary>
-        /// 人员关系
+        /// 所有辈分
         /// </summary>
-        /// <value></value>
-        public List<dynamic> RelativeList { get; set; }
+        public IList<FA_ELDER> ElderList { get; set; }
+        /// <summary>
+        /// 所有关系
+        /// </summary>
+        public IList<KV> RelativeList { get; set; }
     }
 }
