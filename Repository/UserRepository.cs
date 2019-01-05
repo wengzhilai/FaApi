@@ -15,6 +15,27 @@ namespace Repository
 {
     public class UserRepository : IUserRepository
     {
+        DapperHelper<FaUserEntity> dbHelper = new DapperHelper<FaUserEntity>();
+        /// <summary>
+        /// 获取单条
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public FaUserEntity SingleByKey(int key)
+        {
+            return dbHelper.SingleByKey(key);
+        }
+
+        /// <summary>
+        /// 查找所有
+        /// </summary>
+        /// <param name="inParm"></param>
+        /// <returns></returns>
+        public List<FaUserEntity> FindAll(object inParm = null)
+        {
+            return dbHelper.FindAll(inParm);
+        }
+
         public Result<FaUserEntity> UserLogin(string username, string password)
         {
             Result<FaUserEntity> reObj = new Result<FaUserEntity>();

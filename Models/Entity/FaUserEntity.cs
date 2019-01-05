@@ -15,10 +15,10 @@ namespace Models.Entity
         /// <summary>
         /// ID
         /// </summary>
+        [Key]
         [Required]
         [Display(Name = "ID")]
         [Column]
-        [Key]
         public int ID { get; set; }
         /// <summary>
         /// 姓名

@@ -23,6 +23,8 @@ namespace WebApi.MapperCfg.Profiles
         public UserInfoProfile()
         {
             var elder=new ElderRepository();
+            var user=new UserRepository();
+            var file=new FileRepository();
 
             CreateMap<FaUserInfo, FaUserInfoEntity>()
                 ;
@@ -47,9 +49,11 @@ namespace WebApi.MapperCfg.Profiles
                 elder.SingleByKey(m.ELDER_ID.Value).NAME
                 ); })
                 .ForMember(d => d.FatherId, opt => { opt.MapFrom(m =>m.FATHER_ID); })
-                // .ForMember(d => d.IcoUrl, opt => { opt.MapFrom(m =>m.fa_user.ICON_FILES_ID); })
+                .ForMember(d => d.IcoUrl, opt => { opt.MapFrom(m =>
+                file.SingleByKey(user.SingleByKey(m.ID).ICON_FILES_ID.Value).URL
+                ); })
                 .ForMember(d => d.Id, opt => { opt.MapFrom(m =>m.ID); })
-                // .ForMember(d => d.Name, opt => { opt.MapFrom(m =>m.fa_user.NAME); })
+                .ForMember(d => d.Name, opt => { opt.MapFrom(m => user.SingleByKey(m.ID).NAME); })
                 .ForMember(d => d.Sex, opt => { opt.MapFrom(m =>m.SEX); })
                 ;
         }
