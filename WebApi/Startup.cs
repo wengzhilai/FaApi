@@ -23,6 +23,7 @@ using System.Reflection;
 using WebApi.Unit;
 using Helper;
 using Newtonsoft.Json.Serialization;
+using AutoMapper;
 
 namespace WebApi
 {
@@ -104,6 +105,10 @@ namespace WebApi
                 options.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
             });
             #endregion
+            
+
+            services.AddAutoMapper(typeof(Startup));
+            
             #region 依赖注入
 
             var builder = new ContainerBuilder();//实例化容器
@@ -117,6 +122,9 @@ namespace WebApi
             //注册服务，所有IApplicationService到ApplicationService的映射
             builder.Populate(services);
             ApplicationContainer = builder.Build();
+
+
+
             return new AutofacServiceProvider(ApplicationContainer); //第三方IOC接管 core内置DI容器 
             #endregion
 

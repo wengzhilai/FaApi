@@ -39,7 +39,6 @@ namespace Helper
 
         public int Saves(DtoSave<List<T>> inEnt)
         {
-            int reInt = 0;
             var mh = new ModelHelper<T>();
             string sql = mh.GetSaveSql(inEnt.SaveFieldList, inEnt.IgnoreFieldList);
             var result = connection.Execute(sql, inEnt.Data);
@@ -175,6 +174,7 @@ namespace Helper
             }
             catch (Exception ex)
             {
+                LogHelper.WriteErrorLog<DapperHelper<T>>(ex.ToString());
                 throw new ExceptionExtend("请先删除子项");
             }
         }
