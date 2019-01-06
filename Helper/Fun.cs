@@ -1,0 +1,686 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data;
+using System.Text.RegularExpressions;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Configuration;
+using System.Drawing;
+
+namespace Helper
+{
+    public class Fun
+    {
+        public static int GetSeqID<T>() where T : new()
+        {
+            return 0;
+        }
+        public static int GetCurrvalSeqID<T>() where T : new()
+        {
+            return 0;
+        }
+
+        public static bool CheckPassword(string pwdStr)
+        {
+            var PwdMinLength=2;
+            var PwdComplexity=2;
+            Regex r1 = new Regex(@"^(?=.*[a-z])");
+            Regex r2 = new Regex(@"^(?=.*[A-Z])");
+            Regex r3 = new Regex(@"^(?=.*[0-9])");
+            Regex r4 = new Regex(@"^(?=([\x21-\x7e]+)[^a-zA-Z0-9])");
+            if (pwdStr.Length < PwdMinLength)
+            {
+                throw new Exception(string.Format("密码长度不够{0}位",PwdMinLength));
+            }
+            int reInt = 0;
+            if (r1.IsMatch(pwdStr)) reInt++;
+            if (r2.IsMatch(pwdStr)) reInt++;
+            if (r3.IsMatch(pwdStr)) reInt++;
+            if (r4.IsMatch(pwdStr)) reInt++;
+
+            if (reInt<PwdComplexity)
+            {
+                throw new Exception(string.Format("密码必须包括字母大写、字母小写、数字和特殊字符中的其中{0}种", PwdComplexity));
+            }
+            return true;
+        }
+
+
+
+
+
+        public static string GetExceptionMessage(Exception e)
+        {
+            IList<string> message = new List<string>();
+            message.Add(e.Message);
+            while (e.InnerException != null)
+            {
+                e = e.InnerException;
+                message.Add(e.Message);
+            }
+            return message[message.Count - 1];
+        }
+
+
+        /// <summary>
+        /// 将DataTable数据转换成实体类
+        /// 本功能主要用于外导EXCEL
+        /// </summary>
+        /// <typeparam name="T">MVC的实体类</typeparam>
+        /// <param name="dt">输入的DataTable</param>
+        /// <returns>实体类的LIST</returns>
+        public static IList<T> TableToClass<T>(DataTable dt) where T : new()
+        {
+            IList<T> outList = new List<T>();
+            T tmpClass = new T();
+            if (dt.Rows.Count == 0) return outList;
+            PropertyInfo[] proInfoArr = tmpClass.GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);//得到该类的所有公共属性
+            Dictionary<string, string> dic = new Dictionary<string, string>();
+            Dictionary<string, string> dic_all = new Dictionary<string, string>();
+            foreach (var t in proInfoArr)
+            {
+                var attrsPro = t.GetCustomAttributes(typeof(DisplayAttribute), true);
+                if (attrsPro.Length > 0)
+                {
+                    DisplayAttribute pro = (DisplayAttribute)attrsPro[0];
+                    dic_all.Add(pro.Name, t.Name);
+                }
+            }
+            for (int i = 0; i < dt.Columns.Count; i++)
+            {
+                if (dic_all.Where(x => x.Key == dt.Columns[i].Caption).Count() != 0)
+                {
+                    dic.Add(dt.Columns[i].Caption, dic_all[dt.Columns[i].Caption]);
+                }
+                else if (dic_all.Where(x => x.Value == dt.Columns[i].Caption).Count() != 0)
+                {
+                    dic.Add(dt.Columns[i].Caption, dt.Columns[i].Caption);
+                }
+            }
+
+            var rowTmp = dt.Rows[0];
+
+            for (int a = 0; a < dt.Rows.Count; a++)
+            {
+                var row = dt.Rows[a];
+                tmpClass = new T();
+                proInfoArr = tmpClass.GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);//得到该类的所有公共属性
+                foreach (var t in dic)
+                {
+                    PropertyInfo outproInfo = tmpClass.GetType().GetProperty(t.Value);
+                    if (outproInfo != null)
+                    {
+                        if (row[t.Key] == null || string.IsNullOrEmpty(row[t.Key].ToString()))
+                        {
+                            row[t.Key] = rowTmp[t.Key];
+                        }
+                        outproInfo.SetValue(tmpClass, Convert.ChangeType(row[t.Key], outproInfo.PropertyType, CultureInfo.CurrentCulture), null);
+                    }
+                }
+                outList.Add(tmpClass);
+                rowTmp = dt.Rows[a];
+            }
+            return outList;
+        }
+
+        /// <summary>
+        /// 复制一个类里所有属性到别一个类
+        /// </summary>
+        /// <typeparam name="inT">传入的类型</typeparam>
+        /// <typeparam name="outT">输出类型</typeparam>
+        /// <param name="inClass">传入的类</param>
+        /// <param name="outClass">输入的类</param>
+        /// <returns>复制结果的类</returns>
+        public static outT ClassToCopy<inT, outT>(inT inClass, outT outClass, IList<string> allPar = null)
+        {
+            if (inClass == null) return outClass;
+            PropertyInfo[] proInfoArr = inClass.GetType().GetProperties(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);//得到该类的所有公共属性
+            for (int a = 0; a < proInfoArr.Length; a++)
+            {
+                if (allPar != null && !allPar.Contains(proInfoArr[a].Name)) continue;
+                PropertyInfo outproInfo = outClass.GetType().GetProperty(proInfoArr[a].Name);
+                if (outproInfo != null)
+                {
+                    var type = outproInfo.PropertyType;
+                    object objValue = proInfoArr[a].GetValue(inClass, null);
+                    if (null != objValue)
+                    {
+                        if (!outproInfo.PropertyType.IsGenericType)
+                        {
+                            objValue = Convert.ChangeType(objValue, outproInfo.PropertyType);
+                        }
+                        else
+                        {
+                            Type genericTypeDefinition = outproInfo.PropertyType.GetGenericTypeDefinition();
+                            if (genericTypeDefinition == typeof(Nullable<>))
+                            {
+                                objValue = Convert.ChangeType(objValue, Nullable.GetUnderlyingType(outproInfo.PropertyType));
+                            }
+                        }
+                    }
+                    outproInfo.SetValue(outClass, objValue, null);
+                }
+            }
+            return outClass;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="inT"></typeparam>
+        /// <typeparam name="outT"></typeparam>
+        /// <param name="inClass"></param>
+        /// <returns></returns>
+        public static outT ClassToCopy<inT, outT>(inT inClass) where outT : new()
+        {
+            if (inClass == null) return default(outT);
+            outT outClass = new outT();
+            return ClassToCopy(inClass, outClass);
+        }
+        /// <summary>
+        /// 转换IList内的所有属性
+        /// </summary>
+        /// <typeparam name="inT"></typeparam>
+        /// <typeparam name="outT"></typeparam>
+        /// <param name="inClass"></param>
+        /// <returns></returns>
+        public static IList<outT> ClassListToCopy<inT, outT>(IList<inT> inClass) where outT : new()
+        {
+            if (inClass == null) return default(IList<outT>);
+            IList<outT> outClass = new List<outT>();
+            for (int a = 0; a < inClass.Count; a++)
+            {
+                outClass.Add(ClassToCopy<inT, outT>(inClass[a]));
+            }
+            return outClass;
+        }
+
+        /// <summary>
+        /// 计算MD5
+        /// </summary>
+        /// <param name="fileContent"></param>
+        /// <returns></returns>
+        public static string FilesMakeMd5(byte[] fileContent)
+        {
+            if (fileContent == null) return null;
+            System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            byte[] retVal = md5.ComputeHash(fileContent);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < retVal.Length; i++)
+                sb.Append(retVal[i].ToString("x2"));
+            return sb.ToString();
+        }
+
+
+
+
+        public static string GetUpMoth(string yyyyMM, int numMoth)
+        {
+            DateTime dt = new DateTime(Convert.ToInt32(yyyyMM.Substring(0, 4)), Convert.ToInt32(yyyyMM.Substring(4, 2)), 1);
+            return dt.AddMonths(numMoth).ToString("yyyyMM");
+        }
+
+
+        public static DataTable JsonToDataTable(string strJson)
+        {
+            //取出表名  
+            Regex rg = new Regex(@"(?<={)[^:]+(?=:\[)", RegexOptions.IgnoreCase);
+            string strName = rg.Match(strJson).Value;
+            DataTable tb = null;
+            //去除表名  
+            strJson = strJson.Substring(strJson.IndexOf("[") + 1);
+            strJson = strJson.Substring(0, strJson.IndexOf("]"));
+
+            //获取数据  
+            rg = new Regex(@"(?<={)[^}]+(?=})");
+            MatchCollection mc = rg.Matches(strJson);
+            for (int i = 0; i < mc.Count; i++)
+            {
+                string strRow = mc[i].Value;
+                string[] strRows = strRow.Split(',');
+
+                //创建表  
+                if (tb == null)
+                {
+                    tb = new DataTable();
+                    tb.TableName = strName;
+                    foreach (string str in strRows)
+                    {
+                        DataColumn dc = new DataColumn();
+                        string[] strCell = str.Split(':');
+                        dc.ColumnName = strCell[0].ToString().Replace("\"", "");
+                        tb.Columns.Add(dc);
+                    }
+                    tb.AcceptChanges();
+                }
+
+                //增加内容  
+                DataRow dr = tb.NewRow();
+                for (int r = 0; r < strRows.Length; r++)
+                {
+                    dr[r] = strRows[r].Split(':')[1].Trim().Replace("，", ",").Replace("：", ":").Replace("\"", "");
+                }
+                tb.Rows.Add(dr);
+                tb.AcceptChanges();
+            }
+
+            return tb;
+        }
+        public static string EvalExpression(string formula)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Result").Expression = formula;
+            dt.Rows.Add(dt.NewRow());
+
+            var result = dt.Rows[0]["Result"];
+            return result.ToString();
+        }
+        /// <summary>
+        /// 获取类的备注信息
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string GetClassDescription<T>()
+        {
+
+            object[] peroperties = typeof(T).GetCustomAttributes(typeof(DescriptionAttribute), true);
+            if (peroperties.Length > 0)
+            {
+                return ((DescriptionAttribute)peroperties[0]).Description;
+            }
+            return "";
+        }
+        /// <summary>
+        /// 获取类的属性说明
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string GetClassProperDescription<T>(string properName)
+        {
+            PropertyInfo[] peroperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (PropertyInfo property in peroperties)
+            {
+                if (property.Name == properName)
+                {
+                    object[] objs = property.GetCustomAttributes(typeof(DescriptionAttribute), true);
+                    if (objs.Length > 0)
+                    {
+                        return ((DescriptionAttribute)objs[0]).Description;
+                    }
+                }
+            }
+            return "";
+        }
+
+        public static string GetClassProperType<T>(string properName)
+        {
+            PropertyInfo[] peroperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (PropertyInfo property in peroperties)
+            {
+                if (property.Name == properName)
+                {
+                    var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                    return propertyType.Name;
+                }
+            }
+            return "";
+        }
+
+
+
+        /// <summary>
+        /// 产生一组不重复的随机数
+        /// </summary>
+        public static IList<int> RandomIntList(int MinValue, int MaxValue, int Length)
+        {
+            if (MaxValue - MinValue + 1 < Length)
+            {
+                return null;
+            }
+            Random R = new Random();
+            Int32 SuiJi = 0;
+            IList<int> suijisuzu = new List<int>();
+            int min = MinValue - 1;
+            int max = MaxValue + 1;
+            for (int i = 0; i < Length; i++)
+            {
+                suijisuzu.Add(min);
+            }
+            for (int i = 0; i < Length; i++)
+            {
+                while (true)
+                {
+                    SuiJi = R.Next(min, max);
+                    if (!suijisuzu.Contains(SuiJi))
+                    {
+                        suijisuzu[i] = SuiJi;
+                        break;
+                    }
+                }
+            }
+            return suijisuzu;
+        }
+
+        #region 通过两个点的经纬度计算距离
+
+        private const double EARTH_RADIUS = 6378.137; //地球半径
+        private static double rad(double d)
+        {
+            return d * Math.PI / 180.0;
+        }
+        /// <summary>
+        /// 通过两个点的经纬度计算距离(米)
+        /// </summary>
+        /// <param name="lat1"></param>
+        /// <param name="lng1"></param>
+        /// <param name="lat2"></param>
+        /// <param name="lng2"></param>
+        /// <returns></returns>
+        public static double GetDistance(double lat1, double lng1, double lat2, double lng2)
+        {
+            double radLat1 = rad(lat1);
+            double radLat2 = rad(lat2);
+            double a = radLat1 - radLat2;
+            double b = rad(lng1) - rad(lng2);
+            double s = 2 * Math.Asin(Math.Sqrt(Math.Pow(Math.Sin(a / 2), 2) +
+             Math.Cos(radLat1) * Math.Cos(radLat2) * Math.Pow(Math.Sin(b / 2), 2)));
+            s = s * EARTH_RADIUS;
+            s = Math.Round(s * 10000) / 10;
+            return s;
+        }
+        /// <summary>
+        /// 通过两个点的经纬度计算距离(米)
+        /// </summary>
+        /// <param name="lat1"></param>
+        /// <param name="lng1"></param>
+        /// <param name="lat2"></param>
+        /// <param name="lng2"></param>
+        /// <returns></returns>
+        public static double GetDistance(string lat1, string lng1, string lat2, string lng2)
+        {
+            return Fun.GetDistance(Convert.ToDouble(lat1), Convert.ToDouble(lng1), Convert.ToDouble(lat2), Convert.ToDouble(lng2));
+        }
+
+        #endregion
+
+        public static string GetSelectScript(string p)
+        {
+            // @[00-9]  -5   @[00-23,24-40]
+            StringBuilder str = new StringBuilder();
+            int begin = p.IndexOf("@");//0
+            int end = p.IndexOf("]");//6
+
+            //取得参数占位符中的参数
+            string temp = p.Substring(begin + 2, end - begin - 2);
+
+            string[] mc = temp.Split(',');
+
+            foreach (var a in mc)
+            {
+                string[] c = a.Split('-');
+
+                int i1 = 0, i2 = 0, size = 0;
+                try
+                {
+                    i1 = Int32.Parse(c[0]);
+                    i2 = Int32.Parse(c[1]);
+                }
+                catch (Exception e)
+                {
+                    //如果不是数字，返回空字符串
+                    return str.ToString();
+                }
+                //是否不超过第二个数
+                for (int i = i1; i <= i2; i++)
+                {
+                    size = c[0].Length;
+                    size = size - i.ToString().Length;
+                    if (size > 0)
+                    {
+
+                        //补齐占位符
+                        switch (size)
+                        {
+                            case 1:
+                                str.Append(p.Replace(p.Substring(begin, end - begin + 1), "0" + i.ToString()));
+                                break;
+                            case 2:
+                                str.Append(p.Replace(p.Substring(begin, end - begin + 1), "00" + i.ToString()));
+                                break;
+                            case 3:
+                                str.Append(p.Replace(p.Substring(begin, end - begin + 1), "000" + i.ToString()));
+                                break;
+                            default:
+                                str.Append(p.Replace(p.Substring(begin, end - begin + 1), "0000" + i.ToString()));
+                                break;
+
+                        }
+
+                    }
+                    else
+                    {
+                        str.Append(p.Replace(p.Substring(begin, end - begin + 1), i.ToString()));
+                    }
+                    str.Append(";");
+                }
+            }
+            return str.ToString();
+        }
+
+        /// <summary>
+        /// 去除HTML标记
+        /// </summary>
+        /// <param name="NoHTML">包括HTML的源码 </param>
+        /// <returns>已经去除后的文字</returns>
+        public static string NoHTML(string Htmlstring)
+        {
+            if (string.IsNullOrEmpty(Htmlstring)) return Htmlstring;
+            //删除脚本
+            Htmlstring = Regex.Replace(Htmlstring, @"<script[^>]*?>.*?</script>", "", RegexOptions.IgnoreCase);
+            //删除HTML
+            Htmlstring = Regex.Replace(Htmlstring, @"<(.[^>]*)>", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"([\r\n])[\s]+", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"-->", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"<!--.*", "", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(quot|#34);", "\"", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(amp|#38);", "&", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(lt|#60);", "<", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(gt|#62);", ">", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(nbsp|#160);", " ", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(iexcl|#161);", "\xa1", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(cent|#162);", "\xa2", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(pound|#163);", "\xa3", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&(copy|#169);", "\xa9", RegexOptions.IgnoreCase);
+            Htmlstring = Regex.Replace(Htmlstring, @"&#(\d+);", "", RegexOptions.IgnoreCase);
+            Htmlstring.Replace("<", "");
+            Htmlstring.Replace(">", "");
+            Htmlstring.Replace("\r\n", "");
+            //Htmlstring=HttpContext.Current.Server.HtmlEncode(Htmlstring).Trim();
+            return Htmlstring;
+
+        }
+
+
+
+        public static string ExecutePostJson(string server_addr, string postStr, CookieContainer cookieList=null)
+        {
+            string content = string.Empty;
+            try
+            {
+                DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+                var cdt= (int)(DateTime.Now - startTime).TotalSeconds;
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server_addr);
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.Headers.Add("Timestamp", Convert.ToString(cdt));
+                request.ReadWriteTimeout = 30 * 1000;
+                request.CookieContainer = cookieList;
+                if (!string.IsNullOrEmpty(postStr))
+                {
+                    byte[] data = Encoding.UTF8.GetBytes(postStr);
+                    request.ContentLength = data.Length;
+                    Stream myRequestStream = request.GetRequestStream();
+                    myRequestStream.Write(data, 0, data.Length);
+                    myRequestStream.Close();
+                }
+                
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader myStreamReader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                content = myStreamReader.ReadToEnd();
+                myStreamReader.Close();
+            }
+            catch (Exception ex)
+            {
+                return "{\"Message\":\"" + ex.Message + "\",\"IsError\":true}";
+            }
+            return content;
+        }
+
+        public static string ExecuteGetJson(string server_addr)
+        {
+            string content = string.Empty;
+            try
+            {
+                DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+                var cdt = (int)(DateTime.Now - startTime).TotalSeconds;
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server_addr);
+                request.Method = "get";
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader myStreamReader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                content = myStreamReader.ReadToEnd();
+                myStreamReader.Close();
+            }
+            catch (Exception ex)
+            {
+                return "{\"Message\":\"" + ex.Message + "\",\"IsError\":true}";
+            }
+            return content;
+        }
+
+
+        public static bool HttpPostEncoded(string Url, string postDataStr,ref string reStr)
+        {
+            byte[] dataArray = Encoding.UTF8.GetBytes(postDataStr);
+            // Console.Write(Encoding.UTF8.GetString(dataArray));
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+            request.Method = "POST";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = dataArray.Length;
+            //request.CookieContainer = cookie;
+            
+            try
+            {
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(dataArray, 0, dataArray.Length);
+                dataStream.Close();
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                reStr = reader.ReadToEnd();
+                reader.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        // public static CookieContainer ExecuteGetCookieAndPic(string url,ref Bitmap sourcebm)
+        // {
+        //     string content = string.Empty;
+        //     try
+        //     {
+        //         CookieContainer myCookieContainer = new CookieContainer();
+        //         HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+        //         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        //         string cookieStr = response.Headers["set-cookie"];
+        //         Stream resStream = response.GetResponseStream();//得到验证码数据流
+        //         sourcebm = new Bitmap(resStream);//初始化Bitmap图片
+        //         CookieContainer reList = new CookieContainer();
+        //         var cookieVal = Fun.Substring(cookieStr, "=", ";");
+        //         reList.Add(new Cookie("PHPSESSID", cookieVal, "/", "panda.xmxing.net"));
+        //         return reList;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return null;
+        //     }
+        // }
+
+        public static string Substring(string inStr,string startStr,string endStr)
+        {
+            if (string.IsNullOrEmpty(inStr)) return "";
+            int s = inStr.IndexOf(startStr);
+            if (s > 0)
+            {
+                var tmp = inStr.Substring(s + startStr.Length);
+                int e = tmp.IndexOf(endStr);
+                if (e > 0)
+                {
+                    return tmp.Substring(0, e);
+                }
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// 下载
+        /// </summary>
+        public static bool DownLoadSoft(string DownloadPath, string url, string FileName)
+        {
+            string path = DownloadPath.Remove(DownloadPath.Length - 1);
+            bool flag = false;
+            try
+            {
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                using (FileStream fs = new FileStream(DownloadPath + FileName, FileMode.Create, FileAccess.Write))
+                {
+                    //创建请求
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    //接收响应
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    //输出流
+                    Stream responseStream = response.GetResponseStream();
+                    byte[] bufferBytes = new byte[10000];//缓冲字节数组
+                    int bytesRead = -1;
+                    while ((bytesRead = responseStream.Read(bufferBytes, 0, bufferBytes.Length)) > 0)
+                    {
+                        fs.Write(bufferBytes, 0, bytesRead);
+                    }
+                    if (fs.Length > 0)
+                    {
+                        flag = true;
+                    }
+                    //关闭写入
+                    fs.Flush();
+                    fs.Close();
+                }
+
+            }
+            catch (Exception exp)
+            {
+                //返回错误消息
+            }
+            return flag;
+        }
+
+    }
+
+}
