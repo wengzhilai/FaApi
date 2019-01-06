@@ -46,6 +46,7 @@ namespace Repository
         public Result LoginReg(LogingDto inEnt)
         {
             Result reObj = new Result();
+            #region 验证值
             ModelHelper<LogingDto> modelHelper=new ModelHelper<LogingDto>(inEnt);
             var errList=modelHelper.Validate();
             if(errList.Count()>0){
@@ -54,6 +55,7 @@ namespace Repository
                 reObj.Msg=string.Format(",",errList.Select(x=>x.ErrorMessage));
                 return reObj;
             }
+            #endregion
 
            #region 检测输入
 
@@ -75,25 +77,24 @@ namespace Repository
             } 
             #endregion
 
-            // using (DBEntities db = new DBEntities())
-            // {
-            //     #region 检测验证码
-            //     if (AppSet.VerifyCode)
-            //     {
-            //         var nowDate = DateTime.Now.AddMinutes(-30);
-            //         var codeNum = db.fa_sms_send.Where(x =>
-            //                x.ADD_TIME > nowDate
-            //             && x.PHONE_NO == inEnt.loginName
-            //             && x.CONTENT == inEnt.code
-            //             ).Count();
-            //         if (codeNum == 0)
-            //         {
-            //             err.IsError = true;
-            //             err.Message = "验证码无效";
-            //             return err;
-            //         }
-            //     }
-            //     #endregion
+                #region 检测验证码
+                // if (AppSettingsManager.Verify.VerifyCode)
+                // {
+                //     var nowDate = DateTime.Now.AddMinutes(-30);
+                    
+                //     var codeNum = db.fa_sms_send.Where(x =>
+                //            x.ADD_TIME > nowDate
+                //         && x.PHONE_NO == inEnt.loginName
+                //         && x.CONTENT == inEnt.code
+                //         ).Count();
+                //     if (codeNum == 0)
+                //     {
+                //         err.IsError = true;
+                //         err.Message = "验证码无效";
+                //         return err;
+                //     }
+                // }
+                #endregion
 
             //     var userList = db.fa_user.Where(x => x.LOGIN_NAME == inEnt.loginName).ToList();
             //     #region 检测电话号码是否存在
@@ -141,7 +142,6 @@ namespace Repository
             //     // 提交事务数据
             //     Fun.DBEntitiesCommit(db, ref err);
             //     return err;
-            // }
 
 
             return reObj;

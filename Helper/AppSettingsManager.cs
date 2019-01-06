@@ -19,12 +19,45 @@ namespace Helper
         /// <returns></returns>
         public static Logging Logging = new Logging();
 
+        /// <summary>
+        /// 验证配置
+        /// </summary>
+        /// <returns></returns>
+        public static BaseConfig Config=new BaseConfig();
+
     }
 
-
+    /// <summary>
+    /// 日志配置
+    /// </summary>
     public class Logging{
+        /// <summary>
+        /// 日志文件路径
+        /// </summary>
+        /// <value></value>
         public string Log4netConfigPath { get; set; }
+        /// <summary>
+        /// 日志级别
+        /// </summary>
+        /// <value></value>
         public LogLevel LogLevel { get; set; }
+
+    }
+
+    /// <summary>
+    ///  系统验证
+    /// </summary>
+    public class BaseConfig{
+        /// <summary>
+        /// 是否需要验证码
+        /// </summary>
+        /// <value></value>
+        public bool VerifyCode { get; set; }
+        /// <summary>
+        /// 短信验证码有效时间
+        /// </summary>
+        /// <value></value>
+        public int  VerifyExpireMinute{ get; set; }=30;
 
     }
 

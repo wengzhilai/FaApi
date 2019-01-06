@@ -104,7 +104,6 @@ namespace Helper
         {
             var mh = new ModelHelper<T>();
             string sql = mh.GetFindNumSql(TypeChange.DynamicToKeyList(inParm));
-
             var ds = connection.ExecuteScalar(sql, inParm);
             return Convert.ToInt32(ds);
 
