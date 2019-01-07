@@ -19,15 +19,30 @@ namespace Helper
 {
     public class Fun
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static int GetSeqID<T>() where T : new()
         {
             return 0;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static int GetCurrvalSeqID<T>() where T : new()
         {
             return 0;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pwdStr"></param>
+        /// <returns></returns>
         public static bool CheckPassword(string pwdStr)
         {
             var PwdMinLength=2;
@@ -53,10 +68,11 @@ namespace Helper
             return true;
         }
 
-
-
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public static string GetExceptionMessage(Exception e)
         {
             IList<string> message = new List<string>();
@@ -414,6 +430,11 @@ namespace Helper
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public static string GetSelectScript(string p)
         {
             // @[00-9]  -5   @[00-23,24-40]
@@ -438,6 +459,8 @@ namespace Helper
                 }
                 catch (Exception e)
                 {
+                    LogHelper.WriteErrorLog<Fun>(e.ToString());
+
                     //如果不是数字，返回空字符串
                     return str.ToString();
                 }
@@ -513,6 +536,13 @@ namespace Helper
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="server_addr"></param>
+        /// <param name="postStr"></param>
+        /// <param name="cookieList"></param>
+        /// <returns></returns>
         public static string ExecutePostJson(string server_addr, string postStr, CookieContainer cookieList=null)
         {
             string content = string.Empty;
@@ -543,11 +573,18 @@ namespace Helper
             }
             catch (Exception ex)
             {
+                LogHelper.WriteErrorLog<Fun>(ex.ToString());
+
                 return "{\"Message\":\"" + ex.Message + "\",\"IsError\":true}";
             }
             return content;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="server_addr"></param>
+        /// <returns></returns>
         public static string ExecuteGetJson(string server_addr)
         {
             string content = string.Empty;
@@ -565,12 +602,20 @@ namespace Helper
             }
             catch (Exception ex)
             {
+                LogHelper.WriteErrorLog<Fun>(ex.ToString());
                 return "{\"Message\":\"" + ex.Message + "\",\"IsError\":true}";
             }
             return content;
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Url"></param>
+        /// <param name="postDataStr"></param>
+        /// <param name="reStr"></param>
+        /// <returns></returns>
         public static bool HttpPostEncoded(string Url, string postDataStr,ref string reStr)
         {
             byte[] dataArray = Encoding.UTF8.GetBytes(postDataStr);
@@ -595,6 +640,7 @@ namespace Helper
             }
             catch (Exception e)
             {
+                LogHelper.WriteErrorLog<Fun>(e.ToString());
                 return false;
             }
         }
@@ -621,6 +667,13 @@ namespace Helper
         //     }
         // }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inStr"></param>
+        /// <param name="startStr"></param>
+        /// <param name="endStr"></param>
+        /// <returns></returns>
         public static string Substring(string inStr,string startStr,string endStr)
         {
             if (string.IsNullOrEmpty(inStr)) return "";
@@ -676,6 +729,7 @@ namespace Helper
             }
             catch (Exception exp)
             {
+                LogHelper.WriteErrorLog<Fun>(exp.ToString());
                 //返回错误消息
             }
             return flag;

@@ -10,6 +10,7 @@ using Models.Entity;
 using MySql.Data.MySqlClient;
 using Dapper;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace Repository
 {
@@ -31,7 +32,7 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public List<FaUserEntity> FindAll(object inParm = null)
+        public List<FaUserEntity> FindAll(Expression<Func<FaUserEntity, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
         }
@@ -40,13 +41,12 @@ namespace Repository
         {
             Result<FaUserEntity> reObj = new Result<FaUserEntity>();
             DapperHelper<FaLoginEntity> dapper=new DapperHelper<FaLoginEntity>();
-            var dict=new {LOGIN_NAME=username};
-            var login= dapper.Single(dict);
+            var login= dapper.Single(x=>x.LOGIN_NAME==username);
             if (login != null)
             {
                 if (login.PASSWORD.ToLower().Equals(Helper.StringHelp.Get32MD5One(password).ToLower()))
                 {
-                    reObj.Data = new DapperHelper<FaUserEntity>().Single(dict);
+                    reObj.Data = new DapperHelper<FaUserEntity>().Single(x=>x.LOGIN_NAME==username);
                 }
                 else
                 {

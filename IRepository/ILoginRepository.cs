@@ -1,6 +1,7 @@
 
-
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Models;
 using Models.Entity;
 
@@ -15,7 +16,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        List<FaLoginEntity> FindAll(object inParm = null);
+        List<FaLoginEntity> FindAll(Expression<Func<FaLoginEntity, bool>> inParm = null);
 
 
         /// <summary>

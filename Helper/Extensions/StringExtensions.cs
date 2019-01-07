@@ -14,6 +14,49 @@ namespace System
         private static readonly Regex CRegex_Word = new Regex(@"^[a-zA-Z]+$");
         private static readonly Regex CRegex_NumberAndString = new Regex(@"(\d+[a-zA-Z])|([a-zA-Z]\d+)");
 
+
+
+        public static int ToInt32(this String source)
+        {
+            int i = 0;
+            int.TryParse(source, out i);
+            return i;
+        }
+        public static decimal ToDecimal(this String source)
+        {
+            decimal i = 0;
+            decimal.TryParse(source, out i);
+            return i;
+        }
+        public static DateTime ToDateTime(this String source)
+        {
+            DateTime i = DateTime.MinValue;
+            DateTime.TryParse(source, out i);
+            return i;
+        }
+
+        public static Char ToChar(this String source)
+        {
+            Char i = ' ';
+            Char.TryParse(source, out i);
+            return i;
+        }
+        public static bool ToBoolean(this String source)
+        {
+            bool i = false;
+            bool.TryParse(source, out i);
+            return i;
+        }
+        
+
+        
+        
+        
+
+        public static string FormatWith(this String source, params object[] args)
+        {
+            return string.Format(source, args);
+        }
         /// <summary>
         /// 取中文简拼
         /// </summary>
@@ -302,7 +345,7 @@ namespace System
                 return sb.ToString();
             }
 
-           
+
         }
 
         public static string SHA1(this string source)

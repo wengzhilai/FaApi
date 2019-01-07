@@ -10,6 +10,7 @@ using Models.Entity;
 using MySql.Data.MySqlClient;
 using Dapper;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace Repository
 {
@@ -31,7 +32,7 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public List<FaFamilyEntity> FindAll(object inParm = null)
+        public List<FaFamilyEntity> FindAll(Expression<Func<FaFamilyEntity, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
         }

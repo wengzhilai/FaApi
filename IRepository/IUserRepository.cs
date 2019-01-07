@@ -1,6 +1,7 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 using Models;
 using Models.Entity;
 
@@ -20,7 +21,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        List<FaUserEntity> FindAll(object inParm = null);
+        List<FaUserEntity> FindAll(Expression<Func<FaUserEntity, bool>> inParm = null);
 
         /// <summary>
         /// 用户登录

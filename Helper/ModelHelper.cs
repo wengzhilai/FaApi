@@ -450,18 +450,18 @@ namespace Helper
             return sql;
         }
 
-        public string GetSingleSql(string whereStr = "")
+        public string GetSingleSql(string whereStr = "", string orderByStr = "")
         {
             string key = GetKeyField();
-            string sql = "SELECT  {0} FROM {1} WHERE {2}=@{2}";
+            string sql = "SELECT  {0} FROM {1} WHERE {2}=@{2} {3}";
             if (string.IsNullOrEmpty(whereStr))
             {
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), key);
+                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), key,orderByStr);
             }
             else
             {
-                sql = "SELECT  {0} FROM {1} WHERE {2}";
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), whereStr);
+                sql = "SELECT  {0} FROM {1} WHERE {2} {3}";
+                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), whereStr,orderByStr);
 
             }
             return sql;

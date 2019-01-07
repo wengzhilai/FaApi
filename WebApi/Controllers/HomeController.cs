@@ -35,6 +35,7 @@ namespace WebApi.Controllers
         /// 构造
         /// </summary>
         /// <param name="configuration"></param>
+        /// <param name="mapper"></param>
         public HomeController(IConfiguration configuration,IMapper mapper)
         {
             _mapper = mapper;
@@ -60,11 +61,25 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public string TestAutoMap()
         {
-            // FaUserInfoEntity, RelativeItem
             var testEnt=new FaUserInfoEntity();
             testEnt.ELDER_ID=1;
             var outEnt=_mapper.Map<RelativeItem>(testEnt);
             return outEnt.ElderName;
+        }
+
+        /// <summary>
+        /// 不验证权限
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public string TestLambda()
+        {
+            // FaUserInfoEntity, RelativeItem
+            List<KeyValuePair<string,object>> listSqlParaModel = new List<KeyValuePair<string,object>>();
+            List<int> tt=new List<int>(){1,2,4};
+            var testEnt=Helper.LambdaToSqlHelper.GetWhereSql<FaElderEntity>(x=>x.NAME.IndexOf("34")>1 || x.ID<10,listSqlParaModel);
+            return testEnt+"\n\r"+TypeChange.ObjectToStr(listSqlParaModel);
         }
 
         /// <summary>

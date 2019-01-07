@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using Models;
 using MySql.Data.MySqlClient;
 using Dapper;
-
+using System.Linq.Expressions;
 
 namespace Helper
 {
-    public class DapperHelper<T> where T : new()
+    public class DapperHelper<T> where T : class, new()
     {
         public ModelHelper<T> modelHelper;
         IDbConnection connection;
@@ -56,19 +56,22 @@ namespace Helper
         }
 
 
-        public List<T> FindAll(object inParm = null)
+        public List<T> FindAll(Expression<Func<T, bool>> where)
         {
             string sql = "";
             List<T> reList = new List<T>();
-            if (inParm == null)
+            if (where == null)
             {
                 sql = modelHelper.GetFindAllSql();
                 reList = connection.Query<T>(sql).ToList();
             }
             else
             {
-                sql = modelHelper.GetFindAllSql(TypeChange.DynamicToKeyList(inParm));
-                reList = connection.Query<T>(sql, inParm).ToList();
+                List<KeyValuePair<string,object>> listSqlParaModel = new List<KeyValuePair<string,object>>();
+                var whereStr=Helper.LambdaToSqlHelper.GetWhereSql<T>(where,listSqlParaModel);
+
+                sql = modelHelper.GetFindAllSql(whereStr);
+                reList = connection.Query<T>(sql, listSqlParaModel).ToList();
             }
             return reList;
         }
@@ -138,10 +141,12 @@ namespace Helper
             return result;
         }
 
-        public T Single(object inParm = null, string order = "")
+        public T Single(Expression<Func<T, bool>> where, string order = "")
         {
-            string sql = modelHelper.GetSingleSql(TypeChange.DynamicToKeyList(inParm), order);
-            var query = connection.QueryFirst<T>(sql, inParm);
+            List<KeyValuePair<string,object>> listSqlParaModel = new List<KeyValuePair<string,object>>();
+            var whereStr=Helper.LambdaToSqlHelper.GetWhereSql<T>(where,listSqlParaModel);
+            string sql = modelHelper.GetSingleSql(whereStr, order);
+            var query = connection.QueryFirst<T>(sql, listSqlParaModel);
             return query;
         }
 
