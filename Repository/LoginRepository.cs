@@ -37,6 +37,7 @@ namespace Repository
             return dbHelper.FindAll(inParm);
         }
 
+
         /// <summary>
         /// 注册账号
         /// <para>1、添加登录工号 </para>
@@ -78,60 +79,60 @@ namespace Repository
             } 
             #endregion
 
-                #region 检测验证码
-                // if (AppSettingsManager.Verify.VerifyCode)
-                // {
-                //     var nowDate = DateTime.Now.AddMinutes(-30);
-                    
-                //     var codeNum = db.fa_sms_send.Where(x =>
-                //            x.ADD_TIME > nowDate
-                //         && x.PHONE_NO == inEnt.loginName
-                //         && x.CONTENT == inEnt.code
-                //         ).Count();
-                //     if (codeNum == 0)
-                //     {
-                //         err.IsError = true;
-                //         err.Message = "验证码无效";
-                //         return err;
-                //     }
-                // }
-                #endregion
+            #region 检测验证码
+            if (AppSettingsManager.Config.VerifyCode)
+            {
+                var nowDate = DateTime.Now.AddMinutes(-30);
+                
+                var codeNum = new SmsSendRepository().Count(inEnt.loginName,inEnt.code);
+                if (codeNum == 0)
+                {
+                    reObj.IsSuccess=false;
+                    reObj.Code="-3";
+                    reObj.Msg=string.Format("验证码无效");
+                    return reObj;
+                }
+            }
+            #endregion
 
-            //     var userList = db.fa_user.Where(x => x.LOGIN_NAME == inEnt.loginName).ToList();
-            //     #region 检测电话号码是否存在
-            //     if (userList.Count() > 0)
-            //     {
-            //         err.IsError = true;
-            //         err.Message = "电话号码已经存在，请更换电话号码";
-            //         return err;
-            //     } 
-            //     #endregion
+            var userList =new UserRepository().FindAll(x=>x.LOGIN_NAME==inEnt.loginName);
+            #region 检测电话号码是否存在
+            if (userList.Count() > 0)
+            {
+                reObj.IsSuccess=false;
+                reObj.Code="-4";
+                reObj.Msg=string.Format("电话号码已经存在，请更换电话号码");
+            } 
+            #endregion
 
-            //     var loginList = db.fa_login.Where(x => x.LOGIN_NAME == inEnt.loginName).ToList();
+            var loginList =new LoginRepository().FindAll(x=>x.LOGIN_NAME==inEnt.loginName);
+            #region 添加登录账号
+            if (loginList.Count() == 0)
+            {
+                FaLoginEntity inLogin = new FaLoginEntity();
+                inLogin.LOGIN_NAME = inEnt.loginName;
+                inLogin.PASSWORD = inEnt.passWord.Md5();
+                reObj.IsSuccess= dbHelper.Save(new DtoSave<FaLoginEntity>(){
+                    Data=inLogin
+                })==0?true:false;
+                if (!reObj.IsSuccess)
+                {
+                    reObj.IsSuccess=false;
+                    reObj.Code="-5";
+                    reObj.Msg=string.Format("添加账号失败");
+                    return reObj;
+                }
+            }
+            #endregion
 
-            //     #region 添加登录账号
-            //     if (loginList.Count() == 0)
-            //     {
-            //         LOGIN inLogin = new LOGIN();
-            //         inLogin.LOGIN_NAME = inEnt.loginName;
-            //         inLogin.PASSWORD = inEnt.passWord;
-            //         Z_Login zLogin = new Z_Login();
-            //         var isAddSucc = zLogin.Login_Save(db, null, ref err, inLogin, null);
-            //         if (isAddSucc == null)
-            //         {
-            //             return err;
-            //         }
-            //     }
-            //     #endregion
-
-            //     #region 添加user
-            //     TUser inUser = new TUser();
-            //     inUser.LOGIN_NAME = inEnt.loginName;
-            //     inUser.NAME = inEnt.userName;
-            //     var user = Mapper.Map<fa_user>(inUser);
-            //     user.ID = Fun.GetCurrvalSeqID<fa_user>();
-            //     db.fa_user.Add(user);
-            //     #endregion
+            // #region 添加user
+            // TUser inUser = new TUser();
+            // inUser.LOGIN_NAME = inEnt.loginName;
+            // inUser.NAME = inEnt.userName;
+            // var user = Mapper.Map<fa_user>(inUser);
+            // user.ID = Fun.GetCurrvalSeqID<fa_user>();
+            // db.fa_user.Add(user);
+            // #endregion
 
             //     //var userInfo = db.fa_user_info.SingleOrDefault(x => x.ID == user.ID);
             //     //if (userInfo == null)

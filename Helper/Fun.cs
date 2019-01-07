@@ -38,6 +38,17 @@ namespace Helper
             return 0;
         }
 
+        public void CreateSqu(){
+            string sql=@"
+CREATE TABLE `sequence` (
+  `seq_name` varchar(50) NOT NULL,
+  `current_val` int(11) NOT NULL,
+  `increment_val` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`seq_name`)
+  )
+            ";
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -548,7 +559,7 @@ namespace Helper
             string content = string.Empty;
             try
             {
-                DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+                DateTime startTime = new DateTime(1970, 1, 1);
                 var cdt= (int)(DateTime.Now - startTime).TotalSeconds;
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server_addr);
@@ -590,7 +601,7 @@ namespace Helper
             string content = string.Empty;
             try
             {
-                DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+                DateTime startTime = new DateTime(1970, 1, 1);
                 var cdt = (int)(DateTime.Now - startTime).TotalSeconds;
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server_addr);

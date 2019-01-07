@@ -124,7 +124,7 @@ namespace Models.Entity
         [Required]
         [Display(Name = "创建时间")]
         [Column]
-        new public DateTime CREATE_TIME { get; set; }
+        public DateTime CREATE_TIME { get; set; }
         /// <summary>
         /// 创建用户的姓名
         /// </summary>

@@ -45,12 +45,8 @@ namespace Repository
         public int Count(string phone,string code)
         {
             var nowDate = DateTime.Now.AddMinutes(-AppSettingsManager.Config.VerifyExpireMinute);
-            //    x.ADD_TIME > nowDate
-            //             && x.PHONE_NO == inEnt.loginName
-            //             && x.CONTENT == inEnt.code
-            var searchObj=new {ADD_TIME=nowDate};
             
-            return dbHelper.Count(searchObj);
+            return dbHelper.Count(x=>x.ADD_TIME>nowDate && x.PHONE_NO==phone && x.CONTENT==code);
         }
     }
 }

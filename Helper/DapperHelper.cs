@@ -67,8 +67,8 @@ namespace Helper
             }
             else
             {
-                List<KeyValuePair<string,object>> listSqlParaModel = new List<KeyValuePair<string,object>>();
-                var whereStr=Helper.LambdaToSqlHelper.GetWhereSql<T>(where,listSqlParaModel);
+                List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
+                var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(where, listSqlParaModel);
 
                 sql = modelHelper.GetFindAllSql(whereStr);
                 reList = connection.Query<T>(sql, listSqlParaModel).ToList();
@@ -103,11 +103,14 @@ namespace Helper
         }
 
 
-        public int Count(object inParm)
+        public int Count(Expression<Func<T, bool>> where)
         {
             var mh = new ModelHelper<T>();
-            string sql = mh.GetFindNumSql(TypeChange.DynamicToKeyList(inParm));
-            var ds = connection.ExecuteScalar(sql, inParm);
+            List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
+            var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(where, listSqlParaModel);
+
+            string sql = mh.GetFindNumSql(whereStr);
+            var ds = connection.ExecuteScalar(sql, listSqlParaModel);
             return Convert.ToInt32(ds);
 
         }
@@ -143,8 +146,8 @@ namespace Helper
 
         public T Single(Expression<Func<T, bool>> where, string order = "")
         {
-            List<KeyValuePair<string,object>> listSqlParaModel = new List<KeyValuePair<string,object>>();
-            var whereStr=Helper.LambdaToSqlHelper.GetWhereSql<T>(where,listSqlParaModel);
+            List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
+            var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(where, listSqlParaModel);
             string sql = modelHelper.GetSingleSql(whereStr, order);
             var query = connection.QueryFirst<T>(sql, listSqlParaModel);
             return query;
