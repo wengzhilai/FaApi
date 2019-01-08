@@ -125,14 +125,18 @@ namespace Repository
             }
             #endregion
 
-            // #region 添加user
-            // TUser inUser = new TUser();
-            // inUser.LOGIN_NAME = inEnt.loginName;
-            // inUser.NAME = inEnt.userName;
-            // var user = Mapper.Map<fa_user>(inUser);
-            // user.ID = Fun.GetCurrvalSeqID<fa_user>();
-            // db.fa_user.Add(user);
-            // #endregion
+            #region 添加user
+             
+            FaUserEntity inUser = new FaUserEntity();
+            inUser.LOGIN_NAME = inEnt.loginName;
+            inUser.NAME = inEnt.userName;
+            inUser.ID = new SequenceRepository().GetNextID<FaUserEntity>();
+            inUser.DISTRICT_ID=1;
+            new DapperHelper<FaUserEntity>().Save(new DtoSave<FaUserEntity>{
+                Data=inUser,
+                IgnoreFieldList=new List<string>()
+            });
+            #endregion
 
             //     //var userInfo = db.fa_user_info.SingleOrDefault(x => x.ID == user.ID);
             //     //if (userInfo == null)

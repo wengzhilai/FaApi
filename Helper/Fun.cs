@@ -19,35 +19,6 @@ namespace Helper
 {
     public class Fun
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static int GetSeqID<T>() where T : new()
-        {
-            return 0;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static int GetCurrvalSeqID<T>() where T : new()
-        {
-            return 0;
-        }
-
-        public void CreateSqu(){
-            string sql=@"
-CREATE TABLE `sequence` (
-  `seq_name` varchar(50) NOT NULL,
-  `current_val` int(11) NOT NULL,
-  `increment_val` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`seq_name`)
-  )
-            ";
-        }
 
         /// <summary>
         /// 
