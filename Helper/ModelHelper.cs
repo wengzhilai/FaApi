@@ -291,6 +291,18 @@ namespace Helper
             return sql;
         }
 
+        public string GetDeleteSql(string whereStr)
+        {
+            if (string.IsNullOrEmpty(whereStr))
+            {
+                throw new Exception("删除参数，不能为空");
+            }
+
+            string sql = "DELETE FROM {0} WHERE {1}";
+            sql = string.Format(sql, GetTableName(), whereStr);
+            return sql;
+        }
+
         /// <summary>
         /// 获取查看所有SQL
         /// </summary>
