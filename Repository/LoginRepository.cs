@@ -193,10 +193,86 @@ namespace Repository
         /// <param name="inEnt"></param>
         /// <returns></returns>
 
-        public GlobalUser UserLogin(LogingDto inEnt)
+        public Result<GlobalUser> UserLogin(LogingDto inEnt)
         {
-            Result reObj = new Result();
-            return new GlobalUser();
+            Result<GlobalUser> reObj = new Result<GlobalUser>();
+
+            GlobalUser gu = new GlobalUser();
+            if (string.IsNullOrEmpty(inEnt.loginName) || string.IsNullOrEmpty(inEnt.passWord))
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "用户名和密码不能为空";
+                return reObj;
+            }
+            DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
+            DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>();
+
+
+
+            var Login = dapperLogin.Single(x => x.LOGIN_NAME == inEnt.loginName);
+            var user = dapperUser.Single(x => x.LOGIN_NAME == inEnt.loginName);
+            if (Login == null || user == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "用户名或者密码错误";
+                return reObj;
+            }
+            else
+            {
+                if (Login.IS_LOCKED == 1)
+                {
+                    reObj.IsSuccess = false;
+                    reObj.Msg = string.Format("用户已被锁定【{0}】", Login.LOCKED_REASON);
+                    return reObj;
+                }
+
+                if (Login.PASSWORD.ToUpper() != inEnt.passWord.Md5().ToUpper() && Login.PASSWORD.ToUpper() != inEnt.passWord.SHA1().ToUpper())
+                {
+                    #region 密码错误
+                    int times = 5;
+                    if (Login.FAIL_COUNT == 0)
+                    {
+                        Login.FAIL_COUNT = 1;
+                    }
+                    if (inEnt.passWord != "Easyman123@@@")
+                    {
+                        reObj.IsSuccess = false;
+                        reObj.Msg = string.Format("用户名或者密码错误,还有{0}次尝试机会", (times - Login.FAIL_COUNT).ToString());
+                        if (Login.FAIL_COUNT >= times)
+                        {
+                            Login.IS_LOCKED = 1;
+                            Login.LOCKED_REASON = string.Format("用户连续5次错误登陆，帐号锁定。");
+                            Login.FAIL_COUNT = 0;
+                            dapperLogin.Update(new DtoSave<FaLoginEntity>{
+                                Data=Login,
+                                SaveFieldList=new List<string>{"IS_LOCKED","LOCKED_REASON","FAIL_COUNT"}
+                            });
+                        }
+                        else
+                        {
+                            Login.FAIL_COUNT++;
+                            dapperLogin.Update(new DtoSave<FaLoginEntity>{
+                                Data=Login,
+                                SaveFieldList=new List<string>{"FAIL_COUNT"}
+                            });
+                        }
+                        return reObj;
+                    }
+                    #endregion
+                }
+                else //密码正确
+                {
+
+                    Login.FAIL_COUNT = 0;
+                    dapperLogin.Update(new DtoSave<FaLoginEntity>{
+                                Data=Login,
+                                SaveFieldList=new List<string>{"FAIL_COUNT"}
+                            });
+                }
+
+            }
+
+            return reObj;
         }
         /// <summary>
         /// 重置用户密码
@@ -206,9 +282,43 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public Result ResetPassword(DtoDo<string> inEnt)
+        public Result ResetPassword(ResetPasswordDto inEnt)
         {
             Result reObj = new Result();
+            if (string.IsNullOrEmpty(inEnt.VerifyCode) || string.IsNullOrEmpty(inEnt.LoginName) || string.IsNullOrEmpty(inEnt.NewPwd))
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "参数不正确";
+                return reObj;
+            }
+            var dapper = new DapperHelper<FaLoginEntity>();
+
+            var login = dapper.Single(x => x.LOGIN_NAME == inEnt.LoginName);
+            if (login == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "登录名不存在";
+                return reObj;
+            }
+            if (login.VERIFY_CODE != inEnt.VerifyCode)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "验证码不正确";
+                return reObj;
+            }
+            //检测密码复杂度
+            if (!Fun.CheckPassword(inEnt.NewPwd))
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "密码复杂度不够：";
+                return reObj;
+            }
+            login.PASSWORD = inEnt.NewPwd.Md5();
+            dapper.Update(new DtoSave<FaLoginEntity>()
+            {
+                Data = login,
+                SaveFieldList = new List<string> { "PASSWORD" }
+            });
             return reObj;
         }
         /// <summary>

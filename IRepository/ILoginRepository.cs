@@ -42,7 +42,7 @@ namespace IRepository
         /// <param name="inEnt"></param>
         /// <returns></returns>
         
-        GlobalUser UserLogin(LogingDto inEnt);
+        Result<GlobalUser>  UserLogin(LogingDto inEnt);
         /// <summary>
         /// 重置用户密码
         /// <para>VerifyCode:短信验证码</para>
@@ -51,7 +51,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Result ResetPassword(DtoDo<string> inEnt);
+        Result ResetPassword(ResetPasswordDto inEnt);
         /// <summary>
         /// 修改用户密码
         /// <para>entity:旧密码</para>
