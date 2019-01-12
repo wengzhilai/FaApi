@@ -67,6 +67,10 @@ namespace WebApi
             //初始化注入IOptions<T>
             // services.AddOptions();
             Configuration.Bind("Logging", AppSettingsManager.Logging);
+
+            services.Configure<JwtSettings>(Configuration.GetSection("RedisConfig"));
+            Configuration.Bind("RedisConfig", AppSettingsManager.RedisConfig);
+
             #region JWT认证
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             Configuration.Bind("JwtSettings", AppSettingsManager.JwtSettings);

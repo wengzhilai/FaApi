@@ -68,6 +68,21 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// 测试Redis
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<string> TestRedis()
+        {
+            RedisWriteHelper.HashSetKey("user","user_1","翁志来测试1");
+            RedisWriteHelper.HashSetKey("user","user_2","翁志来测试2");
+            await RedisWriteHelper.HashDeleteAsync("user","user_2");
+            var t= RedisReadHelper.HashGetKey("user","user_1");
+            return t;
+        }
+
+        /// <summary>
         /// 不验证权限
         /// </summary>
         /// <returns></returns>

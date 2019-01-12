@@ -25,6 +25,9 @@ namespace Helper
         /// <returns></returns>
         public static BaseConfig Config=new BaseConfig();
 
+        public static RedisConfig RedisConfig=new RedisConfig();
+        
+
     }
 
     /// <summary>
@@ -58,6 +61,23 @@ namespace Helper
         /// </summary>
         /// <value></value>
         public int  VerifyExpireMinute{ get; set; }=30;
+
+    }
+
+    /// <summary>
+    ///  Redis配置
+    /// </summary>
+    public class RedisConfig{
+        /// <summary>
+        /// 写的连接地址
+        /// </summary>
+        /// <value></value>
+        public string writeRedisstr { get; set; }="45.32.134.176:6379,password=wengzhilai";
+        /// <summary>
+        /// 读取的连接地址
+        /// </summary>
+        /// <value></value>
+        public string  readRedisstr{ get; set; }="45.32.134.176:6379,password=wengzhilai";
 
     }
 
