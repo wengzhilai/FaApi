@@ -26,6 +26,7 @@ namespace Repository
         {
             return dbHelper.SingleByKey(key);
         }
+        
 
         /// <summary>
         /// 查找所有
@@ -35,6 +36,11 @@ namespace Repository
         public List<FaUserEntity> FindAll(Expression<Func<FaUserEntity, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
+        }
+
+        public int Update(DtoSave<FaUserEntity> inObj)
+        {
+            return dbHelper.Update(inObj);
         }
 
         public Result<FaUserEntity> UserLogin(string username, string password)

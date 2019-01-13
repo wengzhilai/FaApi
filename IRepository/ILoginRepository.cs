@@ -34,7 +34,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Result LoginOut(DtoDo<string> inEnt);
+        Result LoginOut(DtoSave<FaLoginHistoryEntity> inEnt);
         /// <summary>
         /// 用户登录
         /// <para>只验证用户账号</para>
@@ -59,6 +59,6 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Result UserEditPwd(DtoSave<string> inEnt);
+        Result UserEditPwd(DtoSave<ResetPasswordDto> inEnt);
     }
 }

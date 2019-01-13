@@ -181,9 +181,29 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public Result LoginOut(DtoDo<string> inEnt)
+        public Result LoginOut(DtoSave<FaLoginHistoryEntity> inEnt)
         {
             Result reObj = new Result();
+            #region 记录登出历史
+            var userDal = new UserRepository();
+            //正常退出，修改退出日志
+            reObj.IsSuccess = userDal.Update(new DtoSave<FaUserEntity>
+            {
+                Data = new FaUserEntity { ID = inEnt.Data.USER_ID.Value, LAST_ACTIVE_TIME = DateTime.Now, LAST_LOGOUT_TIME = DateTime.Now },
+                SaveFieldList = new List<string> { "LAST_ACTIVE_TIME", "LAST_LOGOUT_TIME" }
+            }) > 0;
+            if (!reObj.IsSuccess)
+            {
+                return reObj;
+            }
+
+            //记录登录日志
+            new FaLoginHistoryRepository().Save(inEnt);
+            
+            #endregion
+
+            var redis = new RedisRepository();
+            reObj.IsSuccess = redis.UserTokenDelete(inEnt.Data.USER_ID.Value);
             return reObj;
         }
         /// <summary>
@@ -243,17 +263,19 @@ namespace Repository
                             Login.IS_LOCKED = 1;
                             Login.LOCKED_REASON = string.Format("用户连续5次错误登陆，帐号锁定。");
                             Login.FAIL_COUNT = 0;
-                            dapperLogin.Update(new DtoSave<FaLoginEntity>{
-                                Data=Login,
-                                SaveFieldList=new List<string>{"IS_LOCKED","LOCKED_REASON","FAIL_COUNT"}
+                            dapperLogin.Update(new DtoSave<FaLoginEntity>
+                            {
+                                Data = Login,
+                                SaveFieldList = new List<string> { "IS_LOCKED", "LOCKED_REASON", "FAIL_COUNT" }
                             });
                         }
                         else
                         {
                             Login.FAIL_COUNT++;
-                            dapperLogin.Update(new DtoSave<FaLoginEntity>{
-                                Data=Login,
-                                SaveFieldList=new List<string>{"FAIL_COUNT"}
+                            dapperLogin.Update(new DtoSave<FaLoginEntity>
+                            {
+                                Data = Login,
+                                SaveFieldList = new List<string> { "FAIL_COUNT" }
                             });
                         }
                         return reObj;
@@ -264,10 +286,11 @@ namespace Repository
                 {
 
                     Login.FAIL_COUNT = 0;
-                    dapperLogin.Update(new DtoSave<FaLoginEntity>{
-                                Data=Login,
-                                SaveFieldList=new List<string>{"FAIL_COUNT"}
-                            });
+                    dapperLogin.Update(new DtoSave<FaLoginEntity>
+                    {
+                        Data = Login,
+                        SaveFieldList = new List<string> { "FAIL_COUNT" }
+                    });
                 }
 
             }
@@ -328,7 +351,7 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public Result UserEditPwd(DtoSave<string> inEnt)
+        public Result UserEditPwd(DtoSave<ResetPasswordDto> inEnt)
         {
             Result reObj = new Result();
             return reObj;

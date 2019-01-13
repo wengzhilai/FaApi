@@ -114,6 +114,23 @@ namespace Helper
             RedisValue v= cache.HashGet(hash, key);
             return v;
         }
+        
+
+        /// <summary>
+        /// 判断Key是否存在
+        /// </summary>
+        /// <param name="hash"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static bool HashExists(string hash, string key)
+        {
+            return cache.HashExists(hash, key);
+        }
+
+        public static bool KeyExists(string key)
+        {
+            return cache.KeyExists(key);
+        }
     }
     public class RedisWriteHelper
     {
@@ -183,7 +200,7 @@ namespace Helper
         }
 
         /// <summary>
-        /// 添加或更新hash数据的单个字段值
+        /// 将key中存储的哈希中的字段设置为value。 如果key不存在，则创建一个包含哈希的新密钥。 如果哈希中已存在字段，则会覆盖该字段。
         /// </summary>
         /// <param name="hash"></param>
         /// <param name="key"></param>
@@ -221,10 +238,11 @@ namespace Helper
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Task<bool> HashDeleteAsync(string hash, string key)
+        public static bool HashDelete(string hash, string key)
         {
-            return cache.HashDeleteAsync(hash, key);
+            return cache.HashDelete(hash, key);
         }
+
         #endregion
 
         #region 更新
