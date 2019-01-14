@@ -24,12 +24,12 @@ namespace Models
         /// 登录名
         /// </summary>
         [Required, MaxLength(20)]
-        public string loginName { get; set; }
+        public string LoginName { get; set; }
         /// <summary>
         /// 密码
         /// </summary>
         [Required, MaxLength(32)]
-        public string passWord { get; set; }
+        public string Password { get; set; }
         /// <summary>
         /// 手机串号
         /// </summary>

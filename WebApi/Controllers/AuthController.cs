@@ -30,13 +30,13 @@ namespace WebApi.Controllers
     public class AuthController : ControllerBase
     {
         IConfiguration config;
-        IUserRepository user;
+        ILoginRepository user;
         /// <summary>
         /// 授权
         /// </summary>
         /// <param name="_config"></param>
         /// <param name="_user"></param>
-        public AuthController(IConfiguration _config, IUserRepository _user)
+        public AuthController(IConfiguration _config, ILoginRepository _user)
         {
             config = _config;
             user = _user;
@@ -44,31 +44,32 @@ namespace WebApi.Controllers
         /// <summary>
         /// 登录登录
         /// </summary>
-        /// <param name="inObj"></param>
+        /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public Result<FaUserEntity> UserLogin(UserLogin inObj)
+        public Result<FaUserEntity> UserLogin(LogingDto inEnt)
         {
             Result<FaUserEntity> reobj = new Result<FaUserEntity>();
-            reobj = user.UserLogin(inObj.UserName, inObj.Password);
-            var claims = new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, inObj.UserName),
+            reobj = user.UserLogin(inEnt);
+            if (reobj.IsSuccess)
+            {
+                var claims = new Claim[]
+                        {
+                        new Claim(ClaimTypes.Name, reobj.Data.LOGIN_NAME),
                         new Claim(ClaimTypes.Role, "admin, Manage")
-                    };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.JwtSettings.SecretKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(
-                AppSettingsManager.JwtSettings.Issuer,
-                AppSettingsManager.JwtSettings.Audience,
-                claims,
-                DateTime.Now,
-                DateTime.Now.AddMinutes(30),
-                creds);
-
-
-            reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
+                        };
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.JwtSettings.SecretKey));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(
+                    AppSettingsManager.JwtSettings.Issuer,
+                    AppSettingsManager.JwtSettings.Audience,
+                    claims,
+                    DateTime.Now,
+                    DateTime.Now.AddMinutes(30),
+                    creds);
+                reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
+            }
             return reobj;
         }
     }

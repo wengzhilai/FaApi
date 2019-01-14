@@ -42,7 +42,7 @@ namespace IRepository
         /// <param name="inEnt"></param>
         /// <returns></returns>
         
-        Result<GlobalUser>  UserLogin(LogingDto inEnt);
+        Result<FaUserEntity>  UserLogin(LogingDto inEnt);
         /// <summary>
         /// 重置用户密码
         /// <para>VerifyCode:短信验证码</para>

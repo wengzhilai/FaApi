@@ -153,7 +153,7 @@ namespace WebApi
             //请求错误提示配置
             app.UseErrorHandling();
             
-            // app.UseAuthentication();//启用验证
+            app.UseAuthentication();//启用验证
 
             #region 使用SwaggerUI
 

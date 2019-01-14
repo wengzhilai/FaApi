@@ -119,9 +119,17 @@ namespace Helper
         {
             DynamicParameters reField = new DynamicParameters();
             Type type = typeof(T);
+            if (saveFieldList != null)
+            {
+                saveFieldList.Add(GetKeyField());
+            }
             PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
             foreach (PropertyInfo proInfo in PropertyList)
             {
+                if (saveFieldList != null && saveFieldList.Count != 0 && !saveFieldList.Contains(proInfo.Name))
+                {
+                    continue;
+                }
                 object[] attrsPi = proInfo.GetCustomAttributes(true);
                 foreach (object obj in attrsPi)
                 {

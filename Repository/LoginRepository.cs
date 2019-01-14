@@ -63,7 +63,7 @@ namespace Repository
             #region 检测输入
 
 
-            if (!inEnt.loginName.IsOnlyNumber() || inEnt.loginName.Length != 11)
+            if (!inEnt.LoginName.IsOnlyNumber() || inEnt.LoginName.Length != 11)
             {
                 reObj.IsSuccess = false;
                 reObj.Code = "-1";
@@ -71,7 +71,7 @@ namespace Repository
                 return reObj;
             }
 
-            if (!Fun.CheckPassword(inEnt.passWord))
+            if (!Fun.CheckPassword(inEnt.Password))
             {
                 reObj.IsSuccess = false;
                 reObj.Code = "-2";
@@ -85,7 +85,7 @@ namespace Repository
             {
                 var nowDate = DateTime.Now.AddMinutes(-30);
 
-                var codeNum = new SmsSendRepository().Count(inEnt.loginName, inEnt.code);
+                var codeNum = new SmsSendRepository().Count(inEnt.LoginName, inEnt.code);
                 if (codeNum == 0)
                 {
                     reObj.IsSuccess = false;
@@ -96,7 +96,7 @@ namespace Repository
             }
             #endregion
 
-            var userList = new UserRepository().FindAll(x => x.LOGIN_NAME == inEnt.loginName);
+            var userList = new UserRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
             #region 检测电话号码是否存在
             if (userList.Count() > 0)
             {
@@ -108,13 +108,13 @@ namespace Repository
 
             //开始事务
             dbHelper.TranscationBegin();
-            var loginList = new LoginRepository().FindAll(x => x.LOGIN_NAME == inEnt.loginName);
+            var loginList = new LoginRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
             #region 添加登录账号
             if (loginList.Count() == 0)
             {
                 FaLoginEntity inLogin = new FaLoginEntity();
-                inLogin.LOGIN_NAME = inEnt.loginName;
-                inLogin.PASSWORD = inEnt.passWord.Md5();
+                inLogin.LOGIN_NAME = inEnt.LoginName;
+                inLogin.PASSWORD = inEnt.Password.Md5();
                 reObj.IsSuccess = dbHelper.Save(new DtoSave<FaLoginEntity>()
                 {
                     Data = inLogin
@@ -133,7 +133,7 @@ namespace Repository
             #region 添加user
 
             FaUserEntity inUser = new FaUserEntity();
-            inUser.LOGIN_NAME = inEnt.loginName;
+            inUser.LOGIN_NAME = inEnt.LoginName;
             inUser.NAME = inEnt.userName;
             inUser.ID = new SequenceRepository().GetNextID<FaUserEntity>();
             inUser.DISTRICT_ID = 1;
@@ -213,12 +213,11 @@ namespace Repository
         /// <param name="inEnt"></param>
         /// <returns></returns>
 
-        public Result<GlobalUser> UserLogin(LogingDto inEnt)
+        public Result<FaUserEntity> UserLogin(LogingDto inEnt)
         {
-            Result<GlobalUser> reObj = new Result<GlobalUser>();
+            Result<FaUserEntity> reObj = new Result<FaUserEntity>();
 
-            GlobalUser gu = new GlobalUser();
-            if (string.IsNullOrEmpty(inEnt.loginName) || string.IsNullOrEmpty(inEnt.passWord))
+            if (string.IsNullOrEmpty(inEnt.LoginName) || string.IsNullOrEmpty(inEnt.Password))
             {
                 reObj.IsSuccess = false;
                 reObj.Msg = "用户名和密码不能为空";
@@ -229,8 +228,8 @@ namespace Repository
 
 
 
-            var Login = dapperLogin.Single(x => x.LOGIN_NAME == inEnt.loginName);
-            var user = dapperUser.Single(x => x.LOGIN_NAME == inEnt.loginName);
+            var Login = dapperLogin.Single(x => x.LOGIN_NAME == inEnt.LoginName);
+            var user = dapperUser.Single(x => x.LOGIN_NAME == inEnt.LoginName);
             if (Login == null || user == null)
             {
                 reObj.IsSuccess = false;
@@ -246,7 +245,7 @@ namespace Repository
                     return reObj;
                 }
 
-                if (Login.PASSWORD.ToUpper() != inEnt.passWord.Md5().ToUpper() && Login.PASSWORD.ToUpper() != inEnt.passWord.SHA1().ToUpper())
+                if (Login.PASSWORD.ToUpper() != inEnt.Password.Md5().ToUpper() && Login.PASSWORD.ToUpper() != inEnt.Password.SHA1().ToUpper())
                 {
                     #region 密码错误
                     int times = 5;
@@ -254,7 +253,7 @@ namespace Repository
                     {
                         Login.FAIL_COUNT = 1;
                     }
-                    if (inEnt.passWord != "Easyman123@@@")
+                    if (inEnt.Password != "Easyman123@@@")
                     {
                         reObj.IsSuccess = false;
                         reObj.Msg = string.Format("用户名或者密码错误,还有{0}次尝试机会", (times - Login.FAIL_COUNT).ToString());
@@ -286,11 +285,13 @@ namespace Repository
                 {
 
                     Login.FAIL_COUNT = 0;
-                    dapperLogin.Update(new DtoSave<FaLoginEntity>
+                    reObj.IsSuccess= dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
                         Data = Login,
                         SaveFieldList = new List<string> { "FAIL_COUNT" }
-                    });
+                    })>0;
+                    reObj.Data=user;
+                    
                 }
 
             }
