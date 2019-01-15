@@ -130,6 +130,7 @@ namespace WebApi
 
             services.AddAutoMapper(typeof(Startup));
             
+            services.AddHttpContextAccessor();
             #region 依赖注入
 
             var builder = new ContainerBuilder();//实例化容器

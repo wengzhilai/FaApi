@@ -18,28 +18,33 @@ using Helper;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApi.Controllers
 {
     /// <summary>
     /// 授权管理
     /// </summary>
-    [Route("api/auth/[action]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class AuthController : ControllerBase
     {
-        IConfiguration config;
-        ILoginRepository user;
+        IConfiguration _config;
+        ILoginRepository _login;
+        IHttpContextAccessor _accessor;
+        IUserRepository _user;
         /// <summary>
         /// 授权
         /// </summary>
         /// <param name="_config"></param>
         /// <param name="_user"></param>
-        public AuthController(IConfiguration _config, ILoginRepository _user)
+        public AuthController(IConfiguration config, ILoginRepository login, IHttpContextAccessor accessor, IUserRepository user)
         {
-            config = _config;
-            user = _user;
+            _config = config;
+            _login = login;
+            _user = user;
+            _accessor = accessor;
         }
         /// <summary>
         /// 登录登录 
@@ -52,7 +57,7 @@ namespace WebApi.Controllers
         {
             //Bearer 
             Result<FaUserEntity> reobj = new Result<FaUserEntity>();
-            reobj = user.UserLogin(inEnt);
+            reobj = _login.UserLogin(inEnt);
             if (reobj.IsSuccess)
             {
                 var claims = new Claim[]
@@ -72,6 +77,53 @@ namespace WebApi.Controllers
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
             }
             return reobj;
+        }
+
+        /// <summary>
+        /// 注册用户
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Result LoginReg(LogingDto inEnt)
+        {
+            return _login.LoginReg(inEnt);
+        }
+
+        /// <summary>
+        /// 退出登录
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public Result LoginOut()
+        {
+            var reObj = new Result();
+            try
+            {
+                var outEnt = new DtoSave<FaLoginHistoryEntity>();
+                outEnt.Data = new FaLoginHistoryEntity();
+                outEnt.Data.LOGIN_HISTORY_TYPE = 2;
+                outEnt.Data.LOGIN_HOST = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                outEnt.Data.LOGOUT_TIME = DateTime.Now;
+                outEnt.Data.MESSAGE = "正常退出";
+                var userEntList = _user.FindAll(x => x.LOGIN_NAME == User.Identity.Name);
+                if (userEntList.Count() > 0)
+                {
+                    outEnt.Data.USER_ID = userEntList[0].ID;
+                }
+                reObj = _login.LoginOut(outEnt);
+            }
+            catch(ExceptionExtend e){
+                reObj.IsSuccess=false;
+                reObj.Code=e.RealCode;
+                reObj.Msg=e.RealMsg;
+            }
+            catch(Exception e)
+            {
+                reObj.IsSuccess=false;
+                reObj.Msg=e.Message;
+            }
+            return reObj;
         }
     }
 }
