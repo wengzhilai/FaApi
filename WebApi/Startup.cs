@@ -38,13 +38,13 @@ namespace WebApi
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="hostingEnvironment"></param>
-        public Startup(IConfiguration configuration,IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
         }
 
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -88,26 +88,33 @@ namespace WebApi
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.JwtSettings.SecretKey))
                 };
 
-                config.Events=new JwtBearerEvents(){
-                  OnMessageReceived = context =>
-                   {
-                    //    var token = context.Request.Headers["Authorization"];//修改默认的http headers
-                    //    context.Token = token.FirstOrDefault();
+                config.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                     {
+                       //    var token = context.Request.Headers["Authorization"];//修改默认的http headers
+                       //    context.Token = token.FirstOrDefault();
                        return Task.CompletedTask;
-                   },
-                   OnAuthenticationFailed=context =>
-                   {
-                       var user= context.Principal.Identity.Name;
-                       var token = context.Request.Headers["Authorization"];//修改默认的http headers
-                       return Task.CompletedTask;
-                   }
-                   
+                     },
+                    OnAuthenticationFailed = context =>
+                      {
+                          return Task.CompletedTask;
+                      },
+                    OnTokenValidated = context =>
+                      {
+                          var accessToken = context.SecurityToken;
+                          if (accessToken != null)
+                          {
+                          }
+                          return Task.CompletedTask;
+                      }
+
                 };
             });
-            
+
             #endregion
             services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
-            
+
             #region  添加SwaggerUI
             services.AddSwaggerGen(options =>
             {
@@ -121,15 +128,15 @@ namespace WebApi
                 });
                 options.IgnoreObsoleteActions();
                 options.DocInclusionPredicate((docName, description) => true);
-                options.IncludeXmlComments(_hostingEnvironment.ContentRootPath+"/bin/Debug/netcoreapp2.2/WebApi.xml");
+                options.IncludeXmlComments(_hostingEnvironment.ContentRootPath + "/bin/Debug/netcoreapp2.2/WebApi.xml");
                 options.DescribeAllEnumsAsStrings();
                 options.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
             });
             #endregion
-            
+
 
             services.AddAutoMapper(typeof(Startup));
-            
+
             services.AddHttpContextAccessor();
             #region 依赖注入
 
@@ -167,10 +174,10 @@ namespace WebApi
             {
                 app.UseHsts();
             }
-   
+
             //请求错误提示配置
             app.UseErrorHandling();
-            
+
             app.UseAuthentication();//启用验证
 
             #region 使用SwaggerUI
@@ -184,7 +191,7 @@ namespace WebApi
             #endregion
 
             // app.UseHttpsRedirection();
-            
+
             app.UseMvc();
 
         }

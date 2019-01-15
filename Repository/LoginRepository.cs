@@ -103,6 +103,7 @@ namespace Repository
                 reObj.IsSuccess = false;
                 reObj.Code = "-4";
                 reObj.Msg = string.Format("电话号码已经存在，请更换电话号码");
+                return reObj;
             }
             #endregion
 

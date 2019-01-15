@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
+using IRepository;
 
 namespace Repository
 {
-    public class RedisRepository
+    public class RedisRepository : IRedisRepository
     {
         private string _userTokenKey = "UserToken_{0}";
         private string _Data = "Data_{0}";
@@ -56,7 +57,7 @@ namespace Repository
         /// <returns></returns>
         public bool CacheSet(string md5Str, string value)
         {
-            Helper.RedisWriteHelper.SetStringKey(string.Format(_Data, md5Str), value,new System.TimeSpan(0,0,0,20));
+            Helper.RedisWriteHelper.SetStringKey(string.Format(_Data, md5Str), value, new System.TimeSpan(0, 0, 0, 20));
             return true;
         }
 
@@ -70,7 +71,7 @@ namespace Repository
             return Helper.RedisReadHelper.HashExists(string.Format(_Data, md5Str), string.Format(_Data, md5Str));
         }
 
-      
+
         /// <summary>
         /// 删除缓存
         /// </summary>

@@ -34,16 +34,22 @@ namespace WebApi.Controllers
         ILoginRepository _login;
         IHttpContextAccessor _accessor;
         IUserRepository _user;
+
+        IRedisRepository _redis;
         /// <summary>
         /// 授权
         /// </summary>
-        /// <param name="_config"></param>
-        /// <param name="_user"></param>
-        public AuthController(IConfiguration config, ILoginRepository login, IHttpContextAccessor accessor, IUserRepository user)
+        /// <param name="config"></param>
+        /// <param name="login"></param>
+        /// <param name="accessor"></param>
+        /// <param name="user"></param>
+        /// <param name="redis"></param>
+        public AuthController(IConfiguration config, ILoginRepository login, IHttpContextAccessor accessor, IUserRepository user, IRedisRepository redis)
         {
             _config = config;
             _login = login;
             _user = user;
+            _redis = redis;
             _accessor = accessor;
         }
         /// <summary>
@@ -75,6 +81,7 @@ namespace WebApi.Controllers
                     DateTime.Now.AddMinutes(1),
                     creds);
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
+                _redis.UserTokenSet(reobj.Data.ID, reobj.Code);
             }
             return reobj;
         }
@@ -85,15 +92,33 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public Result LoginReg(LogingDto inEnt)
         {
-            return _login.LoginReg(inEnt);
+            var reObj = new Result();
+            try
+            {
+                return _login.LoginReg(inEnt);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
         }
 
         /// <summary>
         /// 退出登录
         /// </summary>
         /// <returns></returns>
+        [Authorize]
         [HttpPost]
         public Result LoginOut()
         {
@@ -113,15 +138,16 @@ namespace WebApi.Controllers
                 }
                 reObj = _login.LoginOut(outEnt);
             }
-            catch(ExceptionExtend e){
-                reObj.IsSuccess=false;
-                reObj.Code=e.RealCode;
-                reObj.Msg=e.RealMsg;
-            }
-            catch(Exception e)
+            catch (ExceptionExtend e)
             {
-                reObj.IsSuccess=false;
-                reObj.Msg=e.Message;
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
             }
             return reObj;
         }
