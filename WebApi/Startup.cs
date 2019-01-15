@@ -72,6 +72,7 @@ namespace WebApi
             Configuration.Bind("RedisConfig", AppSettingsManager.RedisConfig);
 
             #region JWT认证
+            //Bearer 
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             Configuration.Bind("JwtSettings", AppSettingsManager.JwtSettings);
             services.AddAuthentication(option =>
@@ -85,6 +86,22 @@ namespace WebApi
                     ValidAudience = AppSettingsManager.JwtSettings.Audience,
                     ValidIssuer = AppSettingsManager.JwtSettings.Issuer,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.JwtSettings.SecretKey))
+                };
+
+                config.Events=new JwtBearerEvents(){
+                  OnMessageReceived = context =>
+                   {
+                    //    var token = context.Request.Headers["Authorization"];//修改默认的http headers
+                    //    context.Token = token.FirstOrDefault();
+                       return Task.CompletedTask;
+                   },
+                   OnAuthenticationFailed=context =>
+                   {
+                       var user= context.Principal.Identity.Name;
+                       var token = context.Request.Headers["Authorization"];//修改默认的http headers
+                       return Task.CompletedTask;
+                   }
+                   
                 };
             });
             

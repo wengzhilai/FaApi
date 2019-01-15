@@ -42,7 +42,7 @@ namespace WebApi.Controllers
             user = _user;
         }
         /// <summary>
-        /// 登录登录
+        /// 登录登录 
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
@@ -50,6 +50,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public Result<FaUserEntity> UserLogin(LogingDto inEnt)
         {
+            //Bearer 
             Result<FaUserEntity> reobj = new Result<FaUserEntity>();
             reobj = user.UserLogin(inEnt);
             if (reobj.IsSuccess)
@@ -66,7 +67,7 @@ namespace WebApi.Controllers
                     AppSettingsManager.JwtSettings.Audience,
                     claims,
                     DateTime.Now,
-                    DateTime.Now.AddMinutes(30),
+                    DateTime.Now.AddMinutes(1),
                     creds);
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
             }
