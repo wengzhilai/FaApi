@@ -19,3 +19,5 @@ Install-Package Microsoft.EntityFrameworkCore.Tools
 Install-Package Microsoft.VisualStudio.Web.CodeGeneration.Design
 
 https://www.cnblogs.com/yangjinwang/p/9516988.html
+
+Microsoft.AspNetCore.Authentication.AuthenticationBuilder IServiceCollection.AddAuthentication(Action<Microsoft.AspNetCore.Authentication.AuthenticationOptions> configureOptions)

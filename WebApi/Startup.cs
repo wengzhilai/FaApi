@@ -24,6 +24,8 @@ using WebApi.Unit;
 using Helper;
 using Newtonsoft.Json.Serialization;
 using AutoMapper;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace WebApi
 {
@@ -92,16 +94,36 @@ namespace WebApi
                 {
                     OnMessageReceived = context =>
                      {
-                       //    var token = context.Request.Headers["Authorization"];//修改默认的http headers
-                       //    context.Token = token.FirstOrDefault();
-                       return Task.CompletedTask;
+                         //    var token = context.Request.Headers["Authorization"];//修改默认的http headers
+                         //    context.Token = token.FirstOrDefault();
+                         return Task.CompletedTask;
                      },
                     OnAuthenticationFailed = context =>
                       {
+                          var token = context.Request.Headers["Authorization"];
+                          if (token.Count() > 0 && !String.IsNullOrEmpty(token[0]) && token[0].Length > 8)
+                          {
+                              var tokenStr = token[0].Substring(6).Trim();
+                              try
+                              {
+                                  var t = new JwtSecurityTokenHandler().ReadJwtToken(tokenStr);
+                                  if (t.ValidTo < DateTime.Now)
+                                  {
+                                      throw new Exception("登录超时");
+                                      //   var userId = t.Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+                                  }
+                              }
+                              catch { }
+                          }
+
+                          //   context.Response.ContentType = "application/json;charset=utf-8";
+                          // var user=context.Response.Headers;
+                          // context.Response.WriteAsync("{a:1,b:2}");
                           return Task.CompletedTask;
                       },
                     OnTokenValidated = context =>
                       {
+                          var user = context.Principal.Identity;
                           var accessToken = context.SecurityToken;
                           if (accessToken != null)
                           {

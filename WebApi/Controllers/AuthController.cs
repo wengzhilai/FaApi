@@ -69,6 +69,7 @@ namespace WebApi.Controllers
                 var claims = new Claim[]
                         {
                         new Claim(ClaimTypes.Name, reobj.Data.LOGIN_NAME),
+                        new Claim(ClaimTypes.NameIdentifier, reobj.Data.ID.ToString()),
                         new Claim(ClaimTypes.Role, "admin, Manage")
                         };
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.JwtSettings.SecretKey));
@@ -81,6 +82,7 @@ namespace WebApi.Controllers
                     DateTime.Now.AddMinutes(1),
                     creds);
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
+                
                 _redis.UserTokenSet(reobj.Data.ID, reobj.Code);
             }
             return reobj;
