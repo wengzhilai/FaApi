@@ -106,7 +106,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public string[] AuthPage()
         {
-            return new string[] { User.Identity.Name, User.Identity.AuthenticationType };
+            return new string[] { User.Identity.Name, User.Claims.Single(a=>a.Type==ClaimTypes.NameIdentifier).Value };
         }
     }
 }

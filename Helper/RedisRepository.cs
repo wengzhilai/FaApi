@@ -1,12 +1,11 @@
 using System.Threading.Tasks;
-using IRepository;
 
-namespace Repository
+namespace Helper
 {
-    public class RedisRepository : IRedisRepository
+    public class RedisRepository
     {
-        private string _userTokenKey = "UserToken_{0}";
-        private string _Data = "Data_{0}";
+        private static string _userTokenKey = "UserToken_{0}";
+        private static string _Data = "Data_{0}";
 
         /// <summary>
         /// 保存，用户登录
@@ -14,7 +13,7 @@ namespace Repository
         /// <param name="userId"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public bool UserTokenSet(int userId, string key)
+        public static bool UserTokenSet(int userId, string key)
         {
             Helper.RedisWriteHelper.HashSetKey("UserToken", string.Format(_userTokenKey, userId), key);
             return true;
@@ -25,7 +24,7 @@ namespace Repository
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public bool UserTokenExists(int userId)
+        public static bool UserTokenExists(int userId)
         {
             return Helper.RedisReadHelper.HashExists("UserToken", string.Format(_userTokenKey, userId));
         }
@@ -35,7 +34,7 @@ namespace Repository
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public bool UserTokenDelete(int userId)
+        public static bool UserTokenDelete(int userId)
         {
             return Helper.RedisWriteHelper.HashDelete("UserToken", string.Format(_userTokenKey, userId));
         }
@@ -45,7 +44,7 @@ namespace Repository
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public string UserTokenGet(int userId)
+        public static string UserTokenGet(int userId)
         {
             return Helper.RedisReadHelper.HashGetKey("UserToken", string.Format(_userTokenKey, userId));
         }
@@ -55,7 +54,7 @@ namespace Repository
         /// <param name="md5Str">主键</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        public bool CacheSet(string md5Str, string value)
+        public static bool CacheSet(string md5Str, string value)
         {
             Helper.RedisWriteHelper.SetStringKey(string.Format(_Data, md5Str), value, new System.TimeSpan(0, 0, 0, 20));
             return true;
@@ -66,7 +65,7 @@ namespace Repository
         /// </summary>
         /// <param name="md5Str"></param>
         /// <returns></returns>
-        public bool CasheExists(string md5Str)
+        public static bool CasheExists(string md5Str)
         {
             return Helper.RedisReadHelper.HashExists(string.Format(_Data, md5Str), string.Format(_Data, md5Str));
         }
@@ -77,7 +76,7 @@ namespace Repository
         /// </summary>
         /// <param name="md5Str"></param>
         /// <returns></returns>
-        public bool CasheDelete(string md5Str)
+        public static bool CasheDelete(string md5Str)
         {
             return Helper.RedisWriteHelper.KeyDelete(string.Format(_Data, md5Str));
         }
@@ -87,7 +86,7 @@ namespace Repository
         /// </summary>
         /// <param name="md5Str"></param>
         /// <returns></returns>
-        public string CasheGet(string md5Str)
+        public static string CasheGet(string md5Str)
         {
             return Helper.RedisReadHelper.StringGet(string.Format(_Data, md5Str));
         }

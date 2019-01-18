@@ -116,17 +116,25 @@ namespace WebApi
                               catch { }
                           }
 
-                          //   context.Response.ContentType = "application/json;charset=utf-8";
-                          // var user=context.Response.Headers;
-                          // context.Response.WriteAsync("{a:1,b:2}");
                           return Task.CompletedTask;
                       },
                     OnTokenValidated = context =>
                       {
-                          var user = context.Principal.Identity;
-                          var accessToken = context.SecurityToken;
-                          if (accessToken != null)
+                          var tokenStr = ((context as TokenValidatedContext).SecurityToken as JwtSecurityToken).RawData;
+                          if (string.IsNullOrEmpty(tokenStr))
                           {
+                              context.Fail("toke无效");
+                          }
+                          else
+                          {
+                              var userIdObj = new JwtSecurityTokenHandler().ReadJwtToken(tokenStr).Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+                              int userId = 0;
+                              int.TryParse(userIdObj.Value, out userId);
+                              var redisToken = RedisRepository.UserTokenGet(userId);
+                              if (redisToken == null || !redisToken.Equals(tokenStr))
+                              {
+                                  context.Fail("toke过期");
+                              }
                           }
                           return Task.CompletedTask;
                       }

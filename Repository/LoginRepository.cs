@@ -203,8 +203,7 @@ namespace Repository
             
             #endregion
 
-            var redis = new RedisRepository();
-            reObj.IsSuccess = redis.UserTokenDelete(inEnt.Data.USER_ID.Value);
+            reObj.IsSuccess = RedisRepository.UserTokenDelete(inEnt.Data.USER_ID.Value);
             return reObj;
         }
         /// <summary>

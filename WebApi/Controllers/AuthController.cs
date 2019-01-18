@@ -35,7 +35,6 @@ namespace WebApi.Controllers
         IHttpContextAccessor _accessor;
         IUserRepository _user;
 
-        IRedisRepository _redis;
         /// <summary>
         /// 授权
         /// </summary>
@@ -43,13 +42,11 @@ namespace WebApi.Controllers
         /// <param name="login"></param>
         /// <param name="accessor"></param>
         /// <param name="user"></param>
-        /// <param name="redis"></param>
-        public AuthController(IConfiguration config, ILoginRepository login, IHttpContextAccessor accessor, IUserRepository user, IRedisRepository redis)
+        public AuthController(IConfiguration config, ILoginRepository login, IHttpContextAccessor accessor, IUserRepository user)
         {
             _config = config;
             _login = login;
             _user = user;
-            _redis = redis;
             _accessor = accessor;
         }
         /// <summary>
@@ -79,11 +76,11 @@ namespace WebApi.Controllers
                     AppSettingsManager.JwtSettings.Audience,
                     claims,
                     DateTime.Now,
-                    DateTime.Now.AddMinutes(1),
+                    DateTime.Now.AddDays(7),
                     creds);
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
                 
-                _redis.UserTokenSet(reobj.Data.ID, reobj.Code);
+                RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
             }
             return reobj;
         }
