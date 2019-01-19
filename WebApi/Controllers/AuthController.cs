@@ -56,11 +56,11 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public Result<FaUserEntity> UserLogin(LogingDto inEnt)
+        public async Task<Result<FaUserEntity>> UserLogin(LogingDto inEnt)
         {
             //Bearer 
             Result<FaUserEntity> reobj = new Result<FaUserEntity>();
-            reobj = _login.UserLogin(inEnt);
+            reobj =await _login.UserLogin(inEnt);
             if (reobj.IsSuccess)
             {
                 var claims = new Claim[]
@@ -80,7 +80,7 @@ namespace WebApi.Controllers
                     creds);
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
                 
-                RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
+                await RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
             }
             return reobj;
         }
@@ -92,12 +92,12 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public Result LoginReg(LogingDto inEnt)
+        public async Task<Result> LoginReg(LogingDto inEnt)
         {
             var reObj = new Result();
             try
             {
-                return _login.LoginReg(inEnt);
+                return await _login.LoginReg(inEnt);
             }
             catch (ExceptionExtend e)
             {
@@ -119,7 +119,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Authorize]
         [HttpPost]
-        public Result LoginOut()
+        public async Task<Result> LoginOut()
         {
             var reObj = new Result();
             try
@@ -130,12 +130,12 @@ namespace WebApi.Controllers
                 outEnt.Data.LOGIN_HOST = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
                 outEnt.Data.LOGOUT_TIME = DateTime.Now;
                 outEnt.Data.MESSAGE = "正常退出";
-                var userEntList = _user.FindAll(x => x.LOGIN_NAME == User.Identity.Name);
+                var userEntList =await _user.FindAll(x => x.LOGIN_NAME == User.Identity.Name);
                 if (userEntList.Count() > 0)
                 {
-                    outEnt.Data.USER_ID = userEntList[0].ID;
+                    outEnt.Data.USER_ID = userEntList.ToList()[0].ID;
                 }
-                reObj = _login.LoginOut(outEnt);
+                reObj =await _login.LoginOut(outEnt);
             }
             catch (ExceptionExtend e)
             {

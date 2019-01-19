@@ -22,7 +22,7 @@ namespace Repository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public FaUserEntity SingleByKey(int key)
+        public Task<FaUserEntity> SingleByKey(int key)
         {
             return dbHelper.SingleByKey(key);
         }
@@ -33,26 +33,26 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public List<FaUserEntity> FindAll(Expression<Func<FaUserEntity, bool>> inParm = null)
+        public Task<IEnumerable<FaUserEntity>> FindAll(Expression<Func<FaUserEntity, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
         }
 
-        public int Update(DtoSave<FaUserEntity> inObj)
+        public Task<int> Update(DtoSave<FaUserEntity> inObj)
         {
             return dbHelper.Update(inObj);
         }
 
-        public Result<FaUserEntity> UserLogin(string username, string password)
+        public async Task<Result<FaUserEntity>> UserLogin(string username, string password)
         {
             Result<FaUserEntity> reObj = new Result<FaUserEntity>();
             DapperHelper<FaLoginEntity> dapper=new DapperHelper<FaLoginEntity>();
-            var login= dapper.Single(x=>x.LOGIN_NAME==username);
+            var login=await dapper.Single(x=>x.LOGIN_NAME==username);
             if (login != null)
             {
                 if (login.PASSWORD.ToLower().Equals(Helper.StringHelp.Get32MD5One(password).ToLower()))
                 {
-                    reObj.Data = new DapperHelper<FaUserEntity>().Single(x=>x.LOGIN_NAME==username);
+                    reObj.Data =await new DapperHelper<FaUserEntity>().Single(x=>x.LOGIN_NAME==username);
                 }
                 else
                 {

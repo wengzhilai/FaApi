@@ -22,7 +22,7 @@ namespace Repository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public FaSmsSendEntity SingleByKey<t>(t key)
+        public Task<FaSmsSendEntity> SingleByKey<t>(t key)
         {
             return dbHelper.SingleByKey(key);
         }
@@ -32,7 +32,7 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public List<FaSmsSendEntity> FindAll(Expression<Func<FaSmsSendEntity, bool>> inParm = null)
+        public Task<IEnumerable<FaSmsSendEntity>> FindAll(Expression<Func<FaSmsSendEntity, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
         }
@@ -42,7 +42,7 @@ namespace Repository
         /// <param name="phone"></param>
         /// <param name="code"></param>
         /// <returns></returns>
-        public int Count(string phone,string code)
+        public Task<int> Count(string phone,string code)
         {
             var nowDate = DateTime.Now.AddMinutes(-AppSettingsManager.Config.VerifyExpireMinute);
             

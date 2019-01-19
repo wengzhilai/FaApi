@@ -73,12 +73,12 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public string TestRedis()
+        public async Task<string> TestRedis()
         {
-            RedisWriteHelper.HashSetKey("user","user_1","翁志来测试1");
-            RedisWriteHelper.HashSetKey("user","user_2","翁志来测试2");
-            RedisWriteHelper.HashDelete("user","user_2");
-            var t= RedisReadHelper.HashGetKey("user","user_1");
+            await RedisWriteHelper.HashSetKey("user","user_1","翁志来测试1");
+            await RedisWriteHelper.HashSetKey("user","user_2","翁志来测试2");
+            await RedisWriteHelper.HashDelete("user","user_2");
+            var t= await RedisReadHelper.HashGetKey("user","user_1");
             return t;
         }
 

@@ -130,6 +130,7 @@ namespace WebApi
                               var userIdObj = new JwtSecurityTokenHandler().ReadJwtToken(tokenStr).Claims.SingleOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
                               int userId = 0;
                               int.TryParse(userIdObj.Value, out userId);
+                              //判断toke值跟redis的token是否相同
                               var redisToken = RedisRepository.UserTokenGet(userId);
                               if (redisToken == null || !redisToken.Equals(tokenStr))
                               {

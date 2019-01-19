@@ -46,14 +46,14 @@ namespace WebApi.MapperCfg.Profiles
             CreateMap<FaUserInfoEntity, RelativeItem>()
                 .ForMember(d => d.ElderId, opt => { opt.MapFrom(m =>m.ELDER_ID); })
                 .ForMember(d => d.ElderName, opt => { opt.MapFrom(m =>
-                elder.SingleByKey(m.ELDER_ID.Value).NAME
+                elder.SingleByKey(m.ELDER_ID.Value).Result.NAME
                 ); })
                 .ForMember(d => d.FatherId, opt => { opt.MapFrom(m =>m.FATHER_ID); })
                 .ForMember(d => d.IcoUrl, opt => { opt.MapFrom(m =>
-                file.SingleByKey(user.SingleByKey(m.ID).ICON_FILES_ID.Value).URL
+                file.SingleByKey(user.SingleByKey(m.ID).Result.ICON_FILES_ID.Value).Result.URL
                 ); })
                 .ForMember(d => d.Id, opt => { opt.MapFrom(m =>m.ID); })
-                .ForMember(d => d.Name, opt => { opt.MapFrom(m => user.SingleByKey(m.ID).NAME); })
+                .ForMember(d => d.Name, opt => { opt.MapFrom(m => user.SingleByKey(m.ID).Result.NAME); })
                 .ForMember(d => d.Sex, opt => { opt.MapFrom(m =>m.SEX); })
                 ;
         }

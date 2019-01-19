@@ -13,10 +13,9 @@ namespace Helper
         /// <param name="userId"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static bool UserTokenSet(int userId, string key)
+        public static Task<bool> UserTokenSet(int userId, string key)
         {
-            Helper.RedisWriteHelper.HashSetKey("UserToken", string.Format(_userTokenKey, userId), key);
-            return true;
+            return Helper.RedisWriteHelper.HashSetKey("UserToken", string.Format(_userTokenKey, userId), key);
         }
 
         /// <summary>
@@ -24,7 +23,7 @@ namespace Helper
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static bool UserTokenExists(int userId)
+        public static Task<bool> UserTokenExists(int userId)
         {
             return Helper.RedisReadHelper.HashExists("UserToken", string.Format(_userTokenKey, userId));
         }
@@ -34,7 +33,7 @@ namespace Helper
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static bool UserTokenDelete(int userId)
+        public static Task<bool> UserTokenDelete(int userId)
         {
             return Helper.RedisWriteHelper.HashDelete("UserToken", string.Format(_userTokenKey, userId));
         }
@@ -44,7 +43,7 @@ namespace Helper
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public static string UserTokenGet(int userId)
+        public static Task<string> UserTokenGet(int userId)
         {
             return Helper.RedisReadHelper.HashGetKey("UserToken", string.Format(_userTokenKey, userId));
         }
@@ -54,10 +53,9 @@ namespace Helper
         /// <param name="md5Str">主键</param>
         /// <param name="value">值</param>
         /// <returns></returns>
-        public static bool CacheSet(string md5Str, string value)
+        public static Task<bool> CacheSet(string md5Str, string value)
         {
-            Helper.RedisWriteHelper.SetStringKey(string.Format(_Data, md5Str), value, new System.TimeSpan(0, 0, 0, 20));
-            return true;
+            return Helper.RedisWriteHelper.SetStringKey(string.Format(_Data, md5Str), value, new System.TimeSpan(0, 0, 0, 20));
         }
 
         /// <summary>
@@ -65,7 +63,7 @@ namespace Helper
         /// </summary>
         /// <param name="md5Str"></param>
         /// <returns></returns>
-        public static bool CasheExists(string md5Str)
+        public static Task<bool> CasheExists(string md5Str)
         {
             return Helper.RedisReadHelper.HashExists(string.Format(_Data, md5Str), string.Format(_Data, md5Str));
         }
@@ -76,7 +74,7 @@ namespace Helper
         /// </summary>
         /// <param name="md5Str"></param>
         /// <returns></returns>
-        public static bool CasheDelete(string md5Str)
+        public static Task<bool> CasheDelete(string md5Str)
         {
             return Helper.RedisWriteHelper.KeyDelete(string.Format(_Data, md5Str));
         }
@@ -86,7 +84,7 @@ namespace Helper
         /// </summary>
         /// <param name="md5Str"></param>
         /// <returns></returns>
-        public static string CasheGet(string md5Str)
+        public static Task<string> CasheGet(string md5Str)
         {
             return Helper.RedisReadHelper.StringGet(string.Format(_Data, md5Str));
         }

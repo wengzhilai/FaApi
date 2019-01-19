@@ -28,22 +28,22 @@ namespace Repository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public int GetNextID<T>()where T : new()
+        public async Task<int> GetNextID<T>()where T : new()
         {
             string tableName=new ModelHelper<T> ().GetTableName();
-            var single=dbHelper.SingleByKey(tableName);
+            var single=await dbHelper.SingleByKey(tableName);
             if(single==null){
-                single=new SequenceEntity();
+                single= new SequenceEntity();
                 single.seq_name=tableName;
                 single.current_val=1;
                 single.increment_val=1;
-                dbHelper.Save(new DtoSave<SequenceEntity>{
+                await dbHelper.Save(new DtoSave<SequenceEntity>{
                     Data=single,
                     IgnoreFieldList=new List<string>()
                 });
             }else{
                 single.current_val+=single.increment_val;
-                dbHelper.Update(new DtoSave<SequenceEntity>{
+                await dbHelper.Update(new DtoSave<SequenceEntity>{
                     Data=single,
                     SaveFieldList=new List<string>{"current_val"}
                 });

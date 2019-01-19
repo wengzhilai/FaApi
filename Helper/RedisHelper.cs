@@ -29,7 +29,7 @@ namespace Helper
 
         private static ConnectionMultiplexer GetManager(string connectionString = null)
         {
-            connectionString = connectionString ??  AppSettingsManager.RedisConfig.readRedisstr;
+            connectionString = connectionString ?? AppSettingsManager.RedisConfig.readRedisstr;
             var connect = ConnectionMultiplexer.Connect(connectionString);
             return connect;
         }
@@ -41,18 +41,19 @@ namespace Helper
         /// <typeparam name="T"></typeparam>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static T GetObject<T>(ref Result result, string name, List<string> keyArry = null) where T : new()
+        public async static Task<Tuple<T, Result>> GetObject<T>(string name, List<string> keyArry = null) where T : new()
         {
+            Result result = new Result();
             T reEnt = new T();
             var allProperties = reEnt.GetType().GetProperties();
             var allField = allProperties.Where(x => (keyArry == null || keyArry.Count() == 0 || keyArry.Contains(x.Name))).Select(x => (RedisValue)x.Name).ToArray();
-            RedisValue[] values = cache.HashGet(name, allField);
+            RedisValue[] values = await cache.HashGetAsync(name, allField);
             int errNum = values.Count(x => !x.HasValue);
             if (errNum > 0)
             {
                 result.IsSuccess = false;
                 result.Msg = string.Format("取的数，有{0}个错误", errNum);
-                return reEnt;
+                return Tuple.Create<T, Result>(reEnt, result);
             }
             for (int i = 0; i < allField.Count(); i++)
             {
@@ -79,7 +80,7 @@ namespace Helper
                 }
             }
             result.IsSuccess = true;
-            return reEnt;
+            return Tuple.Create<T, Result>(reEnt, result);
         }
 
         /// <summary>
@@ -88,13 +89,15 @@ namespace Helper
         /// <typeparam name="T"></typeparam>
         /// <param name="names"></param>
         /// <returns></returns>
-        public static List<T> GetObjects<T>(List<string> names, List<string> keyArry = null) where T : new()
+        public async static Task<List<T>> GetObjects<T>(List<string> names, List<string> keyArry = null) where T : new()
         {
             List<T> reEnts = new List<T>();
             foreach (var name in names)
             {
                 Result result = new Result();
-                reEnts.Add(GetObject<T>(ref result, name, keyArry));
+                var tmp=await GetObject<T>(name, keyArry);
+                result=tmp.Item2;
+                reEnts.Add(tmp.Item1);
             }
             return reEnts;
         }
@@ -104,17 +107,16 @@ namespace Helper
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static string StringGet(string key)
+        public async static Task<string> StringGet(string key)
         {
-            return cache.StringGet(key).ToString();
+            return await cache.StringGetAsync(key);
         }
 
-        public static string HashGetKey(string hash, string key)
+        public async static Task<string> HashGetKey(string hash, string key)
         {
-            RedisValue v= cache.HashGet(hash, key);
-            return v;
+            return await cache.HashGetAsync(hash, key);
         }
-        
+
 
         /// <summary>
         /// 判断Key是否存在
@@ -122,14 +124,14 @@ namespace Helper
         /// <param name="hash"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static bool HashExists(string hash, string key)
+        public static Task<bool> HashExists(string hash, string key)
         {
-            return cache.HashExists(hash, key);
+            return cache.HashExistsAsync(hash, key);
         }
 
-        public static bool KeyExists(string key)
+        public static Task<bool> KeyExists(string key)
         {
-            return cache.KeyExists(key);
+            return cache.KeyExistsAsync(key);
         }
     }
     public class RedisWriteHelper
@@ -166,10 +168,10 @@ namespace Helper
         /// </summary>
         /// <param name="hash">key</param>
         /// <param name="hashFields">需更新的字段和值</param>
-        public static void HashSetEntry(string hash, Dictionary<string, object> hashFields)
+        public static Task HashSetEntry(string hash, Dictionary<string, object> hashFields)
         {
             var usKv = hashFields.Where(x => x.Value != null).Select(x => new HashEntry(x.Key, x.Value.ToString())).ToArray();
-            cache.HashSet(hash, usKv);
+            return cache.HashSetAsync(hash, usKv);
         }
 
         /// <summary>
@@ -180,7 +182,7 @@ namespace Helper
         /// <param name="inObj"></param>
         /// <param name="saveItems"></param>
         /// <returns></returns>
-        public static bool SetObject<T>(string name, T inObj, List<string> saveItems = null) where T : new()
+        public static Task SetObject<T>(string name, T inObj, List<string> saveItems = null) where T : new()
         {
             var allProperties = inObj.GetType().GetProperties();
             var allField = allProperties.Select(x => (RedisValue)x.Name).ToArray();
@@ -195,8 +197,7 @@ namespace Helper
                     allKv.Add(new HashEntry(item.Name, value.ToString()));
                 }
             }
-            cache.HashSet(name, allKv.ToArray());
-            return true;
+            return cache.HashSetAsync(name, allKv.ToArray());
         }
 
         /// <summary>
@@ -205,9 +206,9 @@ namespace Helper
         /// <param name="hash"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public static void HashSetKey(string hash, string key, string value)
+        public static Task<bool> HashSetKey(string hash, string key, string value)
         {
-            cache.HashSet(hash, key, value);
+            return cache.HashSetAsync(hash, key, value);
         }
         /// <summary>
         /// 设置Hash过期时间
@@ -215,9 +216,9 @@ namespace Helper
         /// <param name="hash"></param>
         /// <param name="span"></param>
         /// <returns></returns>
-        public static bool HashExpire(string hash, TimeSpan span)
+        public static Task<bool> HashExpire(string hash, TimeSpan span)
         {
-            return cache.KeyExpire(hash, span);
+            return cache.KeyExpireAsync(hash, span);
         }
         #endregion
 
@@ -226,9 +227,9 @@ namespace Helper
         /// 删除根据Key删除
         /// </summary>
         /// <param name="hash">keyName</param>
-        public static bool KeyDelete(string keyName)
+        public static Task<bool> KeyDelete(string keyName)
         {
-            return cache.KeyDelete(keyName);
+            return cache.KeyDeleteAsync(keyName);
         }
 
         /// <summary>
@@ -238,9 +239,9 @@ namespace Helper
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static bool HashDelete(string hash, string key)
+        public static Task<bool> HashDelete(string hash, string key)
         {
-            return cache.HashDelete(hash, key);
+            return cache.HashDeleteAsync(hash, key);
         }
 
         #endregion
@@ -253,9 +254,9 @@ namespace Helper
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static void StringHashSetKey(string hash, string key, string value)
+        public static Task<bool> StringHashSetKey(string hash, string key, string value)
         {
-            RedisValue values = cache.HashSet(hash, key, value);
+            return cache.HashSetAsync(hash, key, value);
         }
         #endregion
 
@@ -266,9 +267,9 @@ namespace Helper
         /// <param name="key">string类型key值</param>
         /// <param name="value">值</param>
         /// <param name="timeSpan">当前key过期时间</param>
-        public static void SetStringKey(string key, string value, TimeSpan timeSpan)
+        public static Task<bool> SetStringKey(string key, string value, TimeSpan timeSpan)
         {
-            cache.StringSet(key, value, timeSpan);//新建字段返回值1;修改字段返回值0
+            return cache.StringSetAsync(key, value, timeSpan);//新建字段返回值1;修改字段返回值0
         }
         #endregion
     }

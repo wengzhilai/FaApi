@@ -22,7 +22,7 @@ namespace Repository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public FaUserInfoEntity SingleByKey(int key)
+        public Task<FaUserInfoEntity> SingleByKey(int key)
         {
             return dbHelper.SingleByKey(key);
         }
@@ -32,7 +32,7 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public List<FaUserInfoEntity> FindAll(Expression<Func<FaUserInfoEntity, bool>> inParm = null)
+        public Task<IEnumerable<FaUserInfoEntity>> FindAll(Expression<Func<FaUserInfoEntity, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
         }

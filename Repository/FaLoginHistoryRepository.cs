@@ -22,7 +22,7 @@ namespace Repository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public FaLoginHistoryEntity SingleByKey(int key)
+        public Task<FaLoginHistoryEntity> SingleByKey(int key)
         {
             return dbHelper.SingleByKey(key);
         }
@@ -32,7 +32,7 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public List<FaLoginHistoryEntity> FindAll(Expression<Func<FaLoginHistoryEntity, bool>> inParm = null)
+        public Task<IEnumerable<FaLoginHistoryEntity>> FindAll(Expression<Func<FaLoginHistoryEntity, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
         }
@@ -41,10 +41,9 @@ namespace Repository
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
-        public int Save(DtoSave<FaLoginHistoryEntity> inObj)
+        public Task<int> Save(DtoSave<FaLoginHistoryEntity> inObj)
         {
-            dbHelper.SaveAsync(inObj);
-            return 1;
+            return dbHelper.SaveAsync(inObj);
         }
     }
 }

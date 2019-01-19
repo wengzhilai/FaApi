@@ -22,7 +22,7 @@ namespace Repository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public FaLoginEntity SingleByKey(int key)
+        public Task<FaLoginEntity> SingleByKey(int key)
         {
             return dbHelper.SingleByKey(key);
         }
@@ -32,7 +32,7 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public List<FaLoginEntity> FindAll(Expression<Func<FaLoginEntity, bool>> inParm = null)
+        public Task<IEnumerable<FaLoginEntity>> FindAll(Expression<Func<FaLoginEntity, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
         }
@@ -45,7 +45,7 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public Result LoginReg(LogingDto inEnt)
+        public async Task<Result> LoginReg(LogingDto inEnt)
         {
             Result reObj = new Result();
             #region 验证值
@@ -56,7 +56,7 @@ namespace Repository
                 reObj.IsSuccess = false;
                 reObj.Code = "-1";
                 reObj.Msg = string.Format(",", errList.Select(x => x.ErrorMessage));
-                return reObj;
+                return await Task.Run(() => reObj);
             }
             #endregion
 
@@ -68,7 +68,7 @@ namespace Repository
                 reObj.IsSuccess = false;
                 reObj.Code = "-1";
                 reObj.Msg = "电话号码格式不正确";
-                return reObj;
+                return await Task.Run(() => reObj);
             }
 
             if (!Fun.CheckPassword(inEnt.Password))
@@ -76,7 +76,7 @@ namespace Repository
                 reObj.IsSuccess = false;
                 reObj.Code = "-2";
                 reObj.Msg = string.Format("密码复杂度不够：{0}");
-                return reObj;
+                return await Task.Run(() => reObj);
             }
             #endregion
 
@@ -85,38 +85,38 @@ namespace Repository
             {
                 var nowDate = DateTime.Now.AddMinutes(-30);
 
-                var codeNum = new SmsSendRepository().Count(inEnt.LoginName, inEnt.code);
+                var codeNum =await new SmsSendRepository().Count(inEnt.LoginName, inEnt.code);
                 if (codeNum == 0)
                 {
                     reObj.IsSuccess = false;
                     reObj.Code = "-3";
                     reObj.Msg = string.Format("验证码无效");
-                    return reObj;
+                    return await Task.Run(() => reObj);
                 }
             }
             #endregion
 
-            var userList = new UserRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
+            var userList =await new UserRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
             #region 检测电话号码是否存在
             if (userList.Count() > 0)
             {
                 reObj.IsSuccess = false;
                 reObj.Code = "-4";
                 reObj.Msg = string.Format("电话号码已经存在，请更换电话号码");
-                return reObj;
+                return await Task.Run(() => reObj);
             }
             #endregion
 
             //开始事务
             dbHelper.TranscationBegin();
-            var loginList = new LoginRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
+            var loginList = await new LoginRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
             #region 添加登录账号
             if (loginList.Count() == 0)
             {
                 FaLoginEntity inLogin = new FaLoginEntity();
                 inLogin.LOGIN_NAME = inEnt.LoginName;
                 inLogin.PASSWORD = inEnt.Password.Md5();
-                reObj.IsSuccess = dbHelper.Save(new DtoSave<FaLoginEntity>()
+                reObj.IsSuccess =await dbHelper.Save(new DtoSave<FaLoginEntity>()
                 {
                     Data = inLogin
                 }) > 0 ? true : false;
@@ -136,9 +136,9 @@ namespace Repository
             FaUserEntity inUser = new FaUserEntity();
             inUser.LOGIN_NAME = inEnt.LoginName;
             inUser.NAME = inEnt.userName;
-            inUser.ID = new SequenceRepository().GetNextID<FaUserEntity>();
+            inUser.ID =await new SequenceRepository().GetNextID<FaUserEntity>();
             inUser.DISTRICT_ID = 1;
-            reObj.IsSuccess = new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
+            reObj.IsSuccess =await new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
             {
                 Data = inUser,
                 IgnoreFieldList = new List<string>()
@@ -158,7 +158,7 @@ namespace Repository
             var userInfo = dbUser.Single(x => x.ID == inUser.ID);
             if (userInfo == null)
             {
-                reObj.IsSuccess = dbUser.Save(new DtoSave<FaUserInfoEntity>
+                reObj.IsSuccess =await dbUser.Save(new DtoSave<FaUserInfoEntity>
                 {
                     Data = new FaUserInfoEntity { ID = inUser.ID }
                 }) > 0 ? true : false;
@@ -182,13 +182,13 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public Result LoginOut(DtoSave<FaLoginHistoryEntity> inEnt)
+        public async Task<Result> LoginOut(DtoSave<FaLoginHistoryEntity> inEnt)
         {
             Result reObj = new Result();
             #region 记录登出历史
             var userDal = new UserRepository();
             //正常退出，修改退出日志
-            reObj.IsSuccess = userDal.Update(new DtoSave<FaUserEntity>
+            reObj.IsSuccess =await userDal.Update(new DtoSave<FaUserEntity>
             {
                 Data = new FaUserEntity { ID = inEnt.Data.USER_ID.Value, LAST_ACTIVE_TIME = DateTime.Now, LAST_LOGOUT_TIME = DateTime.Now },
                 SaveFieldList = new List<string> { "LAST_ACTIVE_TIME", "LAST_LOGOUT_TIME" }
@@ -199,11 +199,11 @@ namespace Repository
             }
 
             //记录登录日志
-            new FaLoginHistoryRepository().Save(inEnt);
+            await new FaLoginHistoryRepository().Save(inEnt);
             
             #endregion
 
-            reObj.IsSuccess = RedisRepository.UserTokenDelete(inEnt.Data.USER_ID.Value);
+            reObj.IsSuccess = await RedisRepository.UserTokenDelete(inEnt.Data.USER_ID.Value);
             return reObj;
         }
         /// <summary>
@@ -213,7 +213,7 @@ namespace Repository
         /// <param name="inEnt"></param>
         /// <returns></returns>
 
-        public Result<FaUserEntity> UserLogin(LogingDto inEnt)
+        public async Task<Result<FaUserEntity>> UserLogin(LogingDto inEnt)
         {
             Result<FaUserEntity> reObj = new Result<FaUserEntity>();
 
@@ -228,8 +228,8 @@ namespace Repository
 
 
 
-            var Login = dapperLogin.Single(x => x.LOGIN_NAME == inEnt.LoginName);
-            var user = dapperUser.Single(x => x.LOGIN_NAME == inEnt.LoginName);
+            var Login =await dapperLogin.Single(x => x.LOGIN_NAME == inEnt.LoginName);
+            var user = await dapperUser.Single(x => x.LOGIN_NAME == inEnt.LoginName);
             if (Login == null || user == null)
             {
                 reObj.IsSuccess = false;
@@ -262,7 +262,7 @@ namespace Repository
                             Login.IS_LOCKED = 1;
                             Login.LOCKED_REASON = string.Format("用户连续5次错误登陆，帐号锁定。");
                             Login.FAIL_COUNT = 0;
-                            dapperLogin.Update(new DtoSave<FaLoginEntity>
+                            await dapperLogin.Update(new DtoSave<FaLoginEntity>
                             {
                                 Data = Login,
                                 SaveFieldList = new List<string> { "IS_LOCKED", "LOCKED_REASON", "FAIL_COUNT" }
@@ -271,7 +271,7 @@ namespace Repository
                         else
                         {
                             Login.FAIL_COUNT++;
-                            dapperLogin.Update(new DtoSave<FaLoginEntity>
+                            await dapperLogin.Update(new DtoSave<FaLoginEntity>
                             {
                                 Data = Login,
                                 SaveFieldList = new List<string> { "FAIL_COUNT" }
@@ -285,7 +285,7 @@ namespace Repository
                 {
 
                     Login.FAIL_COUNT = 0;
-                    reObj.IsSuccess= dapperLogin.Update(new DtoSave<FaLoginEntity>
+                    reObj.IsSuccess=await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
                         Data = Login,
                         SaveFieldList = new List<string> { "FAIL_COUNT" }
@@ -306,7 +306,7 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public Result ResetPassword(ResetPasswordDto inEnt)
+        public async Task< Result> ResetPassword(ResetPasswordDto inEnt)
         {
             Result reObj = new Result();
             if (string.IsNullOrEmpty(inEnt.VerifyCode) || string.IsNullOrEmpty(inEnt.LoginName) || string.IsNullOrEmpty(inEnt.NewPwd))
@@ -317,7 +317,7 @@ namespace Repository
             }
             var dapper = new DapperHelper<FaLoginEntity>();
 
-            var login = dapper.Single(x => x.LOGIN_NAME == inEnt.LoginName);
+            var login =await dapper.Single(x => x.LOGIN_NAME == inEnt.LoginName);
             if (login == null)
             {
                 reObj.IsSuccess = false;
@@ -338,7 +338,7 @@ namespace Repository
                 return reObj;
             }
             login.PASSWORD = inEnt.NewPwd.Md5();
-            dapper.Update(new DtoSave<FaLoginEntity>()
+            await dapper.Update(new DtoSave<FaLoginEntity>()
             {
                 Data = login,
                 SaveFieldList = new List<string> { "PASSWORD" }
@@ -352,10 +352,11 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public Result UserEditPwd(DtoSave<ResetPasswordDto> inEnt)
+        public Task<Result> UserEditPwd(DtoSave<ResetPasswordDto> inEnt)
         {
             Result reObj = new Result();
-            return reObj;
+            return Task.Run(()=>reObj);
         }
+
     }
 }
