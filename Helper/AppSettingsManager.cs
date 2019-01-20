@@ -20,14 +20,40 @@ namespace Helper
         public static Logging Logging = new Logging();
 
         /// <summary>
-        /// 验证配置
+        /// 基本配置
         /// </summary>
         /// <returns></returns>
         public static BaseConfig Config=new BaseConfig();
-
+        /// <summary>
+        /// redis配置
+        /// </summary>
+        /// <returns></returns>
         public static RedisConfig RedisConfig=new RedisConfig();
         
+        /// <summary>
+        /// 极光配置
+        /// </summary>
+        /// <returns></returns>
+        public static JpushCfg JpushCfg=new JpushCfg();
 
+    }
+
+    /// <summary>
+    /// 极光推送配置
+    /// </summary>
+    public class JpushCfg
+    {
+        /// <summary>
+        /// AppKey
+        /// </summary>
+        /// <value></value>
+        public string AppKey { get; set; }="84ff22da5402281d47b04ea5";
+        /// <summary>
+        /// MasterSecret
+        /// </summary>
+        /// <value></value>
+        public string MasterSecret { get; set; }="a0381433ca7df3c570345bea";
+         
     }
 
     /// <summary>
