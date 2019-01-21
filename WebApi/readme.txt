@@ -21,3 +21,7 @@ Install-Package Microsoft.VisualStudio.Web.CodeGeneration.Design
 https://www.cnblogs.com/yangjinwang/p/9516988.html
 
 Microsoft.AspNetCore.Authentication.AuthenticationBuilder IServiceCollection.AddAuthentication(Action<Microsoft.AspNetCore.Authentication.AuthenticationOptions> configureOptions)
+
+/Users/wengzhilai/Desktop/ExportCsv
+/Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/Controllers/PublicController.cs
+/Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/readme.txt
