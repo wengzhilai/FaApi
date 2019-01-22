@@ -27,7 +27,7 @@ namespace IRepository
 
 
         /// <summary>
-        /// 直接发送短信
+        /// 直接发送短信,并记录日志表和用户表里
         /// </summary>
         /// <param name="loginKey"></param>
         /// <param name="mobile">手机号码</param>

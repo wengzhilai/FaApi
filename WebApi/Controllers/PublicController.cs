@@ -55,7 +55,13 @@ namespace WebApi.Controllers
         public async Task<Result> SendCode(DtoKey inEnt)
         {
             Result reEnt = new Result();
-            var t=await _public.SmsSendCode("18180770313","AAAA");
+            if(!inEnt.Key.IsPhoneNumber()){
+                reEnt.IsSuccess=false;
+                reEnt.Msg="电话号码格式有误";
+                return reEnt;
+            }
+            var code= PicFunHelper.ValidateMake(4);
+            var t=await _public.SmsSendCode(inEnt.Key,code);
             // dynamic reEnt = await Task.Run(() => Fun<ErrorInfo>.Func(api.PublicApi.SendCode, ref err, inEnt));
             // if (err.IsError) return err;
             return reEnt;
@@ -65,7 +71,7 @@ namespace WebApi.Controllers
         /// 图片上传
         /// </summary>
         /// <returns></returns>
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost]
         [RequestSizeLimit(100_000_000)] //最大100m左右
         public async Task<Result> UploadPhotos(List<IFormFile> files)
@@ -97,6 +103,48 @@ namespace WebApi.Controllers
             }
             return reEnt;
         }
+
+        /// <summary>
+        /// 查看文件 key为文件id
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<Result> Lookfile(DtoKey inEnt){
+            Result reObj=new Result();
+            return reObj;
+        }
+
+        /// <summary>
+        /// 检测版本 key为当前版本号
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<Result> CheckUpdate(DtoKey inEnt){
+            Result reObj=new Result();
+            return reObj;
+        }
+
+        /// <summary>
+        /// 获取阴历 key为时间字符串
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result> GetLunarDate(DtoKey inEnt){
+            Result reObj=new Result();
+            return reObj;
+        }
+
+        /// <summary>
+        /// 获取阳历 key为时间字符串
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result> GetSolarDate(DtoKey inEnt){
+            Result reObj=new Result();
+            return reObj;
+        }
+
 
     }
 }

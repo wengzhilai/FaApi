@@ -10,6 +10,7 @@ namespace System
     /// </summary>
     public static class StringExtensions
     {
+        private static readonly Regex CRegex_PhoneNumber = new Regex(@"^[1]+[3,5,7,8]+\d{9}$");
         private static readonly Regex CRegex_Number = new Regex(@"^[0-9]+$");
         private static readonly Regex CRegex_Word = new Regex(@"^[a-zA-Z]+$");
         private static readonly Regex CRegex_NumberAndString = new Regex(@"(\d+[a-zA-Z])|([a-zA-Z]\d+)");
@@ -100,6 +101,14 @@ namespace System
         public static bool IsOnlyNumber(this String source)
         {
             return CRegex_Number.Match(source).Success;
+        }
+        /// <summary>
+        /// 难证是否是电话号码
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static bool IsPhoneNumber(this String source){
+            return CRegex_PhoneNumber.Match(source).Success;
         }
 
         /// <summary>

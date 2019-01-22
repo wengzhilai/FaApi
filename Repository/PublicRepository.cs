@@ -41,34 +41,66 @@ namespace Repository
 
             var code = PicFunHelper.ValidateMake(4);
             DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>();
+            try
+            {
+                dapperLogin.TranscationBegin();
+                var login = await dapperLogin.Single(x => x.LOGIN_NAME == phone);
+                if (login != null)
+                {
+                    login.VERIFY_CODE = code;
+                    reEnt.IsSuccess= await dapperLogin.Update(new DtoSave<FaLoginEntity>{
+                        Data=login,
+                        SaveFieldList=new List<string>{"VERIFY_CODE"},
+                        IgnoreFieldList=null
+                    })>0;
+                    if(!reEnt.IsSuccess){
+                        reEnt.Msg="更新用户验证码失败";
+                        dapperLogin.TranscationRollback();
+                        return reEnt;
+                    }
+                }
 
-            var login = await dapperLogin.Single(x => x.LOGIN_NAME == phone);
-            if (login != null)
-            {
-                login.VERIFY_CODE = code;
-            }
+                FaSmsSendEntity ent = new FaSmsSendEntity()
+                {
+                    GUID = Guid.NewGuid().ToString().Replace("-", ""),
+                    ADD_TIME = DateTime.Now,
+                    CONTENT = code,
+                    STAUTS = "成功",
+                    PHONE_NO = phone
+                };
 
-            FaSmsSendEntity ent = new FaSmsSendEntity()
-            {
-                GUID = Guid.NewGuid().ToString().Replace("-", ""),
-                ADD_TIME = DateTime.Now,
-                CONTENT = code,
-                STAUTS = "成功",
-                PHONE_NO = phone
-            };
-            if (await SmsSendCode(phone, code))
-            {
-                reEnt.Msg = "发送成功";
+                //发送短信
+                reEnt.IsSuccess=await SmsSendCode(phone, code);
+                if (!reEnt.IsSuccess)
+                {
+                    reEnt.IsSuccess = false;
+                    reEnt.Msg = "短信服务已欠费，请联系管理员";
+                    dapperLogin.TranscationRollback();
+                    return reEnt;
+                }
+                reEnt.IsSuccess=await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
+                {
+                    Data = ent
+                })>0;
+                if (!reEnt.IsSuccess)
+                {
+                    reEnt.IsSuccess = false;
+                    reEnt.Msg = "保存发送记录失败";
+                    dapperLogin.TranscationRollback();
+                    return reEnt;
+                }
+                dapperLogin.TranscationCommit();
+                reEnt.IsSuccess=true;
+                reEnt.Msg="发送成功";
             }
-            else
+            catch (Exception e)
             {
                 reEnt.IsSuccess = false;
-                reEnt.Msg = "短信服务已欠费，请联系管理员";
+                reEnt.Msg=e.Message;
+
+                LogHelper.WriteErrorLog<PublicRepository>(e.ToString());
+                dapperLogin.TranscationRollback();
             }
-            await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
-            {
-                Data = ent
-            });
             return reEnt;
         }
 
