@@ -73,7 +73,7 @@ namespace Repository
 
         public async Task<bool> SmsSendCode(string mobile, string code)
         {
-            JiguangHelper.SendValidSms(mobile,code)
+            await JiguangHelper.SendValidSms(mobile,code);
             return true;
         }
     }

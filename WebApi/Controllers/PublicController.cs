@@ -30,6 +30,16 @@ namespace WebApi.Controllers
     [Authorize]
     public class PublicController : ControllerBase
     {
+
+        IPublicRepository _public;
+        /// <summary>
+        /// 
+        /// </summary>
+        public PublicController(IPublicRepository pub)
+        {
+            _public=pub;
+        }
+  
         /// <summary>
         /// 发送验证码到手机
         /// <para>发送时会在用户的Login表里修改VERIFY_CODE，并在fa_sms_send增加记录</para>
@@ -37,10 +47,11 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<Result> SendCode(DtoKey inEnt)
         {
             Result reEnt = new Result();
-
+            var t=await _public.SmsSendCode("18180770313","AAAA");
             // dynamic reEnt = await Task.Run(() => Fun<ErrorInfo>.Func(api.PublicApi.SendCode, ref err, inEnt));
             // if (err.IsError) return err;
             return reEnt;
