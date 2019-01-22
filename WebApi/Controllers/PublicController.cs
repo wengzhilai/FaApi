@@ -19,6 +19,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WebApi.Controllers
 {
@@ -31,15 +33,17 @@ namespace WebApi.Controllers
     public class PublicController : ControllerBase
     {
 
+        private readonly IHostingEnvironment _env;
         IPublicRepository _public;
         /// <summary>
         /// 
         /// </summary>
-        public PublicController(IPublicRepository pub)
+        public PublicController(IPublicRepository pub,IHostingEnvironment hostingEnvironment)
         {
             _public=pub;
+            _env = hostingEnvironment;
         }
-  
+
         /// <summary>
         /// 发送验证码到手机
         /// <para>发送时会在用户的Login表里修改VERIFY_CODE，并在fa_sms_send增加记录</para>
@@ -56,5 +60,43 @@ namespace WebApi.Controllers
             // if (err.IsError) return err;
             return reEnt;
         }
+
+        /// <summary>
+        /// 图片上传
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [HttpPost]
+        [RequestSizeLimit(100_000_000)] //最大100m左右
+        public async Task<Result> UploadPhotos(List<IFormFile> files)
+        {
+            Result reEnt = new Result();
+            long size = files.Sum(f => f.Length);
+            // var fileFolder = Path.Combine(_env.ContentRootPath, "UpFiles");
+            var fileFolder = "UpFiles";
+
+            if (!Directory.Exists(fileFolder))
+                Directory.CreateDirectory(fileFolder);
+
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") +
+                                   Path.GetExtension(formFile.FileName);
+                    var filePath = Path.Combine(fileFolder, fileName);
+                    var allPath=Path.Combine(_env.ContentRootPath, filePath);
+                    using (var stream = new FileStream(allPath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                        reEnt.IsSuccess=true;
+                        reEnt.Msg=filePath;
+                        stream.Flush();
+                    }
+                }
+            }
+            return reEnt;
+        }
+
     }
 }

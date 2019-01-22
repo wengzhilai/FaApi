@@ -39,41 +39,42 @@ namespace Repository
                 return reEnt;
             }
 
-                var code = PicFunHelper.ValidateMake(4);
-            DapperHelper<FaLoginEntity> dapperLogin=new DapperHelper<FaLoginEntity>();
-            
-                var login =await dapperLogin.Single(x => x.LOGIN_NAME == phone);
-                if (login != null)
-                {
-                    login.VERIFY_CODE = code;
-                }
+            var code = PicFunHelper.ValidateMake(4);
+            DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>();
 
-                FaSmsSendEntity ent = new FaSmsSendEntity()
-                {
-                    GUID = Guid.NewGuid().ToString().Replace("-", ""),
-                    ADD_TIME = DateTime.Now,
-                    CONTENT = code,
-                    STAUTS = "成功",
-                    PHONE_NO = phone
-                };
-                if (await SmsSendCode(phone, code))
-                {
-                    reEnt.Msg = "发送成功";
-                }
-                else
-                {
-                    reEnt.IsSuccess = false;
-                    reEnt.Msg = "短信服务已欠费，请联系管理员";
-                }
-                await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>{
-                    Data=ent
-                });
-                return reEnt;
+            var login = await dapperLogin.Single(x => x.LOGIN_NAME == phone);
+            if (login != null)
+            {
+                login.VERIFY_CODE = code;
+            }
+
+            FaSmsSendEntity ent = new FaSmsSendEntity()
+            {
+                GUID = Guid.NewGuid().ToString().Replace("-", ""),
+                ADD_TIME = DateTime.Now,
+                CONTENT = code,
+                STAUTS = "成功",
+                PHONE_NO = phone
+            };
+            if (await SmsSendCode(phone, code))
+            {
+                reEnt.Msg = "发送成功";
+            }
+            else
+            {
+                reEnt.IsSuccess = false;
+                reEnt.Msg = "短信服务已欠费，请联系管理员";
+            }
+            await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
+            {
+                Data = ent
+            });
+            return reEnt;
         }
 
         public async Task<bool> SmsSendCode(string mobile, string code)
         {
-            await JiguangHelper.SendValidSms(mobile,code);
+            await JiguangHelper.SendValidSms(mobile, code);
             return true;
         }
     }
