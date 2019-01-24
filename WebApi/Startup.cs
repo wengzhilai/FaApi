@@ -169,6 +169,10 @@ namespace WebApi
             services.AddAutoMapper(typeof(Startup));
 
             services.AddHttpContextAccessor();
+
+            services.AddCors(options => options.AddPolicy("AllowSameDomain",
+            x => x.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials()));
+
             #region 依赖注入
 
             var builder = new ContainerBuilder();//实例化容器

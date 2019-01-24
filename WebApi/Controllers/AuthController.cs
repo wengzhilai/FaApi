@@ -19,12 +19,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Cors;
 
 namespace WebApi.Controllers
 {
     /// <summary>
     /// 授权管理
     /// </summary>
+    [EnableCors("AllowSameDomain")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]

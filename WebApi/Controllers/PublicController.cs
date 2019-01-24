@@ -111,7 +111,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
-        public async Task<Result> Lookfile(DtoKey inEnt){
+        public Result Lookfile(DtoKey inEnt){
             Result reObj=new Result();
             return reObj;
         }
@@ -122,7 +122,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<Result> CheckUpdate(DtoKey inEnt){
+        public Result CheckUpdate(DtoKey inEnt){
             Result reObj=new Result();
             return reObj;
         }
@@ -131,7 +131,8 @@ namespace WebApi.Controllers
         /// 获取阴历 key为时间字符串
         /// </summary>
         /// <returns></returns>
-        public async Task<Result> GetLunarDate(DtoKey inEnt){
+        [HttpPost]
+        public Result GetLunarDate(DtoKey inEnt){
             Result reObj=new Result();
             return reObj;
         }
@@ -140,7 +141,8 @@ namespace WebApi.Controllers
         /// 获取阳历 key为时间字符串
         /// </summary>
         /// <returns></returns>
-        public async Task<Result> GetSolarDate(DtoKey inEnt){
+        [HttpPost]
+        public Result GetSolarDate(DtoKey inEnt){
             Result reObj=new Result();
             return reObj;
         }
