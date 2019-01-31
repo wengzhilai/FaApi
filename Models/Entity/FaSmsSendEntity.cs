@@ -17,6 +17,7 @@ namespace Models.Entity
         /// </summary>
         [Key]
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [StringLength(32)]
         [Display(Name = "GUID")]
         [Column]

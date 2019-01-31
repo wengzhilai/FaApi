@@ -197,7 +197,7 @@ namespace Repository
             {
                 return reObj;
             }
-
+            if(inEnt.Data.ID==0)inEnt.Data.ID=await new SequenceRepository().GetNextID<FaLoginHistoryEntity>();
             //记录登录日志
             await new FaLoginHistoryRepository().Save(inEnt);
             

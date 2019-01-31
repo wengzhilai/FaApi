@@ -18,6 +18,7 @@ namespace Models.Entity
         [Key]
         [Required]
         [Display(Name = "表名")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [StringLength(20)]
         [Column]
         public string seq_name { get; set; }

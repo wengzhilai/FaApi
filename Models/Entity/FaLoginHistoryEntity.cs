@@ -16,6 +16,7 @@ namespace Models.Entity
         /// ID
         /// </summary>
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]
         [Display(Name = "ID")]
         [Column]

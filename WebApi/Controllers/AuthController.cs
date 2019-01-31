@@ -44,7 +44,12 @@ namespace WebApi.Controllers
         /// <param name="login"></param>
         /// <param name="accessor"></param>
         /// <param name="user"></param>
-        public AuthController(IConfiguration config, ILoginRepository login, IHttpContextAccessor accessor, IUserRepository user)
+        public AuthController(
+            IConfiguration config, 
+            ILoginRepository login, 
+            IHttpContextAccessor accessor, 
+            IUserRepository user
+            )
         {
             _config = config;
             _login = login;

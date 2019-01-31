@@ -213,17 +213,17 @@ namespace Helper
             List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
             var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(where, listSqlParaModel);
             string sql = modelHelper.GetSingleSql(whereStr, order);
-            var query = connection.QueryFirstAsync<T>(sql, listSqlParaModel, transaction);
+            var query = connection.QueryFirstOrDefaultAsync<T>(sql, listSqlParaModel, transaction);
             return query;
         }
 
-        public Task<T> SingleByKey<t>(t key)
+        public async Task<T> SingleByKey<t>(t key)
         {
             string sql = modelHelper.GetSingleSql();
             DynamicParameters dynamicP = new DynamicParameters();
             dynamicP.Add(modelHelper.GetKeyField(), key);
 
-            var query = connection.QueryFirstAsync<T>(sql, dynamicP, transaction);
+            var query = await connection.QueryFirstOrDefaultAsync<T>(sql, dynamicP, transaction);
             return query;
         }
 

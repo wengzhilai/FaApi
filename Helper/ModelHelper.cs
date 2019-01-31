@@ -108,7 +108,7 @@ namespace Helper
         }
 
 
-        
+
         /// <summary>
         /// 获取Dapper的动态参数
         /// </summary>
@@ -133,9 +133,15 @@ namespace Helper
                 object[] attrsPi = proInfo.GetCustomAttributes(true);
                 foreach (object obj in attrsPi)
                 {
-                    if (obj is DisplayAttribute)//定义了Display属性的字段为字数库字段
+                    if (obj is ColumnAttribute)//定义了Display属性的字段为字数库字段
                     {
-                        reField.Add(proInfo.Name, proInfo.GetValue(inEnt, null));
+                        object objV = proInfo.GetValue(inEnt, null);
+                        //如果是主键并且，不是自增加，并且，值不空或为0
+                        if (GetKeyField().Equals(proInfo.Name) && !GetKeyIsAuto() && (objV == null || objV.ToString() == "0"))
+                        {
+                            throw new Exception("主键没设置值");
+                        }
+                        reField.Add(proInfo.Name, objV);
                         continue;
                     }
                 }
@@ -225,11 +231,56 @@ namespace Helper
                     if (attrsPro.Length > 0)
                     {
                         _key = proInfo.Name;
+
+                        object[] attrsGenerated = proInfo.GetCustomAttributes(typeof(DatabaseGeneratedAttribute), true);
+                        if (attrsGenerated.Length > 0)
+                        {
+                            _IsAuto = ((DatabaseGeneratedAttribute)attrsGenerated[0]).DatabaseGeneratedOption == DatabaseGeneratedOption.None;
+                        }
+                        else
+                        {
+                            _IsAuto = true;
+                        }
                         break;
                     }
                 }
             }
             return _key;
+        }
+
+        bool? _IsAuto;
+        /// <summary>
+        /// 获取Key是否是自动生成的
+        /// </summary>
+        /// <returns></returns>
+        public bool GetKeyIsAuto()
+        {
+            if (_IsAuto == null)
+            {
+                //默认是自动生成
+                _IsAuto = true;
+                Type type = typeof(T);
+                PropertyInfo[] proInfoArr = type.GetProperties();//得到该类的所有公共属性
+                for (int a = 0; a < proInfoArr.Length; a++)
+                {
+                    PropertyInfo proInfo = proInfoArr[a];
+                    object[] attrsPro = proInfo.GetCustomAttributes(typeof(KeyAttribute), true);
+                    if (attrsPro.Length > 0)
+                    {
+                        object[] attrsGenerated = proInfo.GetCustomAttributes(typeof(DatabaseGeneratedAttribute), true);
+                        if (attrsGenerated.Length > 0)
+                        {
+                            _IsAuto = ((DatabaseGeneratedAttribute)attrsGenerated[0]).DatabaseGeneratedOption != DatabaseGeneratedOption.None;
+                        }
+                        else
+                        {
+                            _IsAuto = true;
+                        }
+                        break;
+                    }
+                }
+            }
+            return _IsAuto.Value;
         }
 
         /// <summary>
@@ -241,11 +292,16 @@ namespace Helper
         public string GetSaveSql(List<string> saveFieldList = null, List<string> ignoreFieldList = null)
         {
             string sql = null;
-            if (ignoreFieldList == null) {
+            //如果没设置并且主键是自动生成
+            if (ignoreFieldList == null && GetKeyIsAuto())
+            {
                 ignoreFieldList = new List<string> { GetKeyField() };
             }
             sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList)) + ") VALUES(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => "@" + x)) + ")";
-            sql += "\r\n select @@IDENTITY ";
+            if (GetKeyIsAuto())
+            {
+                sql += "\r\n select @@IDENTITY ";
+            }
             return sql;
         }
 
@@ -478,12 +534,12 @@ namespace Helper
             string sql = "SELECT  {0} FROM {1} WHERE {2}=@{2} {3}";
             if (string.IsNullOrEmpty(whereStr))
             {
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), key,orderByStr);
+                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), key, orderByStr);
             }
             else
             {
                 sql = "SELECT  {0} FROM {1} WHERE {2} {3}";
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), whereStr,orderByStr);
+                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), whereStr, orderByStr);
 
             }
             return sql;
