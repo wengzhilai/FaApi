@@ -241,7 +241,9 @@ namespace Helper
         public string GetSaveSql(List<string> saveFieldList = null, List<string> ignoreFieldList = null)
         {
             string sql = null;
-            if (ignoreFieldList == null) ignoreFieldList = new List<string> { GetKeyField() };
+            if (ignoreFieldList == null) {
+                ignoreFieldList = new List<string> { GetKeyField() };
+            }
             sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList)) + ") VALUES(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => "@" + x)) + ")";
             sql += "\r\n select @@IDENTITY ";
             return sql;

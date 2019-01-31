@@ -6,41 +6,57 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Models.Entity
 {
     /// <summary>
-    /// 账号登录日志
+    /// 登录历史
     /// </summary>
     [Table("fa_login_history")]
     public class FaLoginHistoryEntity : BaseModel
     {
+
         /// <summary>
-        /// 主键
+        /// ID
         /// </summary>
-        /// <value></value>
+        [Key]
+        [Required]
+        [Display(Name = "ID")]
+        [Column]
         public int ID { get; set; }
         /// <summary>
-        /// 用户ID
+        /// USER_ID
         /// </summary>
-        /// <value></value>
+        [Display(Name = "USER_ID")]
+        [Column]
         public Nullable<int> USER_ID { get; set; }
         /// <summary>
-        /// 登录时间
+        /// LOGIN_TIME
         /// </summary>
-        /// <value></value>
-        public Nullable<System.DateTime> LOGIN_TIME { get; set; }
+        [Display(Name = "LOGIN_TIME")]
+        [Column]
+        public Nullable<DateTime> LOGIN_TIME { get; set; }
         /// <summary>
-        /// 操作IP
+        /// LOGIN_HOST
         /// </summary>
-        /// <value></value>
+        [StringLength(255)]
+        [Display(Name = "LOGIN_HOST")]
+        [Column]
         public string LOGIN_HOST { get; set; }
         /// <summary>
-        /// 操作时间
+        /// LOGOUT_TIME
         /// </summary>
-        /// <value></value>
-        public Nullable<System.DateTime> LOGOUT_TIME { get; set; }
+        [Display(Name = "LOGOUT_TIME")]
+        [Column]
+        public Nullable<DateTime> LOGOUT_TIME { get; set; }
         /// <summary>
-        /// 登录操作类型，1表示登录，2表示退出，3操作
+        /// LOGIN_HISTORY_TYPE
         /// </summary>
-        /// <value></value>
+        [Display(Name = "LOGIN_HISTORY_TYPE")]
+        [Column]
         public Nullable<int> LOGIN_HISTORY_TYPE { get; set; }
+        /// <summary>
+        /// MESSAGE
+        /// </summary>
+        [StringLength(255)]
+        [Display(Name = "MESSAGE")]
+        [Column]
         public string MESSAGE { get; set; }
     }
 }
