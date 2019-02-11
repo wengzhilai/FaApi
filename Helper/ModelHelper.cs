@@ -412,6 +412,25 @@ namespace Helper
             return sql;
         }
 
+        public string GetFindAllSql( DtoSearch<T> inSearch,string whereSql="")
+        {
+            string key = GetKeyField();
+            if (inSearch.OrderType == null)
+            {
+                inSearch.OrderType = string.Format("{0} DESC", key);
+            }
+            
+
+
+            if (inSearch.PageIndex < 1) inSearch.PageIndex = 1;
+            if (inSearch.PageSize < 1) inSearch.PageSize = 10;
+            string sql = string.Format(@"
+                select {0} from {1} where {2} ORDER  BY  {5} limit {3},{4};
+                ", string.Join(",",GetTableFields()),
+                                GetTableName(),whereSql, (inSearch.PageIndex-1)*inSearch.PageSize, inSearch.PageSize, inSearch.OrderType);
+            return sql;
+        }
+
         public string GetFindAllSql(List<string> filterList)
         {
             if (filterList == null || filterList.Count() == 0)

@@ -36,5 +36,10 @@ namespace Repository
         {
             return dbHelper.FindAll(inParm);
         }
+
+        public Task<IEnumerable<FaUserInfoEntity>> List(DtoSearch<FaUserInfoEntity> inEnt)
+        {
+            return dbHelper.FindAll(inEnt);
+        }
     }
 }
