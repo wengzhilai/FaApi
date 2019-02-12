@@ -103,14 +103,21 @@ namespace Helper
         }
 
 
-        public async Task<IEnumerable<T>> FindAll(T inEnt, DtoSearch inSearch)
+        public async Task<IEnumerable<T>> FindAll( DtoSearch inSearch)
         {
-
-            var mh = new ModelHelper<T>(inEnt);
-            string sql = mh.GetFindAllSql(inSearch);
-            return await connection.QueryAsync<T>(sql, mh.GetDynamicParameters(), transaction);
+            string sql = this.modelHelper.GetFindAllSql(inSearch);
+            return await connection.QueryAsync<T>(sql, this.modelHelper.GetDynamicParameters(), transaction);
         }
 
+        public async Task<IEnumerable<T>> FindAll(DtoSearch<T> inSearch)
+        {
+
+            List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
+            var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(inSearch.FilterList, listSqlParaModel);
+
+            string sql = this.modelHelper.GetFindAllSql(inSearch,whereStr);
+            return await connection.QueryAsync<T>(sql, this.modelHelper.GetDynamicParameters(), transaction);
+        }
 
         public async Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> where)
         {

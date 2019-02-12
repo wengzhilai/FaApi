@@ -412,16 +412,14 @@ namespace Helper
             return sql;
         }
 
-        public string GetFindAllSql( DtoSearch<T> inSearch,string whereSql="")
+        public string GetFindAllSql(DtoSearch<T> inSearch,string whereSql="")
         {
-            string key = GetKeyField();
             if (inSearch.OrderType == null)
             {
+                string key = GetKeyField();
                 inSearch.OrderType = string.Format("{0} DESC", key);
             }
             
-
-
             if (inSearch.PageIndex < 1) inSearch.PageIndex = 1;
             if (inSearch.PageSize < 1) inSearch.PageSize = 10;
             string sql = string.Format(@"
