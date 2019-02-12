@@ -22,7 +22,8 @@ namespace Helper
         public DapperHelper()
         {
             modelHelper = new ModelHelper<T>();
-            connection = new MySqlConnection("server=45.32.134.176;userid=FA;pwd=abcdef1234;port=3306;database=fa;sslmode=none;");
+            connection = new MySqlConnection("server=127.0.0.1;userid=root;pwd=Wcnfngo123;port=3306;database=fa;sslmode=none;");
+            // connection = new MySqlConnection("server=45.32.134.176;userid=FA;pwd=abcdef1234;port=3306;database=fa;sslmode=none;");
         }
 
         public DapperHelper(IDbConnection _connection, IDbTransaction _transaction)

@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Models;
 using Models.Entity;
 
 namespace IRepository
 {
-    public interface IUserInfoRepository 
+    public interface IUserInfoRepository
     {
         /// <summary>
         /// 单个查询
@@ -23,5 +24,6 @@ namespace IRepository
         /// <returns></returns>
         Task<IEnumerable<FaUserInfoEntity>> FindAll(Expression<Func<FaUserInfoEntity, bool>> inParm = null);
 
+        Task<IEnumerable<FaUserInfoEntity>> List(DtoSearch<FaUserInfoEntity> inEnt);
     }
 }

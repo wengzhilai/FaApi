@@ -15,7 +15,14 @@ namespace Helper
         /// <returns></returns>
         public static Task<bool> UserTokenSet(int userId, string key)
         {
-            return Helper.RedisWriteHelper.HashSetKey("UserToken", string.Format(_userTokenKey, userId), key);
+            try
+            {
+                return Helper.RedisWriteHelper.HashSetKey("UserToken", string.Format(_userTokenKey, userId), key);
+            }
+            catch
+            {
+                return Task.Run(()=> true);
+            }
         }
 
         /// <summary>

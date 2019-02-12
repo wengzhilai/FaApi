@@ -63,10 +63,25 @@ namespace WebApi.Controllers
         public async Task<Result<FaUserInfo>> Single(DtoKey inEnt)
         {
             Result<FaUserInfo> reObj = new Result<FaUserInfo>();
-            int key=Convert.ToInt32(inEnt.Key);
-            FaUserInfoEntity user= await userInfo.SingleByKey(key);
-            reObj.Data= mapper.Map<FaUserInfo>(user);
-            reObj.IsSuccess=true;
+            int key = Convert.ToInt32(inEnt.Key);
+            FaUserInfoEntity user = await userInfo.SingleByKey(key);
+            reObj.Data = mapper.Map<FaUserInfo>(user);
+            reObj.IsSuccess = true;
+            return reObj;
+        }
+
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaUserInfoEntity>> List(DtoSearch<FaUserInfoEntity> inEnt)
+        {
+            Result<FaUserInfoEntity> reObj = new Result<FaUserInfoEntity>();
+            var user = await userInfo.List(inEnt);
+            reObj.DataList = user.ToList();
+            reObj.IsSuccess = true;
             return reObj;
         }
     }
