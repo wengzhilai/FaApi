@@ -188,6 +188,44 @@ namespace Helper
             return _DisplayDirct;
         }
 
+        /// <summary>
+        /// 获取属性对表字段
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, object> GetTableFieldDirct()
+        {
+            if (_DisplayDirct == null)
+            {
+
+                Dictionary<string, object> reField = new Dictionary<string, object>();   //所有数据字段名
+                Type type = typeof(T);
+                PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
+                foreach (PropertyInfo proInfo in PropertyList)
+                {
+                    object[] attrsPi = proInfo.GetCustomAttributes(true);
+                    foreach (object obj in attrsPi)
+                    {
+                        if (obj is ColumnAttribute)//定义了Display属性的字段为字数库字段
+                        {
+                            var display = (ColumnAttribute)obj;
+                            if (string.IsNullOrEmpty(display.Name))
+                            {
+                                reField.Add(proInfo.Name, proInfo.Name);
+                            }
+                            else
+                            {
+                                reField.Add(proInfo.Name, display.Name.Split(' ')[0]);
+                            }
+                            continue;
+                        }
+                    }
+                }
+                _DisplayDirct = reField;
+            }
+            return _DisplayDirct;
+        }
+
+
 
         private string _TableName = null;
         /// <summary>
@@ -243,6 +281,33 @@ namespace Helper
                             _IsAuto = true;
                         }
                         break;
+                    }
+                }
+            }
+            return _key;
+        }
+
+        /// <summary>
+        /// 获取主键数据库字段
+        /// </summary>
+        /// <returns></returns>
+        public string GetKeyTableField()
+        {
+            Type type = typeof(T);
+            PropertyInfo[] proInfoArr = type.GetProperties();//得到该类的所有公共属性
+            for (int a = 0; a < proInfoArr.Length; a++)
+            {
+                PropertyInfo proInfo = proInfoArr[a];
+                object[] attrsPro = proInfo.GetCustomAttributes(typeof(KeyAttribute), true);
+                if (attrsPro.Length > 0)
+                {
+                    _key = proInfo.Name;
+
+                    object[] attrsColumn = proInfo.GetCustomAttributes(typeof(ColumnAttribute), true);
+                    if (attrsColumn.Length > 0)
+                    {
+                        var column = (ColumnAttribute)attrsColumn[0];
+                        return string.IsNullOrEmpty(column.Name) ? _key : column.Name;
                     }
                 }
             }
@@ -413,24 +478,25 @@ namespace Helper
             return sql;
         }
 
-        public string GetFindAllSql(DtoSearch<T> inSearch,string whereSql="")
+        public string GetFindAllSql(DtoSearch<T> inSearch, string whereSql = "")
         {
             if (inSearch.OrderType == null)
             {
                 string key = GetKeyField();
                 inSearch.OrderType = string.Format("{0} DESC", key);
             }
-            
-            if(!string.IsNullOrEmpty(whereSql)){
-                whereSql= " where " +whereSql;
+
+            if (!string.IsNullOrEmpty(whereSql))
+            {
+                whereSql = " where " + whereSql;
             }
 
             if (inSearch.PageIndex < 1) inSearch.PageIndex = 1;
             if (inSearch.PageSize < 1) inSearch.PageSize = 10;
             string sql = string.Format(@"
                 select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
-                ", string.Join(",",GetTableFields()),
-                                GetTableName(),whereSql, (inSearch.PageIndex-1)*inSearch.PageSize, inSearch.PageSize, inSearch.OrderType);
+                ", string.Join(",", GetTableFields()),
+                                GetTableName(), whereSql, (inSearch.PageIndex - 1) * inSearch.PageSize, inSearch.PageSize, inSearch.OrderType);
             return sql;
         }
 
@@ -545,8 +611,8 @@ namespace Helper
         public string GetSingleSql()
         {
             string key = GetKeyField();
-            string sql = "SELECT  {0} FROM {1} WHERE {2}=@{2}";
-            sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), key);
+            string sql = "SELECT  {0} FROM {1} WHERE {2}=@{3}";
+            sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), GetKeyTableField(), key);
             return sql;
         }
 

@@ -116,7 +116,11 @@ namespace Helper
 
             List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
             var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(inSearch.FilterList, listSqlParaModel);
-
+            var dbField=this.modelHelper.GetTableFieldDirct();
+            foreach (var item in dbField)
+            {
+                whereStr=whereStr.Replace(item.Key,item.Value.ToString());
+            }
             string sql = this.modelHelper.GetFindAllSql(inSearch,whereStr);
             return await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
         }

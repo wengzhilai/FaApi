@@ -135,11 +135,11 @@ namespace WebApi
                               int userId = 0;
                               int.TryParse(userIdObj.Value, out userId);
                               //判断toke值跟redis的token是否相同
-                              var redisToken = RedisRepository.UserTokenGet(userId).Result;
-                              if (redisToken == null || !redisToken.Equals(tokenStr))
-                              {
-                                  context.Fail("toke过期");
-                              }
+                            //   var redisToken = RedisRepository.UserTokenGet(userId).Result;
+                            //   if (redisToken == null || !redisToken.Equals(tokenStr))
+                            //   {
+                            //       context.Fail("toke过期");
+                            //   }
                           }
                           return Task.CompletedTask;
                       }
