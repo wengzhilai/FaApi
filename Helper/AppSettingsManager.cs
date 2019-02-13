@@ -35,6 +35,12 @@ namespace Helper
         /// </summary>
         /// <returns></returns>
         public static JpushCfg JpushCfg=new JpushCfg();
+        /// <summary>
+        /// 数据库连接
+        /// </summary>
+        /// <returns></returns>
+        public static MongoSettings MongoSettings=new MongoSettings();
+        
 
     }
 
@@ -105,6 +111,18 @@ namespace Helper
         /// <value></value>
         public string  readRedisstr{ get; set; }="45.32.134.176:6379,password=wengzhilai";
 
+    }
+
+    public class MongoSettings
+    {
+        public string server { get; set; }="127.0.0.1";
+        public string userid { get; set; }="root";
+        public string pwd { get; set; }="Wcnfngo123";
+        public string port { get; set; }="3306";
+        public string database { get; set; }="fa";
+        public string sslmode { get; set; }="none";
+
+        
     }
 
     public class LogLevel

@@ -11,20 +11,21 @@ using MySql.Data.MySqlClient;
 using Dapper;
 using System.Data;
 using System.Linq.Expressions;
+using Models.EntityView;
 
 namespace Repository
 {
     public class UserInfoRepository : IUserInfoRepository
     {
-        DapperHelper<FaUserInfoEntity> dbHelper = new DapperHelper<FaUserInfoEntity>();
+        DapperHelper<FaUserInfoEntityView> dbHelper = new DapperHelper<FaUserInfoEntityView>();
         /// <summary>
         /// 获取单条
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public Task<FaUserInfoEntity> SingleByKey(int key)
+        public Task<FaUserInfoEntityView> SingleByKey(int key)
         {
-            return dbHelper.SingleByKey(key);
+            return new DapperHelper<FaUserInfoEntityView>().SingleByKey(key);
         }
 
         /// <summary>
@@ -32,12 +33,12 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public Task<IEnumerable<FaUserInfoEntity>> FindAll(Expression<Func<FaUserInfoEntity, bool>> inParm = null)
+        public Task<IEnumerable<FaUserInfoEntityView>> FindAll(Expression<Func<FaUserInfoEntityView, bool>> inParm = null)
         {
             return dbHelper.FindAll(inParm);
         }
 
-        public Task<IEnumerable<FaUserInfoEntity>> List(DtoSearch<FaUserInfoEntity> inEnt)
+        public Task<IEnumerable<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt)
         {
             return dbHelper.FindAll(inEnt);
         }

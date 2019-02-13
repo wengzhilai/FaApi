@@ -44,6 +44,10 @@ namespace Models
         /// </summary>
         public FaUserInfoEntity Mather { get; set; }
         /// <summary>
+        /// 母亲姓名
+        /// </summary>
+        public string MatherName { get; set; }
+        /// <summary>
         ///  配偶
         /// </summary>
         public FaUserInfoEntity Consort { get; set; }

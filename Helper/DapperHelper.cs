@@ -22,8 +22,9 @@ namespace Helper
         public DapperHelper()
         {
             modelHelper = new ModelHelper<T>();
-            connection = new MySqlConnection("server=127.0.0.1;userid=root;pwd=Wcnfngo123;port=3306;database=fa;sslmode=none;");
-            // connection = new MySqlConnection("server=45.32.134.176;userid=FA;pwd=abcdef1234;port=3306;database=fa;sslmode=none;");
+            var tt= TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
+            var alldict= string.Join(";", tt.Select(x=>string.Format("{0}={1}",x.Key,x.Value)));
+            connection = new MySqlConnection(alldict);
         }
 
         public DapperHelper(IDbConnection _connection, IDbTransaction _transaction)
@@ -117,7 +118,7 @@ namespace Helper
             var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(inSearch.FilterList, listSqlParaModel);
 
             string sql = this.modelHelper.GetFindAllSql(inSearch,whereStr);
-            return await connection.QueryAsync<T>(sql, this.modelHelper.GetDynamicParameters(), transaction);
+            return await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
         }
 
         public async Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>> where)

@@ -63,7 +63,8 @@ namespace Helper
                     {
                         if (obj is ColumnAttribute)//定义了Display属性的字段为字数库字段
                         {
-                            reFieldStr.Add(proInfo.Name);
+                            var column = (ColumnAttribute)obj;
+                            reFieldStr.Add(string.IsNullOrEmpty(column.Name) ? proInfo.Name : column.Name);
                             continue;
                         }
                     }
@@ -420,10 +421,14 @@ namespace Helper
                 inSearch.OrderType = string.Format("{0} DESC", key);
             }
             
+            if(!string.IsNullOrEmpty(whereSql)){
+                whereSql= " where " +whereSql;
+            }
+
             if (inSearch.PageIndex < 1) inSearch.PageIndex = 1;
             if (inSearch.PageSize < 1) inSearch.PageSize = 10;
             string sql = string.Format(@"
-                select {0} from {1} where {2} ORDER  BY  {5} limit {3},{4};
+                select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
                 ", string.Join(",",GetTableFields()),
                                 GetTableName(),whereSql, (inSearch.PageIndex-1)*inSearch.PageSize, inSearch.PageSize, inSearch.OrderType);
             return sql;

@@ -23,6 +23,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using AutoMapper;
 using Microsoft.AspNetCore.Cors;
+using Models.EntityView;
 
 namespace WebApi.Controllers
 {
@@ -60,12 +61,12 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaUserInfo>> Single(DtoKey inEnt)
+        public async Task<Result<FaUserInfoEntityView>> Single(DtoKey inEnt)
         {
-            Result<FaUserInfo> reObj = new Result<FaUserInfo>();
+            Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
             int key = Convert.ToInt32(inEnt.Key);
-            FaUserInfoEntity user = await userInfo.SingleByKey(key);
-            reObj.Data = mapper.Map<FaUserInfo>(user);
+            FaUserInfoEntityView user = await userInfo.SingleByKey(key);
+            reObj.Data = user;
             reObj.IsSuccess = true;
             return reObj;
         }
@@ -76,9 +77,11 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaUserInfoEntity>> List(DtoSearch<FaUserInfoEntity> inEnt)
+        public async Task<Result<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt)
         {
-            Result<FaUserInfoEntity> reObj = new Result<FaUserInfoEntity>();
+            Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
+            inEnt.FilterList=x=>x.ID<100;
+            inEnt.OrderType="id asc";
             var user = await userInfo.List(inEnt);
             reObj.DataList = user.ToList();
             reObj.IsSuccess = true;

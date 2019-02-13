@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Models;
 using Models.Entity;
+using Models.EntityView;
 
 namespace IRepository
 {
@@ -15,15 +16,15 @@ namespace IRepository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<FaUserInfoEntity> SingleByKey(int key);
+        Task<FaUserInfoEntityView> SingleByKey(int key);
 
         /// <summary>
         /// 查找所有
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        Task<IEnumerable<FaUserInfoEntity>> FindAll(Expression<Func<FaUserInfoEntity, bool>> inParm = null);
+        Task<IEnumerable<FaUserInfoEntityView>> FindAll(Expression<Func<FaUserInfoEntityView, bool>> inParm = null);
 
-        Task<IEnumerable<FaUserInfoEntity>> List(DtoSearch<FaUserInfoEntity> inEnt);
+        Task<IEnumerable<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt);
     }
 }

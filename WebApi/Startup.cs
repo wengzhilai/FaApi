@@ -73,6 +73,10 @@ namespace WebApi
             services.Configure<JwtSettings>(Configuration.GetSection("RedisConfig"));
             Configuration.Bind("RedisConfig", AppSettingsManager.RedisConfig);
 
+            services.Configure<MongoSettings>(Configuration.GetSection("MongoSettings"));
+            Configuration.Bind("MongoSettings", AppSettingsManager.MongoSettings);
+
+
             #region JWT认证
             //Bearer 
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
