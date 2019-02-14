@@ -106,15 +106,18 @@ namespace WebApi.Controllers
 
         /// <summary>
         /// 查看文件 key为文件id
+        /// 测试地址：http://localhost:5000/api/Public/Lookfile/a.jpg
         /// </summary>
-        /// <param name="inEnt"></param>
+        /// <param name="fileId">文件ID</param>
         /// <returns></returns>
         [AllowAnonymous]
-        [HttpGet]
-        public Result Lookfile(DtoKey inEnt){
-            Result reObj=new Result();
-            return reObj;
-        }
+        [HttpGet("{fileId}.jpg")]
+        public IActionResult Lookfile(string fileId)
+        {
+            Response.Body.Dispose();
+            return File(System.IO.File.ReadAllBytes("F:\\FeigeDownload\\9}J5LMPTM_Z[2_NI(`]6`20.png"), @"image/png");
+        }
+
 
         /// <summary>
         /// 检测版本 key为当前版本号

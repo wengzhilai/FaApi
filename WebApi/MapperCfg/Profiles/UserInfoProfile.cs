@@ -3,6 +3,7 @@ using IRepository;
 using Microsoft.Extensions.DependencyInjection;
 using Models;
 using Models.Entity;
+using Models.EntityView;
 using Repository;
 using System;
 using System.Collections.Generic;
@@ -50,6 +51,10 @@ namespace WebApi.MapperCfg.Profiles
                 ;
 
             CreateMap<FaUserEntity, FaUserInfo>();
+            CreateMap<RelativeItem, FaUserInfoEntityView>();
+            CreateMap<FaUserInfoEntityView, RelativeItem>()
+                .ForMember(d => d.ElderId, opt => { opt.MapFrom(m =>m.ELDER_ID); })
+            ;
 
             CreateMap<FaUserInfoEntity, RelativeItem>()
                 .ForMember(d => d.ElderId, opt => { opt.MapFrom(m =>m.ELDER_ID); })
