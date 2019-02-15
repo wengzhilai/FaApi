@@ -72,6 +72,22 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// 根据姓名查用户
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaUserInfoEntityView>> SingleByName(DtoKey inEnt)
+        {
+            Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
+            var user = await userInfo.FindAll(x=>x.NAME==inEnt.Key);
+            reObj.DataList = user.ToList();
+            reObj.IsSuccess = true;
+            return reObj;
+        }
+        
+
+        /// <summary>
         /// 获取列表
         /// </summary>
         /// <param name="inEnt"></param>

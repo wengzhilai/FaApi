@@ -149,7 +149,7 @@ namespace Models.EntityView
         /// </summary>
         [StringLength(80)]
         [Display(Name = "姓名")]
-        [Column("b.`NAME`")]
+        [Column("b.NAME")]
         public string NAME { get; set; }
         /// <summary>
         /// 登录名

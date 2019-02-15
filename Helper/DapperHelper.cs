@@ -22,8 +22,8 @@ namespace Helper
         public DapperHelper()
         {
             modelHelper = new ModelHelper<T>();
-            var tt= TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
-            var alldict= string.Join(";", tt.Select(x=>string.Format("{0}={1}",x.Key,x.Value)));
+            var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
+            var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
             connection = new MySqlConnection(alldict);
         }
 
@@ -105,7 +105,7 @@ namespace Helper
         }
 
 
-        public async Task<IEnumerable<T>> FindAll( DtoSearch inSearch)
+        public async Task<IEnumerable<T>> FindAll(DtoSearch inSearch)
         {
             string sql = this.modelHelper.GetFindAllSql(inSearch);
             return await connection.QueryAsync<T>(sql, this.modelHelper.GetDynamicParameters(), transaction);
@@ -116,12 +116,12 @@ namespace Helper
 
             List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
             var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(inSearch.FilterList, listSqlParaModel);
-            var dbField=this.modelHelper.GetTableFieldDirct();
+            var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr=whereStr.Replace(item.Key,item.Value.ToString());
+                whereStr = whereStr.Replace(item.Key, item.Value.ToString());
             }
-            string sql = this.modelHelper.GetFindAllSql(inSearch,whereStr);
+            string sql = this.modelHelper.GetFindAllSql(inSearch, whereStr);
             return await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
         }
 
@@ -138,9 +138,13 @@ namespace Helper
             {
                 List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
                 var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(where, listSqlParaModel);
-
+                var dbField = this.modelHelper.GetTableFieldDirct();
+                foreach (var item in dbField)
+                {
+                    whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+                }
                 sql = modelHelper.GetFindAllSql(whereStr);
-                reList = (await connection.QueryAsync<T>(sql, listSqlParaModel, transaction));
+                reList = await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
             }
             return reList;
         }
@@ -167,7 +171,7 @@ namespace Helper
 
             var mh = new ModelHelper<T>(inEnt);
             string sql = mh.GetFindNumSql(inSearch);
-            var ds =await connection.ExecuteScalarAsync(sql, mh.GetDynamicParameters(), transaction);
+            var ds = await connection.ExecuteScalarAsync(sql, mh.GetDynamicParameters(), transaction);
             return Convert.ToInt32(ds);
         }
 
