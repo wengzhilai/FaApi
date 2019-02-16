@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Jiguang.JSMS;
@@ -27,6 +28,7 @@ namespace Helper
             senEnt.TemplateParameters=new Dictionary<string, string>();
             senEnt.TemplateParameters.Add("code",code);
             var reObj=await jp.SendTemplateMessageAsync(senEnt);
+            Console.WriteLine(reObj);
             // reObj.Content=
             // {\"error\":{\"code\":50051,\"message\":\"signatures not exist\"}}
             return reObj;

@@ -71,7 +71,7 @@ namespace Repository
                 return await Task.Run(() => reObj);
             }
 
-            if (!Fun.CheckPassword(inEnt.Password))
+            if (!Fun.CheckPassword(inEnt.Password,AppSettingsManager.BaseConfig.PwdComplexity))
             {
                 reObj.IsSuccess = false;
                 reObj.Code = "-2";
@@ -81,7 +81,7 @@ namespace Repository
             #endregion
 
             #region 检测验证码
-            if (AppSettingsManager.Config.VerifyCode)
+            if (AppSettingsManager.BaseConfig.VerifyCode)
             {
                 var nowDate = DateTime.Now.AddMinutes(-30);
 
@@ -331,7 +331,7 @@ namespace Repository
                 return reObj;
             }
             //检测密码复杂度
-            if (!Fun.CheckPassword(inEnt.NewPwd))
+            if (!Fun.CheckPassword(inEnt.NewPwd,AppSettingsManager.BaseConfig.PwdComplexity))
             {
                 reObj.IsSuccess = false;
                 reObj.Msg = "密码复杂度不够：";

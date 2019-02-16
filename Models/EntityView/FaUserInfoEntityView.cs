@@ -140,6 +140,12 @@ namespace Models.EntityView
         [Column("a.STATUS")]
         public string STATUS { get; set; }
 
+        /// <summary>
+        /// 权限
+        /// </summary>
+        [Display(Name = "权限")]
+        [Column("a.AUTHORITY")]
+        public int AUTHORITY { get; set; }
 
 
 

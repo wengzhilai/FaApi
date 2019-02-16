@@ -76,6 +76,8 @@ namespace WebApi
             services.Configure<MongoSettings>(Configuration.GetSection("MongoSettings"));
             Configuration.Bind("MongoSettings", AppSettingsManager.MongoSettings);
 
+            services.Configure<BaseConfig>(Configuration.GetSection("BaseConfig"));
+            Configuration.Bind("BaseConfig", AppSettingsManager.BaseConfig);
 
             #region JWT认证
             //Bearer 

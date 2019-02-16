@@ -37,6 +37,8 @@ namespace WebApi.Controllers
         /// 授权
         /// </summary>
         /// <param name="_config"></param>
+        /// <param name="_userInfo"></param>
+        /// <param name="_mapper"></param>
         /// <param name="_user"></param>
         public FamilyController(
             IConfiguration _config,

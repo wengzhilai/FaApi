@@ -45,9 +45,9 @@ namespace WebApi.Controllers
         /// <param name="accessor"></param>
         /// <param name="user"></param>
         public AuthController(
-            IConfiguration config, 
-            ILoginRepository login, 
-            IHttpContextAccessor accessor, 
+            IConfiguration config,
+            ILoginRepository login,
+            IHttpContextAccessor accessor,
             IUserRepository user
             )
         {
@@ -67,7 +67,7 @@ namespace WebApi.Controllers
         {
             //Bearer 
             Result<FaUserEntity> reobj = new Result<FaUserEntity>();
-            reobj =await _login.UserLogin(inEnt);
+            reobj = await _login.UserLogin(inEnt);
             if (reobj.IsSuccess)
             {
                 var claims = new Claim[]
@@ -86,7 +86,7 @@ namespace WebApi.Controllers
                     DateTime.Now.AddDays(7),
                     creds);
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
-                
+
                 await RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
             }
             return reobj;
@@ -137,12 +137,42 @@ namespace WebApi.Controllers
                 outEnt.Data.LOGIN_HOST = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
                 outEnt.Data.LOGOUT_TIME = DateTime.Now;
                 outEnt.Data.MESSAGE = "正常退出";
-                var userEntList =await _user.FindAll(x => x.LOGIN_NAME == User.Identity.Name);
+                var userEntList = await _user.FindAll(x => x.LOGIN_NAME == User.Identity.Name);
                 if (userEntList.Count() > 0)
                 {
                     outEnt.Data.USER_ID = userEntList.ToList()[0].ID;
                 }
-                reObj =await _login.LoginOut(outEnt);
+                reObj = await _login.LoginOut(outEnt);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+
+
+        /// <summary>
+        /// 重设置密码
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<Result> ResetPassword(ResetPasswordDto inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                reObj = await this._login.ResetPassword(inEnt);
             }
             catch (ExceptionExtend e)
             {

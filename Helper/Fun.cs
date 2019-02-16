@@ -25,10 +25,9 @@ namespace Helper
         /// </summary>
         /// <param name="pwdStr"></param>
         /// <returns></returns>
-        public static bool CheckPassword(string pwdStr)
+        public static bool CheckPassword(string pwdStr,int PwdComplexity)
         {
             var PwdMinLength=2;
-            var PwdComplexity=2;
             Regex r1 = new Regex(@"^(?=.*[a-z])");
             Regex r2 = new Regex(@"^(?=.*[A-Z])");
             Regex r3 = new Regex(@"^(?=.*[0-9])");

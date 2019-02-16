@@ -44,6 +44,7 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="_userInfo"></param>
+        /// <param name="_mapper"></param>
         /// <param name="_user"></param>
         public UserInfoController(
             IUserInfoRepository _userInfo,

@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +22,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Cors;
+using System.Globalization;
 
 namespace WebApi.Controllers
 {
     /// <summary>
     /// 授权管理
     /// </summary>
+    [EnableCors("AllowSameDomain")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
@@ -38,9 +42,9 @@ namespace WebApi.Controllers
         /// <summary>
         /// 
         /// </summary>
-        public PublicController(IPublicRepository pub,IHostingEnvironment hostingEnvironment)
+        public PublicController(IPublicRepository pub, IHostingEnvironment hostingEnvironment)
         {
-            _public=pub;
+            _public = pub;
             _env = hostingEnvironment;
         }
 
@@ -55,15 +59,14 @@ namespace WebApi.Controllers
         public async Task<Result> SendCode(DtoKey inEnt)
         {
             Result reEnt = new Result();
-            if(!inEnt.Key.IsPhoneNumber()){
-                reEnt.IsSuccess=false;
-                reEnt.Msg="电话号码格式有误";
+            if (string.IsNullOrEmpty(inEnt.Key) || !inEnt.Key.IsPhoneNumber())
+            {
+                reEnt.IsSuccess = false;
+                reEnt.Msg = "电话号码格式有误";
                 return reEnt;
             }
-            var code= PicFunHelper.ValidateMake(4);
-            var t=await _public.SmsSendCode(inEnt.Key,code);
-            // dynamic reEnt = await Task.Run(() => Fun<ErrorInfo>.Func(api.PublicApi.SendCode, ref err, inEnt));
-            // if (err.IsError) return err;
+            reEnt = await _public.SendCode(inEnt.Key);
+
             return reEnt;
         }
 
@@ -91,12 +94,12 @@ namespace WebApi.Controllers
                     var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") +
                                    Path.GetExtension(formFile.FileName);
                     var filePath = Path.Combine(fileFolder, fileName);
-                    var allPath=Path.Combine(_env.ContentRootPath, filePath);
+                    var allPath = Path.Combine(_env.ContentRootPath, filePath);
                     using (var stream = new FileStream(allPath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);
-                        reEnt.IsSuccess=true;
-                        reEnt.Msg=filePath;
+                        reEnt.IsSuccess = true;
+                        reEnt.Msg = filePath;
                         stream.Flush();
                     }
                 }
@@ -113,10 +116,10 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         [HttpGet("{fileId}.jpg")]
         public IActionResult Lookfile(string fileId)
-        {
-            Response.Body.Dispose();
-            return File(System.IO.File.ReadAllBytes("F:\\FeigeDownload\\9}J5LMPTM_Z[2_NI(`]6`20.png"), @"image/png");
-        }
+        {
+            Response.Body.Dispose();
+            return File(System.IO.File.ReadAllBytes("F:\\FeigeDownload\\9}J5LMPTM_Z[2_NI(`]6`20.png"), @"image/png");
+        }
 
 
         /// <summary>
@@ -125,8 +128,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public Result CheckUpdate(DtoKey inEnt){
-            Result reObj=new Result();
+        public Result CheckUpdate(DtoKey inEnt)
+        {
+            Result reObj = new Result();
             return reObj;
         }
 
@@ -135,8 +139,21 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public Result GetLunarDate(DtoKey inEnt){
-            Result reObj=new Result();
+        public Result GetLunarDate(DtoKey inEnt)
+        {
+            inEnt.Key = inEnt.Key.Replace("T", " ");
+
+            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
+
+            DateTime datetime = Convert.ToDateTime(inEnt.Key);
+
+            int lyear = cc.GetYear(datetime);
+            int lmonth = cc.GetMonth(datetime);
+            int lday = cc.GetDayOfMonth(datetime);
+
+            Result reObj = new Result();
+            reObj.IsSuccess = true;
+            reObj.Msg = string.Format("{0}-{1}-{2} {3}:00", lyear, lmonth, lday, datetime.Hour);
             return reObj;
         }
 
@@ -145,8 +162,21 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public Result GetSolarDate(DtoKey inEnt){
-            Result reObj=new Result();
+        public Result GetSolarDate(DtoKey inEnt)
+        {
+            inEnt.Key = inEnt.Key.Replace("T", " ");
+            DateTime datetime = Convert.ToDateTime(inEnt.Key);
+
+            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
+            DateTime dt = cc.ToDateTime(datetime.Year, datetime.Month, datetime.Day, datetime.Hour, datetime.Minute, datetime.Second, 0);
+            //判断到某个月份是否有润月
+            for (int i = 1; i <= datetime.Month; i++)
+                if (cc.IsLeapMonth(datetime.Year, i))
+                    dt = dt.AddMonths(1);
+
+            Result reObj = new Result();
+            reObj.IsSuccess = true;
+            reObj.Msg = dt.ToString("yyyy-MM-dd HH:00");
             return reObj;
         }
 

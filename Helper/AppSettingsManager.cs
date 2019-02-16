@@ -23,7 +23,7 @@ namespace Helper
         /// 基本配置
         /// </summary>
         /// <returns></returns>
-        public static BaseConfig Config=new BaseConfig();
+        public static BaseConfig BaseConfig=new BaseConfig();
         /// <summary>
         /// redis配置
         /// </summary>
@@ -94,6 +94,12 @@ namespace Helper
         /// <value></value>
         public int  VerifyExpireMinute{ get; set; }=30;
 
+        /// <summary>
+        /// 密码复杂度
+        /// </summary>
+        /// <value></value>
+        public int PwdComplexity{get;set;}
+
     }
 
     /// <summary>
@@ -154,4 +160,5 @@ namespace Helper
         /// </summary>
         public string SecretKey { get; set; }
     }
+
 }

@@ -21,7 +21,7 @@ namespace Helper
             }
             catch
             {
-                return Task.Run(()=> true);
+                return Task.Run(() => true);
             }
         }
 
@@ -42,7 +42,15 @@ namespace Helper
         /// <returns></returns>
         public static Task<bool> UserTokenDelete(int userId)
         {
-            return Helper.RedisWriteHelper.HashDelete("UserToken", string.Format(_userTokenKey, userId));
+            try
+            {
+                return Helper.RedisWriteHelper.HashDelete("UserToken", string.Format(_userTokenKey, userId));
+
+            }
+            catch
+            {
+                return Task.Run(() => true);
+            }
         }
 
         /// <summary>

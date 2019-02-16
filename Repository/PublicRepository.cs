@@ -48,9 +48,10 @@ namespace Repository
                 if (login != null)
                 {
                     login.VERIFY_CODE = code;
+                    login.VERIFY_TIME=DateTime.Now;
                     reEnt.IsSuccess= await dapperLogin.Update(new DtoSave<FaLoginEntity>{
                         Data=login,
-                        SaveFieldList=new List<string>{"VERIFY_CODE"},
+                        SaveFieldList=new List<string>{"VERIFY_CODE","VERIFY_TIME"},
                         IgnoreFieldList=null
                     })>0;
                     if(!reEnt.IsSuccess){
@@ -107,6 +108,8 @@ namespace Repository
         public async Task<bool> SmsSendCode(string mobile, string code)
         {
             await JiguangHelper.SendValidSms(mobile, code);
+            
+
             return true;
         }
     }
