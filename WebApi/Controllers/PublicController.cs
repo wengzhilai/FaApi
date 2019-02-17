@@ -139,6 +139,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public Result GetLunarDate(DtoKey inEnt)
         {
             inEnt.Key = inEnt.Key.Replace("T", " ");
@@ -162,6 +163,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public Result GetSolarDate(DtoKey inEnt)
         {
             inEnt.Key = inEnt.Key.Replace("T", " ");

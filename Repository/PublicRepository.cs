@@ -40,6 +40,7 @@ namespace Repository
             }
 
             var code = PicFunHelper.ValidateMake(4);
+            code="1111";
             DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>();
             try
             {
@@ -71,7 +72,7 @@ namespace Repository
                 };
 
                 //发送短信
-                reEnt.IsSuccess=await SmsSendCode(phone, code);
+                // reEnt.IsSuccess=await SmsSendCode(phone, code);
                 if (!reEnt.IsSuccess)
                 {
                     reEnt.IsSuccess = false;

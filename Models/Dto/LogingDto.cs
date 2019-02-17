@@ -10,13 +10,6 @@ namespace Models
     public class LogingDto
     {
         /// <summary>
-        /// 构造
-        /// </summary>
-        public LogingDto()
-        {
-            para = new List<KTV>();
-        }
-        /// <summary>
         /// 用户姓名
         /// </summary>
         public string userName { get; set; }
@@ -58,10 +51,5 @@ namespace Models
         /// 类型
         /// </summary>
         public int type { get; set; }
-
-        /// <summary>
-        /// 参数
-        /// </summary>
-        public IList<KTV> para { get; set; }
     }
 }

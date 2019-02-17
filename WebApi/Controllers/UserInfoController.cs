@@ -39,6 +39,7 @@ namespace WebApi.Controllers
         private IUserInfoRepository userInfo;
         private IMapper mapper;
         private IUserRepository user;
+        private ILoginRepository login;
 
         /// <summary>
         /// 
@@ -49,11 +50,14 @@ namespace WebApi.Controllers
         public UserInfoController(
             IUserInfoRepository _userInfo,
             IMapper _mapper,
-            IUserRepository _user)
+            ILoginRepository _login,
+            IUserRepository _user
+            )
         {
             userInfo = _userInfo;
             mapper = _mapper;
             user = _user;
+            login = _login;
         }
 
         /// <summary>
@@ -78,6 +82,7 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<Result<FaUserInfoEntityView>> SingleByName(DtoKey inEnt)
         {
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
@@ -102,6 +107,46 @@ namespace WebApi.Controllers
             var user = await userInfo.List(inEnt);
             reObj.DataList = user.ToList();
             reObj.IsSuccess = true;
+            return reObj;
+        }
+
+        /// <summary>
+        /// 用户注册
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<Result> UserInfoReg(RegUserInfo inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                var rustle= await login.LoginReg(new LogingDto{
+                    userName=inEnt.ParentArr?[0].V,
+                    LoginName=inEnt.LoginName,
+                    Password=inEnt.Password,
+                    code=inEnt.Code
+                });
+
+                // DapperHelper<FaUserInfoEntity> dapper=new DapperHelper<FaUserInfoEntity>();
+                // var isSucc=await dapper.SaveAsync(new DtoSave<FaUserInfoEntity>{
+                //     Data=new FaUserInfoEntity{
+                //         ID=rustle,
+                //     }
+                // });
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
             return reObj;
         }
     }

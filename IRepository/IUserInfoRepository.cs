@@ -25,6 +25,13 @@ namespace IRepository
         /// <returns></returns>
         Task<IEnumerable<FaUserInfoEntityView>> FindAll(Expression<Func<FaUserInfoEntityView, bool>> inParm = null);
 
+        /// <summary>
+        /// 查询列表
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
         Task<IEnumerable<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt);
+
+
     }
 }

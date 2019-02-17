@@ -153,8 +153,9 @@ namespace Repository
             }
             #endregion
 
-            DapperHelper<FaUserInfoEntity> dbUser = new DapperHelper<FaUserInfoEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
+            #region 添加UserInfo
 
+            DapperHelper<FaUserInfoEntity> dbUser = new DapperHelper<FaUserInfoEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
             var userInfo = dbUser.Single(x => x.ID == inUser.ID);
             if (userInfo == null)
             {
@@ -166,11 +167,13 @@ namespace Repository
                 {
                     reObj.IsSuccess = false;
                     reObj.Code = "-6";
-                    reObj.Msg = string.Format("添加user失败");
+                    reObj.Msg = string.Format("添加userinfo失败");
                     dbHelper.TranscationRollback();
                     return reObj;
                 }
             }
+            #endregion
+
             dbHelper.TranscationCommit();
 
             return reObj;
