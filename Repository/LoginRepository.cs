@@ -109,59 +109,69 @@ namespace Repository
 
             //开始事务
             dbHelper.TranscationBegin();
-            var loginList = await new LoginRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
-            #region 添加登录账号
-            if (loginList.Count() == 0)
+            try
             {
-                FaLoginEntity inLogin = new FaLoginEntity();
-                inLogin.ID = await new SequenceRepository().GetNextID<FaLoginEntity>();
-                inLogin.LOGIN_NAME = inEnt.LoginName;
-                inLogin.PASSWORD = inEnt.Password.Md5();
-                inLogin.IS_LOCKED = 0;
-                inLogin.FAIL_COUNT = 0;
-                reObj.IsSuccess = await dbHelper.Save(new DtoSave<FaLoginEntity>()
+                var loginList = await new LoginRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
+                #region 添加登录账号
+                if (loginList.Count() == 0)
                 {
-                    Data = inLogin
+                    FaLoginEntity inLogin = new FaLoginEntity();
+                    inLogin.ID = await new SequenceRepository().GetNextID<FaLoginEntity>();
+                    inLogin.LOGIN_NAME = inEnt.LoginName;
+                    inLogin.PASSWORD = inEnt.Password.Md5();
+                    inLogin.IS_LOCKED = 0;
+                    inLogin.FAIL_COUNT = 0;
+                    reObj.IsSuccess = await dbHelper.Save(new DtoSave<FaLoginEntity>()
+                    {
+                        Data = inLogin
+                    }) > 0 ? true : false;
+                    if (!reObj.IsSuccess)
+                    {
+                        reObj.IsSuccess = false;
+                        reObj.Code = "-5";
+                        reObj.Msg = string.Format("添加账号失败");
+                        dbHelper.TranscationRollback();
+                        return reObj;
+                    }
+                }
+                #endregion
+
+                #region 添加user
+
+                FaUserEntity inUser = new FaUserEntity();
+                inUser.LOGIN_NAME = inEnt.LoginName;
+                inUser.NAME = inEnt.userName;
+                inUser.ID = await new SequenceRepository().GetNextID<FaUserEntity>();
+                inUser.DISTRICT_ID = 1;
+                inUser.CREATE_TIME = DateTime.Now;
+                inUser.IS_LOCKED = 0;
+                reObj.IsSuccess = await new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
+                {
+                    Data = inUser,
+                    IgnoreFieldList = new List<string>()
                 }) > 0 ? true : false;
                 if (!reObj.IsSuccess)
                 {
                     reObj.IsSuccess = false;
-                    reObj.Code = "-5";
-                    reObj.Msg = string.Format("添加账号失败");
+                    reObj.Code = "-6";
+                    reObj.Msg = string.Format("添加user失败");
                     dbHelper.TranscationRollback();
                     return reObj;
                 }
+                #endregion
+
+
+                dbHelper.TranscationCommit();
+                reObj.Data = inUser.ID;
             }
-            #endregion
-
-            #region 添加user
-
-            FaUserEntity inUser = new FaUserEntity();
-            inUser.LOGIN_NAME = inEnt.LoginName;
-            inUser.NAME = inEnt.userName;
-            inUser.ID = await new SequenceRepository().GetNextID<FaUserEntity>();
-            inUser.DISTRICT_ID = 1;
-            inUser.CREATE_TIME = DateTime.Now;
-            inUser.IS_LOCKED = 0;
-            reObj.IsSuccess = await new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
+            catch (Exception e)
             {
-                Data = inUser,
-                IgnoreFieldList = new List<string>()
-            }) > 0 ? true : false;
-            if (!reObj.IsSuccess)
-            {
-                reObj.IsSuccess = false;
-                reObj.Code = "-6";
-                reObj.Msg = string.Format("添加user失败");
                 dbHelper.TranscationRollback();
-                return reObj;
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
             }
-            #endregion
 
 
-
-            dbHelper.TranscationCommit();
-            reObj.Data = inUser.ID;
             return reObj;
         }
         /// <summary>
@@ -398,7 +408,7 @@ namespace Repository
             {
                 Data = user,
                 SaveFieldList = new List<string> { "NAME", "LOGIN_NAME" },
-                WhereList=null
+                WhereList = null
             }) > 0 ? true : false;
 
             if (!reObj.IsSuccess)
@@ -446,8 +456,8 @@ namespace Repository
             #endregion
 
             userDapper.TranscationCommit();
-            reObj.IsSuccess=true;
-            reObj.Msg=user.ID.ToString();
+            reObj.IsSuccess = true;
+            reObj.Msg = user.ID.ToString();
             return reObj;
         }
 

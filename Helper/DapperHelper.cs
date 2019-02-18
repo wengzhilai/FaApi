@@ -185,6 +185,11 @@ namespace Helper
             var mh = new ModelHelper<T>();
             List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
             var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(where, listSqlParaModel);
+            var dbField = this.modelHelper.GetTableFieldDirct();
+            foreach (var item in dbField)
+            {
+                whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+            }
 
             string sql = mh.GetFindNumSql(whereStr);
             var ds = await connection.ExecuteScalarAsync(sql, listSqlParaModel, transaction);
@@ -229,6 +234,12 @@ namespace Helper
         {
             List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
             var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(where, listSqlParaModel);
+            var dbField = this.modelHelper.GetTableFieldDirct();
+            foreach (var item in dbField)
+            {
+                whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+            }
+
             string sql = modelHelper.GetSingleSql(whereStr, order);
             var query = connection.QueryFirstOrDefaultAsync<T>(sql, listSqlParaModel, transaction);
             return query;
@@ -251,6 +262,12 @@ namespace Helper
             {
                 List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
                 var whereStr = Helper.LambdaToSqlHelper.GetWhereSql<T>(where, listSqlParaModel);
+                var dbField = this.modelHelper.GetTableFieldDirct();
+                foreach (var item in dbField)
+                {
+                    whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+                }
+
                 string sql = modelHelper.GetDeleteSql(whereStr);
                 var query = connection.ExecuteAsync(sql, listSqlParaModel, transaction);
                 return query;

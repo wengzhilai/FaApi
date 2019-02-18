@@ -82,16 +82,17 @@ namespace Repository
                     Password = inEnt.Password,
                     code = inEnt.Code
                 });
+                if(!rustle.IsSuccess){
+                    return rustle;
+                }
 
                 DapperHelper<FaUserInfoEntity> dbUserInfo = new DapperHelper<FaUserInfoEntity>();
-                var userInfo = dbUserInfo.Single(x => x.ID == rustle.Data);
+                var userinfoId=rustle.Data;
+                var userInfo =await dbUserInfo.Single(x => x.ID == userinfoId);
                 if (userInfo == null)
                 {
-
-
                     reObj.IsSuccess = await dbUserInfo.Save(new DtoSave<FaUserInfoEntity>
                     {
-
                         Data = new FaUserInfoEntity
                         {
                             ID = rustle.Data,

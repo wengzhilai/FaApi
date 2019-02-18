@@ -122,7 +122,7 @@ namespace WebApi.Controllers
             var reObj = new Result();
             try
             {
-                var rustle= await userInfo.RegUserInfo(inEnt);
+                return await userInfo.RegUserInfo(inEnt);
             }
             catch (ExceptionExtend e)
             {
