@@ -32,6 +32,11 @@ namespace IRepository
         /// <returns></returns>
         Task<IEnumerable<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt);
 
-
+        /// <summary>
+        /// 注册用户
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result> RegUserInfo(RegUserInfo inEnt);
     }
 }

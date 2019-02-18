@@ -27,7 +27,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result> LoginReg(LogingDto inEnt);
+        Task<Result<int>> LoginReg(LogingDto inEnt);
         /// <summary>
         /// 注销用户登录状态
         /// <para>清除用户的缓存状态</para>

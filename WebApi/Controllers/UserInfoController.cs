@@ -122,19 +122,7 @@ namespace WebApi.Controllers
             var reObj = new Result();
             try
             {
-                var rustle= await login.LoginReg(new LogingDto{
-                    userName=inEnt.ParentArr?[0].V,
-                    LoginName=inEnt.LoginName,
-                    Password=inEnt.Password,
-                    code=inEnt.Code
-                });
-
-                // DapperHelper<FaUserInfoEntity> dapper=new DapperHelper<FaUserInfoEntity>();
-                // var isSucc=await dapper.SaveAsync(new DtoSave<FaUserInfoEntity>{
-                //     Data=new FaUserInfoEntity{
-                //         ID=rustle,
-                //     }
-                // });
+                var rustle= await userInfo.RegUserInfo(inEnt);
             }
             catch (ExceptionExtend e)
             {

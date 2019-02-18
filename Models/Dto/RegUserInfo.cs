@@ -37,14 +37,14 @@ namespace Models
         /// 排行
         /// </summary>
         /// <value></value>
-        public string Level_id{get;set;}
+        public int LevelId{get;set;}
         /// <summary>
         /// 登录名
         /// </summary>
         /// <value></value>
         public string LoginName{get;set;}
         /// <summary>
-        /// 父母组
+        /// 父母组,最多只有两条，第一条为本人，第二条为父亲
         /// </summary>
         /// <value></value>
         public List<KV> ParentArr{get;set;}

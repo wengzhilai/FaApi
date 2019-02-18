@@ -154,5 +154,20 @@ namespace Models.Entity
         [Display(Name = "修改用户的ID")]
         [Column]
         public int UPDATE_USER_ID { get; set; }
+
+
+
+        /// <summary>
+        /// 别名
+        /// </summary>
+        /// <value></value>
+        public string ALIAS { get; set; }
+
+        /// <summary>
+        /// 权限
+        /// </summary>
+        /// <value></value>
+        public int AUTHORITY { get; set; }
+
     }
 }

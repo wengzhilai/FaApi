@@ -45,9 +45,9 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public async Task<Result> LoginReg(LogingDto inEnt)
+        public async Task<Result<int>> LoginReg(LogingDto inEnt)
         {
-            Result reObj = new Result();
+            Result<int> reObj = new Result<int>();
             #region 验证值
             ModelHelper<LogingDto> modelHelper = new ModelHelper<LogingDto>(inEnt);
             var errList = modelHelper.Validate();
@@ -56,7 +56,7 @@ namespace Repository
                 reObj.IsSuccess = false;
                 reObj.Code = "-1";
                 reObj.Msg = string.Format(",", errList.Select(x => x.ErrorMessage));
-                return await Task.Run(() => reObj);
+                return reObj;
             }
             #endregion
 
@@ -68,15 +68,15 @@ namespace Repository
                 reObj.IsSuccess = false;
                 reObj.Code = "-1";
                 reObj.Msg = "电话号码格式不正确";
-                return await Task.Run(() => reObj);
+                return reObj;
             }
 
-            if (!Fun.CheckPassword(inEnt.Password,AppSettingsManager.BaseConfig.PwdComplexity))
+            if (!Fun.CheckPassword(inEnt.Password, AppSettingsManager.BaseConfig.PwdComplexity))
             {
                 reObj.IsSuccess = false;
                 reObj.Code = "-2";
                 reObj.Msg = string.Format("密码复杂度不够：{0}");
-                return await Task.Run(() => reObj);
+                return reObj;
             }
             #endregion
 
@@ -91,7 +91,7 @@ namespace Repository
                     reObj.IsSuccess = false;
                     reObj.Code = "-3";
                     reObj.Msg = string.Format("验证码无效");
-                    return await Task.Run(() => reObj);
+                    return reObj;
                 }
             }
             #endregion
@@ -103,7 +103,7 @@ namespace Repository
                 reObj.IsSuccess = false;
                 reObj.Code = "-4";
                 reObj.Msg = string.Format("电话号码已经存在，请更换电话号码");
-                return await Task.Run(() => reObj);
+                return reObj;
             }
             #endregion
 
@@ -114,8 +114,11 @@ namespace Repository
             if (loginList.Count() == 0)
             {
                 FaLoginEntity inLogin = new FaLoginEntity();
+                inLogin.ID = await new SequenceRepository().GetNextID<FaLoginEntity>();
                 inLogin.LOGIN_NAME = inEnt.LoginName;
                 inLogin.PASSWORD = inEnt.Password.Md5();
+                inLogin.IS_LOCKED = 0;
+                inLogin.FAIL_COUNT = 0;
                 reObj.IsSuccess = await dbHelper.Save(new DtoSave<FaLoginEntity>()
                 {
                     Data = inLogin
@@ -138,6 +141,8 @@ namespace Repository
             inUser.NAME = inEnt.userName;
             inUser.ID = await new SequenceRepository().GetNextID<FaUserEntity>();
             inUser.DISTRICT_ID = 1;
+            inUser.CREATE_TIME = DateTime.Now;
+            inUser.IS_LOCKED = 0;
             reObj.IsSuccess = await new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
             {
                 Data = inUser,
@@ -153,29 +158,10 @@ namespace Repository
             }
             #endregion
 
-            #region 添加UserInfo
 
-            DapperHelper<FaUserInfoEntity> dbUser = new DapperHelper<FaUserInfoEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
-            var userInfo = dbUser.Single(x => x.ID == inUser.ID);
-            if (userInfo == null)
-            {
-                reObj.IsSuccess = await dbUser.Save(new DtoSave<FaUserInfoEntity>
-                {
-                    Data = new FaUserInfoEntity { ID = inUser.ID }
-                }) > 0 ? true : false;
-                if (!reObj.IsSuccess)
-                {
-                    reObj.IsSuccess = false;
-                    reObj.Code = "-6";
-                    reObj.Msg = string.Format("添加userinfo失败");
-                    dbHelper.TranscationRollback();
-                    return reObj;
-                }
-            }
-            #endregion
 
             dbHelper.TranscationCommit();
-
+            reObj.Data = inUser.ID;
             return reObj;
         }
         /// <summary>
@@ -334,7 +320,7 @@ namespace Repository
                 return reObj;
             }
             //检测密码复杂度
-            if (!Fun.CheckPassword(inEnt.NewPwd,AppSettingsManager.BaseConfig.PwdComplexity))
+            if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.BaseConfig.PwdComplexity))
             {
                 reObj.IsSuccess = false;
                 reObj.Msg = "密码复杂度不够：";
@@ -359,6 +345,110 @@ namespace Repository
         {
             Result reObj = new Result();
             return Task.Run(() => reObj);
+        }
+
+        /// <summary>
+        /// 更新登录名
+        /// </summary>
+        /// <param name="oldLoginName"></param>
+        /// <param name="NewLoginName"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name)
+        {
+            DapperHelper<FaUserEntity> userDapper = new DapperHelper<FaUserEntity>();
+            Result reObj = new Result();
+            #region 检测输入
+            if (!NewLoginName.IsOnlyNumber() || NewLoginName.Length != 11)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = "-1";
+                reObj.Msg = "电话号码格式不正确";
+                return reObj;
+            }
+
+            #endregion
+
+            #region 检测电话号码是否存在
+            var userList = await userDapper.FindAll(x => x.LOGIN_NAME == NewLoginName);
+            if (userList.Count() > 0)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = "-4";
+                reObj.Msg = string.Format("电话号码已经存在，请更换电话号码");
+                return reObj;
+            }
+            #endregion
+
+            var user = await userDapper.Single(x => x.LOGIN_NAME == oldLoginName);
+            if (user == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = "-5";
+                reObj.Msg = string.Format("用户不存在");
+                return reObj;
+            }
+            userDapper.TranscationBegin();
+
+            #region 修改用户账号
+            user.NAME = name;
+            user.LOGIN_NAME = NewLoginName;
+
+            reObj.IsSuccess = await userDapper.Save(new DtoSave<FaUserEntity>()
+            {
+                Data = user,
+                SaveFieldList = new List<string> { "NAME", "LOGIN_NAME" },
+                WhereList=null
+            }) > 0 ? true : false;
+
+            if (!reObj.IsSuccess)
+            {
+                reObj.Msg = "保存用户失败";
+                userDapper.TranscationRollback();
+                return reObj;
+            }
+            #endregion
+
+
+            #region 修改登录账号
+            DapperHelper<FaLoginEntity> loginDapper = new DapperHelper<FaLoginEntity>(userDapper.GetConnection(), userDapper.GetTransaction());
+            var login = await loginDapper.Single(x => x.LOGIN_NAME == oldLoginName);
+            if (login == null)
+            {
+                FaLoginEntity inLogin = new FaLoginEntity();
+                inLogin.ID = await new SequenceRepository().GetNextID<FaLoginEntity>();
+                inLogin.LOGIN_NAME = NewLoginName;
+                inLogin.PASSWORD = NewLoginName.Substring(oldLoginName.Length - 6).Md5();
+                inLogin.IS_LOCKED = 0;
+                inLogin.FAIL_COUNT = 0;
+                reObj.IsSuccess = await loginDapper.Save(new DtoSave<FaLoginEntity>()
+                {
+                    Data = inLogin
+                }) > 0 ? true : false;
+            }
+            else
+            {
+                login.LOGIN_NAME = NewLoginName;
+                reObj.IsSuccess = await loginDapper.Update(new DtoSave<FaLoginEntity>
+                {
+                    Data = login,
+                    SaveFieldList = new List<string> { "LOGIN_NAME" },
+                    WhereList = null
+                }) > 0 ? true : false;
+            }
+
+            if (!reObj.IsSuccess)
+            {
+                reObj.Msg = "保存账号失败";
+                userDapper.TranscationRollback();
+                return reObj;
+            }
+            #endregion
+
+            userDapper.TranscationCommit();
+            reObj.IsSuccess=true;
+            reObj.Msg=user.ID.ToString();
+            return reObj;
         }
 
     }
