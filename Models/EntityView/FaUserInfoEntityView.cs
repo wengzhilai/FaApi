@@ -190,5 +190,17 @@ namespace Models.EntityView
         [Display(Name = "创建时间")]
         [Column("b.`CREATE_TIME`")]
         public Nullable<DateTime> CREATE_TIME { get; set; }
+
+        /// <summary>
+        /// 出生阴历
+        /// </summary>
+        /// <value></value>
+        public string BirthdaylunlarDate{get;set;}
+
+        /// <summary>
+        /// 出生阳历
+        /// </summary>
+        /// <value></value>
+        public string BirthdaysolarDate{get;set;}
     }
 }

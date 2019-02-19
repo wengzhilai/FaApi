@@ -118,7 +118,7 @@ namespace WebApi.Controllers
         public IActionResult Lookfile(string fileId)
         {
             Response.Body.Dispose();
-            return File(System.IO.File.ReadAllBytes("F:\\FeigeDownload\\9}J5LMPTM_Z[2_NI(`]6`20.png"), @"image/png");
+            return File(System.IO.File.ReadAllBytes("/Users/wengzhilai/Desktop/FamilyApp4/src/assets/images/marty-avatar.png"), @"image/png");
         }
 
 

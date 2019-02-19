@@ -46,6 +46,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="_userInfo"></param>
         /// <param name="_mapper"></param>
+        /// <param name="_login"></param>
         /// <param name="_user"></param>
         public UserInfoController(
             IUserInfoRepository _userInfo,
@@ -71,6 +72,8 @@ namespace WebApi.Controllers
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
             int key = Convert.ToInt32(inEnt.Key);
             FaUserInfoEntityView user = await userInfo.SingleByKey(key);
+            user.BirthdaylunlarDate=user.BIRTHDAY_TIME.ToString();
+            user.BirthdaysolarDate=user.BIRTHDAY_TIME.ToString();
             reObj.Data = user;
             reObj.IsSuccess = true;
             return reObj;
