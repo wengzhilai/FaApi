@@ -73,51 +73,74 @@ namespace Repository
                     reObj.Msg = "父级有误";
                     return reObj;
                 }
-
-                //注册账号，返回UserId
-                var rustle = await new LoginRepository().LoginReg(new LogingDto
+                DapperHelper<FaLoginEntity> dbHelperLogin = new DapperHelper<FaLoginEntity>();
+                dbHelperLogin.TranscationBegin();
+                try
                 {
-                    userName = inEnt.ParentArr?[0].V,
-                    LoginName = inEnt.LoginName,
-                    Password = inEnt.Password,
-                    code = inEnt.Code
-                });
-                if(!rustle.IsSuccess){
-                    return rustle;
-                }
-
-                DapperHelper<FaUserInfoEntity> dbUserInfo = new DapperHelper<FaUserInfoEntity>();
-                var userinfoId=rustle.Data;
-                var userInfo =await dbUserInfo.Single(x => x.ID == userinfoId);
-                if (userInfo == null)
-                {
-                    reObj.IsSuccess = await dbUserInfo.Save(new DtoSave<FaUserInfoEntity>
+                    //注册账号，返回UserId
+                    var rustle = await new LoginRepository().LoginReg(new LogingDto
                     {
-                        Data = new FaUserInfoEntity
-                        {
-                            ID = rustle.Data,
-                            LEVEL_ID = inEnt.LevelId,
-                            FAMILY_ID = 1,
-                            FATHER_ID = fatherId,
-                            ELDER_ID = fatherEnt.ELDER_ID + 1,
-                            BIRTHDAY_TIME = brithDay,
-                            BIRTHDAY_PLACE = inEnt.BirthdayPlace,
-                            SEX = inEnt.Sex,
-                            YEARS_TYPE = inEnt.YearsType,
-                            STATUS = "正常",
-                            CREATE_TIME = DateTime.Now,
-                            AUTHORITY = 7
-                        }
-                    }) > 0 ? true : false;
+                        userName = inEnt.ParentArr?[0].V,
+                        LoginName = inEnt.LoginName,
+                        Password = inEnt.Password,
+                        code = inEnt.Code
+                    }, dbHelperLogin);
 
-                    if (!reObj.IsSuccess)
+                    if (rustle.IsSuccess)
+                    {
+                        DapperHelper<FaUserInfoEntity> dbUserInfo = new DapperHelper<FaUserInfoEntity>(dbHelperLogin.GetConnection(), dbHelperLogin.GetTransaction());
+                        var userinfoId = rustle.Data;
+                        var userInfo = await dbUserInfo.Single(x => x.ID == userinfoId);
+                        if (userInfo == null)
+                        {
+                            reObj.IsSuccess = await dbUserInfo.Save(new DtoSave<FaUserInfoEntity>
+                            {
+                                Data = new FaUserInfoEntity
+                                {
+                                    ID = rustle.Data,
+                                    LEVEL_ID = inEnt.LevelId,
+                                    FAMILY_ID = 1,
+                                    FATHER_ID = fatherId,
+                                    ELDER_ID = fatherEnt.ELDER_ID + 1,
+                                    BIRTHDAY_TIME = brithDay,
+                                    CREATE_USER_NAME = inEnt.ParentArr[0].V,
+                                    UPDATE_USER_NAME = inEnt.ParentArr[0].V,
+                                    BIRTHDAY_PLACE = inEnt.BirthdayPlace,
+                                    SEX = inEnt.Sex,
+                                    YEARS_TYPE = inEnt.YearsType,
+                                    STATUS = "正常",
+                                    CREATE_TIME = DateTime.Now,
+                                    AUTHORITY = 7
+                                }
+                            }) > 0 ? true : false;
+
+                            if (!reObj.IsSuccess)
+                            {
+                                reObj.IsSuccess = false;
+                                reObj.Code = "-6";
+                                reObj.Msg = string.Format("添加userinfo失败");
+                                return reObj;
+                            }
+                        }
+
+                        dbHelperLogin.TranscationCommit();
+                    }
+                    else
                     {
                         reObj.IsSuccess = false;
-                        reObj.Code = "-6";
-                        reObj.Msg = string.Format("添加userinfo失败");
-                        return reObj;
+                        reObj.Msg = rustle.Msg;
+                        dbHelperLogin.TranscationRollback();
                     }
                 }
+                catch (Exception e)
+                {
+                    dbHelperLogin.TranscationRollback();
+                    reObj.IsSuccess = false;
+                    reObj.Msg = e.Message;
+                }
+                return reObj;
+
+
                 #endregion
             }
             else  //修改用户

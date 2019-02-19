@@ -16,7 +16,6 @@ namespace Repository
 {
     public class LoginRepository : ILoginRepository
     {
-        DapperHelper<FaLoginEntity> dbHelper = new DapperHelper<FaLoginEntity>();
         /// <summary>
         /// 获取单条
         /// </summary>
@@ -24,6 +23,7 @@ namespace Repository
         /// <returns></returns>
         public Task<FaLoginEntity> SingleByKey(int key)
         {
+            DapperHelper<FaLoginEntity> dbHelper = new DapperHelper<FaLoginEntity>();
             return dbHelper.SingleByKey(key);
         }
 
@@ -34,6 +34,7 @@ namespace Repository
         /// <returns></returns>
         public Task<IEnumerable<FaLoginEntity>> FindAll(Expression<Func<FaLoginEntity, bool>> inParm = null)
         {
+            DapperHelper<FaLoginEntity> dbHelper = new DapperHelper<FaLoginEntity>();
             return dbHelper.FindAll(inParm);
         }
 
@@ -46,6 +47,22 @@ namespace Repository
         /// <param name="inEnt"></param>
         /// <returns></returns>
         public async Task<Result<int>> LoginReg(LogingDto inEnt)
+        {
+            DapperHelper<FaLoginEntity> dbHelper = new DapperHelper<FaLoginEntity>();
+            dbHelper.TranscationBegin();
+            Result<int> reObj = await LoginReg(inEnt, dbHelper);
+            if (reObj.IsSuccess)
+            {
+                dbHelper.TranscationCommit();
+            }
+            else
+            {
+                dbHelper.TranscationRollback();
+            }
+            return reObj;
+        }
+
+        public async Task<Result<int>> LoginReg(LogingDto inEnt, DapperHelper<FaLoginEntity> dbHelper)
         {
             Result<int> reObj = new Result<int>();
             #region 验证值
@@ -108,7 +125,6 @@ namespace Repository
             #endregion
 
             //开始事务
-            dbHelper.TranscationBegin();
             try
             {
                 var loginList = await new LoginRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
@@ -130,7 +146,6 @@ namespace Repository
                         reObj.IsSuccess = false;
                         reObj.Code = "-5";
                         reObj.Msg = string.Format("添加账号失败");
-                        dbHelper.TranscationRollback();
                         return reObj;
                     }
                 }
@@ -155,18 +170,14 @@ namespace Repository
                     reObj.IsSuccess = false;
                     reObj.Code = "-6";
                     reObj.Msg = string.Format("添加user失败");
-                    dbHelper.TranscationRollback();
                     return reObj;
                 }
                 #endregion
 
-
-                dbHelper.TranscationCommit();
                 reObj.Data = inUser.ID;
             }
             catch (Exception e)
             {
-                dbHelper.TranscationRollback();
                 reObj.IsSuccess = false;
                 reObj.Msg = e.Message;
             }
@@ -174,6 +185,8 @@ namespace Repository
 
             return reObj;
         }
+
+
         /// <summary>
         /// 注销用户登录状态
         /// <para>清除用户的缓存状态</para>
