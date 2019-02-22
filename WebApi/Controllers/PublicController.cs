@@ -70,6 +70,7 @@ namespace WebApi.Controllers
             return reEnt;
         }
 
+        static object savePic = new object();
         /// <summary>
         /// 图片上传
         /// </summary>
@@ -77,30 +78,38 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         [HttpPost]
         [RequestSizeLimit(100_000_000)] //最大100m左右
-        public async Task<Result> UploadPhotos(List<IFormFile> files)
+        public Result<FaFilesEntity> UploadPhotos()
         {
-            Result reEnt = new Result();
-            long size = files.Sum(f => f.Length);
-            // var fileFolder = Path.Combine(_env.ContentRootPath, "UpFiles");
-            var fileFolder = "UpFiles";
-
-            if (!Directory.Exists(fileFolder))
-                Directory.CreateDirectory(fileFolder);
-
-            foreach (var formFile in files)
+            Result<FaFilesEntity> reEnt = new Result<FaFilesEntity>();
+            lock (savePic)
             {
-                if (formFile.Length > 0)
+                var files = Request.Form.Files;
+                var fileFolder = string.Format("{0}", DateTime.Now.ToString("yyyyMM"));
+                if (!Directory.Exists(fileFolder))
+                    Directory.CreateDirectory(fileFolder);
+
+                foreach (var formFile in files)
                 {
-                    var fileName = DateTime.Now.ToString("yyyyMMddHHmmss") +
-                                   Path.GetExtension(formFile.FileName);
-                    var filePath = Path.Combine(fileFolder, fileName);
-                    var allPath = Path.Combine(_env.ContentRootPath, filePath);
-                    using (var stream = new FileStream(allPath, FileMode.Create))
+                    if (formFile.Length > 0)
                     {
-                        await formFile.CopyToAsync(stream);
-                        reEnt.IsSuccess = true;
-                        reEnt.Msg = filePath;
-                        stream.Flush();
+                        var fileName = DateTime.Now.ToString("ddHHmmssfff") +
+                                       Path.GetExtension(formFile.FileName);
+                        var filePath = Path.Combine(fileFolder, fileName);
+                        var allPath = Path.Combine(_env.ContentRootPath,"UpFiles/"+ filePath);
+                        using (var stream = new FileStream(allPath, FileMode.Create))
+                        {
+                            formFile.CopyToAsync(stream);
+                            reEnt.IsSuccess = true;
+                            reEnt.Msg = filePath;
+                            reEnt.Data=new FaFilesEntity{
+                                NAME=fileName,
+                                PATH=allPath,
+                                URL="api/Public/LookfileByPath/"+filePath,
+                                LENGTH=stream.Length,
+                                UPLOAD_TIME=DateTime.Now
+                            };
+                            stream.Flush();
+                        }
                     }
                 }
             }
@@ -118,7 +127,23 @@ namespace WebApi.Controllers
         public IActionResult Lookfile(string fileId)
         {
             Response.Body.Dispose();
-            return File(System.IO.File.ReadAllBytes(_env.ContentRootPath+"/assets/images/marty-avatar.png"), @"image/png");
+            return File(System.IO.File.ReadAllBytes(_env.ContentRootPath + "/assets/images/marty-avatar.png"), @"image/png");
+        }
+
+        /// <summary>
+        /// 根据路径查看图片
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="fileName"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet("{dir}/{fileName}.{type}")]
+        public IActionResult LookfileByPath(string dir,string fileName,string type)
+        {
+            Response.Body.Dispose();
+            var allPath = Path.Combine(_env.ContentRootPath, "UpFiles",dir,fileName+"."+type);
+            return File(System.IO.File.ReadAllBytes(allPath), @"image/png");
         }
 
 

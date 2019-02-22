@@ -46,7 +46,7 @@ namespace Models.Entity
         [Required]
         [Range(0, 2147483647)]
         [Display(Name = "大小")]
-        public int LENGTH { get; set; }
+        public Int64 LENGTH { get; set; }
         /// <summary>
         /// 添加时间
         /// </summary>
