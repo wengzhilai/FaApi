@@ -85,8 +85,8 @@ namespace WebApi.Controllers
             {
                 var files = Request.Form.Files;
                 var fileFolder = string.Format("{0}", DateTime.Now.ToString("yyyyMM"));
-                if (!Directory.Exists(fileFolder))
-                    Directory.CreateDirectory(fileFolder);
+                if (!Directory.Exists(Path.Combine("UpFiles", fileFolder)))
+                    Directory.CreateDirectory(Path.Combine("UpFiles", fileFolder));
 
                 foreach (var formFile in files)
                 {
@@ -95,18 +95,20 @@ namespace WebApi.Controllers
                         var fileName = DateTime.Now.ToString("ddHHmmssfff") +
                                        Path.GetExtension(formFile.FileName);
                         var filePath = Path.Combine(fileFolder, fileName);
-                        var allPath = Path.Combine(_env.ContentRootPath,"UpFiles/"+ filePath);
+                        var allPath = Path.Combine(_env.ContentRootPath, "UpFiles/" + filePath);
                         using (var stream = new FileStream(allPath, FileMode.Create))
                         {
                             formFile.CopyToAsync(stream);
                             reEnt.IsSuccess = true;
                             reEnt.Msg = filePath;
-                            reEnt.Data=new FaFilesEntity{
-                                NAME=fileName,
-                                PATH=allPath,
-                                URL="api/Public/LookfileByPath/"+filePath,
-                                LENGTH=stream.Length,
-                                UPLOAD_TIME=DateTime.Now
+                            reEnt.Data = new FaFilesEntity
+                            {
+                                NAME = fileName,
+                                PATH = allPath,
+                                URL = "api/Public/LookfileByPath/" + filePath,
+                                LENGTH = stream.Length,
+                                UPLOAD_TIME = DateTime.Now,
+                                FILE_TYPE=Path.GetExtension(formFile.FileName),
                             };
                             stream.Flush();
                         }
@@ -139,10 +141,10 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("{dir}/{fileName}.{type}")]
-        public IActionResult LookfileByPath(string dir,string fileName,string type)
+        public IActionResult LookfileByPath(string dir, string fileName, string type)
         {
             Response.Body.Dispose();
-            var allPath = Path.Combine(_env.ContentRootPath, "UpFiles",dir,fileName+"."+type);
+            var allPath = Path.Combine(_env.ContentRootPath, "UpFiles", dir, fileName + "." + type);
             return File(System.IO.File.ReadAllBytes(allPath), @"image/png");
         }
 
