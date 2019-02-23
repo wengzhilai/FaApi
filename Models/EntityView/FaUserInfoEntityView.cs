@@ -202,5 +202,18 @@ namespace Models.EntityView
         /// </summary>
         /// <value></value>
         public string BirthdaysolarDate{get;set;}
+
+
+        /// <summary>
+        /// 逝世阴历
+        /// </summary>
+        /// <value></value>
+        public string DiedlunlarDate{get;set;}
+
+        /// <summary>
+        /// 逝世阳历
+        /// </summary>
+        /// <value></value>
+        public string DiedsolarDate{get;set;}
     }
 }
