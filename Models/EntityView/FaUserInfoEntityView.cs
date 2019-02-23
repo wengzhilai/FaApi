@@ -189,7 +189,6 @@ namespace Models.EntityView
         /// <summary>
         /// 归属地
         /// </summary>
-        [Required]
         [Display(Name = "归属地")]
         [Column("b.`DISTRICT_ID`")]
         public int DISTRICT_ID { get; set; }

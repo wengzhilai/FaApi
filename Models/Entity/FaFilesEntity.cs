@@ -15,7 +15,6 @@ namespace Models.Entity
         /// ID
         /// </summary>
         [Key]
-        [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "ID")]
         [Column]
@@ -23,7 +22,6 @@ namespace Models.Entity
         /// <summary>
         /// 名称
         /// </summary>
-        [Required]
         [StringLength(50)]
         [Display(Name = "名称")]
         [Column]
@@ -31,7 +29,6 @@ namespace Models.Entity
         /// <summary>
         /// 路径
         /// </summary>
-        [Required]
         [StringLength(200)]
         [Display(Name = "路径")]
         [Column]
@@ -46,7 +43,6 @@ namespace Models.Entity
         /// <summary>
         /// 大小
         /// </summary>
-        [Required]
         [Range(0, 2147483647)]
         [Display(Name = "大小")]
         [Column]

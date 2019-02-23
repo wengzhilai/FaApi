@@ -43,6 +43,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="config"></param>
         /// <param name="login"></param>
+        /// <param name="role"></param>
         /// <param name="accessor"></param>
         /// <param name="user"></param>
         public AuthController(

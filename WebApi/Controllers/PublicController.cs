@@ -75,7 +75,6 @@ namespace WebApi.Controllers
             return reEnt;
         }
 
-        static object savePic = new object();
         /// <summary>
         /// 图片上传
         /// </summary>
@@ -83,40 +82,38 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         [HttpPost]
         [RequestSizeLimit(100_000_000)] //最大100m左右
-        public Result<FaFilesEntity> UploadPhotos()
+        async public Task<Result<FaFilesEntity>> UploadPhotos()
         {
             Result<FaFilesEntity> reEnt = new Result<FaFilesEntity>();
-            lock (savePic)
-            {
-                var files = Request.Form.Files;
-                var fileFolder = string.Format("{0}", DateTime.Now.ToString("yyyyMM"));
-                if (!Directory.Exists(Path.Combine("UpFiles", fileFolder)))
-                    Directory.CreateDirectory(Path.Combine("UpFiles", fileFolder));
 
-                foreach (var formFile in files)
+            var files = Request.Form.Files;
+            var fileFolder = string.Format("{0}", DateTime.Now.ToString("yyyyMM"));
+            if (!Directory.Exists(Path.Combine("UpFiles", fileFolder)))
+                Directory.CreateDirectory(Path.Combine("UpFiles", fileFolder));
+
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
                 {
-                    if (formFile.Length > 0)
+                    var fileName = DateTime.Now.ToString("ddHHmmssfff") +
+                                   Path.GetExtension(formFile.FileName);
+                    var filePath = Path.Combine(fileFolder, fileName);
+                    var allPath = Path.Combine(_env.ContentRootPath, "UpFiles/" + filePath);
+                    using (var stream = new FileStream(allPath, FileMode.Create))
                     {
-                        var fileName = DateTime.Now.ToString("ddHHmmssfff") +
-                                       Path.GetExtension(formFile.FileName);
-                        var filePath = Path.Combine(fileFolder, fileName);
-                        var allPath = Path.Combine(_env.ContentRootPath, "UpFiles/" + filePath);
-                        using (var stream = new FileStream(allPath, FileMode.Create))
+                        await formFile.CopyToAsync(stream);
+                        reEnt.IsSuccess = true;
+                        reEnt.Msg = filePath;
+                        reEnt.Data = new FaFilesEntity
                         {
-                            formFile.CopyToAsync(stream);
-                            reEnt.IsSuccess = true;
-                            reEnt.Msg = filePath;
-                            reEnt.Data = new FaFilesEntity
-                            {
-                                NAME = fileName,
-                                PATH = allPath,
-                                URL = "api/Public/LookfileByPath/" + filePath,
-                                LENGTH = stream.Length,
-                                UPLOAD_TIME = DateTime.Now,
-                                FILE_TYPE = Path.GetExtension(formFile.FileName),
-                            };
-                            stream.Flush();
-                        }
+                            NAME = fileName,
+                            PATH = allPath,
+                            URL = "api/Public/LookfileByPath/" + filePath,
+                            LENGTH = stream.Length,
+                            UPLOAD_TIME = DateTime.Now,
+                            FILE_TYPE = Path.GetExtension(formFile.FileName),
+                        };
+                        stream.Flush();
                     }
                 }
             }
@@ -141,7 +138,15 @@ namespace WebApi.Controllers
             }
             else
             {
-                return File(System.IO.File.ReadAllBytes(fileEnt.PATH), @"image/png");
+                if (string.IsNullOrEmpty(fileEnt.FILE_TYPE))
+                {
+                    fileEnt.FILE_TYPE = "png";
+                }
+                else
+                {
+                    fileEnt.FILE_TYPE = fileEnt.FILE_TYPE.Replace(".", "");
+                }
+                return File(System.IO.File.ReadAllBytes(fileEnt.PATH), @"image/" + fileEnt.FILE_TYPE);
             }
         }
 
