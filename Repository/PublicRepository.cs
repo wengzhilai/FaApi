@@ -16,11 +16,6 @@ namespace Repository
 {
     public class PublicRepository : IPublicRepository
     {
-        public Task<Result> GetChineseCalendar(DateTime inDate)
-        {
-            Result reObj = new Result();
-            return Task.Run(() => reObj);
-        }
 
         public async Task<Result> SendCode(string phone)
         {

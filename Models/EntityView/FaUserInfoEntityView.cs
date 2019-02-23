@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Models.Entity;
 
 namespace Models.EntityView
 {
@@ -141,11 +142,26 @@ namespace Models.EntityView
         public string STATUS { get; set; }
 
         /// <summary>
+        /// 别名
+        /// </summary>
+        /// <value></value>
+        [Display(Name = "别名")]
+        [Column("a.ALIAS")]
+        public string ALIAS { get; set; }
+
+        /// <summary>
         /// 权限
         /// </summary>
         [Display(Name = "权限")]
         [Column("a.AUTHORITY")]
         public int AUTHORITY { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [StringLength(500)]
+        [Display(Name = "备注")]
+        [Column("a.REMARK")]
+        public string REMARK { get; set; }
 
 
 
@@ -215,5 +231,11 @@ namespace Models.EntityView
         /// </summary>
         /// <value></value>
         public string DiedsolarDate{get;set;}
+
+        /// <summary>
+        /// 头像信息，只用于添加头像时有效
+        /// </summary>
+        /// <value></value>
+        public FaFilesEntity IconFiles{get;set;}
     }
 }

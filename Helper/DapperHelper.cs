@@ -89,14 +89,6 @@ namespace Helper
             return result;
         }
 
-        public Task<int> SaveAsync(DtoSave<T> inEnt)
-        {
-            var mh = new ModelHelper<T>(inEnt.Data);
-            string sql = mh.GetSaveSql(null, inEnt.IgnoreFieldList);
-            var result = connection.ExecuteAsync(sql, mh.GetDynamicParameters(), transaction);
-            return result;
-        }
-
         public Task<int> Saves(DtoSave<List<T>> inEnt)
         {
             var mh = new ModelHelper<T>();

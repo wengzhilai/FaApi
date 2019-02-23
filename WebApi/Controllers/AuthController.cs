@@ -34,6 +34,7 @@ namespace WebApi.Controllers
     {
         IConfiguration _config;
         ILoginRepository _login;
+        IRoleRepository _role;
         IHttpContextAccessor _accessor;
         IUserRepository _user;
 
@@ -47,12 +48,14 @@ namespace WebApi.Controllers
         public AuthController(
             IConfiguration config,
             ILoginRepository login,
+            IRoleRepository role,
             IHttpContextAccessor accessor,
             IUserRepository user
             )
         {
             _config = config;
             _login = login;
+            _role = role;
             _user = user;
             _accessor = accessor;
         }
@@ -120,7 +123,7 @@ namespace WebApi.Controllers
             return reObj;
         }
 
-        
+
 
 
         /// <summary>
@@ -190,5 +193,35 @@ namespace WebApi.Controllers
             }
             return reObj;
         }
+
+        /// <summary>
+        /// 检测用户是否有权限
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        public async Task<Result<bool>> CheckAuth(CheckAuthDto inEnt)
+        {
+            var reObj = new Result<bool>();
+            try
+            {
+                reObj.Data = await this._role.CheckAuth(inEnt);
+                reObj.IsSuccess=true;
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+
+
     }
 }

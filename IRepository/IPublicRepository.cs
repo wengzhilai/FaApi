@@ -9,12 +9,6 @@ namespace IRepository
 {
     public interface IPublicRepository 
     {
-        /// <summary>
-        /// 阳历转阳历
-        /// </summary>
-        /// <param name="inEnt"></param>
-        /// <returns></returns>
-        Task<Result> GetChineseCalendar(DateTime inDate);
         
 
         /// <summary>

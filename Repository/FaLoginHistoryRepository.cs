@@ -43,7 +43,7 @@ namespace Repository
         /// <returns></returns>
         public Task<int> Save(DtoSave<FaLoginHistoryEntity> inObj)
         {
-            return dbHelper.SaveAsync(inObj);
+            return dbHelper.Save(inObj);
         }
     }
 }

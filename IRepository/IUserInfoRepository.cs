@@ -38,5 +38,15 @@ namespace IRepository
         /// <param name="inEnt"></param>
         /// <returns></returns>
         Task<Result> RegUserInfo(RegUserInfo inEnt);
+
+        /// <summary>
+        /// 保存用户基本信息
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <param name="opUserName"></param>
+        /// <param name="opUserId"></param>
+        /// <returns></returns>
+        Task<Result<bool>> Save(DtoSave<FaUserInfoEntityView> inEnt, string opUserName, int opUserId);
+
     }
 }

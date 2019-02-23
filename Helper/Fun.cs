@@ -25,16 +25,16 @@ namespace Helper
         /// </summary>
         /// <param name="pwdStr"></param>
         /// <returns></returns>
-        public static bool CheckPassword(string pwdStr,int PwdComplexity)
+        public static bool CheckPassword(string pwdStr, int PwdComplexity)
         {
-            var PwdMinLength=2;
+            var PwdMinLength = 2;
             Regex r1 = new Regex(@"^(?=.*[a-z])");
             Regex r2 = new Regex(@"^(?=.*[A-Z])");
             Regex r3 = new Regex(@"^(?=.*[0-9])");
             Regex r4 = new Regex(@"^(?=([\x21-\x7e]+)[^a-zA-Z0-9])");
             if (pwdStr.Length < PwdMinLength)
             {
-                throw new Exception(string.Format("密码长度不够{0}位",PwdMinLength));
+                throw new Exception(string.Format("密码长度不够{0}位", PwdMinLength));
             }
             int reInt = 0;
             if (r1.IsMatch(pwdStr)) reInt++;
@@ -42,7 +42,7 @@ namespace Helper
             if (r3.IsMatch(pwdStr)) reInt++;
             if (r4.IsMatch(pwdStr)) reInt++;
 
-            if (reInt<PwdComplexity)
+            if (reInt < PwdComplexity)
             {
                 throw new Exception(string.Format("密码必须包括字母大写、字母小写、数字和特殊字符中的其中{0}种", PwdComplexity));
             }
@@ -524,13 +524,13 @@ namespace Helper
         /// <param name="postStr"></param>
         /// <param name="cookieList"></param>
         /// <returns></returns>
-        public static string ExecutePostJson(string server_addr, string postStr, CookieContainer cookieList=null)
+        public static string ExecutePostJson(string server_addr, string postStr, CookieContainer cookieList = null)
         {
             string content = string.Empty;
             try
             {
                 DateTime startTime = new DateTime(1970, 1, 1);
-                var cdt= (int)(DateTime.Now - startTime).TotalSeconds;
+                var cdt = (int)(DateTime.Now - startTime).TotalSeconds;
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server_addr);
                 request.Method = "POST";
@@ -546,7 +546,7 @@ namespace Helper
                     myRequestStream.Write(data, 0, data.Length);
                     myRequestStream.Close();
                 }
-                
+
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 StreamReader myStreamReader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 content = myStreamReader.ReadToEnd();
@@ -597,7 +597,7 @@ namespace Helper
         /// <param name="postDataStr"></param>
         /// <param name="reStr"></param>
         /// <returns></returns>
-        public static bool HttpPostEncoded(string Url, string postDataStr,ref string reStr)
+        public static bool HttpPostEncoded(string Url, string postDataStr, ref string reStr)
         {
             byte[] dataArray = Encoding.UTF8.GetBytes(postDataStr);
             // Console.Write(Encoding.UTF8.GetString(dataArray));
@@ -607,7 +607,7 @@ namespace Helper
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = dataArray.Length;
             //request.CookieContainer = cookie;
-            
+
             try
             {
                 Stream dataStream = request.GetRequestStream();
@@ -655,7 +655,7 @@ namespace Helper
         /// <param name="startStr"></param>
         /// <param name="endStr"></param>
         /// <returns></returns>
-        public static string Substring(string inStr,string startStr,string endStr)
+        public static string Substring(string inStr, string startStr, string endStr)
         {
             if (string.IsNullOrEmpty(inStr)) return "";
             int s = inStr.IndexOf(startStr);
@@ -714,6 +714,34 @@ namespace Helper
                 //返回错误消息
             }
             return flag;
+        }
+
+        /// <summary>
+        /// 获取权限
+        /// </summary>
+        /// <param name="powerInt"></param>
+        /// <returns></returns>
+        public static List<int> GetPowerList(string powerInt)
+        {
+            switch (powerInt)
+            {
+                case "7":
+                    return new List<int>() { 1, 2, 4 };
+                case "6":
+                    return new List<int>() { 2, 4 };
+                case "5":
+                    return new List<int>() { 1, 4 };
+                case "4":
+                    return new List<int>() { 4 };
+                case "3":
+                    return new List<int>() { 1, 2 };
+                case "2":
+                    return new List<int>() { 2 };
+                case "1":
+                    return new List<int>() { 1 };
+                default:
+                    return new List<int>() { 4 };
+            }
         }
 
     }

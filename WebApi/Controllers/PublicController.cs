@@ -38,12 +38,17 @@ namespace WebApi.Controllers
     {
 
         private readonly IHostingEnvironment _env;
+        private IFileRepository _file;
         IPublicRepository _public;
         /// <summary>
         /// 
         /// </summary>
-        public PublicController(IPublicRepository pub, IHostingEnvironment hostingEnvironment)
+        public PublicController(
+            IPublicRepository pub,
+            IFileRepository file,
+             IHostingEnvironment hostingEnvironment)
         {
+            _file = file;
             _public = pub;
             _env = hostingEnvironment;
         }
@@ -108,7 +113,7 @@ namespace WebApi.Controllers
                                 URL = "api/Public/LookfileByPath/" + filePath,
                                 LENGTH = stream.Length,
                                 UPLOAD_TIME = DateTime.Now,
-                                FILE_TYPE=Path.GetExtension(formFile.FileName),
+                                FILE_TYPE = Path.GetExtension(formFile.FileName),
                             };
                             stream.Flush();
                         }
@@ -126,10 +131,18 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("{fileId}.jpg")]
-        public IActionResult Lookfile(string fileId)
+        async public Task<IActionResult> Lookfile(int fileId)
         {
             Response.Body.Dispose();
-            return File(System.IO.File.ReadAllBytes(_env.ContentRootPath + "/assets/images/marty-avatar.png"), @"image/png");
+            var fileEnt = await _file.SingleByKey(fileId);
+            if (fileEnt == null || fileEnt.PATH.IsNullOrEmpty())
+            {
+                return File(System.IO.File.ReadAllBytes(_env.ContentRootPath + "/assets/images/marty-avatar.png"), @"image/png");
+            }
+            else
+            {
+                return File(System.IO.File.ReadAllBytes(fileEnt.PATH), @"image/png");
+            }
         }
 
         /// <summary>
@@ -169,17 +182,17 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public Result GetLunarDate(DtoKey inEnt)
         {
+            Result reObj = new Result();
+            if (string.IsNullOrEmpty(inEnt.Key)) return reObj;
             inEnt.Key = inEnt.Key.Replace("T", " ");
-
+            DateTime datetime = new DateTime();
+            if (!DateTime.TryParse(inEnt.Key, out datetime)) return reObj;
             ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
-
-            DateTime datetime = Convert.ToDateTime(inEnt.Key);
 
             int lyear = cc.GetYear(datetime);
             int lmonth = cc.GetMonth(datetime);
             int lday = cc.GetDayOfMonth(datetime);
 
-            Result reObj = new Result();
             reObj.IsSuccess = true;
             reObj.Msg = string.Format("{0}-{1}-{2} {3}:00", lyear, lmonth, lday, datetime.Hour);
             return reObj;

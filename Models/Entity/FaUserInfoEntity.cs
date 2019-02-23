@@ -155,18 +155,30 @@ namespace Models.Entity
         [Column]
         public int UPDATE_USER_ID { get; set; }
 
-
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [StringLength(500)]
+        [Display(Name = "备注")]
+        [Column]
+        public string REMARK { get; set; }
 
         /// <summary>
         /// 别名
         /// </summary>
         /// <value></value>
+        [Display(Name = "别名")]
+        [Column]
         public string ALIAS { get; set; }
 
         /// <summary>
         /// 权限
+        ///  * 获取权限列表
+        ///  * 权限字符串，第一位表示创建者，第二位管理员，第三位表示超级管理员
+        ///  * 判断的权限，1添加，2修改，4查看
         /// </summary>
-        /// <value></value>
+        [Display(Name = "权限")]
+        [Column]
         public int AUTHORITY { get; set; }
 
     }

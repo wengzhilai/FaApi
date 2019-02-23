@@ -36,7 +36,7 @@ namespace WebApi.Controllers
     [Authorize]
     public class UserInfoController : ControllerBase
     {
-        private IUserInfoRepository userInfo;
+        private IUserInfoRepository _userInfo;
         private IMapper mapper;
         private IUserRepository user;
         private ILoginRepository login;
@@ -44,18 +44,18 @@ namespace WebApi.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="_userInfo"></param>
+        /// <param name="userInfo"></param>
         /// <param name="_mapper"></param>
         /// <param name="_login"></param>
         /// <param name="_user"></param>
         public UserInfoController(
-            IUserInfoRepository _userInfo,
+            IUserInfoRepository userInfo,
             IMapper _mapper,
             ILoginRepository _login,
             IUserRepository _user
             )
         {
-            userInfo = _userInfo;
+            _userInfo = userInfo;
             mapper = _mapper;
             user = _user;
             login = _login;
@@ -71,9 +71,9 @@ namespace WebApi.Controllers
         {
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
             int key = Convert.ToInt32(inEnt.Key);
-            FaUserInfoEntityView user = await userInfo.SingleByKey(key);
-            user.BirthdaylunlarDate=user.BIRTHDAY_TIME.ToString();
-            user.BirthdaysolarDate=user.BIRTHDAY_TIME.ToString();
+            FaUserInfoEntityView user = await _userInfo.SingleByKey(key);
+            user.BirthdaylunlarDate = user.BIRTHDAY_TIME.ToString();
+            user.BirthdaysolarDate = user.BIRTHDAY_TIME.ToString();
             reObj.Data = user;
             reObj.IsSuccess = true;
             return reObj;
@@ -89,12 +89,12 @@ namespace WebApi.Controllers
         public async Task<Result<FaUserInfoEntityView>> SingleByName(DtoKey inEnt)
         {
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
-            var user = await userInfo.FindAll(x=>x.NAME==inEnt.Key);
+            var user = await _userInfo.FindAll(x => x.NAME == inEnt.Key);
             reObj.DataList = user.ToList();
             reObj.IsSuccess = true;
             return reObj;
         }
-        
+
 
         /// <summary>
         /// 获取列表
@@ -105,9 +105,9 @@ namespace WebApi.Controllers
         public async Task<Result<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt)
         {
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
-            inEnt.FilterList=x=>x.ID<100;
-            inEnt.OrderType="id asc";
-            var user = await userInfo.List(inEnt);
+            inEnt.FilterList = x => x.ID < 100;
+            inEnt.OrderType = "id asc";
+            var user = await _userInfo.List(inEnt);
             reObj.DataList = user.ToList();
             reObj.IsSuccess = true;
             return reObj;
@@ -125,7 +125,7 @@ namespace WebApi.Controllers
             var reObj = new Result();
             try
             {
-                return await userInfo.RegUserInfo(inEnt);
+                return await _userInfo.RegUserInfo(inEnt);
             }
             catch (ExceptionExtend e)
             {
@@ -140,5 +140,35 @@ namespace WebApi.Controllers
             }
             return reObj;
         }
+
+        /// <summary>
+        /// 修改用户信息
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [HttpGet]
+        [Authorize]
+        async public Task<Result> Save(DtoSave<FaUserInfoEntityView> inEnt)
+        {
+            var reObj = new Result<bool>();
+            try
+            {
+                reObj = await this._userInfo.Save(inEnt,User.Identity.Name,1);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+        
     }
 }

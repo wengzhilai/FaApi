@@ -193,5 +193,267 @@ namespace Repository
 
             return reObj;
         }
+
+        /// <summary>
+        /// 只添加信息不添加账号，可用于保存
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        async public Task<Result<bool>> Save(DtoSave<FaUserInfoEntityView> inEnt, string opUserName, int opUserId)
+        {
+            var reObj = new Result<bool>();
+            #region 验证信息是否有误
+            if (inEnt.Data.ID == 0 && (inEnt.Data.COUPLE_ID == null || inEnt.Data.COUPLE_ID == 0))
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "添加的用户没有选择COUPLE_ID";
+                return reObj;
+            }
+            #endregion
+            DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
+            dapperUser.TranscationBegin();
+            DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
+            //如果有新添加的头像，则保存像头地址到数据库
+            if ((inEnt.Data.ICON_FILES_ID == null || inEnt.Data.ICON_FILES_ID == 0) && inEnt.Data.IconFiles != null && !string.IsNullOrEmpty(inEnt.Data.IconFiles.PATH))
+            {
+                DapperHelper<FaFilesEntity> dapperFile = new DapperHelper<FaFilesEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
+                inEnt.Data.ICON_FILES_ID = await new SequenceRepository().GetNextID<FaFilesEntity>();
+                inEnt.Data.IconFiles.ID = inEnt.Data.ICON_FILES_ID.Value;
+                inEnt.Data.IconFiles.UPLOAD_TIME=DateTime.Now;
+                var saveNum = await dapperFile.Save(new DtoSave<FaFilesEntity>
+                {
+                    Data = inEnt.Data.IconFiles
+                });
+                if (saveNum < 1)
+                {
+                    dapperUser.TranscationRollback();
+                    reObj.IsSuccess = false;
+                    reObj.Msg = "保存文件失败";
+                    return reObj;
+                }
+            }
+            try
+            {
+                if (inEnt.Data.ID == 0)
+                {
+                    var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.Data.COUPLE_ID);
+                    if (coupleEnt == null)
+                    {
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "选择的COUPLE_ID不存在";
+                        return reObj;
+                    }
+
+                    var userId = await new SequenceRepository().GetNextID<FaUserEntity>();
+                    #region 保存用户
+                    var addUserId = await dapperUser.Save(new DtoSave<FaUserEntity>
+                    {
+                        Data = new FaUserEntity
+                        {
+                            ID = userId,
+                            NAME = inEnt.Data.NAME,
+                            ICON_FILES_ID = inEnt.Data.ICON_FILES_ID,
+                            CREATE_TIME = DateTime.Now,
+                            LOGIN_NAME = userId.ToString(),
+                            DISTRICT_ID = 1
+                        }
+                    });
+                    if (addUserId < 1)
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "保存用户失败";
+                        return reObj;
+                    }
+                    #endregion
+
+                    #region 保存UserInfo
+                    var addUserInfoId = await dapperUserInfo.Save(new DtoSave<FaUserInfoEntity>
+                    {
+                        Data = new FaUserInfoEntity
+                        {
+                            ID = userId,
+                            LEVEL_ID = inEnt.Data.LEVEL_ID,
+                            COUPLE_ID = inEnt.Data.COUPLE_ID,
+                            BIRTHDAY_TIME = inEnt.Data.BIRTHDAY_TIME,
+                            BIRTHDAY_PLACE = inEnt.Data.BIRTHDAY_PLACE,
+                            IS_LIVE = inEnt.Data.IS_LIVE,
+                            DIED_TIME = inEnt.Data.DIED_TIME,
+                            DIED_PLACE = inEnt.Data.DIED_PLACE,
+                            SEX = inEnt.Data.SEX,
+                            YEARS_TYPE = inEnt.Data.YEARS_TYPE,
+                            ALIAS = inEnt.Data.ALIAS,
+                            CREATE_USER_NAME = opUserName,
+                            CREATE_USER_ID = opUserId,
+                            UPDATE_TIME = DateTime.Now,
+                            UPDATE_USER_NAME = opUserName,
+                            UPDATE_USER_ID = opUserId,
+                            CREATE_TIME = DateTime.Now,
+                            AUTHORITY = 0,
+                            STATUS = "正常",
+                        }
+                    });
+                    if (addUserInfoId < 1)
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "保存用户信息失败";
+                        return reObj;
+                    }
+                    #endregion
+
+                    #region 修改COUPLE用户信息
+
+                    coupleEnt.COUPLE_ID = userId;
+
+                    var saveList = new List<string>();
+                    saveList.Add("COUPLE_ID");
+
+                    var addUserInfoNum = await dapperUserInfo.Update(new DtoSave<FaUserInfoEntity>
+                    {
+                        Data = coupleEnt,
+                        SaveFieldList = saveList,
+                        WhereList = null
+                    });
+                    if (addUserInfoNum < 1)
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "修改用户失败";
+                        return reObj;
+                    }
+                    #endregion
+                }
+                else
+                {
+                    var userId = inEnt.Data.ID;
+                    var user = await dapperUser.Single((x) => x.ID == userId);
+                    var userInfo = await dapperUserInfo.Single((x) => x.ID == userId);
+                    #region 检测数据是否正确权限
+                    // 正常：所有人都可修改
+                    // 锁定：只有创建人可以修改
+                    // 存档：任何人都不可修改
+                    if (userInfo.STATUS == "存档")
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "用户信息已经存档，不可修改，请联系管理员";
+                        return reObj;
+                    }
+                    if (userInfo.STATUS == "锁定" && userInfo.CREATE_USER_ID != opUserId)
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "用户信息已经锁定，不可修改，请联系管理员，和添加用户";
+                        return reObj;
+                    }
+
+                    if (userInfo.AUTHORITY > 0)
+                    {
+                        var isPower = await new RoleRepository().CheckAuth(new CheckAuthDto
+                        {
+                            UserId = opUserId,
+                            Authority = userInfo.AUTHORITY.ToString(),
+                            PowerNum = 2,
+                            IsCreater = userInfo.CREATE_USER_ID == opUserId
+                        });
+                        if (!isPower)
+                        {
+                            dapperUser.TranscationRollback();
+                            reObj.IsSuccess = false;
+                            reObj.Msg = "您无权限操作该用户请联系管理员";
+                            return reObj;
+                        }
+                    }
+
+                    if (user == null || userInfo == null)
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "用户信息不存在";
+                        return reObj;
+                    }
+                    #endregion
+
+                    #region 修改用户
+                    user.NAME = inEnt.Data.NAME;
+                    user.ICON_FILES_ID = inEnt.Data.ICON_FILES_ID;
+                    var addUserNum = await dapperUser.Update(new DtoSave<FaUserEntity>
+                    {
+                        Data = user,
+                        SaveFieldList = new List<string> { "NAME", "ICON_FILES_ID" },
+                        WhereList = null
+                    });
+                    if (addUserNum < 1)
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "修改用户失败";
+                        return reObj;
+                    }
+                    #endregion
+
+                    #region 修改用户信息
+
+                    userInfo.LEVEL_ID = inEnt.Data.LEVEL_ID;
+                    userInfo.COUPLE_ID = inEnt.Data.COUPLE_ID;
+                    userInfo.BIRTHDAY_TIME = inEnt.Data.BIRTHDAY_TIME;
+                    userInfo.BIRTHDAY_PLACE = inEnt.Data.BIRTHDAY_PLACE;
+                    userInfo.IS_LIVE = inEnt.Data.IS_LIVE;
+                    userInfo.DIED_TIME = inEnt.Data.DIED_TIME;
+                    userInfo.DIED_PLACE = inEnt.Data.DIED_PLACE;
+                    userInfo.SEX = inEnt.Data.SEX;
+                    userInfo.YEARS_TYPE = inEnt.Data.YEARS_TYPE;
+                    userInfo.ALIAS = inEnt.Data.ALIAS;
+                    userInfo.REMARK = inEnt.Data.REMARK;
+                    userInfo.UPDATE_TIME = DateTime.Now;
+                    userInfo.UPDATE_USER_NAME = opUserName;
+                    userInfo.UPDATE_USER_ID = opUserId;
+                    var saveList = new List<string>();
+                    saveList.Add("LEVEL_ID");
+                    saveList.Add("COUPLE_ID");
+                    saveList.Add("BIRTHDAY_TIME");
+                    saveList.Add("BIRTHDAY_PLACE");
+                    saveList.Add("IS_LIVE");
+                    saveList.Add("DIED_TIME");
+                    saveList.Add("DIED_PLACE");
+                    saveList.Add("SEX");
+                    saveList.Add("YEARS_TYPE");
+                    saveList.Add("ALIAS");
+                    saveList.Add("REMARK");
+                    saveList.Add("UPDATE_TIME");
+                    saveList.Add("UPDATE_USER_NAME");
+                    saveList.Add("UPDATE_USER_ID");
+                    var addUserInfoNum = await dapperUserInfo.Update(new DtoSave<FaUserInfoEntity>
+                    {
+                        Data = userInfo,
+                        SaveFieldList = saveList,
+                        WhereList = null
+                    });
+                    if (addUserInfoNum < 1)
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "修改用户失败";
+                        return reObj;
+                    }
+                    #endregion
+                }
+                dapperUser.TranscationCommit();
+                reObj.Data = true;
+                reObj.IsSuccess = true;
+                reObj.Msg = "修改成功";
+                return reObj;
+
+            }
+            catch (Exception e)
+            {
+                dapperUser.TranscationRollback();
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+                return reObj;
+            }
+        }
+
     }
 }
