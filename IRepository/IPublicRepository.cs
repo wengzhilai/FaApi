@@ -7,9 +7,9 @@ using Models.Entity;
 
 namespace IRepository
 {
-    public interface IPublicRepository 
+    public interface IPublicRepository
     {
-        
+
 
         /// <summary>
         /// 发送验证码到手机
@@ -28,5 +28,19 @@ namespace IRepository
         /// <param name="code">验证码</param>
         /// <returns></returns>
         Task<bool> SmsSendCode(string mobile, string code);
+
+        /// <summary>
+        /// 获取阴历 key为时间字符串
+        /// </summary>
+        /// <param name="datetime">时间字符串</param>
+        /// <returns></returns>
+        Result GetLunarDate(DateTime datetime);
+
+        /// <summary>
+        /// 获取阳历 key为时间字符串
+        /// </summary>
+        /// <param name="datetime">时间字符串</param>
+        /// <returns></returns>
+        Result GetSolarDate(DateTime datetime);
     }
 }

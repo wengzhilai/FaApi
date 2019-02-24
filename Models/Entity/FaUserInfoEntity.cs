@@ -181,5 +181,23 @@ namespace Models.Entity
         [Column]
         public int AUTHORITY { get; set; }
 
+        /// <summary>
+        /// 教育背影
+        /// </summary>
+        /// <value></value>
+        [StringLength(20)]
+        [Display(Name = "教育背影")]
+        [Column]
+        public string EDUCATION { get; set; }
+
+        /// <summary>
+        /// 行业
+        /// </summary>
+        /// <value></value>
+        [StringLength(100)]
+        [Display(Name = "行业")]
+        [Column]
+        public string INDUSTRY { get; set; }
+
     }
 }

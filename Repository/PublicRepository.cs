@@ -11,6 +11,7 @@ using MySql.Data.MySqlClient;
 using Dapper;
 using System.Data;
 using System.Linq.Expressions;
+using System.Globalization;
 
 namespace Repository
 {
@@ -35,7 +36,7 @@ namespace Repository
             }
 
             var code = PicFunHelper.ValidateMake(4);
-            code="1111";
+            code = "1111";
             DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>();
             try
             {
@@ -44,14 +45,16 @@ namespace Repository
                 if (login != null)
                 {
                     login.VERIFY_CODE = code;
-                    login.VERIFY_TIME=DateTime.Now;
-                    reEnt.IsSuccess= await dapperLogin.Update(new DtoSave<FaLoginEntity>{
-                        Data=login,
-                        SaveFieldList=new List<string>{"VERIFY_CODE","VERIFY_TIME"},
-                        IgnoreFieldList=null
-                    })>0;
-                    if(!reEnt.IsSuccess){
-                        reEnt.Msg="更新用户验证码失败";
+                    login.VERIFY_TIME = DateTime.Now;
+                    reEnt.IsSuccess = await dapperLogin.Update(new DtoSave<FaLoginEntity>
+                    {
+                        Data = login,
+                        SaveFieldList = new List<string> { "VERIFY_CODE", "VERIFY_TIME" },
+                        IgnoreFieldList = null
+                    }) > 0;
+                    if (!reEnt.IsSuccess)
+                    {
+                        reEnt.Msg = "更新用户验证码失败";
                         dapperLogin.TranscationRollback();
                         return reEnt;
                     }
@@ -75,10 +78,10 @@ namespace Repository
                     dapperLogin.TranscationRollback();
                     return reEnt;
                 }
-                reEnt.IsSuccess=await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
+                reEnt.IsSuccess = await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
                 {
                     Data = ent
-                })>0;
+                }) > 0;
                 if (!reEnt.IsSuccess)
                 {
                     reEnt.IsSuccess = false;
@@ -87,13 +90,13 @@ namespace Repository
                     return reEnt;
                 }
                 dapperLogin.TranscationCommit();
-                reEnt.IsSuccess=true;
-                reEnt.Msg="发送成功";
+                reEnt.IsSuccess = true;
+                reEnt.Msg = "发送成功";
             }
             catch (Exception e)
             {
                 reEnt.IsSuccess = false;
-                reEnt.Msg=e.Message;
+                reEnt.Msg = e.Message;
 
                 LogHelper.WriteErrorLog<PublicRepository>(e.ToString());
                 dapperLogin.TranscationRollback();
@@ -104,9 +107,46 @@ namespace Repository
         public async Task<bool> SmsSendCode(string mobile, string code)
         {
             await JiguangHelper.SendValidSms(mobile, code);
-            
-
             return true;
         }
+
+        /// <summary>
+        /// 获取阴历 key为时间字符串
+        /// </summary>
+        /// <param name="datetime">时间字符串</param>
+        /// <returns></returns>
+        public Result GetLunarDate(DateTime datetime)
+        {
+            Result reObj = new Result();
+            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
+            int lyear = cc.GetYear(datetime);
+            int lmonth = cc.GetMonth(datetime);
+            int lday = cc.GetDayOfMonth(datetime);
+            reObj.IsSuccess = true;
+            reObj.Msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:00", lyear, lmonth, lday, datetime.Hour)).ToString("yyyy-MM-dd HH:00");
+            return reObj;
+        }
+
+        /// <summary>
+        /// 获取阳历 key为时间字符串
+        /// </summary>
+        /// <param name="datetime">时间字符串</param>
+        /// <returns></returns>
+        public Result GetSolarDate(DateTime datetime)
+        {
+            Result reObj = new Result();
+            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
+            DateTime dt = cc.ToDateTime(datetime.Year, datetime.Month, datetime.Day, datetime.Hour, datetime.Minute, datetime.Second, 0);
+            //判断到某个月份是否有润月
+            for (int i = 1; i <= datetime.Month; i++)
+                if (cc.IsLeapMonth(datetime.Year, i))
+                    dt = dt.AddMonths(1);
+
+            reObj.IsSuccess = true;
+            reObj.Msg = dt.ToString("yyyy-MM-dd HH:00");
+            return reObj;
+        }
+
+
     }
 }

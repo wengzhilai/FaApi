@@ -60,6 +60,6 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result> UserEditPwd(DtoSave<ResetPasswordDto> inEnt);
+        Task<Result<bool>> UserEditPwd(EditPwdDto inEnt);
     }
 }

@@ -196,6 +196,34 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result> EditPwd(EditPwdDto inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                inEnt.LoginName=User.Identity.Name;
+                reObj = await this._login.UserEditPwd(inEnt);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
         /// 检测用户是否有权限
         /// </summary>
         /// <param name="inEnt"></param>

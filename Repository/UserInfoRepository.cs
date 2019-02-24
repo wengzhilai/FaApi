@@ -213,27 +213,30 @@ namespace Repository
             DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
             dapperUser.TranscationBegin();
             DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
-            //如果有新添加的头像，则保存像头地址到数据库
-            if ((inEnt.Data.ICON_FILES_ID == null || inEnt.Data.ICON_FILES_ID == 0) && inEnt.Data.IconFiles != null && !string.IsNullOrEmpty(inEnt.Data.IconFiles.PATH))
-            {
-                DapperHelper<FaFilesEntity> dapperFile = new DapperHelper<FaFilesEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
-                inEnt.Data.ICON_FILES_ID = await new SequenceRepository().GetNextID<FaFilesEntity>();
-                inEnt.Data.IconFiles.ID = inEnt.Data.ICON_FILES_ID.Value;
-                inEnt.Data.IconFiles.UPLOAD_TIME=DateTime.Now;
-                var saveNum = await dapperFile.Save(new DtoSave<FaFilesEntity>
-                {
-                    Data = inEnt.Data.IconFiles
-                });
-                if (saveNum < 1)
-                {
-                    dapperUser.TranscationRollback();
-                    reObj.IsSuccess = false;
-                    reObj.Msg = "保存文件失败";
-                    return reObj;
-                }
-            }
             try
             {
+                #region 保存头像
+                //如果有新添加的头像，则保存像头地址到数据库
+                if ((inEnt.Data.ICON_FILES_ID == null || inEnt.Data.ICON_FILES_ID == 0) && inEnt.Data.IconFiles != null && !string.IsNullOrEmpty(inEnt.Data.IconFiles.PATH))
+                {
+                    DapperHelper<FaFilesEntity> dapperFile = new DapperHelper<FaFilesEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
+                    inEnt.Data.ICON_FILES_ID = await new SequenceRepository().GetNextID<FaFilesEntity>();
+                    inEnt.Data.IconFiles.ID = inEnt.Data.ICON_FILES_ID.Value;
+                    inEnt.Data.IconFiles.UPLOAD_TIME = DateTime.Now;
+                    var saveNum = await dapperFile.Save(new DtoSave<FaFilesEntity>
+                    {
+                        Data = inEnt.Data.IconFiles
+                    });
+                    if (saveNum < 1)
+                    {
+                        dapperUser.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "保存文件失败";
+                        return reObj;
+                    }
+                }
+                #endregion
+
                 if (inEnt.Data.ID == 0)
                 {
                     var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.Data.COUPLE_ID);
@@ -283,6 +286,8 @@ namespace Repository
                             SEX = inEnt.Data.SEX,
                             YEARS_TYPE = inEnt.Data.YEARS_TYPE,
                             ALIAS = inEnt.Data.ALIAS,
+                            INDUSTRY = inEnt.Data.INDUSTRY,
+                            EDUCATION = inEnt.Data.EDUCATION,
                             CREATE_USER_NAME = opUserName,
                             CREATE_USER_ID = opUserId,
                             UPDATE_TIME = DateTime.Now,
@@ -375,13 +380,41 @@ namespace Repository
                     }
                     #endregion
 
+                    #region 修改账号
+                    //如果账号变动需修改登录账号
+                    if (!user.LOGIN_NAME.Equals(inEnt.Data.LOGIN_NAME))
+                    {
+                        DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
+                        var login = await dapperLogin.Single(i => i.LOGIN_NAME == user.LOGIN_NAME);
+                        if (login != null)
+                        {
+                            login.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
+                            var updateLoginNum = await dapperLogin.Update(new DtoSave<FaLoginEntity>
+                            {
+                                Data = login,
+                                SaveFieldList = new List<string> { "LOGIN_NAME" },
+                                WhereList = null
+                            });
+                            if (updateLoginNum < 1)
+                            {
+                                dapperUser.TranscationRollback();
+                                reObj.IsSuccess = false;
+                                reObj.Msg = "修改账号失败";
+                                return reObj;
+                            }
+                        }
+
+                    }
+
+                    #endregion
                     #region 修改用户
                     user.NAME = inEnt.Data.NAME;
+                    user.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
                     user.ICON_FILES_ID = inEnt.Data.ICON_FILES_ID;
                     var addUserNum = await dapperUser.Update(new DtoSave<FaUserEntity>
                     {
                         Data = user,
-                        SaveFieldList = new List<string> { "NAME", "ICON_FILES_ID" },
+                        SaveFieldList = new List<string> { "NAME", "ICON_FILES_ID", "LOGIN_NAME" },
                         WhereList = null
                     });
                     if (addUserNum < 1)
@@ -406,6 +439,8 @@ namespace Repository
                     userInfo.YEARS_TYPE = inEnt.Data.YEARS_TYPE;
                     userInfo.ALIAS = inEnt.Data.ALIAS;
                     userInfo.REMARK = inEnt.Data.REMARK;
+                    userInfo.INDUSTRY = inEnt.Data.INDUSTRY;
+                    userInfo.EDUCATION = inEnt.Data.EDUCATION;
                     userInfo.UPDATE_TIME = DateTime.Now;
                     userInfo.UPDATE_USER_NAME = opUserName;
                     userInfo.UPDATE_USER_ID = opUserId;
@@ -421,6 +456,8 @@ namespace Repository
                     saveList.Add("YEARS_TYPE");
                     saveList.Add("ALIAS");
                     saveList.Add("REMARK");
+                    saveList.Add("INDUSTRY");
+                    saveList.Add("EDUCATION");
                     saveList.Add("UPDATE_TIME");
                     saveList.Add("UPDATE_USER_NAME");
                     saveList.Add("UPDATE_USER_ID");

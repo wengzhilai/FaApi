@@ -364,10 +364,55 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public Task<Result> UserEditPwd(DtoSave<ResetPasswordDto> inEnt)
+        async public Task<Result<bool>> UserEditPwd(EditPwdDto inEnt)
         {
-            Result reObj = new Result();
-            return Task.Run(() => reObj);
+            var reObj = new Result<bool>();
+            reObj.Data=false;
+            if (!inEnt.NewPwd.Equals(inEnt.ReNewPwd))
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "两次密码不一致";
+                return reObj;
+            }
+            if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.BaseConfig.PwdComplexity))
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = "-2";
+                reObj.Msg = string.Format("密码复杂度不够：{0}");
+                return reObj;
+            }
+            DapperHelper<FaLoginEntity> dapper = new DapperHelper<FaLoginEntity>();
+            var single = await dapper.Single(i => i.LOGIN_NAME == inEnt.LoginName);
+            if (single == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "账号不存在";
+                return reObj;
+            }
+            if (single.PASSWORD != inEnt.OldPwd.Md5())
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "原密码有误";
+                return reObj;
+            }
+
+            single.PASSWORD = inEnt.NewPwd.Md5();
+            var upRows = await dapper.Update(new DtoSave<FaLoginEntity>
+            {
+                Data = single,
+                SaveFieldList = new List<string> { "PASSWORD" },
+                WhereList = null
+            });
+            if (upRows < 1)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "修改密码失败";
+                return reObj;
+            }
+
+            reObj.IsSuccess = true;
+            reObj.Data = true;
+            return reObj;
         }
 
         /// <summary>

@@ -187,19 +187,25 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public Result GetLunarDate(DtoKey inEnt)
         {
-            Result reObj = new Result();
-            if (string.IsNullOrEmpty(inEnt.Key)) return reObj;
-            inEnt.Key = inEnt.Key.Replace("T", " ");
-            DateTime datetime = new DateTime();
-            if (!DateTime.TryParse(inEnt.Key, out datetime)) return reObj;
-            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
-
-            int lyear = cc.GetYear(datetime);
-            int lmonth = cc.GetMonth(datetime);
-            int lday = cc.GetDayOfMonth(datetime);
-
-            reObj.IsSuccess = true;
-            reObj.Msg = string.Format("{0}-{1}-{2} {3}:00", lyear, lmonth, lday, datetime.Hour);
+            var reObj = new Result();
+            try
+            {
+                if (string.IsNullOrEmpty(inEnt.Key)) return reObj;
+                inEnt.Key = inEnt.Key.Replace("T", " ");
+                DateTime datetime = Convert.ToDateTime(inEnt.Key);
+                return _public.GetLunarDate(datetime);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
             return reObj;
         }
 
@@ -211,19 +217,25 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public Result GetSolarDate(DtoKey inEnt)
         {
-            inEnt.Key = inEnt.Key.Replace("T", " ");
-            DateTime datetime = Convert.ToDateTime(inEnt.Key);
-
-            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
-            DateTime dt = cc.ToDateTime(datetime.Year, datetime.Month, datetime.Day, datetime.Hour, datetime.Minute, datetime.Second, 0);
-            //判断到某个月份是否有润月
-            for (int i = 1; i <= datetime.Month; i++)
-                if (cc.IsLeapMonth(datetime.Year, i))
-                    dt = dt.AddMonths(1);
-
-            Result reObj = new Result();
-            reObj.IsSuccess = true;
-            reObj.Msg = dt.ToString("yyyy-MM-dd HH:00");
+            var reObj = new Result();
+            try
+            {
+                if (string.IsNullOrEmpty(inEnt.Key)) return reObj;
+                inEnt.Key = inEnt.Key.Replace("T", " ");
+                DateTime datetime = Convert.ToDateTime(inEnt.Key);
+                return _public.GetSolarDate(datetime);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
             return reObj;
         }
 

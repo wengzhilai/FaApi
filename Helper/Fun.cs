@@ -21,7 +21,7 @@ namespace Helper
     {
 
         /// <summary>
-        /// 
+        /// 检测密码的复杂度是否满足
         /// </summary>
         /// <param name="pwdStr"></param>
         /// <returns></returns>

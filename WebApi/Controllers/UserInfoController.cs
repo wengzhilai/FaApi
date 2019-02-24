@@ -37,6 +37,7 @@ namespace WebApi.Controllers
     public class UserInfoController : ControllerBase
     {
         private IUserInfoRepository _userInfo;
+        private IPublicRepository _public;
         private IMapper mapper;
         private IUserRepository user;
         private ILoginRepository login;
@@ -52,10 +53,12 @@ namespace WebApi.Controllers
             IUserInfoRepository userInfo,
             IMapper _mapper,
             ILoginRepository _login,
-            IUserRepository _user
+            IUserRepository _user,
+            IPublicRepository pub
             )
         {
             _userInfo = userInfo;
+            _public = pub;
             mapper = _mapper;
             user = _user;
             login = _login;
@@ -72,8 +75,33 @@ namespace WebApi.Controllers
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
             int key = Convert.ToInt32(inEnt.Key);
             FaUserInfoEntityView user = await _userInfo.SingleByKey(key);
-            user.BirthdaylunlarDate = user.BIRTHDAY_TIME.ToString();
-            user.BirthdaysolarDate = user.BIRTHDAY_TIME.ToString();
+            if (user.DIED_TIME != null)
+            {
+                if (user.YEARS_TYPE.Equals("阳历"))
+                {
+                    user.BirthdaylunlarDate = this._public.GetLunarDate(user.BIRTHDAY_TIME.Value).Msg;
+                    user.BirthdaysolarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                }
+                else
+                {
+                    user.BirthdaysolarDate = this._public.GetSolarDate(user.BIRTHDAY_TIME.Value).Msg;
+                    user.BirthdaylunlarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                }
+            }
+            if (user.DIED_TIME != null && user.IS_LIVE == 0)
+            {
+                if (user.YEARS_TYPE.Equals("阳历"))
+                {
+                    user.DiedlunlarDate = this._public.GetLunarDate(user.DIED_TIME.Value).Msg;
+                    user.DiedsolarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                }
+                else
+                {
+                    user.DiedsolarDate = this._public.GetSolarDate(user.DIED_TIME.Value).Msg;
+                    user.DiedlunlarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                }
+            }
+
             reObj.Data = user;
             reObj.IsSuccess = true;
             return reObj;
@@ -105,7 +133,7 @@ namespace WebApi.Controllers
         public async Task<Result<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt)
         {
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
-            inEnt.FilterList = x => x.ID < 100;
+            inEnt.FilterList=x=>x.LOGIN_NAME.Length>0;
             inEnt.OrderType = "id asc";
             var user = await _userInfo.List(inEnt);
             reObj.DataList = user.ToList();
@@ -154,7 +182,7 @@ namespace WebApi.Controllers
             var reObj = new Result<bool>();
             try
             {
-                reObj = await this._userInfo.Save(inEnt,User.Identity.Name,1);
+                reObj = await this._userInfo.Save(inEnt, User.Identity.Name, 1);
             }
             catch (ExceptionExtend e)
             {
@@ -169,6 +197,6 @@ namespace WebApi.Controllers
             }
             return reObj;
         }
-        
+
     }
 }

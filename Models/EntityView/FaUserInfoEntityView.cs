@@ -163,6 +163,24 @@ namespace Models.EntityView
         [Column("a.REMARK")]
         public string REMARK { get; set; }
 
+                /// <summary>
+        /// 教育背影
+        /// </summary>
+        /// <value></value>
+        [StringLength(20)]
+        [Display(Name = "教育背影")]
+        [Column("a.EDUCATION")]
+        public string EDUCATION { get; set; }
+
+        /// <summary>
+        /// 行业
+        /// </summary>
+        /// <value></value>
+        [StringLength(100)]
+        [Display(Name = "行业")]
+        [Column("a.INDUSTRY")]
+        public string INDUSTRY { get; set; }
+
 
 
 
