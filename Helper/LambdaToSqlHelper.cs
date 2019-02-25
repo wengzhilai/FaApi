@@ -133,7 +133,7 @@ namespace Helper
             }
         }
 
-        private static string BinarExpressionProvider(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string BinarExpressionProvider(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             BinaryExpression be = exp as BinaryExpression;
             Expression left = be.Left;
@@ -157,7 +157,7 @@ namespace Helper
             return sb += ")";
         }
 
-        private static string ConstantExpressionProvider(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string ConstantExpressionProvider(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             ConstantExpression ce = exp as ConstantExpression;
             if (ce.Value == null)
@@ -177,23 +177,32 @@ namespace Helper
             return "";
         }
 
-        private static string LambdaExpressionProvider(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string LambdaExpressionProvider(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             LambdaExpression le = exp as LambdaExpression;
             return ExpressionRouter(le.Body, listSqlParaModel);
         }
 
-        private static string MemberExpressionProvider(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string MemberExpressionProvider(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             if (!exp.ToString().StartsWith("value"))
             {
                 MemberExpression me = exp as MemberExpression;
-                if (me.Member.Name == "Now")
+                switch (me.Member.Name)
                 {
-                    GetSqlParaModel(listSqlParaModel, DateTime.Now);
-                    return "@para" + listSqlParaModel.Count;
+                    case "Now":
+                        GetSqlParaModel(listSqlParaModel, DateTime.Now);
+                        return "@para" + listSqlParaModel.Count;
+                    case "Length":
+                        if (exp is MemberExpression) //表示访问字段或属性
+                        {
+                            MemberExpression me1 = me.Expression as MemberExpression;
+                            return string.Format("LENGTH(({0}))", me1.Member.Name);
+                        }
+                        return string.Format("({0})", me.Member.Name);
+                    default:
+                        return string.Format("({0})", me.Member.Name);
                 }
-                return me.Member.Name;
             }
             else
             {
@@ -238,7 +247,7 @@ namespace Helper
             return "";
         }
 
-        private static string MethodCallExpressionProvider(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string MethodCallExpressionProvider(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             MethodCallExpression mce = exp as MethodCallExpression;
             if (mce.Method.Name == "Contains")
@@ -256,7 +265,7 @@ namespace Helper
                         var _value = ExpressionRouter(mce.Arguments[0], listSqlParaModel);
                         // var index = _value.RetainNumber().ToInt32() - 1;
                         var index = _value.ToInt32() - 1;
-                        listSqlParaModel[index]=new KeyValuePair<string, object>(listSqlParaModel[index].Key, "%{0}%".FormatWith(listSqlParaModel[index].Value));
+                        listSqlParaModel[index] = new KeyValuePair<string, object>(listSqlParaModel[index].Key, "%{0}%".FormatWith(listSqlParaModel[index].Value));
                         return string.Format("{0} like {1}", _name, _value);
                     }
                 }
@@ -296,7 +305,7 @@ namespace Helper
             return "";
         }
 
-        private static string NewArrayExpressionProvider(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string NewArrayExpressionProvider(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             NewArrayExpression ae = exp as NewArrayExpression;
             StringBuilder sbTmp = new StringBuilder();
@@ -308,13 +317,13 @@ namespace Helper
             return sbTmp.ToString(0, sbTmp.Length - 1);
         }
 
-        private static string ParameterExpressionProvider(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string ParameterExpressionProvider(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             ParameterExpression pe = exp as ParameterExpression;
             return pe.Type.Name;
         }
 
-        private static string UnaryExpressionProvider(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string UnaryExpressionProvider(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             UnaryExpression ue = exp as UnaryExpression;
             var result = ExpressionRouter(ue.Operand, listSqlParaModel);
@@ -339,7 +348,7 @@ namespace Helper
         /// <param name="exp"></param>
         /// <param name="listSqlParaModel"></param>
         /// <returns></returns>
-        private static string ExpressionRouter(Expression exp, List<KeyValuePair<string,object>> listSqlParaModel)
+        private static string ExpressionRouter(Expression exp, List<KeyValuePair<string, object>> listSqlParaModel)
         {
             var nodeType = exp.NodeType;
             if (exp is BinaryExpression)    //表示具有二进制运算符的表达式
@@ -402,9 +411,9 @@ namespace Helper
         /// </summary>
         /// <param name="listSqlParaModel"></param>
         /// <param name="val"></param>
-        private static void GetSqlParaModel(List<KeyValuePair<string,object>> listSqlParaModel, object val)
+        private static void GetSqlParaModel(List<KeyValuePair<string, object>> listSqlParaModel, object val)
         {
-            KeyValuePair<string,object> p = new KeyValuePair<string,object>("para" + (listSqlParaModel.Count + 1),val);
+            KeyValuePair<string, object> p = new KeyValuePair<string, object>("para" + (listSqlParaModel.Count + 1), val);
             listSqlParaModel.Add(p);
         }
 
@@ -415,7 +424,7 @@ namespace Helper
         /// <param name="where"></param>
         /// <param name="listSqlParaModel"></param>
         /// <returns></returns>
-        public static string GetWhereSql<T>(Expression<Func<T, bool>> where, List<KeyValuePair<string,object>> listSqlParaModel) where T : class
+        public static string GetWhereSql<T>(Expression<Func<T, bool>> where, List<KeyValuePair<string, object>> listSqlParaModel) where T : class
         {
             string result = string.Empty;
             if (where != null)
@@ -442,7 +451,7 @@ namespace Helper
             if (orderBy != null && orderBy.Body is MethodCallExpression)
             {
                 MethodCallExpression exp = orderBy.Body as MethodCallExpression;
-                List<KeyValuePair<string,object>> listSqlParaModel = new List<KeyValuePair<string,object>>();
+                List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
                 result = MethodCallExpressionProvider(exp, listSqlParaModel);
             }
             if (result != string.Empty)

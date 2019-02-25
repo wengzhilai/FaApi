@@ -112,7 +112,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
             }
             string sql = this.modelHelper.GetFindAllSql(inSearch, whereStr);
             return await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
@@ -134,7 +134,7 @@ namespace Helper
                 var dbField = this.modelHelper.GetTableFieldDirct();
                 foreach (var item in dbField)
                 {
-                    whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+                    whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
                 }
                 sql = modelHelper.GetFindAllSql(whereStr);
                 reList = await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
@@ -181,7 +181,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
             }
 
             string sql = mh.GetFindNumSql(whereStr);
@@ -230,7 +230,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
             }
 
             string sql = modelHelper.GetSingleSql(whereStr, order);
@@ -258,7 +258,7 @@ namespace Helper
                 var dbField = this.modelHelper.GetTableFieldDirct();
                 foreach (var item in dbField)
                 {
-                    whereStr = whereStr.Replace(item.Key, item.Value.ToString());
+                    whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
                 }
 
                 string sql = modelHelper.GetDeleteSql(whereStr);

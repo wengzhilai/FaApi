@@ -49,6 +49,7 @@ namespace WebApi.Controllers
         /// <param name="_mapper"></param>
         /// <param name="_login"></param>
         /// <param name="_user"></param>
+        /// <param name="pub"></param>
         public UserInfoController(
             IUserInfoRepository userInfo,
             IMapper _mapper,
@@ -133,7 +134,7 @@ namespace WebApi.Controllers
         public async Task<Result<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt)
         {
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
-            inEnt.FilterList=x=>x.LOGIN_NAME.Length>0;
+            inEnt.FilterList = x => x.LOGIN_NAME.Length == 11;
             inEnt.OrderType = "id asc";
             var user = await _userInfo.List(inEnt);
             reObj.DataList = user.ToList();
