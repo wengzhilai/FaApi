@@ -136,7 +136,12 @@ namespace Repository
         {
             Result reObj = new Result();
             ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
-            DateTime dt = cc.ToDateTime(datetime.Year, datetime.Month, datetime.Day, datetime.Hour, datetime.Minute, datetime.Second, 0);
+            DateTime dt = new DateTime();
+            try
+            {
+                dt = cc.ToDateTime(datetime.Year, datetime.Month, datetime.Day, datetime.Hour, datetime.Minute, datetime.Second, 0);
+            }
+            catch { }
             //判断到某个月份是否有润月
             for (int i = 1; i <= datetime.Month; i++)
                 if (cc.IsLeapMonth(datetime.Year, i))

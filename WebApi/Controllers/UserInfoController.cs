@@ -71,33 +71,36 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<Result<FaUserInfoEntityView>> Single(DtoKey inEnt)
         {
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
             int key = Convert.ToInt32(inEnt.Key);
             FaUserInfoEntityView user = await _userInfo.SingleByKey(key);
-            if (user.DIED_TIME != null)
+            if (user.BIRTHDAY_TIME != null)
             {
-                if (user.YEARS_TYPE.Equals("阳历"))
+                if (user.YEARS_TYPE==("阳历"))
                 {
                     user.BirthdaylunlarDate = this._public.GetLunarDate(user.BIRTHDAY_TIME.Value).Msg;
                     user.BirthdaysolarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
                 else
                 {
+                    user.YEARS_TYPE=("阳历");
                     user.BirthdaysolarDate = this._public.GetSolarDate(user.BIRTHDAY_TIME.Value).Msg;
                     user.BirthdaylunlarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             }
             if (user.DIED_TIME != null && user.IS_LIVE == 0)
             {
-                if (user.YEARS_TYPE.Equals("阳历"))
+                if (user.YEARS_TYPE==("阳历"))
                 {
                     user.DiedlunlarDate = this._public.GetLunarDate(user.DIED_TIME.Value).Msg;
                     user.DiedsolarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
                 else
                 {
+                    user.YEARS_TYPE=("阳历");
                     user.DiedsolarDate = this._public.GetSolarDate(user.DIED_TIME.Value).Msg;
                     user.DiedlunlarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }

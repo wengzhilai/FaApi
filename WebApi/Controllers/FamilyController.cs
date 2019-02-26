@@ -131,7 +131,6 @@ namespace WebApi.Controllers
         private async Task<bool> AddFatherItem(IList<RelativeItem> mainList, FaUserInfoEntityView inSon, int levelId, int maxLevelId, XYZ xyz, int toLeft, int toRigth)
         {
             if (levelId > maxLevelId) return true;
-            if (inSon.ChildNum == 0) return true;
             if (inSon.FATHER_ID == null) return true;
 
             List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.FATHER_ID == inSon.FATHER_ID)).OrderBy(x => x.LEVEL_ID).ToList();

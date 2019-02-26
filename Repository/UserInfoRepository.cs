@@ -382,7 +382,7 @@ namespace Repository
 
                     #region 修改账号
                     //如果账号变动需修改登录账号
-                    if (!user.LOGIN_NAME.Equals(inEnt.Data.LOGIN_NAME))
+                    if (inEnt.Data.LOGIN_NAME!=user.LOGIN_NAME)
                     {
                         DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
                         var login = await dapperLogin.Single(i => i.LOGIN_NAME == user.LOGIN_NAME);
