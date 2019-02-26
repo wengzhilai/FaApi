@@ -54,6 +54,7 @@ namespace WebApi.MapperCfg.Profiles
             CreateMap<RelativeItem, FaUserInfoEntityView>();
             CreateMap<FaUserInfoEntityView, RelativeItem>()
                 .ForMember(d => d.ElderId, opt => { opt.MapFrom(m =>m.ELDER_ID); })
+                .ForMember(d => d.FatherId, opt => { opt.MapFrom(m =>m.FATHER_ID); })
             ;
 
             CreateMap<FaUserInfoEntity, RelativeItem>()

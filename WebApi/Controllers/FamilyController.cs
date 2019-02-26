@@ -19,12 +19,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using AutoMapper;
 using Models.EntityView;
+using Microsoft.AspNetCore.Cors;
 
 namespace WebApi.Controllers
 {
     /// <summary>
     /// 关系
     /// </summary>
+    [EnableCors("AllowSameDomain")]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class FamilyController : ControllerBase
@@ -62,8 +64,8 @@ namespace WebApi.Controllers
             Result<Relative> reobj = new Result<Relative>();
 
             Relative reEnt = new Relative();
-
-            var userInfo = await this.userInfo.SingleByKey(Convert.ToInt32(inObj.Key));
+            var userId=Convert.ToInt32(inObj.Key);
+            var userInfo = await this.userInfo.SingleByKey(userId);
             if (userInfo == null)
             {
                 reobj.IsSuccess = false;
@@ -88,7 +90,8 @@ namespace WebApi.Controllers
                 item.x = item.x - minX;
             }
 
-            reEnt.RelativeList = reEnt.ItemList.Where(x => x.FatherId != null).Select(x => new KV { K = x.Id.ToString(), V = x.FatherId.ToString() }).ToList();
+            reEnt.RelativeList = reEnt.ItemList.Select(x => new KV { K = x.Id.ToString(), V = x.FatherId.ToString() }).ToList();
+            reEnt.RelativeList.RemoveAt(reEnt.RelativeList.Count()-1);
             reobj.Data = reEnt;
             return reobj;
         }
@@ -129,8 +132,9 @@ namespace WebApi.Controllers
         {
             if (levelId > maxLevelId) return true;
             if (inSon.ChildNum == 0) return true;
+            if (inSon.FATHER_ID == null) return true;
 
-            var allSon = (await this.userInfo.FindAll(x => x.FATHER_ID == inSon.FATHER_ID)).OrderBy(x => x.LEVEL_ID).ToList();
+            List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.FATHER_ID == inSon.FATHER_ID)).OrderBy(x => x.LEVEL_ID).ToList();
 
             var sonList = mapper.Map<IList<RelativeItem>>(allSon);
             #region 计算坐标
@@ -164,10 +168,13 @@ namespace WebApi.Controllers
 
             var minX = sonList.Min(x => x.x);
             var maxX = sonList.Max(x => x.x);
-            var father = InfoToItem(await this.userInfo.SingleByKey(inSon.FATHER_ID.Value), (minX + maxX) / 2, xyz.Y + 1);
-            mainList.Add(father);
+            if (inSon.FATHER_ID != null)
+            {
+                var father = InfoToItem(await this.userInfo.SingleByKey(inSon.FATHER_ID.Value), (minX + maxX) / 2, xyz.Y + 1);
+                mainList.Add(father);
+                await AddFatherItem(mainList, await this.userInfo.SingleByKey(inSon.FATHER_ID.Value), levelId + 1, maxLevelId, new XYZ { X = father.x, Y = father.y }, minX, maxX);
+            }
 
-            await AddFatherItem(mainList, await this.userInfo.SingleByKey(inSon.FATHER_ID.Value), levelId + 1, maxLevelId, new XYZ { X = father.x, Y = father.y }, minX, maxX);
             return true;
         }
     }
