@@ -163,7 +163,7 @@ namespace Models.EntityView
         [Column("a.REMARK")]
         public string REMARK { get; set; }
 
-                /// <summary>
+        /// <summary>
         /// 教育背影
         /// </summary>
         /// <value></value>
@@ -182,6 +182,23 @@ namespace Models.EntityView
         public string INDUSTRY { get; set; }
 
 
+        /// <summary>
+        /// 出生国号
+        /// </summary>
+        /// <value></value>
+        [StringLength(50)]
+        [Display(Name = "出生国号")]
+        [Column("a.BIRTHDAY_CHINA_YEAR")]
+        public string BIRTHDAY_CHINA_YEAR { get; set; }
+
+        /// <summary>
+        /// 过逝国号
+        /// </summary>
+        /// <value></value>
+        [StringLength(50)]
+        [Display(Name = "过逝国号")]
+        [Column("a.DIED_CHINA_YEAR")]
+        public string DIED_CHINA_YEAR { get; set; }
 
 
         /// <summary>
@@ -228,31 +245,31 @@ namespace Models.EntityView
         /// 出生阴历
         /// </summary>
         /// <value></value>
-        public string BirthdaylunlarDate{get;set;}
+        public string BirthdaylunlarDate { get; set; }
 
         /// <summary>
         /// 出生阳历
         /// </summary>
         /// <value></value>
-        public string BirthdaysolarDate{get;set;}
+        public string BirthdaysolarDate { get; set; }
 
 
         /// <summary>
         /// 逝世阴历
         /// </summary>
         /// <value></value>
-        public string DiedlunlarDate{get;set;}
+        public string DiedlunlarDate { get; set; }
 
         /// <summary>
         /// 逝世阳历
         /// </summary>
         /// <value></value>
-        public string DiedsolarDate{get;set;}
+        public string DiedsolarDate { get; set; }
 
         /// <summary>
         /// 头像信息，只用于添加头像时有效
         /// </summary>
         /// <value></value>
-        public FaFilesEntity IconFiles{get;set;}
+        public FaFilesEntity IconFiles { get; set; }
     }
 }

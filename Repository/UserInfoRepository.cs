@@ -288,6 +288,8 @@ namespace Repository
                             ALIAS = inEnt.Data.ALIAS,
                             INDUSTRY = inEnt.Data.INDUSTRY,
                             EDUCATION = inEnt.Data.EDUCATION,
+                            DIED_CHINA_YEAR = inEnt.Data.DIED_CHINA_YEAR,
+                            BIRTHDAY_CHINA_YEAR = inEnt.Data.BIRTHDAY_CHINA_YEAR,
                             CREATE_USER_NAME = opUserName,
                             CREATE_USER_ID = opUserId,
                             UPDATE_TIME = DateTime.Now,
@@ -296,6 +298,7 @@ namespace Repository
                             CREATE_TIME = DateTime.Now,
                             AUTHORITY = 0,
                             STATUS = "正常",
+
                         }
                     });
                     if (addUserInfoId < 1)
@@ -382,7 +385,7 @@ namespace Repository
 
                     #region 修改账号
                     //如果账号变动需修改登录账号
-                    if (inEnt.Data.LOGIN_NAME!=user.LOGIN_NAME)
+                    if (inEnt.Data.LOGIN_NAME != user.LOGIN_NAME)
                     {
                         DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
                         var login = await dapperLogin.Single(i => i.LOGIN_NAME == user.LOGIN_NAME);
@@ -437,6 +440,8 @@ namespace Repository
                     userInfo.DIED_PLACE = inEnt.Data.DIED_PLACE;
                     userInfo.SEX = inEnt.Data.SEX;
                     userInfo.YEARS_TYPE = inEnt.Data.YEARS_TYPE;
+                    userInfo.DIED_CHINA_YEAR = inEnt.Data.DIED_CHINA_YEAR;
+                    userInfo.BIRTHDAY_CHINA_YEAR = inEnt.Data.BIRTHDAY_CHINA_YEAR;
                     userInfo.ALIAS = inEnt.Data.ALIAS;
                     userInfo.REMARK = inEnt.Data.REMARK;
                     userInfo.INDUSTRY = inEnt.Data.INDUSTRY;
@@ -457,6 +462,8 @@ namespace Repository
                     saveList.Add("ALIAS");
                     saveList.Add("REMARK");
                     saveList.Add("INDUSTRY");
+                    saveList.Add("DIED_CHINA_YEAR");
+                    saveList.Add("BIRTHDAY_CHINA_YEAR");
                     saveList.Add("EDUCATION");
                     saveList.Add("UPDATE_TIME");
                     saveList.Add("UPDATE_USER_NAME");

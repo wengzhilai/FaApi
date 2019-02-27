@@ -79,30 +79,29 @@ namespace WebApi.Controllers
             FaUserInfoEntityView user = await _userInfo.SingleByKey(key);
             if (user.BIRTHDAY_TIME != null)
             {
-                if (user.YEARS_TYPE==("阳历"))
+                if (user.YEARS_TYPE==("阴历") || user.YEARS_TYPE==("国号"))
+                {
+                    user.BirthdaysolarDate = this._public.GetSolarDate(user.BIRTHDAY_TIME.Value).Msg;
+                    user.BirthdaylunlarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                    
+                }
+                else
                 {
                     user.BirthdaylunlarDate = this._public.GetLunarDate(user.BIRTHDAY_TIME.Value).Msg;
                     user.BirthdaysolarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
-                else
-                {
-                    user.YEARS_TYPE=("阳历");
-                    user.BirthdaysolarDate = this._public.GetSolarDate(user.BIRTHDAY_TIME.Value).Msg;
-                    user.BirthdaylunlarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
-                }
             }
             if (user.DIED_TIME != null && user.IS_LIVE == 0)
             {
-                if (user.YEARS_TYPE==("阳历"))
+                if (user.YEARS_TYPE==("阴历") || user.YEARS_TYPE==("国号"))
                 {
-                    user.DiedlunlarDate = this._public.GetLunarDate(user.DIED_TIME.Value).Msg;
-                    user.DiedsolarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                    user.DiedsolarDate = this._public.GetSolarDate(user.DIED_TIME.Value).Msg;
+                    user.DiedlunlarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
                 else
                 {
-                    user.YEARS_TYPE=("阳历");
-                    user.DiedsolarDate = this._public.GetSolarDate(user.DIED_TIME.Value).Msg;
-                    user.DiedlunlarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                    user.DiedlunlarDate = this._public.GetLunarDate(user.DIED_TIME.Value).Msg;
+                    user.DiedsolarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             }
 

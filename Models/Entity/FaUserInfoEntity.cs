@@ -199,5 +199,23 @@ namespace Models.Entity
         [Column]
         public string INDUSTRY { get; set; }
 
+
+        /// <summary>
+        /// 出生国号
+        /// </summary>
+        /// <value></value>
+        [StringLength(50)]
+        [Display(Name = "出生国号")]
+        [Column]
+        public string BIRTHDAY_CHINA_YEAR { get; set; }
+
+        /// <summary>
+        /// 过逝国号
+        /// </summary>
+        /// <value></value>
+        [StringLength(50)]
+        [Display(Name = "过逝国号")]
+        [Column]
+        public string DIED_CHINA_YEAR { get; set; }
     }
 }
