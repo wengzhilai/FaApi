@@ -134,7 +134,7 @@ namespace WebApi.Controllers
             var fileEnt = await _file.SingleByKey(fileId);
             if (fileEnt == null || fileEnt.PATH.IsNullOrEmpty())
             {
-                return File(System.IO.File.ReadAllBytes(_env.ContentRootPath + "/assets/images/marty-avatar.png"), @"image/png");
+                return File(System.IO.File.ReadAllBytes(_env.ContentRootPath + "/assets/images/defaultPng.png"), @"image/png");
             }
             else
             {
