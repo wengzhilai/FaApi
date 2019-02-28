@@ -118,6 +118,13 @@ namespace Repository
         public Result GetLunarDate(DateTime datetime)
         {
             Result reObj = new Result();
+            if (datetime < new DateTime(1900, 1, 1))
+            {
+                reObj.IsSuccess = true;
+                reObj.Msg = datetime.ToString("yyyy-MM-dd HH:00");
+                return reObj;
+            }
+
             ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
             int lyear = cc.GetYear(datetime);
             int lmonth = cc.GetMonth(datetime);
@@ -135,6 +142,12 @@ namespace Repository
         public Result GetSolarDate(DateTime datetime)
         {
             Result reObj = new Result();
+            if (datetime < new DateTime(1900, 1, 1))
+            {
+                reObj.IsSuccess = true;
+                reObj.Msg = datetime.ToString("yyyy-MM-dd HH:00");
+                return reObj;
+            }
             ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
             DateTime dt = new DateTime();
             try
