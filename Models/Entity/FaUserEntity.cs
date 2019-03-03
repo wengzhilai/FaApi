@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -93,5 +94,17 @@ namespace Models.Entity
         [Column]
         public string REMARK { get; set; }
 
+
+        /// <summary>
+        /// 是管理管理员
+        /// </summary>
+        /// <value></value>
+        public bool IsAdmin{ get; set; }
+        
+        /// <summary>
+        /// 是普通管理员
+        /// </summary>
+        /// <value></value>
+        public bool IsLeader{ get; set; }
     }
 }

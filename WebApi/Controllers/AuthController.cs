@@ -228,6 +228,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
+        [HttpPost]
         public async Task<Result<bool>> CheckAuth(CheckAuthDto inEnt)
         {
             var reObj = new Result<bool>();

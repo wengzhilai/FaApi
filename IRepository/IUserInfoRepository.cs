@@ -48,5 +48,11 @@ namespace IRepository
         /// <returns></returns>
         Task<Result<bool>> Save(DtoSave<FaUserInfoEntityView> inEnt, string opUserName, int opUserId);
 
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<Result> Delete(int userId);
     }
 }
