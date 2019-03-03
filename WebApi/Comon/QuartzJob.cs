@@ -4,6 +4,9 @@ using Quartz;
 
 namespace WebApi.Comon
 {
+    /// <summary>
+    /// 默认任务
+    /// </summary>
     public class QuartzJob : IJob
     {
         public Task Execute(IJobExecutionContext context)

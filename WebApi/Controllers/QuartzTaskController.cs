@@ -45,6 +45,20 @@ namespace WebApi.Controllers
             this._schedulerFactory = schedulerFactory;
         }
 
+        /// <summary>
+        /// 获取任务是否运行
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        async public Task<Result<bool>> IsStarted()
+        {
+            Result<bool> reObj = new Result<bool>();
+            //1、通过调度工厂获得调度器
+            _scheduler = await _schedulerFactory.GetScheduler();
+            reObj.Data = _scheduler.IsStarted;
+            return reObj;
+        }
 
         /// <summary>
         /// 开始任务
@@ -95,16 +109,76 @@ namespace WebApi.Controllers
             return reObj;
         }
 
+        /// <summary>
+        /// 移除任务
+        /// </summary>
+        /// <param name="InEnt">trigger名称</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        async public Task<Result<string>> List()
+        async public Task<Result<bool>> RemoveJob(DtoKey InEnt)
         {
-            Result<string> reObj = new Result<string>();
+            Result<bool> reObj = new Result<bool>();
+            try
+            {
+                //1、通过调度工厂获得调度器
+                _scheduler = await _schedulerFactory.GetScheduler();
+                GroupMatcher<TriggerKey> matcherTrigger = GroupMatcher<TriggerKey>.GroupEquals(InEnt.Key);
+                var triggerList = await _scheduler.GetTriggerKeys(matcherTrigger);
+                foreach (var triggerKey in triggerList)
+                {
+                    await _scheduler.PauseTrigger(triggerKey);// 停止触发器
+                    await _scheduler.UnscheduleJob(triggerKey);// 移除触发器
+                    var trigger = await _scheduler.GetTrigger(triggerKey);
+                    await _scheduler.DeleteJob(trigger.JobKey);// 删除任务
+                    reObj.IsSuccess = true;
+                    reObj.Data = true;
+                }
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Data = false;
+                reObj.Msg = e.Message;
+            }
+
+            return reObj;
+        }
+
+
+        /// <summary>
+        /// 获取任务列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        async public Task<Result<QuartzTaskModel>> List()
+        {
+            Result<QuartzTaskModel> reObj = new Result<QuartzTaskModel>();
             //1、通过调度工厂获得调度器
             _scheduler = await _schedulerFactory.GetScheduler();
-            GroupMatcher<JobKey> matcher=GroupMatcher<JobKey>.AnyGroup();
-            var jobList = await _scheduler.GetJobKeys(matcher);
-            reObj.DataList = jobList.Select(x => x.Name).ToList();
+            GroupMatcher<TriggerKey> matcherTrigger = GroupMatcher<TriggerKey>.AnyGroup();
+            var allTrigger = await _scheduler.GetTriggerKeys(matcherTrigger);
+            foreach (var triggerKey in allTrigger)
+            {
+                reObj.Data = new QuartzTaskModel();
+                var jobTrigger = await _scheduler.GetTrigger(triggerKey);
+                var jobDetail = await _scheduler.GetJobDetail(jobTrigger.JobKey);
+
+                reObj.Data.KeyName = jobTrigger.Key.Name;
+                reObj.Data.KeyGroup = jobTrigger.Key.Group;
+                reObj.Data.JobDataListStr = TypeChange.ObjectToStr(jobTrigger.JobDataMap);
+                reObj.Data.CalendarName = jobTrigger.CalendarName;
+                reObj.Data.Description = jobTrigger.Description;
+                if (jobTrigger.EndTimeUtc != null) reObj.Data.EndTime = jobTrigger.EndTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.FinalFireTimeUtc != null) reObj.Data.FinalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                //返回下一次计划触发Quartz.ITrigger的时间
+                if (jobTrigger.GetNextFireTimeUtc() != null) reObj.Data.NextFireTime = jobTrigger.GetNextFireTimeUtc().Value.ToString("yyyy-MM-dd HH-mm-ss");
+                //优先级
+                reObj.Data.Priority = jobTrigger.Priority;
+                //触发器调度应该开始的时间
+                reObj.Data.StartTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
+            }
             return reObj;
         }
     }
