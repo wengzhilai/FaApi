@@ -26,6 +26,8 @@ using Newtonsoft.Json.Serialization;
 using AutoMapper;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Quartz;
+using Quartz.Impl;
 
 namespace WebApi
 {
@@ -155,7 +157,8 @@ namespace WebApi
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm";
             });
-
+            // 添加Quartz任务监控
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();//注册ISchedulerFactory的实例。
             #region  添加SwaggerUI
             services.AddSwaggerGen(options =>
             {
