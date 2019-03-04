@@ -14,6 +14,7 @@ namespace Models.Entity
         /// ID
         /// </summary>
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]
         [Range(0, 2147483647)]
         [Display(Name = "ID")]
@@ -75,8 +76,9 @@ namespace Models.Entity
         public string RUN_DATA { get; set; }
 
         /// <summary>
-        /// 状态
+        /// 状态（正常，停用）
         /// </summary>
+        [Required]
         [StringLength(10)]
         [Display(Name = "状态")]
         [Column]
@@ -96,13 +98,21 @@ namespace Models.Entity
         [Column]
         public string SERVICE_FLAG { get; set; }
 
+        /// <summary>
+        /// 归属组ID
+        /// </summary>
+        /// <value></value>
         [Range(0, 2147483647)]
         [Display(Name = "GROUP_ID")]
         [Column]
         public int? GROUP_ID { get; set; }
 
+        /// <summary>
+        /// 排序
+        /// </summary>
+        /// <value></value>
         [Range(0, 2147483647)]
-        [Display(Name = "GROUP_ID")]
+        [Display(Name = "ORDER_INDEX")]
         [Column]
         public int ORDER_INDEX { get; set; }
 

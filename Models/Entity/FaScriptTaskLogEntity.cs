@@ -14,6 +14,7 @@ namespace Models.Entity
         /// ID
         /// </summary>
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]
         [Range(0, 2147483647)]
         [Display(Name = "ID")]

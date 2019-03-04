@@ -495,7 +495,7 @@ namespace Helper
             if (inSearch.PageSize < 1) inSearch.PageSize = 10;
             string sql = string.Format(@"
                 select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
-                ", string.Join(",", GetTableFields()),
+                ", string.Join(",", GetTableFields(null,inSearch.IgnoreFieldList)),
                                 GetTableName(), whereSql, (inSearch.PageIndex - 1) * inSearch.PageSize, inSearch.PageSize, inSearch.OrderType);
             return sql;
         }

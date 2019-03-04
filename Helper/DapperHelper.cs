@@ -271,5 +271,20 @@ namespace Helper
                 throw new ExceptionExtend("请先删除子项");
             }
         }
+
+        public Task<int> Delete(string whereStr)
+        {
+            try
+            {
+                string sql = modelHelper.GetDeleteSql(whereStr);
+                var query = connection.ExecuteAsync(sql, null,transaction);
+                return query;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteErrorLog<DapperHelper<T>>(ex.ToString());
+                throw new ExceptionExtend("请先删除子项");
+            }
+        }
     }
 }

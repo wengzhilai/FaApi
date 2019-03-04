@@ -15,6 +15,7 @@ namespace Models.Entity
         /// ID
         /// </summary>
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]
         [Range(0, 2147483647)]
         [Display(Name = "ID")]
@@ -43,7 +44,7 @@ namespace Models.Entity
         [Display(Name = "脚本哈希值")]
         public string BODY_HASH { get; set; }
         /// <summary>
-        /// 运行状态
+        /// 运行状态(等待\运行\停止)
         /// </summary>
         [Required]
         [StringLength(10)]
@@ -88,7 +89,7 @@ namespace Models.Entity
         [Column]
         public string DSL_TYPE { get; set; }
         /// <summary>
-        /// 任务状态
+        /// 任务状态(成功\失败)
         /// </summary>
         [StringLength(10)]
         [Display(Name = "任务状态")]
@@ -126,6 +127,13 @@ namespace Models.Entity
         [Display(Name = "服务标识")]
         [Column]
         public string SERVICE_FLAG { get; set; }
+
+
+        /// <summary>
+        /// 最后一条日志
+        /// </summary>
+        /// <value></value>
+        public FaScriptTaskLogEntity LaskLog{get;set;}
 
     }
 }
