@@ -18,6 +18,7 @@ namespace Models.Entity
         [Required]
         [Range(0, 2147483647)]
         [Display(Name = "ID")]
+        [Column]
         public int ID { get; set; }
         /// <summary>
         /// 口径任务ID
@@ -25,6 +26,7 @@ namespace Models.Entity
         [Required]
         [Range(0, 2147483647)]
         [Display(Name = "口径任务ID")]
+        [Column]
         public int SCRIPT_TASK_ID { get; set; }
         /// <summary>
         /// 记录时间

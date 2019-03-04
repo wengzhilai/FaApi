@@ -58,7 +58,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<bool>> ScriptTaskSave(DtoSave<FaScriptTaskEntity> inEnt);
+        Task<Result<int>> ScriptTaskSave(DtoSave<FaScriptTaskEntity> inEnt);
 
         /// <summary>
         /// 取消任务

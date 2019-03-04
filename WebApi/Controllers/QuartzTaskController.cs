@@ -41,6 +41,7 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="schedulerFactory"></param>
+        /// <param name="scritp"></param>
         public QuartzTaskController(
             ISchedulerFactory schedulerFactory,
             IScritpRepository scritp

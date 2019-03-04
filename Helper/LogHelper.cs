@@ -85,6 +85,17 @@ namespace Helper
             log.Error("Error", ec);
             //log.ErrorFormat(msg);
         }
+
+        public static void WriteErrorLog(Type type,string msg)
+        {
+            if (!initLog4net()){
+                return;
+            }
+            log4net.ILog log = log4net.LogManager.GetLogger(type);
+            Exception ec = new Exception(msg);
+            log.Error("Error", ec);
+            //log.ErrorFormat(msg);
+        }
         #endregion
 
         #region 输出记录日志到Log4Net

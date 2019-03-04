@@ -11,7 +11,6 @@ using MySql.Data.MySqlClient;
 using Dapper;
 using System.Data;
 using System.Linq.Expressions;
-
 namespace Repository
 {
     public class ScritpRepository : IScritpRepository
@@ -144,18 +143,18 @@ namespace Repository
             return reObj;
         }
 
-        async public Task<Result<bool>> ScriptTaskSave(DtoSave<FaScriptTaskEntity> inEnt)
+        async public Task<Result<int>> ScriptTaskSave(DtoSave<FaScriptTaskEntity> inEnt)
         {
-            Result<bool> reObj = new Result<bool>();
+            Result<int> reObj = new Result<int>();
             DapperHelper<FaScriptTaskEntity> dapper = new DapperHelper<FaScriptTaskEntity>();
             if (inEnt.Data.ID == 0)
             {
                 inEnt.Data.ID = await new SequenceRepository().GetNextID<FaScriptTaskEntity>();
-
             }
             var opNum = await dapper.Save(inEnt);
             reObj.IsSuccess = opNum > 0;
             reObj.Msg = "添加成功";
+            reObj.Data=inEnt.Data.ID;
             return reObj;
         }
 

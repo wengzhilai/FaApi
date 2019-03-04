@@ -13,6 +13,65 @@ using System.Linq.Expressions;
 
 namespace Helper
 {
+    static public class DapperHelper
+    {
+        static IDbConnection _connection;
+        static IDbConnection connection
+        {
+            get
+            {
+                if (_connection == null)
+                {
+                    var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
+                    var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
+                    _connection = new MySqlConnection(alldict + ";CharSet=utf8");
+                }
+                return _connection;
+            }
+        }
+        static IDbTransaction transaction = null;
+  
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        public static void TranscationBegin()
+        {
+            connection.Open();
+            transaction = connection.BeginTransaction();
+        }
+        /// <summary>
+        /// 获取连接
+        /// </summary>
+        /// <returns></returns>
+        public static IDbConnection GetConnection()
+        {
+            return connection;
+        }
+
+        /// <summary>
+        /// 回滚事务
+        /// </summary>
+        public static void TranscationRollback()
+        {
+            transaction.Rollback();
+            connection.Close();
+        }
+        /// <summary>
+        /// 提交事务
+        /// </summary>
+        public static void TranscationCommit()
+        {
+            transaction.Commit();
+            connection.Close();
+        }
+
+        async public static Task<int> Exec(string sql, object param = null)
+        {
+            var result = await connection.ExecuteAsync(sql, param, transaction);
+            return result;
+        }
+
+    }
     public class DapperHelper<T> where T : class, new()
     {
         public ModelHelper<T> modelHelper;
@@ -112,7 +171,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
             }
             string sql = this.modelHelper.GetFindAllSql(inSearch, whereStr);
             return await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
@@ -134,7 +193,7 @@ namespace Helper
                 var dbField = this.modelHelper.GetTableFieldDirct();
                 foreach (var item in dbField)
                 {
-                    whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                    whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
                 }
                 sql = modelHelper.GetFindAllSql(whereStr);
                 reList = await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
@@ -181,7 +240,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
             }
 
             string sql = mh.GetFindNumSql(whereStr);
@@ -230,7 +289,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
             }
 
             string sql = modelHelper.GetSingleSql(whereStr, order);
@@ -258,7 +317,7 @@ namespace Helper
                 var dbField = this.modelHelper.GetTableFieldDirct();
                 foreach (var item in dbField)
                 {
-                    whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                    whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
                 }
 
                 string sql = modelHelper.GetDeleteSql(whereStr);
@@ -277,7 +336,7 @@ namespace Helper
             try
             {
                 string sql = modelHelper.GetDeleteSql(whereStr);
-                var query = connection.ExecuteAsync(sql, null,transaction);
+                var query = connection.ExecuteAsync(sql, null, transaction);
                 return query;
             }
             catch (Exception ex)
