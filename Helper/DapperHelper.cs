@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 
 namespace Helper
 {
+
     static public class DapperHelper
     {
         static IDbConnection _connection;
@@ -30,7 +31,7 @@ namespace Helper
             }
         }
         static IDbTransaction transaction = null;
-  
+
         /// <summary>
         /// 开始事务
         /// </summary>
@@ -71,6 +72,35 @@ namespace Helper
             return result;
         }
 
+        async public static Task<IDataReader> ExecuteReaderAsync(string sql, object param = null)
+        {
+            var result = await connection.ExecuteReaderAsync(sql, param, transaction);
+            return result;
+        }
+
+        async public static Task<string> ExecuteScalarAsync(string sql, object param = null)
+        {
+            var result = await connection.ExecuteScalarAsync(sql, param, transaction);
+            if (result != null)
+                return result.ToString();
+            else
+                return "";
+        }
+
+
+        async public static Task<DataTable> GetDataTable(string sql, object param = null)
+        {
+            DataTable table = new DataTable("MyTable");
+            var reader = await ExecuteReaderAsync(sql, param);
+            if (reader != null)
+            {
+                table.Load(reader);
+                reader.Dispose();
+            }
+            return table;
+        }
+
+
     }
     public class DapperHelper<T> where T : class, new()
     {
@@ -83,7 +113,7 @@ namespace Helper
             modelHelper = new ModelHelper<T>();
             var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
             var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
-            connection = new MySqlConnection(alldict+";CharSet=utf8");
+            connection = new MySqlConnection(alldict + ";CharSet=utf8");
         }
 
         public DapperHelper(IDbConnection _connection, IDbTransaction _transaction)
