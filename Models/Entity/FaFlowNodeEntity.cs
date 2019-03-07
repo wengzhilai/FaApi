@@ -7,8 +7,8 @@ namespace Models.Entity
     /// <summary>
     /// 流程节点
     /// </summary>
-    [Table("fa_flow_flownode")]
-    public class FaFlowFlownodeEntity
+    [Table("fa_flow_node")]
+    public class FaFlowNodeEntity
     {
         /// <summary>
         /// ID

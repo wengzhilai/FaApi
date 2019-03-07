@@ -7,7 +7,7 @@ namespace Models.Entity
     /// <summary>
     /// 流程节点步骤
     /// </summary>
-    [Table("fa_flow_flownode_flow")]
+    [Table("fa_flow_node_flow")]
     public class FaFlowFlownodeFlowEntity
     {
         /// <summary>
@@ -31,15 +31,15 @@ namespace Models.Entity
         /// </summary>
         [Display(Name = "开始节点")]
         [Column]
-        public int FROM_FLOWNODE_ID { get; set; }
+        public int FROM_NODE_ID { get; set; }
         /// <summary>
         /// 结束节点
         /// </summary>
         [Display(Name = "结束节点")]
         [Column]
-        public int TO_FLOWNODE_ID { get; set; }
+        public int TO_NODE_ID { get; set; }
         /// <summary>
-        /// 处理方式
+        /// 处理方式 0一人处理即可,1所有人必须处理
         /// </summary>
         [Required]
         [Display(Name = "处理方式")]
@@ -47,7 +47,7 @@ namespace Models.Entity
         public short HANDLE { get; set; }
 
         /// <summary>
-        /// 选择人
+        /// 选择人 0,指定角色,1操作时选择人,2返回上级,3发起人,4已处理人
         /// </summary>
         [Required]
         [Display(Name = "选择人")]
@@ -55,10 +55,10 @@ namespace Models.Entity
         public short ASSIGNER { get; set; }
 
         /// <summary>
-        /// 状态
+        /// 状态名称
         /// </summary>
         [StringLength(20)]
-        [Display(Name = "状态")]
+        [Display(Name = "状态名称")]
         [Column]
         public string STATUS { get; set; }
         /// <summary>
