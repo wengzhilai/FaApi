@@ -443,38 +443,27 @@ namespace Helper
         public string GetFindAllSql(DtoSearch inSearch)
         {
             string key = GetKeyField();
-            if (inSearch.OrderType == null)
+            if (string.IsNullOrEmpty(inSearch.OrderType))
             {
                 inSearch.OrderType = string.Format("{0} DESC", key);
             }
-            string sql = "SELECT Row_number()OVER (ORDER BY {2}) AS RowNumber ,{0} FROM {1} WHERE {3}";
-            if (inSearch.FilterList == null)
+            string whereSql = "";
+            if (inSearch.FilterList != null && inSearch.FilterList.Count() > 0)
             {
-                sql = "SELECT Row_number()OVER (ORDER BY {2}) AS RowNumber ,{0} FROM {1}";
-                sql = string.Format(sql, string.Join(",",
-                                GetTableFields()),
-                                GetTableName(),
-                                inSearch.OrderType
-                                );
+                whereSql = " where " + string.Join(" AND ", inSearch.FilterList.Select(x => string.Format("{0}=@{0}", x)));
             }
-            else
-            {
-                sql = string.Format(sql, string.Join(",",
-                                GetTableFields()),
-                                GetTableName(),
-                                inSearch.OrderType,
-                                string.Join(" AND ", inSearch.FilterList.Select(x => string.Format("{0}=@{0}", x)))
-                                );
-            }
-
-
             if (inSearch.PageIndex < 1) inSearch.PageIndex = 1;
             if (inSearch.PageSize < 1) inSearch.PageSize = 10;
-            sql = string.Format(@"
-                SELECT * FROM ({0}) T 
-                WHERE  RowNumber BETWEEN ( ( ( {1} - 1 ) * {2} ) + 1 ) AND ( {1} * {2} )
-                ORDER  BY  {3}
-                ", sql, inSearch.PageIndex, inSearch.PageSize, inSearch.OrderType);
+            string sql = string.Format(@"
+                select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
+                ",
+                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList)),
+                GetTableName(),
+                whereSql,
+                (inSearch.PageIndex - 1) * inSearch.PageSize,
+                inSearch.PageSize,
+                inSearch.OrderType
+                );
             return sql;
         }
 
@@ -495,8 +484,14 @@ namespace Helper
             if (inSearch.PageSize < 1) inSearch.PageSize = 10;
             string sql = string.Format(@"
                 select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
-                ", string.Join(",", GetTableFields(null,inSearch.IgnoreFieldList)),
-                                GetTableName(), whereSql, (inSearch.PageIndex - 1) * inSearch.PageSize, inSearch.PageSize, inSearch.OrderType);
+                ",
+                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList)),
+                GetTableName(),
+                whereSql,
+                (inSearch.PageIndex - 1) * inSearch.PageSize,
+                inSearch.PageSize,
+                inSearch.OrderType
+                );
             return sql;
         }
 

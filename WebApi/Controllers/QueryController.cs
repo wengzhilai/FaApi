@@ -230,6 +230,31 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// 获取所有查询列表
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaQueryEntity>> List(DtoSearch inEnt)
+        {
+            Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
+            inEnt.OrderType = "id asc";
+            inEnt.IgnoreFieldList=new List<string>{
+                "QUERY_CFG_JSON",
+                "IN_PARA_JSON",
+                "JS_STR",
+                "ROWS_BTN",
+                "HEARD_BTN",
+                "CHARTS_CFG",
+                "REPORT_SCRIPT",
+                };
+            var user = await _query.FindAll(inEnt);
+            reObj.DataList = user.ToList();
+            reObj.IsSuccess = true;
+            return reObj;
+        }
+
+        /// <summary>
         /// 保存Query
         /// </summary>
         /// <param name="inEnt"></param>
