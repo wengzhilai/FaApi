@@ -203,12 +203,12 @@ namespace Repository
         {
             var reObj = new Result<bool>();
             #region 验证信息是否有误
-            if (inEnt.Data.ID == 0 && (inEnt.Data.COUPLE_ID == null || inEnt.Data.COUPLE_ID == 0))
-            {
-                reObj.IsSuccess = false;
-                reObj.Msg = "添加的用户没有选择COUPLE_ID";
-                return reObj;
-            }
+            // if (inEnt.Data.ID == 0 && (inEnt.Data.COUPLE_ID == null || inEnt.Data.COUPLE_ID == 0))
+            // {
+            //     reObj.IsSuccess = false;
+            //     reObj.Msg = "添加的用户没有选择COUPLE_ID";
+            //     return reObj;
+            // }
             #endregion
             DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
             dapperUser.TranscationBegin();
@@ -239,15 +239,48 @@ namespace Repository
 
                 if (inEnt.Data.ID == 0)
                 {
-                    var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.Data.COUPLE_ID);
-                    if (coupleEnt == null)
+                    if (inEnt.Data.COUPLE_ID == null && inEnt.Data.FATHER_ID == null)
                     {
                         reObj.IsSuccess = false;
-                        reObj.Msg = "选择的COUPLE_ID不存在";
+                        reObj.Msg = "选择的COUPLE_ID和FATHER_ID不能同时为空";
                         return reObj;
                     }
 
                     var userId = await new SequenceRepository().GetNextID<FaUserEntity>();
+                    if (inEnt.Data.COUPLE_ID != null && inEnt.Data.COUPLE_ID != 0)
+                    {
+                        var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.Data.COUPLE_ID);
+                        if (coupleEnt == null)
+                        {
+                            reObj.IsSuccess = false;
+                            reObj.Msg = "选择的COUPLE_ID不存在";
+                            return reObj;
+                        }
+
+                        #region 修改COUPLE用户信息
+
+                        coupleEnt.COUPLE_ID = userId;
+
+                        var saveList = new List<string>();
+                        saveList.Add("COUPLE_ID");
+
+                        var addUserInfoNum = await dapperUserInfo.Update(new DtoSave<FaUserInfoEntity>
+                        {
+                            Data = coupleEnt,
+                            SaveFieldList = saveList,
+                            WhereList = null
+                        });
+                        if (addUserInfoNum < 1)
+                        {
+                            dapperUser.TranscationRollback();
+                            reObj.IsSuccess = false;
+                            reObj.Msg = "修改用户失败";
+                            return reObj;
+                        }
+                        #endregion
+
+                    }
+
                     #region 保存用户
                     var addUserId = await dapperUser.Save(new DtoSave<FaUserEntity>
                     {
@@ -290,6 +323,7 @@ namespace Repository
                             EDUCATION = inEnt.Data.EDUCATION,
                             DIED_CHINA_YEAR = inEnt.Data.DIED_CHINA_YEAR,
                             BIRTHDAY_CHINA_YEAR = inEnt.Data.BIRTHDAY_CHINA_YEAR,
+                            FATHER_ID = inEnt.Data.FATHER_ID,
                             CREATE_USER_NAME = opUserName,
                             CREATE_USER_ID = opUserId,
                             UPDATE_TIME = DateTime.Now,
@@ -310,27 +344,7 @@ namespace Repository
                     }
                     #endregion
 
-                    #region 修改COUPLE用户信息
 
-                    coupleEnt.COUPLE_ID = userId;
-
-                    var saveList = new List<string>();
-                    saveList.Add("COUPLE_ID");
-
-                    var addUserInfoNum = await dapperUserInfo.Update(new DtoSave<FaUserInfoEntity>
-                    {
-                        Data = coupleEnt,
-                        SaveFieldList = saveList,
-                        WhereList = null
-                    });
-                    if (addUserInfoNum < 1)
-                    {
-                        dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "修改用户失败";
-                        return reObj;
-                    }
-                    #endregion
                 }
                 else
                 {
@@ -486,7 +500,7 @@ namespace Repository
                 dapperUser.TranscationCommit();
                 reObj.Data = true;
                 reObj.IsSuccess = true;
-                reObj.Msg = "修改成功";
+                reObj.Msg = "保存成功";
                 return reObj;
 
             }
@@ -497,6 +511,47 @@ namespace Repository
                 reObj.Msg = e.Message;
                 return reObj;
             }
+        }
+
+        async public Task<Result> Delete(int userId)
+        {
+            Result reObj = new Result();
+            DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>();
+            dapperUserInfo.TranscationBegin();
+            try
+            {
+                var children=await dapperUserInfo.Count(i => i.FAMILY_ID == userId);
+                if(children>0){
+                    reObj.IsSuccess=false;
+                    reObj.Msg="该用户有项子项，不能删除";
+                    return reObj;
+
+                }
+                var opNum = await dapperUserInfo.Delete(i => i.ID == userId);
+                reObj.IsSuccess = opNum > 0;
+                if (!reObj.IsSuccess)
+                {
+                    dapperUserInfo.TranscationRollback();
+                    return reObj;
+                }
+                DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>(dapperUserInfo.GetConnection(), dapperUserInfo.GetTransaction());
+                opNum = await dapperUser.Delete(i => i.ID == userId);
+                reObj.IsSuccess = opNum > 0;
+                if (!reObj.IsSuccess)
+                {
+                    dapperUserInfo.TranscationRollback();
+                    return reObj;
+                }
+                dapperUserInfo.TranscationCommit();
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog<UserInfoRepository>(e.ToString());
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+                dapperUserInfo.TranscationRollback();
+            }
+            return reObj;
         }
 
     }

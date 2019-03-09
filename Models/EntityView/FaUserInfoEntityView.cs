@@ -200,6 +200,13 @@ namespace Models.EntityView
         [Column("a.DIED_CHINA_YEAR")]
         public string DIED_CHINA_YEAR { get; set; }
 
+        /// <summary>
+        /// 创建用户ID
+        /// </summary>
+        [Required]
+        [Display(Name = "创建用户ID")]
+        [Column("a.CREATE_USER_ID")]
+        public int CREATE_USER_ID { get; set; }
 
         /// <summary>
         /// 姓名

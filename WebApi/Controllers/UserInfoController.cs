@@ -178,14 +178,40 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [HttpGet]
-        [Authorize]
         async public Task<Result> Save(DtoSave<FaUserInfoEntityView> inEnt)
         {
             var reObj = new Result<bool>();
             try
             {
                 reObj = await this._userInfo.Save(inEnt, User.Identity.Name, 1);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = e.RealCode;
+                reObj.Msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize]
+        async public Task<Result> Delete(DtoDo<int> inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                reObj = await this._userInfo.Delete(inEnt.Key);
             }
             catch (ExceptionExtend e)
             {

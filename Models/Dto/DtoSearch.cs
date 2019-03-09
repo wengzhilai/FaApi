@@ -61,8 +61,13 @@ namespace Models
         /// <summary>
         /// 页码大小
         /// </summary>
-        [Range(1, 100, ErrorMessage = "{0}值不能小于1")]
+        [Range(1, 10000, ErrorMessage = "{0}值不能小于1")]
         public int PageSize { get; set; }
+
+        /// <summary>
+        /// 查询时需要忽略的字段
+        /// </summary>
+        public List<string> IgnoreFieldList { get; set; }
     }
 
 

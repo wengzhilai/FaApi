@@ -302,8 +302,12 @@ namespace Repository
                         Data = Login,
                         SaveFieldList = new List<string> { "FAIL_COUNT" }
                     }) > 0;
-                    reObj.Data = user;
 
+                    DapperHelper<FaUserRoleEntityView> dapperUserRole = new DapperHelper<FaUserRoleEntityView>();
+                    var role = await dapperUserRole.FindAll(i => i.USER_ID == user.ID);
+                    user.IsAdmin = role.Count(i => i.ROLE_ID == 1) > 0;
+                    user.IsLeader = role.Count(i => i.ROLE_ID == 2) > 0;
+                    reObj.Data = user;
                 }
 
             }
@@ -367,7 +371,7 @@ namespace Repository
         async public Task<Result<bool>> UserEditPwd(EditPwdDto inEnt)
         {
             var reObj = new Result<bool>();
-            reObj.Data=false;
+            reObj.Data = false;
             if (!inEnt.NewPwd.Equals(inEnt.ReNewPwd))
             {
                 reObj.IsSuccess = false;

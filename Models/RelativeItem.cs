@@ -38,5 +38,9 @@ namespace Models
         /// 坐标Y
         /// </summary>
         public int y { get; set; }
+
+        public string Authority { get; set; }
+        public string CreateUserId { get; set; }
+
     }
 }

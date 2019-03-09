@@ -13,6 +13,95 @@ using System.Linq.Expressions;
 
 namespace Helper
 {
+
+    static public class DapperHelper
+    {
+        static IDbConnection _connection;
+        static IDbConnection connection
+        {
+            get
+            {
+                if (_connection == null)
+                {
+                    var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
+                    var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
+                    _connection = new MySqlConnection(alldict + ";CharSet=utf8");
+                }
+                return _connection;
+            }
+        }
+        static IDbTransaction transaction = null;
+
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        public static void TranscationBegin()
+        {
+            connection.Open();
+            transaction = connection.BeginTransaction();
+        }
+        /// <summary>
+        /// 获取连接
+        /// </summary>
+        /// <returns></returns>
+        public static IDbConnection GetConnection()
+        {
+            return connection;
+        }
+
+        /// <summary>
+        /// 回滚事务
+        /// </summary>
+        public static void TranscationRollback()
+        {
+            transaction.Rollback();
+            connection.Close();
+        }
+        /// <summary>
+        /// 提交事务
+        /// </summary>
+        public static void TranscationCommit()
+        {
+            transaction.Commit();
+            connection.Close();
+        }
+
+        async public static Task<int> Exec(string sql, object param = null)
+        {
+            var result = await connection.ExecuteAsync(sql, param, transaction);
+            return result;
+        }
+
+        async public static Task<IDataReader> ExecuteReaderAsync(string sql, object param = null)
+        {
+            var result = await connection.ExecuteReaderAsync(sql, param, transaction);
+            return result;
+        }
+
+        async public static Task<string> ExecuteScalarAsync(string sql, object param = null)
+        {
+            var result = await connection.ExecuteScalarAsync(sql, param, transaction);
+            if (result != null)
+                return result.ToString();
+            else
+                return "";
+        }
+
+
+        async public static Task<DataTable> GetDataTable(string sql, object param = null)
+        {
+            DataTable table = new DataTable("MyTable");
+            var reader = await ExecuteReaderAsync(sql, param);
+            if (reader != null)
+            {
+                table.Load(reader);
+                reader.Dispose();
+            }
+            return table;
+        }
+
+
+    }
     public class DapperHelper<T> where T : class, new()
     {
         public ModelHelper<T> modelHelper;
@@ -24,7 +113,7 @@ namespace Helper
             modelHelper = new ModelHelper<T>();
             var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
             var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
-            connection = new MySqlConnection(alldict+";CharSet=utf8");
+            connection = new MySqlConnection(alldict + ";CharSet=utf8");
         }
 
         public DapperHelper(IDbConnection _connection, IDbTransaction _transaction)
@@ -112,7 +201,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
             }
             string sql = this.modelHelper.GetFindAllSql(inSearch, whereStr);
             return await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
@@ -134,7 +223,7 @@ namespace Helper
                 var dbField = this.modelHelper.GetTableFieldDirct();
                 foreach (var item in dbField)
                 {
-                    whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                    whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
                 }
                 sql = modelHelper.GetFindAllSql(whereStr);
                 reList = await connection.QueryAsync<T>(sql, listSqlParaModel, transaction);
@@ -181,7 +270,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
             }
 
             string sql = mh.GetFindNumSql(whereStr);
@@ -230,7 +319,7 @@ namespace Helper
             var dbField = this.modelHelper.GetTableFieldDirct();
             foreach (var item in dbField)
             {
-                whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
             }
 
             string sql = modelHelper.GetSingleSql(whereStr, order);
@@ -258,11 +347,26 @@ namespace Helper
                 var dbField = this.modelHelper.GetTableFieldDirct();
                 foreach (var item in dbField)
                 {
-                    whereStr = whereStr.Replace(string.Format("({0})",item.Key), item.Value.ToString());
+                    whereStr = whereStr.Replace(string.Format("({0})", item.Key), item.Value.ToString());
                 }
 
                 string sql = modelHelper.GetDeleteSql(whereStr);
                 var query = connection.ExecuteAsync(sql, listSqlParaModel, transaction);
+                return query;
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteErrorLog<DapperHelper<T>>(ex.ToString());
+                throw new ExceptionExtend("请先删除子项");
+            }
+        }
+
+        public Task<int> Delete(string whereStr)
+        {
+            try
+            {
+                string sql = modelHelper.GetDeleteSql(whereStr);
+                var query = connection.ExecuteAsync(sql, null, transaction);
                 return query;
             }
             catch (Exception ex)
