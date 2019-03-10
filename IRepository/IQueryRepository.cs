@@ -67,6 +67,7 @@ namespace IRepository
         Task<int> Save(DtoSave<FaQueryEntity> inEnt);
 
         Task<List<FaQueryEntity>> FindAll(DtoSearch inSearch);
+        Task<Result<FaQueryEntity>> FindAllPage(DtoSearch inSearch);
         Task<int> Update(DtoSave<FaQueryEntity> inEnt);
         Task<FaQueryEntity> Single(Expression<Func<FaQueryEntity, bool>> where);
 

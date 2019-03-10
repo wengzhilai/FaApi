@@ -193,6 +193,21 @@ namespace Helper
             return await connection.QueryAsync<T>(sql, this.modelHelper.GetDynamicParameters(), transaction);
         }
 
+        public async Task<Tuple<IEnumerable<T1>,IEnumerable<T2>>> FindAllS<T1,T2>(DtoSearch inSearch)
+        {
+            var reOjb=new Tuple<IEnumerable<T1>,IEnumerable<T2>>(null,null); 
+            string[] sqlArr = this.modelHelper.GetFindAllAndCountSql(inSearch);
+            IEnumerable<T1> item1=null;
+            IEnumerable<T2> item2=null;
+            if(sqlArr.Count()>0){
+                item1=await connection.QueryAsync<T1>(sqlArr[0], this.modelHelper.GetDynamicParameters(), transaction);
+            }
+            if(sqlArr.Count()>1){
+                item2=await connection.QueryAsync<T2>(sqlArr[1], this.modelHelper.GetDynamicParameters(), transaction);
+            }
+            return new Tuple<IEnumerable<T1>,IEnumerable<T2>>(item1,item2);
+        }
+
         public async Task<IEnumerable<T>> FindAll(DtoSearch<T> inSearch)
         {
 

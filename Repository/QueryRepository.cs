@@ -458,6 +458,17 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
             return reList.ToList();
         }
 
+        public async Task<Result<FaQueryEntity>> FindAllPage(DtoSearch inSearch)
+        {
+            var reObj=new Result<FaQueryEntity>();
+            var reList = await dal.FindAllS<FaQueryEntity,KV>(inSearch);
+            reObj.DataList=reList.Item1.ToList();
+            if(reList.Item2!=null && reList.Item2.Count()>0){
+                reObj.Msg=reList.Item2.ToList()[0].V;
+            }
+            return reObj;
+        }
+
         public async Task<int> Update(DtoSave<FaQueryEntity> inEnt)
         {
             return await dal.Update(inEnt);

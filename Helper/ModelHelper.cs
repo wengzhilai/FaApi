@@ -467,6 +467,35 @@ namespace Helper
             return sql;
         }
 
+
+        public string[] GetFindAllAndCountSql(DtoSearch inSearch)
+        {
+            string key = GetKeyField();
+            if (string.IsNullOrEmpty(inSearch.OrderType))
+            {
+                inSearch.OrderType = string.Format("{0} DESC", key);
+            }
+            string whereSql = "";
+            if (inSearch.FilterList != null && inSearch.FilterList.Count() > 0)
+            {
+                whereSql = " where " + string.Join(" AND ", inSearch.FilterList.Select(x => string.Format("{0}=@{0}", x)));
+            }
+            if (inSearch.PageIndex < 1) inSearch.PageIndex = 1;
+            if (inSearch.PageSize < 1) inSearch.PageSize = 10;
+            string sql = string.Format(@"
+                select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
+                select count(1) V from {1} {2}
+                ",
+                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList)),
+                GetTableName(),
+                whereSql,
+                (inSearch.PageIndex - 1) * inSearch.PageSize,
+                inSearch.PageSize,
+                inSearch.OrderType
+                );
+            return sql.Split(';');
+        }
+
         public string GetFindAllSql(DtoSearch<T> inSearch, string whereSql = "")
         {
             if (inSearch.OrderType == null)
