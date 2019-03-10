@@ -240,6 +240,7 @@ namespace WebApi.Controllers
             Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
             inEnt.OrderType = "id asc";
             inEnt.IgnoreFieldList=new List<string>{
+                "QUERY_CONF",
                 "QUERY_CFG_JSON",
                 "IN_PARA_JSON",
                 "JS_STR",
@@ -248,8 +249,7 @@ namespace WebApi.Controllers
                 "CHARTS_CFG",
                 "REPORT_SCRIPT",
                 };
-            var user = await _query.FindAll(inEnt);
-            reObj.DataList = user.ToList();
+            reObj = await _query.FindAllPage(inEnt);
             reObj.IsSuccess = true;
             return reObj;
         }
