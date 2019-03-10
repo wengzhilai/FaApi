@@ -283,5 +283,50 @@ namespace WebApi.Controllers
             }
             return reObj;
         }
+
+        /// <summary>
+        /// 查找单条
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaQueryEntity>> Single(DtoDo<int> inEnt)
+        {
+            Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
+            try
+            {
+                reObj.Data = await _query.Single(x=>x.ID==inEnt.Key);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
+                reObj.Msg = ex.Message;
+                reObj.IsSuccess = false;
+            }
+            return reObj;
+        }
+
+        /// <summary>
+        /// 删除单条
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<int>> Delete(DtoDo<int> inEnt)
+        {
+            Result<int> reObj = new Result<int>();
+            try
+            {
+                reObj.Data = await _query.Delete(x=>x.ID==inEnt.Key);
+
+            }
+            catch (Exception ex)
+            {
+                LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
+                reObj.Msg = ex.Message;
+                reObj.IsSuccess = false;
+            }
+            return reObj;
+        }
     }
 }
