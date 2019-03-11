@@ -449,6 +449,9 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
 
         public async Task<int> Save(DtoSave<FaQueryEntity> inEnt)
         {
+            if(inEnt.Data.ID==0){
+                inEnt.Data.ID=await new SequenceRepository().GetNextID<FaQueryEntity>();
+            }
             return await dal.Save(inEnt);
         }
 
