@@ -18,7 +18,6 @@ namespace Models.Entity
         /// <summary>
         /// ID
         /// </summary>
-        [Required]
         [Key]
         [Display(Name = "ID")]
         [Column]
@@ -26,7 +25,6 @@ namespace Models.Entity
         /// <summary>
         /// 名称
         /// </summary>
-        [Required]
         [StringLength(50)]
         [Display(Name = "名称")]
         [Column]
@@ -34,7 +32,6 @@ namespace Models.Entity
         /// <summary>
         /// 代码
         /// </summary>
-        [Required]
         [StringLength(20)]
         [Display(Name = "代码")]
         [Column]
@@ -42,21 +39,18 @@ namespace Models.Entity
         /// <summary>
         /// 自动加载
         /// </summary>
-        [Required]
         [Display(Name = "自动加载")]
         [Column]
         public bool AUTO_LOAD { get; set; }
         /// <summary>
         /// 页面大小
         /// </summary>
-        [Required]
         [Display(Name = "页面大小")]
         [Column]
         public int PAGE_SIZE { get; set; }
         /// <summary>
         /// 复选框
         /// </summary>
-        [Required]
         [Display(Name = "复选框")]
         [Column]
         public bool SHOW_CHECKBOX { get; set; }
@@ -64,7 +58,6 @@ namespace Models.Entity
         /// <summary>
         /// 调试
         /// </summary>
-        [Required]
         [Display(Name = "调试")]
         [Column]
         public bool IS_DEBUG { get; set; }
@@ -125,7 +118,6 @@ namespace Models.Entity
         /// <summary>
         /// 图表类型
         /// </summary>
-        [Required]
         [StringLength(50)]
         [Display(Name = "图表类型")]
         [Column]
@@ -135,7 +127,6 @@ namespace Models.Entity
         /// <summary>
         /// 统计范围
         /// </summary>
-        [Required]
         [Display(Name = "统计范围")]
         [Column]
         public short FILTR_LEVEL { get; set; }
