@@ -10,6 +10,7 @@ using Models;
 using MySql.Data.MySqlClient;
 using Dapper;
 using System.Linq.Expressions;
+using Models.Entity;
 
 namespace Helper
 {
@@ -72,10 +73,24 @@ namespace Helper
             return result;
         }
 
-        async public static Task<IDataReader> ExecuteReaderAsync(string sql, object param = null)
+        public static IDataReader ExecuteReaderAsync(string sql, object param = null)
         {
-            var result = await connection.ExecuteReaderAsync(sql, param, transaction);
-            return result;
+            if (param == null) param = new { };
+            connection.Open();
+            try
+            {
+                var result = connection.ExecuteReader(sql, param, transaction);
+                return result;
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(typeof(DapperHelper),e.ToString());
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return null;
         }
 
         async public static Task<string> ExecuteScalarAsync(string sql, object param = null)
@@ -91,12 +106,25 @@ namespace Helper
         async public static Task<DataTable> GetDataTable(string sql, object param = null)
         {
             DataTable table = new DataTable("MyTable");
-            var reader = await ExecuteReaderAsync(sql, param);
-            if (reader != null)
+            connection.Open();
+            try
             {
-                table.Load(reader);
-                reader.Dispose();
+                var reader = connection.ExecuteReader(sql, param, transaction);
+                if (reader != null)
+                {
+                    table.Load(reader);
+                    reader.Dispose();
+                }
             }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(typeof(DapperHelper),e.ToString());
+            }
+            finally
+            {
+                connection.Close();
+            }
+
             return table;
         }
 
@@ -193,19 +221,21 @@ namespace Helper
             return await connection.QueryAsync<T>(sql, this.modelHelper.GetDynamicParameters(), transaction);
         }
 
-        public async Task<Tuple<IEnumerable<T1>,IEnumerable<T2>>> FindAllS<T1,T2>(DtoSearch inSearch)
+        public async Task<Tuple<IEnumerable<T1>, IEnumerable<T2>>> FindAllS<T1, T2>(DtoSearch inSearch)
         {
-            var reOjb=new Tuple<IEnumerable<T1>,IEnumerable<T2>>(null,null); 
+            var reOjb = new Tuple<IEnumerable<T1>, IEnumerable<T2>>(null, null);
             string[] sqlArr = this.modelHelper.GetFindAllAndCountSql(inSearch);
-            IEnumerable<T1> item1=null;
-            IEnumerable<T2> item2=null;
-            if(sqlArr.Count()>0){
-                item1=await connection.QueryAsync<T1>(sqlArr[0], this.modelHelper.GetDynamicParameters(), transaction);
+            IEnumerable<T1> item1 = null;
+            IEnumerable<T2> item2 = null;
+            if (sqlArr.Count() > 0)
+            {
+                item1 = await connection.QueryAsync<T1>(sqlArr[0], this.modelHelper.GetDynamicParameters(), transaction);
             }
-            if(sqlArr.Count()>1){
-                item2=await connection.QueryAsync<T2>(sqlArr[1], this.modelHelper.GetDynamicParameters(), transaction);
+            if (sqlArr.Count() > 1)
+            {
+                item2 = await connection.QueryAsync<T2>(sqlArr[1], this.modelHelper.GetDynamicParameters(), transaction);
             }
-            return new Tuple<IEnumerable<T1>,IEnumerable<T2>>(item1,item2);
+            return new Tuple<IEnumerable<T1>, IEnumerable<T2>>(item1, item2);
         }
 
         public async Task<IEnumerable<T>> FindAll(DtoSearch<T> inSearch)

@@ -36,7 +36,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="mapper"></param>
-        public HomeController(IConfiguration configuration,IMapper mapper)
+        public HomeController(IConfiguration configuration, IMapper mapper)
         {
             _mapper = mapper;
             _configuration = configuration;
@@ -50,6 +50,16 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public string Index()
         {
+            try
+            {
+                var i = Convert.ToInt32("a");
+            }
+            catch
+            (Exception e)
+            {
+                LogHelper.WriteErrorLog<HomeController>("测试错误日志", e);
+            }
+            LogHelper.WriteLog<HomeController>("测试正常日志");
             return "home-index";
         }
 
@@ -61,9 +71,9 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public string TestAutoMap()
         {
-            var testEnt=new FaUserInfoEntity();
-            testEnt.ELDER_ID=1;
-            var outEnt=_mapper.Map<RelativeItem>(testEnt);
+            var testEnt = new FaUserInfoEntity();
+            testEnt.ELDER_ID = 1;
+            var outEnt = _mapper.Map<RelativeItem>(testEnt);
             return outEnt.ElderName;
         }
 
@@ -75,10 +85,10 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<string> TestRedis()
         {
-            await RedisWriteHelper.HashSetKey("user","user_1","翁志来测试1");
-            await RedisWriteHelper.HashSetKey("user","user_2","翁志来测试2");
-            await RedisWriteHelper.HashDelete("user","user_2");
-            var t= await RedisReadHelper.HashGetKey("user","user_1");
+            await RedisWriteHelper.HashSetKey("user", "user_1", "翁志来测试1");
+            await RedisWriteHelper.HashSetKey("user", "user_2", "翁志来测试2");
+            await RedisWriteHelper.HashDelete("user", "user_2");
+            var t = await RedisReadHelper.HashGetKey("user", "user_1");
             return t;
         }
 
@@ -91,10 +101,10 @@ namespace WebApi.Controllers
         public string TestLambda()
         {
             // FaUserInfoEntity, RelativeItem
-            List<KeyValuePair<string,object>> listSqlParaModel = new List<KeyValuePair<string,object>>();
-            List<int> tt=new List<int>(){1,2,4};
-            var testEnt=Helper.LambdaToSqlHelper.GetWhereSql<FaElderEntity>(x=>x.NAME.IndexOf("34")>1 || x.ID<10,listSqlParaModel);
-            return testEnt+"\n\r"+TypeChange.ObjectToStr(listSqlParaModel);
+            List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
+            List<int> tt = new List<int>() { 1, 2, 4 };
+            var testEnt = Helper.LambdaToSqlHelper.GetWhereSql<FaElderEntity>(x => x.NAME.IndexOf("34") > 1 || x.ID < 10, listSqlParaModel);
+            return testEnt + "\n\r" + TypeChange.ObjectToStr(listSqlParaModel);
         }
 
         /// <summary>
@@ -106,7 +116,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public string[] AuthPage()
         {
-            return new string[] { User.Identity.Name, User.Claims.Single(a=>a.Type==ClaimTypes.NameIdentifier).Value };
+            return new string[] { User.Identity.Name, User.Claims.Single(a => a.Type == ClaimTypes.NameIdentifier).Value };
         }
     }
 }

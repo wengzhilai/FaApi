@@ -99,7 +99,7 @@ namespace Repository
             {
                 reObj.Msg = AllSql;
 
-                var reader = await DapperHelper.ExecuteReaderAsync(AllSql);
+                var reader = DapperHelper.ExecuteReaderAsync(AllSql);
                 if (reader != null)
                 {
                     if (inEnt.page < 1) inEnt.page = 1;
@@ -178,7 +178,7 @@ namespace Repository
                 }
                 reObj.Data = reEnt;
             }
-            catch
+            catch(Exception e)
             {
                 return reObj;
             }
@@ -290,13 +290,13 @@ namespace Repository
         /// <param name="whereStr"></param>
         /// <param name="fieldList"></param>
         /// <returns></returns>
-        public string MakePageSql(string sql, int pageIndex = 1, int pageSize = 1, string orderStr = "getdate()", string whereStr = null, IList<string> fieldList = null)
+        public string MakePageSql(string sql, int pageIndex = 1, int pageSize = 1, string orderStr = "1", string whereStr = null, IList<string> fieldList = null)
         {
             if (pageIndex < 0) pageIndex = 1;
             if (pageSize < 0) pageSize = 10;
             if (!string.IsNullOrWhiteSpace(whereStr) && !whereStr.Trim().ToLower().StartsWith("where")) whereStr = "where " + whereStr;
-            if (string.IsNullOrWhiteSpace(orderStr)) orderStr = "getdate()";
-            orderStr = string.Format("ROW_NUMBER() OVER (ORDER BY {0})", orderStr);
+            if (string.IsNullOrWhiteSpace(orderStr)) orderStr = "1";
+            orderStr = string.Format("ORDER BY {0}", orderStr);
 
 
             string withStr = "";
@@ -320,13 +320,10 @@ namespace Repository
             }
             string sqlStr = @"
 {5}
-SELECT T1.{7} FROM 
-	(
-		SELECT {1} RowIndex, T.{6} FROM 
-			( 
-				{0}
-			) T {4}
-	)  T1 WHERE T1.RowIndex>{2} AND T1.RowIndex<={3};
+SELECT T.{6} FROM 
+( 
+    {0}
+) T {4} LIMIT {2},{3};
 SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
 ";
             if (pageIndex == 0) pageIndex = 1;
@@ -449,6 +446,9 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
 
         public async Task<int> Save(DtoSave<FaQueryEntity> inEnt)
         {
+            if(inEnt.Data.ID==0){
+                inEnt.Data.ID=await new SequenceRepository().GetNextID<FaQueryEntity>();
+            }
             return await dal.Save(inEnt);
         }
 
