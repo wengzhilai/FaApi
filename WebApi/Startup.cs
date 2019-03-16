@@ -28,6 +28,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Quartz;
 using Quartz.Impl;
+using log4net.Repository;
+using log4net;
+using log4net.Config;
 
 namespace WebApi
 {
@@ -36,6 +39,8 @@ namespace WebApi
     /// </summary>
     public class Startup
     {
+        //log4net
+        public ILoggerRepository repository { get; set; }
         private readonly IHostingEnvironment _hostingEnvironment;
         /// <summary>
         /// 
@@ -46,6 +51,9 @@ namespace WebApi
         {
             Configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
+            //log4net
+            repository = LogManager.CreateRepository("NETCoreRepository");
+            XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
         }
 
 
@@ -212,8 +220,10 @@ namespace WebApi
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        /// <param name="loggerFactory"></param>
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
         {
+            // LogHelper.Init(LogManager.GetLogger(repository.Name,typeof(Startup)));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

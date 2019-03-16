@@ -144,12 +144,12 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaQueryEntity>> GetSingleQuery(string code)
+        public async Task<Result<FaQueryEntity>> GetSingleQuery(DtoKey inEnt)
         {
             Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
             try
             {
-                reObj.Data = await _query.Single(i => i.CODE == code);
+                reObj.Data = await _query.Single(i => i.CODE == inEnt.Key);
                 reObj.IsSuccess = true;
             }
             catch (Exception ex)
