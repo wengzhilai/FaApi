@@ -140,7 +140,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// 获取Query对象
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
@@ -205,6 +205,23 @@ namespace WebApi.Controllers
             // Session[string.Format("SQL_{0}", querySearchModel.Code)] = sqlStr;
             var tmepObj = await _query.QueryExecuteCsv(querySearchModel);
             return File(tmepObj.Data.ToArray(), "application/octet-stream", string.Format("{0}.csv", querySearchModel.Code));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> DownFile(string code)
+        {
+            var tmepObj = await _query.QueryExecuteCsv(new QuerySearchModel{
+                Code=code,
+                page=1,
+                rows=10000
+            });
+            return File(tmepObj.Data.ToArray(), "application/octet-stream", string.Format("{0}.csv", code));
         }
 
         /// <summary>

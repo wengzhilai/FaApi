@@ -39,7 +39,10 @@ namespace WebApi
     /// </summary>
     public class Startup
     {
-        //log4net
+        /// <summary>
+        /// log4net
+        /// </summary>
+        /// <value></value>
         public ILoggerRepository repository { get; set; }
         private readonly IHostingEnvironment _hostingEnvironment;
         /// <summary>

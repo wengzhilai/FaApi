@@ -48,7 +48,7 @@ namespace Repository
             if (string.IsNullOrEmpty(inEnt.OrderStr)) inEnt.OrderStr = "(SELECT 0)";
             try
             {
-                DataTable dt = await DapperHelper.GetDataTable(AllSql);
+                DataTable dt = DapperHelper.GetDataTable(AllSql);
                 reEnt.rows = dt;
                 reEnt.rows.TableName = "tables1";
                 reEnt.total = reEnt.rows.Rows.Count;
@@ -98,40 +98,7 @@ namespace Repository
             try
             {
                 reObj.Msg = AllSql;
-
-                var reader = DapperHelper.ExecuteReaderAsync(AllSql);
-                if (reader != null)
-                {
-                    if (inEnt.page < 1) inEnt.page = 1;
-                    int startNum = (inEnt.page - 1) * inEnt.rows;
-                    int endNum = startNum + inEnt.rows;
-                    int i = 0;
-                    #region 创建列
-
-                    List<string> allColumns = new List<string>();
-                    for (int a = 0; a < reader.FieldCount; a++)
-                    {
-                        allColumns.Add(reader.GetName(a).Trim());
-                    }
-                    reEnt.AddRange(Encoding.Default.GetBytes(string.Join(",", allColumns) + "\r\n"));
-
-                    #endregion
-                    object[] objValues = new object[reader.FieldCount];
-                    while (reader.Read())
-                    {
-                        if (startNum <= i && i < endNum)
-                        {
-                            reader.GetValues(objValues);
-                            reEnt.AddRange(Encoding.Default.GetBytes(string.Join(",", objValues) + "\r\n"));
-                        }
-                        if (i > endNum)
-                            break;
-                        i++;
-                    }
-                    reader.Dispose();
-                }
-                reader.Dispose();
-                reObj.Data = reEnt;
+                reObj.Data = DapperHelper.ExecuteBytesAsync(AllSql);
             }
             catch
             {
@@ -167,7 +134,7 @@ namespace Repository
                 var sqlList = reObj.Msg.Split(';');
                 if (sqlList.Count() > 0)
                 {
-                    reEnt.rows = await DapperHelper.GetDataTable(sqlList[0]);
+                    reEnt.rows = DapperHelper.GetDataTable(sqlList[0]);
                 }
 
                 if (sqlList.Count() > 1)
@@ -180,6 +147,7 @@ namespace Repository
             }
             catch(Exception e)
             {
+                LogHelper.WriteErrorLog(this.GetType(),"执行分页数据失败",e);
                 return reObj;
             }
             return reObj;
@@ -214,7 +182,7 @@ namespace Repository
             try
             {
 
-                DataTable dt = await DapperHelper.GetDataTable(reObj.Msg);
+                DataTable dt = DapperHelper.GetDataTable(reObj.Msg);
                 for (int i = 0; i < dt.Columns.Count; i++)
                 {
                     var t = dt.Columns[i];

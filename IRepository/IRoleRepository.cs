@@ -11,7 +11,28 @@ namespace IRepository
 {
     public interface IRoleRepository
     {
+        /// <summary>
+        /// 查询单条
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         Task<FaRoleEntity> SingleByKey(int key);
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="scriptId">主键 ID</param>
+        /// <returns></returns>
+        Task<Result<int>> Delete(int scriptId);
+
+        /// <summary>
+        /// 保存基本信息
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result<int>> Save(DtoSave<FaRoleEntity> inEnt);
+
+
         /// <summary>
         /// 查找所有
         /// </summary>

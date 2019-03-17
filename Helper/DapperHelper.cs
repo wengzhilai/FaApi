@@ -73,18 +73,41 @@ namespace Helper
             return result;
         }
 
-        public static IDataReader ExecuteReaderAsync(string sql, object param = null)
+        public static List<byte> ExecuteBytesAsync(string sql, object param = null)
         {
-            if (param == null) param = new { };
+            List<byte> reEnt = new List<byte>();
+
             connection.Open();
             try
             {
-                var result = connection.ExecuteReader(sql, param, transaction);
-                return result;
+                var reader = connection.ExecuteReader(sql, param, transaction);
+                if (reader != null)
+                {
+
+                    #region 创建列
+
+                    List<string> allColumns = new List<string>();
+                    for (int a = 0; a < reader.FieldCount; a++)
+                    {
+                        allColumns.Add(reader.GetName(a).Trim());
+                    }
+                    reEnt.AddRange(Encoding.UTF8.GetBytes(string.Join(",", allColumns) + "\r\n"));
+
+                    #endregion
+                    object[] objValues = new object[reader.FieldCount];
+                    while (reader.Read())
+                    {
+                        reader.GetValues(objValues);
+                        reEnt.AddRange(Encoding.UTF8.GetBytes(string.Join(",", objValues) + "\r\n"));
+
+                    }
+                    reader.Dispose();
+                }
+                return reEnt;
             }
             catch (Exception e)
             {
-                LogHelper.WriteErrorLog(typeof(DapperHelper),e.ToString());
+                LogHelper.WriteErrorLog(typeof(DapperHelper), e.ToString());
             }
             finally
             {
@@ -103,7 +126,13 @@ namespace Helper
         }
 
 
-        async public static Task<DataTable> GetDataTable(string sql, object param = null)
+        /// <summary>
+        /// 获取Table
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public static DataTable GetDataTable(string sql, object param = null)
         {
             DataTable table = new DataTable("MyTable");
             connection.Open();
@@ -118,7 +147,7 @@ namespace Helper
             }
             catch (Exception e)
             {
-                LogHelper.WriteErrorLog(typeof(DapperHelper),e.ToString());
+                LogHelper.WriteErrorLog(typeof(DapperHelper), e.ToString());
             }
             finally
             {
