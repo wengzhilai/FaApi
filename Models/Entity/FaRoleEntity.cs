@@ -41,7 +41,10 @@ namespace Models.Entity
         [Display(Name = "类型")]
         [Column]
         public Nullable<int> TYPE { get; set; }
-
-
+        /// <summary>
+        /// 模块ID集合
+        /// </summary>
+        /// <value></value>
+        public int[] moduleIdStr { get; set; }
     }
 }

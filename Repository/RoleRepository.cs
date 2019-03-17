@@ -22,9 +22,12 @@ namespace Repository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public Task<FaRoleEntity> SingleByKey(int key)
+        public async Task<FaRoleEntity> SingleByKey(int key)
         {
-            return dbHelper.SingleByKey(key);
+            var ent=await dbHelper.SingleByKey(key);
+            DapperHelper<FaRoleModuleEntityView> roleModule=new DapperHelper<FaRoleModuleEntityView>();
+            ent.moduleIdStr=(await roleModule.FindAll(i=>i.ROLE_ID==key)).Select(i=>i.MODULE_ID).ToArray();
+            return ent;
         }
 
         /// <summary>
