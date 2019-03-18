@@ -22,9 +22,12 @@ namespace Repository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public Task<FaRoleEntity> SingleByKey(int key)
+        public async Task<FaRoleEntity> SingleByKey(int key)
         {
-            return dbHelper.SingleByKey(key);
+            var ent=await dbHelper.SingleByKey(key);
+            DapperHelper<FaRoleModuleEntityView> roleModule=new DapperHelper<FaRoleModuleEntityView>();
+            ent.moduleIdStr=(await roleModule.FindAll(i=>i.ROLE_ID==key)).Select(i=>i.MODULE_ID).ToArray();
+            return ent;
         }
 
         /// <summary>
@@ -78,5 +81,31 @@ namespace Repository
             }
             return true;
         }
+
+        public async Task<Result<int>> Delete(int key)
+        {
+            Result<int> reObj = new Result<int>();
+            reObj.Data = await dbHelper.Delete(i => i.ID == key);
+            reObj.IsSuccess = reObj.Data > 0;
+            return reObj;
+        }
+
+        public async Task<Result<int>> Save(DtoSave<FaRoleEntity> inEnt)
+        {
+            Result<int> reObj = new Result<int>();
+            if (inEnt.Data.ID == 0)
+            {
+                inEnt.Data.ID = await new SequenceRepository().GetNextID<FaRoleEntity>();
+                reObj.Data = await dbHelper.Save(inEnt);
+            }
+            else
+            {
+                reObj.Data = await dbHelper.Update(inEnt);
+            }
+
+            reObj.IsSuccess = reObj.Data > 0;
+            return reObj;
+        }
+
     }
 }

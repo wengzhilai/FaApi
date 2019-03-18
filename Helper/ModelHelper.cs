@@ -359,9 +359,16 @@ namespace Helper
         {
             string sql = null;
             //如果没设置并且主键是自动生成
-            if (ignoreFieldList == null && GetKeyIsAuto())
+            if (GetKeyIsAuto())
             {
-                ignoreFieldList = new List<string> { GetKeyField() };
+                if (ignoreFieldList == null)
+                {
+                    ignoreFieldList = new List<string> { GetKeyField() };
+                }
+                else
+                {
+                    ignoreFieldList.Add(GetKeyField());
+                }
             }
             sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList)) + ") VALUES(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => "@" + x)) + ")";
             if (GetKeyIsAuto())
