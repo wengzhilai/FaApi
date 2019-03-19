@@ -24,9 +24,9 @@ namespace Repository
         /// <returns></returns>
         public async Task<FaRoleEntity> SingleByKey(int key)
         {
-            var ent=await dbHelper.SingleByKey(key);
-            DapperHelper<FaRoleModuleEntityView> roleModule=new DapperHelper<FaRoleModuleEntityView>();
-            ent.moduleIdStr=(await roleModule.FindAll(i=>i.ROLE_ID==key)).Select(i=>i.MODULE_ID).ToArray();
+            var ent = await dbHelper.SingleByKey(key);
+            DapperHelper<FaRoleModuleEntityView> roleModule = new DapperHelper<FaRoleModuleEntityView>();
+            ent.moduleIdStr = (await roleModule.FindAll(i => i.ROLE_ID == key)).Select(i => i.MODULE_ID).ToArray();
             return ent;
         }
 
@@ -93,17 +93,57 @@ namespace Repository
         public async Task<Result<int>> Save(DtoSave<FaRoleEntity> inEnt)
         {
             Result<int> reObj = new Result<int>();
-            if (inEnt.Data.ID == 0)
+            try
             {
-                inEnt.Data.ID = await new SequenceRepository().GetNextID<FaRoleEntity>();
-                reObj.Data = await dbHelper.Save(inEnt);
-            }
-            else
-            {
-                reObj.Data = await dbHelper.Update(inEnt);
-            }
+                dbHelper.TranscationBegin();
+                DapperHelper<FaModuleEntity> moduleDapper = new DapperHelper<FaModuleEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
 
-            reObj.IsSuccess = reObj.Data > 0;
+                if (inEnt.Data.ID == 0)
+                {
+                    inEnt.Data.ID = await new SequenceRepository().GetNextID<FaRoleEntity>();
+                    reObj.Data = await dbHelper.Save(inEnt);
+                }
+                else
+                {
+                    reObj.Data = await dbHelper.Update(inEnt);
+                }
+                reObj.IsSuccess = reObj.Data > 0;
+                if (!reObj.IsSuccess)
+                {
+                    reObj.Msg = "保存角色失败";
+                    dbHelper.TranscationRollback();
+                }
+                else
+                {
+                    var allModule = await moduleDapper.FindAll(string.Format("ID in ({0})", string.Join(",", inEnt.Data.moduleIdStr)));
+                    var moduleIdList = allModule.Select(i => i.ID).ToList();
+                    var parent = allModule.GroupBy(i => i.PARENT_ID).Select(x => x.Key).Where(x => x != null).Select(x => x.Value).ToList();
+                    moduleIdList = moduleIdList.Concat(parent).ToList();
+                    moduleIdList=moduleIdList.GroupBy(i=>i).Select(i=>i.Key).ToList();
+                    DapperHelper.Init(dbHelper.GetConnection(), dbHelper.GetTransaction());
+                    await DapperHelper.Exec("delete from fa_role_module where ROLE_ID = " + inEnt.Data.ID);
+                    var opNum = await DapperHelper.Exec(string.Format("insert into fa_role_module(ROLE_ID,MODULE_ID) select {0} ROLE_ID,ID MODULE_ID from fa_module where ID IN ({1}) ", inEnt.Data.ID, string.Join(",", moduleIdList)));
+                    if (opNum != moduleIdList.Count())
+                    {
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "保存角色模块失败";
+                        dbHelper.TranscationRollback();
+                    }
+                    else
+                    {
+                        reObj.IsSuccess=true;
+                        dbHelper.TranscationCommit();
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "保存角色失败";
+                LogHelper.WriteErrorLog(this.GetType(), reObj.Msg, e);
+                dbHelper.TranscationRollback();
+            }
             return reObj;
         }
 

@@ -38,11 +38,11 @@ namespace IRepository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        Task<Result<KTV>> GetMenu(Expression<Func<FaModuleEntity, bool>> inParm = null);
+        Task<Result<FaModuleEntity>> GetMenu(Expression<Func<FaModuleEntity, bool>> inParm = null);
 
-        Task<Result<KTV>> GetMenuByRoleId(List<int> roleIdList);
+        Task<Result<FaModuleEntity>> GetMenuByRoleId(List<int> roleIdList);
         
-        Task<Result<KTV>> GetMGetMenuByUserId(int userId);
+        Task<Result<FaModuleEntity>> GetMGetMenuByUserId(int userId);
 
 
     }

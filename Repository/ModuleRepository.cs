@@ -32,26 +32,22 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public async Task<Result<KTV>> GetMenu(Expression<Func<FaModuleEntity, bool>> where)
+        public async Task<Result<FaModuleEntity>> GetMenu(Expression<Func<FaModuleEntity, bool>> where)
         {
-            Result<KTV> reObj = new Result<KTV>();
+            Result<FaModuleEntity> reObj = new Result<FaModuleEntity>();
             var allModel = await dbHelper.FindAll(where);
             reObj.DataList = GetChildItems(allModel, null);
             return reObj;
         }
 
-        private List<KTV> GetChildItems(IEnumerable<FaModuleEntity> inList, int? parentId)
+        private List<FaModuleEntity> GetChildItems(IEnumerable<FaModuleEntity> inList, int? parentId)
         {
             var childList = inList.Where(i => i.PARENT_ID == parentId).ToList();
-            List<KTV> reObj = new List<KTV>();
+            List<FaModuleEntity> reObj = new List<FaModuleEntity>();
             foreach (var item in childList)
             {
-                var addItem = new KTV();
-                addItem.K = item.ID.ToString();
-                addItem.V = item.NAME;
-                addItem.T = item.LOCATION;
-                addItem.child = GetChildItems(inList, item.ID);
-                reObj.Add(addItem);
+                item.Children = GetChildItems(inList, item.ID);
+                reObj.Add(item);
             }
             return reObj;
         }
@@ -81,9 +77,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<KTV>> GetMenuByRoleId(List<int> roleIdList)
+        public async Task<Result<FaModuleEntity>> GetMenuByRoleId(List<int> roleIdList)
         {
-            Result<KTV> reObj = new Result<KTV>();
+            Result<FaModuleEntity> reObj = new Result<FaModuleEntity>();
             if (!roleIdList.Contains(1))
             {
                 DapperHelper<FaRoleModuleEntityView> roleModule = new DapperHelper<FaRoleModuleEntityView>();
@@ -98,7 +94,7 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<KTV>> GetMGetMenuByUserId(int userId)
+        public async Task<Result<FaModuleEntity>> GetMGetMenuByUserId(int userId)
         {
 
             DapperHelper<FaUserRoleEntityView> userRole = new DapperHelper<FaUserRoleEntityView>();

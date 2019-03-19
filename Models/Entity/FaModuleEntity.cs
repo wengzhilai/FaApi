@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -107,5 +108,12 @@ namespace Models.Entity
         [Display(Name = "高")]
         [Column]
         public Nullable<int> H { get; set; }
+
+
+        /// <summary>
+        /// 所有子项
+        /// </summary>
+        /// <value></value>
+        public List<FaModuleEntity> Children { get; set; }
     }
 }
