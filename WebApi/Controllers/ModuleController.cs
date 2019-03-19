@@ -122,7 +122,6 @@ namespace WebApi.Controllers
         /// <summary>
         /// 获取所有用户菜单
         /// </summary>
-        /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
         [Authorize]

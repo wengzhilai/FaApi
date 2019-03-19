@@ -157,7 +157,11 @@ namespace Helper
             return table;
         }
 
-
+        public static void Init(IDbConnection dbConnection, IDbTransaction dbTransaction)
+        {
+             _connection=dbConnection;
+             transaction=dbTransaction;
+        }
     }
     public class DapperHelper<T> where T : class, new()
     {
