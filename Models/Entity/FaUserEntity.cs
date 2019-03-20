@@ -106,5 +106,10 @@ namespace Models.Entity
         /// </summary>
         /// <value></value>
         public bool IsLeader{ get; set; }
+        /// <summary>
+        /// 用户角色
+        /// </summary>
+        /// <value></value>
+        public int roleIdList { get; set; }
     }
 }
