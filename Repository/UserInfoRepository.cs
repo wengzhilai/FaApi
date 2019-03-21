@@ -528,17 +528,19 @@ namespace Repository
 
                 }
                 var opNum = await dapperUserInfo.Delete(i => i.ID == userId);
-                reObj.IsSuccess = opNum > 0;
-                if (!reObj.IsSuccess)
-                {
-                    dapperUserInfo.TranscationRollback();
-                    return reObj;
-                }
+                // reObj.IsSuccess = opNum > 0;
+                // if (!reObj.IsSuccess)
+                // {
+                //     reObj.Msg="删除UserINfo失败";
+                //     dapperUserInfo.TranscationRollback();
+                //     return reObj;
+                // }
                 DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>(dapperUserInfo.GetConnection(), dapperUserInfo.GetTransaction());
                 opNum = await dapperUser.Delete(i => i.ID == userId);
                 reObj.IsSuccess = opNum > 0;
                 if (!reObj.IsSuccess)
                 {
+                    reObj.Msg="删除User失败";
                     dapperUserInfo.TranscationRollback();
                     return reObj;
                 }
