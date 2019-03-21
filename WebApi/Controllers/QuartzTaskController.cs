@@ -194,25 +194,26 @@ namespace WebApi.Controllers
             _scheduler = await _schedulerFactory.GetScheduler();
             GroupMatcher<TriggerKey> matcherTrigger = GroupMatcher<TriggerKey>.AnyGroup();
             var allTrigger = await _scheduler.GetTriggerKeys(matcherTrigger);
+
             foreach (var triggerKey in allTrigger)
             {
-                reObj.Data = new QuartzTaskModel();
+                var task = new QuartzTaskModel();
                 var jobTrigger = await _scheduler.GetTrigger(triggerKey);
                 var jobDetail = await _scheduler.GetJobDetail(jobTrigger.JobKey);
-
-                reObj.Data.KeyName = jobTrigger.Key.Name;
-                reObj.Data.KeyGroup = jobTrigger.Key.Group;
-                reObj.Data.JobDataListStr = TypeChange.ObjectToStr(jobTrigger.JobDataMap);
-                reObj.Data.CalendarName = jobTrigger.CalendarName;
-                reObj.Data.Description = jobTrigger.Description;
-                if (jobTrigger.EndTimeUtc != null) reObj.Data.EndTime = jobTrigger.EndTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
-                if (jobTrigger.FinalFireTimeUtc != null) reObj.Data.FinalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                task.KeyName = jobTrigger.Key.Name;
+                task.KeyGroup = jobTrigger.Key.Group;
+                task.JobDataListStr = TypeChange.ObjectToStr(jobTrigger.JobDataMap);
+                task.CalendarName = jobTrigger.CalendarName;
+                task.Description = jobTrigger.Description;
+                if (jobTrigger.EndTimeUtc != null) task.EndTime = jobTrigger.EndTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.FinalFireTimeUtc != null) task.FinalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
                 //返回下一次计划触发Quartz.ITrigger的时间
-                if (jobTrigger.GetNextFireTimeUtc() != null) reObj.Data.NextFireTime = jobTrigger.GetNextFireTimeUtc().Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.GetNextFireTimeUtc() != null) task.NextFireTime = jobTrigger.GetNextFireTimeUtc().Value.ToString("yyyy-MM-dd HH-mm-ss");
                 //优先级
-                reObj.Data.Priority = jobTrigger.Priority;
+                task.Priority = jobTrigger.Priority;
                 //触发器调度应该开始的时间
-                reObj.Data.StartTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
+                task.StartTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
+                reObj.DataList.Add(task);
             }
             return reObj;
         }
