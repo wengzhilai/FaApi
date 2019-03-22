@@ -291,7 +291,7 @@ namespace Repository
 SELECT T.{6} FROM 
 ( 
     {0}
-) T {4} LIMIT {2},{3};
+) T {4} {1} LIMIT {2},{3};
 SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
 ";
             if (pageIndex == 0) pageIndex = 1;
