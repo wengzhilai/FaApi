@@ -85,6 +85,14 @@ namespace Models.Entity
         public int IS_REQUIRED { get; set; }
 
         /// <summary>
+        /// 默认值
+        /// </summary>
+        [StringLength(10)]
+        [Display(Name = "默认值")]
+        [Column]
+        public string DEFAULT_VALUE { get; set; }
+
+        /// <summary>
         /// 列配置内容
         /// </summary>
         /// <value></value>

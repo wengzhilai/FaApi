@@ -9,8 +9,8 @@ namespace Models.Entity
     /// <summary>
     /// 自定义表的类型
     /// </summary>
-    [Table("fa_table_type")]
-    public class FaTableTypeEntity : BaseModel
+    [Table("fa_equipment")]
+    public class FaEquipmentEntity : BaseModel
     {
 
         /// <summary>
@@ -19,28 +19,36 @@ namespace Models.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required]
-        [Range(0, 2147483647)]
         [Display(Name = "ID")]
         [Column]
         public int ID { get; set; }
 
         /// <summary>
-        /// 表别名
+        /// 设备名
         /// </summary>
         [Required]
         [StringLength(50)]
-        [Display(Name = "表别名")]
+        [Display(Name = "设备名")]
         [Column]
         public string NAME { get; set; }
 
+
         /// <summary>
-        /// 数据库中表名
+        /// 上级ID
         /// </summary>
-        [Required]
-        [StringLength(50)]
-        [Display(Name = "数据库中表名")]
+        /// <value></value>
+        [Display(Name = "上级ID")]
         [Column]
-        public string TABLE_NAME { get; set; }
+        public int? PARENT_ID { get; set; }
+
+
+        /// <summary>
+        /// 自定义表ID
+        /// </summary>
+        /// <value></value>
+        [Display(Name = "自定义表ID")]
+        [Column]
+        public int TABLE_TYPE_ID { get; set; }
 
         /// <summary>
         /// 介绍
@@ -50,13 +58,7 @@ namespace Models.Entity
         [Display(Name = "介绍")]
         [Column]
         public string INTRODUCE { get; set; }
-        /// <summary>
-        /// 添加时间
-        /// </summary>
-        [Display(Name = "添加时间")]
-        [Column]
-        public DateTime ADD_TIME { get; set; }
- 
+
         /// <summary>
         /// 状态,禁用，启用
         /// </summary>
@@ -64,14 +66,6 @@ namespace Models.Entity
         [Display(Name = "状态")]
         [Column]
         public string STAUTS { get; set; }
-
-
-        /// <summary>
-        /// 表的所有列
-        /// </summary>
-        /// <value></value>
-        public List<FaTableColumnEntity> AllColumns{get;set;}
-
 
     }
 }
