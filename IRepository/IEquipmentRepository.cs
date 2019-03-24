@@ -29,7 +29,14 @@ namespace IRepository
         ///  获取所有自定义表的列表
         /// </summary>
         /// <returns></returns>
-        Task<Result<KTV>> GetTree();
+        Task<Result<KTV>> GetTree(int? parentId);
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="Id">主键 ID</param>
+        /// <returns></returns>
+        Task<Result<int>> Delete(int Id);
 
     }
 }

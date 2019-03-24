@@ -14,9 +14,8 @@ namespace IRepository
         /// 获取表的单个对象
         /// </summary>
         /// <param name="key"></param>
-        /// <typeparam name="t"></typeparam>
         /// <returns></returns>
-        Task<FaTableTypeEntity> SingleByKey<t>(t key);
+        Task<FaTableTypeEntity> SingleByKey(int key);
 
         /// <summary>
         /// 保存和自定义Table

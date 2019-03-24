@@ -24,6 +24,14 @@ namespace Models.Entity
         public int ID { get; set; }
 
         /// <summary>
+        /// 自定义表ID
+        /// </summary>
+        /// <value></value>
+        [Display(Name = "自定义表ID")]
+        [Column]
+        public int TABLE_TYPE_ID { get; set; }
+
+        /// <summary>
         /// 列别名
         /// </summary>
         [Required]
