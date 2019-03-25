@@ -85,6 +85,14 @@ namespace Models.Entity
         public string COLUMN_TYPE { get; set; }
 
         /// <summary>
+        /// 字段长度
+        /// </summary>
+        /// <value></value>
+        [Display(Name = "字段长度")]
+        [Column]
+        public int? COLUMN_LONG { get; set; }
+
+        /// <summary>
         /// 必填
         /// </summary>
         [Required]
