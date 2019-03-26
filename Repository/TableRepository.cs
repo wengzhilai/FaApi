@@ -16,10 +16,10 @@ namespace Repository
 {
     public class TableRepository : ITableRepository
     {
-        DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>();
 
         public async Task<Result<KTV>> GetTableSelect()
         {
+            DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>();
             var reObj = new Result<KTV>();
             var entList = await dbHelper.FindAll(x => x.STAUTS == "启用");
             reObj.DataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
@@ -29,11 +29,16 @@ namespace Repository
         public async Task<Result<bool>> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
             Result<bool> reObj = new Result<bool>();
+            DapperHelper.TranscationBegin();
+            DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>(DapperHelper.GetConnection(), DapperHelper.GetTransaction());
+
+            FaTableTypeEntity oldEnt = new FaTableTypeEntity();
             try
             {
-                dbHelper.TranscationBegin();
+                bool isAdd = false;
                 if (inEnt.Data.ID == 0)
                 {
+                    isAdd = true;
                     inEnt.Data.ID = await new SequenceRepository().GetNextID<FaTableTypeEntity>();
                     var opNum = await dbHelper.Save(inEnt);
                     reObj.IsSuccess = opNum > 0;
@@ -41,14 +46,17 @@ namespace Repository
                 }
                 else
                 {
+                    oldEnt = await dbHelper.SingleByKey(inEnt.Data.ID);
                     var opNum = await dbHelper.Update(inEnt);
                     reObj.IsSuccess = opNum > 0;
                     reObj.Msg = "修改成功";
                 }
                 DapperHelper<FaTableColumnEntity> dapperCol = new DapperHelper<FaTableColumnEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
+
+
                 foreach (var item in inEnt.Data.AllColumns)
                 {
-                    if (item.ID == 0)
+                    if (isAdd || item.ID == 0) //如果是新增加，或列ID为空
                     {
                         item.ID = await new SequenceRepository().GetNextID<FaTableColumnEntity>();
                         var opNum = await dapperCol.Save(new DtoSave<FaTableColumnEntity>
@@ -58,22 +66,82 @@ namespace Repository
                         if (opNum < 1)
                         {
                             LogHelper.WriteErrorLog(this.GetType(), "保存字段失败");
-                            dbHelper.TranscationRollback();
+                            DapperHelper.TranscationRollback();
+                            reObj.IsSuccess = false;
+                            reObj.Msg = "保存字段失败";
+                            return reObj;
+                        }
+                        //如果是修改，才修改数据库
+                        if (!isAdd)
+                        {
+                            //添加字段,线程添加
+                            var t = DapperHelper.Exec(MakeSqlAlterAddColumn(inEnt.Data.TABLE_NAME, item));
                         }
                     }
                     else
                     {
-                        var opNum = await dapperCol.Update(new DtoSave<FaTableColumnEntity>
+                        var oldCol = oldEnt.AllColumns.Single(x => x.ID == item.ID);
+                        if (
+                            oldCol != null
+                            && oldCol.COLUMN_NAME == item.COLUMN_NAME
+                            && oldCol.NAME == item.NAME
+                            && oldCol.COLUMN_TYPE == item.COLUMN_TYPE
+                            && oldCol.COLUMN_LONG == item.COLUMN_LONG
+                            )
                         {
-                            Data = item,
-                            SaveFieldList = dapperCol.modelHelper.GetDirct().Select(x => x.Key).ToList(),
-                            IgnoreFieldList = null
-                        });
+                            continue;
+                        }
+                        int opNum = 0;
+                        if (oldCol == null)
+                        {
+                            item.ID = await new SequenceRepository().GetNextID<FaTableColumnEntity>();
+                            opNum = await dapperCol.Save(new DtoSave<FaTableColumnEntity>
+                            {
+                                Data = item
+                            });
+                            //添加字段
+                            var t = DapperHelper.Exec(MakeSqlAlterAddColumn(inEnt.Data.TABLE_NAME, item));
+                        }
+                        else
+                        {
+                            opNum = await dapperCol.Update(new DtoSave<FaTableColumnEntity>
+                            {
+                                Data = item,
+                                SaveFieldList = dapperCol.modelHelper.GetDirct().Select(x => x.Key).ToList(),
+                                IgnoreFieldList = null
+                            });
+                            if (oldCol.COLUMN_NAME == item.COLUMN_NAME)
+                            {
+                                var t = DapperHelper.Exec(MakeSqlAlterTable(inEnt.Data.TABLE_NAME, item));
+                            }
+                            else
+                            {
+                                var t = DapperHelper.Exec(MakeSqlAlterChangeColumn(inEnt.Data.TABLE_NAME, oldCol.COLUMN_NAME, item));
+                            }
+                        }
+
                         if (opNum < 1)
                         {
                             LogHelper.WriteErrorLog(this.GetType(), "修改字段失败");
                             dbHelper.TranscationRollback();
+                            reObj.IsSuccess = false;
+                            reObj.Msg = "修改字段失败";
+                            return reObj;
                         }
+                    }
+                }
+
+                if (isAdd)
+                {
+                    string createSql = MakeSqlCreateTable(inEnt.Data);
+                    int opNum = await DapperHelper.Exec(createSql);
+                    if (opNum < 1)
+                    {
+                        LogHelper.WriteErrorLog(this.GetType(), "创建表失败");
+                        DapperHelper.TranscationRollback();
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "创建表失败";
+                        return reObj;
                     }
                 }
 
@@ -89,6 +157,7 @@ namespace Repository
 
         public async Task<FaTableTypeEntity> SingleByKey(int key)
         {
+            DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>();
             var ent = await dbHelper.SingleByKey(key);
             var allColumns = await new DapperHelper<FaTableColumnEntity>().FindAll(x => x.TABLE_TYPE_ID == key);
             ent.AllColumns = allColumns.ToList();
@@ -102,7 +171,27 @@ namespace Repository
         /// <returns></returns>
         public string MakeSqlCreateTable(FaTableTypeEntity inEnt)
         {
-            string reObj = "";
+            List<string> allColumns = new List<string>();
+            foreach (var item in inEnt.AllColumns)
+            {
+                allColumns.Add(
+                    string.Format("\r\n  {0} {1} {2} COMMENT '{3}'",
+                        item.COLUMN_NAME,
+                        GetTypeStr(item),
+                        (item.IS_REQUIRED > 1) ? "not null" : "null",
+                        item.NAME
+                        )
+                );
+            }
+
+            string reObj = @"
+create table {0}(
+   Id INT NOT NULL AUTO_INCREMENT,
+{1}
+   PRIMARY KEY ( Id )
+);
+            ";
+            reObj = string.Format(reObj, inEnt.TABLE_NAME, string.Join(",", allColumns));
             return reObj;
         }
 
@@ -121,7 +210,7 @@ namespace Repository
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
-                (inEnt.IS_REQUIRED>1)?"not null":"null",
+                (inEnt.IS_REQUIRED > 1) ? "not null" : "null",
                 inEnt.NAME
                 );
             return reObj;
@@ -141,7 +230,7 @@ namespace Repository
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
-                (inEnt.IS_REQUIRED>1)?"not null":"null",
+                (inEnt.IS_REQUIRED > 1) ? "not null" : "null",
                 inEnt.NAME
                 );
             return reObj;
@@ -155,14 +244,14 @@ namespace Repository
         /// <param name="oldName"></param>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public string MakeSqlAlterChangeColumn(string tableName,string oldName, FaTableColumnEntity inEnt)
+        public string MakeSqlAlterChangeColumn(string tableName, string oldName, FaTableColumnEntity inEnt)
         {
             string reObj = string.Format(
                 "alter table {0}  change {5} {1} {2} {3} COMMENT '{4}';",
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
-                (inEnt.IS_REQUIRED>1)?"not null":"null",
+                (inEnt.IS_REQUIRED > 1) ? "not null" : "null",
                 inEnt.NAME,
                 oldName
                 );
@@ -183,7 +272,7 @@ namespace Repository
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
-                (inEnt.IS_REQUIRED>1)?"not null":"null",
+                (inEnt.IS_REQUIRED > 1) ? "not null" : "null",
                 inEnt.NAME
                 );
             return reObj;
@@ -204,6 +293,8 @@ namespace Repository
                 case "int":
                 case "pic":
                     return string.Format("int", inEnt.COLUMN_LONG);
+                case "datatime":
+                    return string.Format("datatime", inEnt.COLUMN_LONG);
                 default:
                     return string.Format("varchar({0})", inEnt.COLUMN_LONG);
             }
