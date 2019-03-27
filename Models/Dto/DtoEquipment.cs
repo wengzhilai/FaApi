@@ -21,6 +21,16 @@ namespace Models
         /// </summary>
         public int TypeId { get; set; }
 
-        public int Id{ get; set; }
+        /// <summary>
+        /// 主键
+        /// </summary>
+        /// <value></value>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// 数据内容
+        /// </summary>
+        /// <value></value>
+        public string DataStr { get; set; }
     }
 }

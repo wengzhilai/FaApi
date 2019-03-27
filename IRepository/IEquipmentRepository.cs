@@ -40,7 +40,27 @@ namespace IRepository
         /// <returns></returns>
         Task<Result<KTV>> GetTree(int? parentId);
 
-        
+        /// <summary>
+        /// 保存设备
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result> SaveEquiment(DtoEquipment inEnt);
+
+        /// <summary>
+        /// 删除设备
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result> DeleteEquiment(DtoEquipment inEnt);
+
+        /// <summary>
+        /// 更新设备
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result> UpdateEquiment(DtoEquipment inEnt);
+
 
     }
 }
