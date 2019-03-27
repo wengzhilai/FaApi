@@ -8,7 +8,7 @@ using Models.Entity;
 
 namespace IRepository
 {
-    public interface IEquipmentRepository 
+    public interface IEquipmentRepository
     {
         /// <summary>
         /// 获取表的单个对象
@@ -25,11 +25,7 @@ namespace IRepository
         /// <returns></returns>
         Task<Result<bool>> Save(DtoSave<FaEquipmentEntity> inEnt);
 
-        /// <summary>
-        ///  获取所有自定义表的列表
-        /// </summary>
-        /// <returns></returns>
-        Task<Result<KTV>> GetTree(int? parentId);
+
 
         /// <summary>
         /// 删除
@@ -37,6 +33,14 @@ namespace IRepository
         /// <param name="Id">主键 ID</param>
         /// <returns></returns>
         Task<Result<int>> Delete(int Id);
+
+        /// <summary>
+        ///  获取所有自定义表的列表
+        /// </summary>
+        /// <returns></returns>
+        Task<Result<KTV>> GetTree(int? parentId);
+
+        
 
     }
 }
