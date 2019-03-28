@@ -60,7 +60,7 @@ namespace IRepository
         /// <param name="query"></param>
         /// <param name="whereStr"></param>
         /// <returns></returns>
-        string MakeSql(QuerySearchModel inEnt, FaQueryEntity query, ref string whereStr);
+        string MakeSql(QuerySearchModel inEnt, string query, ref string whereStr);
 
 
 

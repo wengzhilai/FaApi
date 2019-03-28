@@ -24,7 +24,14 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<bool>> Save(DtoSave<FaTableTypeEntity> inEnt);
+        Task<Result<int>> Save(DtoSave<FaTableTypeEntity> inEnt);
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="key">主键 ID</param>
+        /// <returns></returns>
+        Task<Result<int>> Delete(int key);
 
         /// <summary>
         ///  获取所有自定义表的列表

@@ -26,9 +26,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<bool>> Save(DtoSave<FaTableTypeEntity> inEnt)
+        public async Task<Result<int>> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
-            Result<bool> reObj = new Result<bool>();
+            Result<int> reObj = new Result<int>();
             DapperHelper.TranscationBegin();
             DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>(DapperHelper.GetConnection(), DapperHelper.GetTransaction());
 
@@ -162,6 +162,37 @@ namespace Repository
             var allColumns = await new DapperHelper<FaTableColumnEntity>().FindAll(x => x.TABLE_TYPE_ID == key);
             ent.AllColumns = allColumns.ToList();
             return ent;
+        }
+
+        public async Task<Result<int>> Delete(int key)
+        {
+            Result<int> reObj = new Result<int>();
+            DapperHelper<FaTableTypeEntity> typeDapper = new DapperHelper<FaTableTypeEntity>();
+            DapperHelper<FaTableColumnEntity> columnHelper = new DapperHelper<FaTableColumnEntity>(typeDapper.GetConnection(), typeDapper.GetTransaction());
+            try
+            {
+                typeDapper.TranscationBegin();
+                var opNum= await columnHelper.Delete(i=>i.TABLE_TYPE_ID==key);
+                if(opNum<1){
+                    reObj.IsSuccess=false;
+                    reObj.Msg="删除表类型为空";
+                    return reObj;
+                }
+                opNum = await typeDapper.Delete(i => i.ID == key);
+                if(opNum!=1){
+                    reObj.IsSuccess=false;
+                    reObj.Msg="删除表类字段失败";
+                    return reObj;
+                }
+
+                typeDapper.TranscationCommit();
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "删除表类型失败", e);
+                typeDapper.TranscationRollback();
+            }
+            return reObj;
         }
 
 
@@ -299,5 +330,7 @@ create table {0}(
                     return string.Format("varchar({0})", inEnt.COLUMN_LONG);
             }
         }
+
+
     }
 }

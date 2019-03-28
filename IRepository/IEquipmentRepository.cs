@@ -23,7 +23,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<bool>> Save(DtoSave<FaEquipmentEntity> inEnt);
+        Task<Result<int>> Save(DtoSave<FaEquipmentEntity> inEnt);
 
 
 
@@ -61,6 +61,12 @@ namespace IRepository
         /// <returns></returns>
         Task<Result> UpdateEquiment(DtoEquipment inEnt);
 
-
+        /// <summary>
+        /// 获取配置信息和数据
+        /// Code=TableId
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result<DataGridDataJson>> GetConfigAndData(QuerySearchModel inEnt);
     }
 }

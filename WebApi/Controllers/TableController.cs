@@ -36,17 +36,17 @@ namespace WebApi.Controllers
     [Authorize]
     public class TableController : ControllerBase
     {
-        private IRoleRepository _role;
+        private ITableRepository _dal;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="role"></param>
+        /// <param name="dal"></param>
         public TableController(
-            IRoleRepository role
+            ITableRepository dal
             )
         {
-            _role = role;
+            _dal = dal;
         }
 
         /// <summary>
@@ -56,12 +56,12 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaRoleEntity>> Single(DtoDo<int> inEnt)
+        public async Task<Result<FaTableTypeEntity>> Single(DtoDo<int> inEnt)
         {
-            Result<FaRoleEntity> reObj = new Result<FaRoleEntity>();
+            Result<FaTableTypeEntity> reObj = new Result<FaTableTypeEntity>();
             try
             {
-                var ent = await _role.SingleByKey(inEnt.Key);
+                var ent = await _dal.SingleByKey(inEnt.Key);
                 reObj.Data = ent;
                 reObj.IsSuccess = true;
             }
@@ -81,12 +81,12 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        async public Task<Result> Save(DtoSave<FaRoleEntity> inEnt)
+        async public Task<Result> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
             var reObj = new Result<int>();
             try
             {
-                reObj = await this._role.Save(inEnt);
+                reObj = await this._dal.Save(inEnt);
             }
             catch (Exception e)
             {
@@ -103,13 +103,12 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize]
-        async public Task<Result> Delete(DtoDo<int> inEnt)
+        public async Task<Result> Delete(DtoDo<int> inEnt)
         {
             var reObj = new Result();
             try
             {
-                reObj = await this._role.Delete(inEnt.Key);
+                reObj = await this._dal.Delete(inEnt.Key);
             }
             catch (Exception e)
             {
@@ -120,5 +119,25 @@ namespace WebApi.Controllers
             return reObj;
         }
 
+        /// <summary>
+        /// 获取表的选择框
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<KTV>> GetTableSelect()
+        {
+            var reObj = new Result<KTV>();
+            try
+            {
+                reObj = await this._dal.GetTableSelect();
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取表的选择框", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
     }
 }
