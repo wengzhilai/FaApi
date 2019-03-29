@@ -407,6 +407,11 @@ namespace Models.Entity
 
     public class DataGridDataJson
     {
+        /// <summary>
+        /// 配置信息
+        /// </summary>
+        /// <value></value>
+        public FaQueryEntity Config {get;set;}
         public int total { get; set; }
         public DataTable rows { get; set; }
         public string errMsg { get; set; }

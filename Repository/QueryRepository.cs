@@ -43,7 +43,7 @@ namespace Repository
             IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.QUERY_CFG_JSON);
 
             string whereStr = "";
-            string AllSql = MakeSql(inEnt, query, ref whereStr);
+            string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
             reObj.Msg = AllSql;
             if (string.IsNullOrEmpty(inEnt.OrderStr)) inEnt.OrderStr = "(SELECT 0)";
             try
@@ -81,7 +81,7 @@ namespace Repository
             IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.QUERY_CFG_JSON);
 
             string whereStr = "";
-            string AllSql = MakeSql(inEnt, query, ref whereStr);
+            string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
             //如果条件为空
             if (!string.IsNullOrEmpty(whereStr))
             {
@@ -126,7 +126,7 @@ namespace Repository
             IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.QUERY_CFG_JSON);
 
             string whereStr = "";
-            string AllSql = MakeSql(inEnt, query, ref whereStr);
+            string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
             if (string.IsNullOrWhiteSpace(inEnt.OrderStr)) inEnt.OrderStr = "(SELECT 0)";
             reObj.Msg = MakePageSql(AllSql, inEnt.page, inEnt.rows, inEnt.OrderStr, whereStr);
             try
@@ -177,7 +177,7 @@ namespace Repository
             }
 
             string whereStr = "";
-            string AllSql = MakeSql(inEnt, query, ref whereStr);
+            string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
             reObj.Msg = MakePageSql(AllSql);
             try
             {
@@ -305,10 +305,10 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
         /// 根据Query的SQL 生成需要的SQL
         /// </summary>
         /// <param name="inEnt"></param>
-        /// <param name="query"></param>
+        /// <param name="querySql"></param>
         /// <param name="whereStr"></param>
         /// <returns></returns>
-        public string MakeSql(QuerySearchModel inEnt, FaQueryEntity query, ref string whereStr)
+        public string MakeSql(QuerySearchModel inEnt, string querySql, ref string whereStr)
         {
 
             if (inEnt.ParaList == null) inEnt.ParaList = new List<QueryPara>();
@@ -344,7 +344,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
                 {
                     tmp.Value = DateTime.Today.ToString("yyyy-MM-dd");
                 }
-                query.QUERY_CONF = query.QUERY_CONF.Replace("@(" + tmp.ParaName + ")", tmp.Value);
+                querySql = querySql.Replace("@(" + tmp.ParaName + ")", tmp.Value);
             }
 
             //替换搜索的参数
@@ -352,7 +352,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
             {
                 if (string.IsNullOrEmpty(tmp.ObjFiled)) tmp.ObjFiled = tmp.FieldName;
                 if (string.IsNullOrEmpty(tmp.FieldName)) tmp.FieldName = tmp.ObjFiled;
-                query.QUERY_CONF = query.QUERY_CONF.Replace("@(" + tmp.ObjFiled + ")", tmp.Value);
+                querySql = querySql.Replace("@(" + tmp.ObjFiled + ")", tmp.Value);
             }
 
             StringBuilder whereSb = new StringBuilder();
@@ -407,7 +407,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
             if (whereSb.Length > 4)
                 whereSb = whereSb.Remove(whereSb.Length - 4, 4);
             whereStr = whereSb.ToString();
-            return query.QUERY_CONF;
+            return querySql;
         }
 
 

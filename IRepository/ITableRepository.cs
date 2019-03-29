@@ -8,15 +8,14 @@ using Models.Entity;
 
 namespace IRepository
 {
-    public interface ITableRepository 
+    public interface ITableRepository
     {
         /// <summary>
         /// 获取表的单个对象
         /// </summary>
         /// <param name="key"></param>
-        /// <typeparam name="t"></typeparam>
         /// <returns></returns>
-        Task<FaTableTypeEntity> SingleByKey<t>(t key);
+        Task<FaTableTypeEntity> SingleByKey(int key);
 
         /// <summary>
         /// 保存和自定义Table
@@ -25,7 +24,14 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<bool>> Save(DtoSave<FaTableTypeEntity> inEnt);
+        Task<Result<int>> Save(DtoSave<FaTableTypeEntity> inEnt);
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="key">主键 ID</param>
+        /// <returns></returns>
+        Task<Result<int>> Delete(int key);
 
         /// <summary>
         ///  获取所有自定义表的列表
@@ -33,5 +39,48 @@ namespace IRepository
         /// <returns></returns>
         Task<Result<KTV>> GetTableSelect();
 
+
+        /// <summary>
+        /// 生成创建表SQL
+        /// </summary>
+        /// <returns></returns>
+        string MakeSqlCreateTable(FaTableTypeEntity inEnt);
+
+        /// <summary>
+        /// 修改字段类型和注释
+        /// alter table {0}  modify column description varchar(255) null COMMENT '应用描述';
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        string MakeSqlAlterTable(string tableName,FaTableColumnEntity inEnt);
+
+        /// <summary>
+        /// 生成添加字段字段
+        /// alert table sys_application add `url` varchar(255) not null comment '应用访问地址';  
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        string MakeSqlAlterAddColumn(string tableName,FaTableColumnEntity inEnt);
+
+        /// <summary>
+        /// 修改字段名字
+        /// alter table {0} change name app_name varchar(255) not null comment '应用访问地址'; 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="oldName"></param>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        string MakeSqlAlterChangeColumn(string tableName,string oldName,FaTableColumnEntity inEnt);
+
+        /// <summary>
+        /// MySQL 修改字段为不可重复
+        /// ALTER TABLE dbname.table ADD UNIQUE (fieldname);
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        string MakeSqlAlterUniqueColumn(string tableName,FaTableColumnEntity inEnt);
     }
 }

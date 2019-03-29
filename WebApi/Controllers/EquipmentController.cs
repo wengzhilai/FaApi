@@ -36,17 +36,17 @@ namespace WebApi.Controllers
     [Authorize]
     public class EquipmentController : ControllerBase
     {
-        private IRoleRepository _role;
+        private IEquipmentRepository _dal;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="role"></param>
+        /// <param name="dal"></param>
         public EquipmentController(
-            IRoleRepository role
+            IEquipmentRepository dal
             )
         {
-            _role = role;
+            _dal = dal;
         }
 
         /// <summary>
@@ -56,12 +56,12 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaRoleEntity>> Single(DtoDo<int> inEnt)
+        public async Task<Result<FaEquipmentEntity>> Single(DtoDo<int> inEnt)
         {
-            Result<FaRoleEntity> reObj = new Result<FaRoleEntity>();
+            Result<FaEquipmentEntity> reObj = new Result<FaEquipmentEntity>();
             try
             {
-                var ent = await _role.SingleByKey(inEnt.Key);
+                var ent = await _dal.SingleByKey(inEnt.Key);
                 reObj.Data = ent;
                 reObj.IsSuccess = true;
             }
@@ -81,12 +81,12 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        async public Task<Result> Save(DtoSave<FaRoleEntity> inEnt)
+        async public Task<Result> Save(DtoSave<FaEquipmentEntity> inEnt)
         {
             var reObj = new Result<int>();
             try
             {
-                reObj = await this._role.Save(inEnt);
+                reObj = await this._dal.Save(inEnt);
             }
             catch (Exception e)
             {
@@ -103,13 +103,12 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize]
         async public Task<Result> Delete(DtoDo<int> inEnt)
         {
             var reObj = new Result();
             try
             {
-                reObj = await this._role.Delete(inEnt.Key);
+                reObj = await this._dal.Delete(inEnt.Key);
             }
             catch (Exception e)
             {
@@ -120,5 +119,114 @@ namespace WebApi.Controllers
             return reObj;
         }
 
+        /// <summary>
+        /// 获取表的选择框
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<KTV>> GetTree()
+        {
+            var reObj = new Result<KTV>();
+            try
+            {
+                reObj = await this._dal.GetTree(null);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取表的选择框", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
+        /// 保存设备
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        async public Task<Result> SaveEquiment(DtoEquipment inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                reObj = await this._dal.SaveEquiment(inEnt);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "保存设备失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
+        /// 删除设备
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result> DeleteEquiment(DtoEquipment inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                reObj = await this._dal.DeleteEquiment(inEnt);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "保存设备失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+
+        /// <summary>
+        /// 更新设备
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result> UpdateEquiment(DtoEquipment inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                reObj = await this._dal.UpdateEquiment(inEnt);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "保存设备失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
+        /// 获取配置信息和数据
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<DataGridDataJson>> GetConfigAndData(QuerySearchModel inEnt)
+        {
+            var reObj = new Result<DataGridDataJson>();
+            try
+            {
+                reObj = await this._dal.GetConfigAndData(inEnt);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "保存设备失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
     }
 }

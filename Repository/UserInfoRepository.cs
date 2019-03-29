@@ -239,15 +239,15 @@ namespace Repository
 
                 if (inEnt.Data.ID == 0)
                 {
-                    if (inEnt.Data.COUPLE_ID == null && inEnt.Data.FATHER_ID == null)
-                    {
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "选择的COUPLE_ID和FATHER_ID不能同时为空";
-                        return reObj;
-                    }
+                    // if (inEnt.Data.COUPLE_ID == null && inEnt.Data.FATHER_ID == null)
+                    // {
+                    //     reObj.IsSuccess = false;
+                    //     reObj.Msg = "选择的COUPLE_ID和FATHER_ID不能同时为空";
+                    //     return reObj;
+                    // }
 
                     var userId = await new SequenceRepository().GetNextID<FaUserEntity>();
-                    if (inEnt.Data.COUPLE_ID != null && inEnt.Data.COUPLE_ID != 0)
+                    if (inEnt.Data.COUPLE_ID != null)
                     {
                         var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.Data.COUPLE_ID);
                         if (coupleEnt == null)

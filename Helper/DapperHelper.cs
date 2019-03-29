@@ -50,6 +50,11 @@ namespace Helper
             return connection;
         }
 
+        public static IDbTransaction GetTransaction()
+        {
+            return transaction;
+        }
+
         /// <summary>
         /// 回滚事务
         /// </summary>

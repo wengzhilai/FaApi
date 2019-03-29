@@ -24,6 +24,14 @@ namespace Models.Entity
         public int ID { get; set; }
 
         /// <summary>
+        /// 自定义表ID
+        /// </summary>
+        /// <value></value>
+        [Display(Name = "自定义表ID")]
+        [Column]
+        public int TABLE_TYPE_ID { get; set; }
+
+        /// <summary>
         /// 列别名
         /// </summary>
         [Required]
@@ -75,6 +83,14 @@ namespace Models.Entity
         [Display(Name = "列类型")]
         [Column]
         public string COLUMN_TYPE { get; set; }
+
+        /// <summary>
+        /// 字段长度
+        /// </summary>
+        /// <value></value>
+        [Display(Name = "字段长度")]
+        [Column]
+        public int? COLUMN_LONG { get; set; }
 
         /// <summary>
         /// 必填
