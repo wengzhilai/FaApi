@@ -213,7 +213,7 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<DataGridDataJson>> UpdateEquiment(QuerySearchModel inEnt)
+        public async Task<Result<DataGridDataJson>> GetConfigAndData(QuerySearchModel inEnt)
         {
             var reObj = new Result<DataGridDataJson>();
             try
