@@ -72,10 +72,10 @@ namespace WebApi.Controllers
                 reobj.Msg = "用户ID有误";
                 return reobj;
             }
-            var tmpXY = await AddSonItem(reEnt.ItemList, userInfo, 1, 7, new XYZ { X = 0, Y = 0, Z = 0 });
+            var tmpXY = await AddSonItem(reEnt.ItemList, userInfo, 1, 27, new XYZ { X = 0, Y = 0, Z = 0 });
             var nowInfo = InfoToItem(userInfo, (tmpXY[0] + tmpXY[1]) / 2, 0);
             reEnt.ItemList.Add(nowInfo);
-            await AddFatherItem(reEnt.ItemList, userInfo, 1, 2, new XYZ { X = nowInfo.x, Y = nowInfo.y, Z = userInfo.ChildNum }, tmpXY[0], tmpXY[1]);
+            await AddFatherItem(reEnt.ItemList, userInfo, 1, 27, new XYZ { X = nowInfo.x, Y = nowInfo.y, Z = userInfo.ChildNum }, tmpXY[0], tmpXY[1]);
 
 
             var minX = reEnt.ItemList.Min(x => x.x);
