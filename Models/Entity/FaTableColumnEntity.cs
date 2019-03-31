@@ -17,8 +17,6 @@ namespace Models.Entity
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Required]
-        [Range(0, 2147483647)]
         [Display(Name = "ID")]
         [Column]
         public int ID { get; set; }
@@ -34,25 +32,22 @@ namespace Models.Entity
         /// <summary>
         /// 列别名
         /// </summary>
-        [Required]
         [StringLength(50)]
         [Display(Name = "列别名")]
         [Column]
         public string NAME { get; set; }
 
         /// <summary>
-        /// 数据库中表名
+        /// 数据库中列名
         /// </summary>
-        [Required]
         [StringLength(50)]
-        [Display(Name = "数据库中表名")]
+        [Display(Name = "数据库中列名")]
         [Column]
         public string COLUMN_NAME { get; set; }
 
         /// <summary>
         /// 介绍
         /// </summary>
-        [Required]
         [StringLength(50)]
         [Display(Name = "介绍")]
         [Column]
@@ -61,7 +56,6 @@ namespace Models.Entity
         /// <summary>
         /// 状态,禁用，启用
         /// </summary>
-        [Required]
         [StringLength(15)]
         [Display(Name = "状态")]
         [Column]
@@ -70,7 +64,6 @@ namespace Models.Entity
         /// <summary>
         /// 排序号
         /// </summary>
-        [Required]
         [Display(Name = "排序号")]
         [Column]
         public int ORDER_INDEX { get; set; }
@@ -78,7 +71,6 @@ namespace Models.Entity
         /// <summary>
         /// 列类型，text,int,datatime,pic,textarea,Checkbox,Radio,auto
         /// </summary>
-        [Required]
         [StringLength(15)]
         [Display(Name = "列类型")]
         [Column]
@@ -95,7 +87,6 @@ namespace Models.Entity
         /// <summary>
         /// 必填
         /// </summary>
-        [Required]
         [Display(Name = "必填")]
         [Column]
         public int IS_REQUIRED { get; set; }
@@ -116,15 +107,13 @@ namespace Models.Entity
         [Display(Name = "列配置内容")]
         [Column]
         public string COLUMN_TYPE_CFG { get; set; }
-
         /// <summary>
         /// 权限
         ///  * 获取权限列表
         ///  * 判断的权限，1添加，2修改，4查看
         /// </summary>
         /// <value></value>
-        [Required]
-        [Display(Name = "必填")]
+        [Display(Name = "权限")]
         [Column]
         public int AUTHORITY { get; set; }
     }

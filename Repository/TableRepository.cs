@@ -29,6 +29,11 @@ namespace Repository
         public async Task<Result<int>> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
             Result<int> reObj = new Result<int>();
+            if(inEnt.Data.AllColumns==null || inEnt.Data.AllColumns.Count()==0){
+                reObj.IsSuccess=false;
+                reObj.Msg="配置列不能为空";
+                return reObj;
+            }
             DapperHelper.TranscationBegin();
             DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>(DapperHelper.GetConnection(), DapperHelper.GetTransaction());
 
@@ -40,13 +45,14 @@ namespace Repository
                 {
                     isAdd = true;
                     inEnt.Data.ID = await new SequenceRepository().GetNextID<FaTableTypeEntity>();
+                    inEnt.Data.ADD_TIME=DateTime.Now;
                     var opNum = await dbHelper.Save(inEnt);
                     reObj.IsSuccess = opNum > 0;
                     reObj.Msg = "添加成功";
                 }
                 else
                 {
-                    oldEnt = await dbHelper.SingleByKey(inEnt.Data.ID);
+                    oldEnt =await this.SingleByKey(inEnt.Data.ID);
                     var opNum = await dbHelper.Update(inEnt);
                     reObj.IsSuccess = opNum > 0;
                     reObj.Msg = "修改成功";
@@ -58,6 +64,7 @@ namespace Repository
                 {
                     if (isAdd || item.ID == 0) //如果是新增加，或列ID为空
                     {
+                        item.TABLE_TYPE_ID=inEnt.Data.ID;
                         item.ID = await new SequenceRepository().GetNextID<FaTableColumnEntity>();
                         var opNum = await dapperCol.Save(new DtoSave<FaTableColumnEntity>
                         {
@@ -135,20 +142,15 @@ namespace Repository
                 {
                     string createSql = MakeSqlCreateTable(inEnt.Data);
                     int opNum = await DapperHelper.Exec(createSql);
-                    if (opNum < 1)
-                    {
-                        LogHelper.WriteErrorLog(this.GetType(), "创建表失败");
-                        DapperHelper.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "创建表失败";
-                        return reObj;
-                    }
+                    
                 }
 
                 dbHelper.TranscationCommit();
             }
             catch (Exception e)
             {
+                reObj.IsSuccess=false;
+                reObj.Msg="保存自定义表失败"+e.Message;
                 LogHelper.WriteErrorLog(this.GetType(), "保存自定义表失败", e);
                 dbHelper.TranscationRollback();
             }
@@ -218,7 +220,7 @@ namespace Repository
             string reObj = @"
 create table {0}(
    Id INT NOT NULL AUTO_INCREMENT,
-{1}
+{1},
    PRIMARY KEY ( Id )
 );
             ";
