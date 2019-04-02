@@ -62,10 +62,15 @@ namespace WebApi.Comon
                 {
                     msg = "请求错误";
                 }
+                else if (statusCode == 400)
+                {
+                    msg = "参数验证不通过";
+                }
                 else if (statusCode != 200)
                 {
                     msg = "未知错误";
                 }
+                
                 if (!string.IsNullOrWhiteSpace(msg))
                 {
                     await HandleExceptionAsync(context, statusCode, msg);

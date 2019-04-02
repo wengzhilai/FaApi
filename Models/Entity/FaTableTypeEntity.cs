@@ -18,7 +18,6 @@ namespace Models.Entity
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Required]
         [Range(0, 2147483647)]
         [Display(Name = "ID")]
         [Column]
@@ -27,7 +26,6 @@ namespace Models.Entity
         /// <summary>
         /// 表别名
         /// </summary>
-        [Required]
         [StringLength(50)]
         [Display(Name = "表别名")]
         [Column]
@@ -36,7 +34,6 @@ namespace Models.Entity
         /// <summary>
         /// 数据库中表名
         /// </summary>
-        [Required]
         [StringLength(50)]
         [Display(Name = "数据库中表名")]
         [Column]
@@ -45,7 +42,6 @@ namespace Models.Entity
         /// <summary>
         /// 介绍
         /// </summary>
-        [Required]
         [StringLength(50)]
         [Display(Name = "介绍")]
         [Column]
@@ -70,7 +66,7 @@ namespace Models.Entity
         /// 表的所有列
         /// </summary>
         /// <value></value>
-        public List<FaTableColumnEntity> AllColumns{get;set;}
+        public List<FaTableColumnEntity> AllColumns{get;set;}=new List<FaTableColumnEntity>();
 
 
     }
