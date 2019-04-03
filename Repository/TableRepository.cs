@@ -216,7 +216,7 @@ namespace Repository
             foreach (var item in inEnt.AllColumns)
             {
                 allColumns.Add(
-                    string.Format("\r\n  {0} {1} set utf8 {2} COMMENT '{3}'",
+                    string.Format("\r\n  {0} {1} {2} COMMENT '{3}'",
                         item.COLUMN_NAME,
                         GetTypeStr(item),
                         (item.IS_REQUIRED > 1) ? "not null" : "null",
@@ -265,7 +265,7 @@ create table {0}(
         {
 
             string reObj = string.Format(
-                "alter table {0}  modify column {1} {2} set utf8 {3} COMMENT '{4}';",
+                "alter table {0}  modify column {1} {2} {3} COMMENT '{4}';",
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
@@ -285,7 +285,7 @@ create table {0}(
         public string MakeSqlAlterAddColumn(string tableName, FaTableColumnEntity inEnt)
         {
             string reObj = string.Format(
-                "alter table {0}  add {1} {2} set utf8 {3} COMMENT '{4}';",
+                "alter table {0}  add {1} {2} {3} COMMENT '{4}';",
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
@@ -306,7 +306,7 @@ create table {0}(
         public string MakeSqlAlterChangeColumn(string tableName, string oldName, FaTableColumnEntity inEnt)
         {
             string reObj = string.Format(
-                "alter table {0}  change {5} {1} {2} set utf8 {3} COMMENT '{4}';",
+                "alter table {0}  change {5} {1} {2} {3} COMMENT '{4}';",
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
@@ -348,14 +348,14 @@ create table {0}(
                 case "Checkbox":
                 case "Radio":
                 case "auto":
-                    return string.Format("varchar({0})", inEnt.COLUMN_LONG);
+                    return string.Format("varchar({0}) character set utf8", inEnt.COLUMN_LONG);
                 case "int":
                 case "pic":
                     return string.Format("int", inEnt.COLUMN_LONG);
                 case "datatime":
                     return string.Format("datatime", inEnt.COLUMN_LONG);
                 default:
-                    return string.Format("varchar({0})", inEnt.COLUMN_LONG);
+                    return string.Format("varchar({0}) character set utf8", inEnt.COLUMN_LONG);
             }
         }
 
