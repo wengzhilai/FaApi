@@ -33,15 +33,17 @@ create table fa_table_type (
     TABLE_NAME VARCHAR(50) not null COMMENT '数据库中表名',
     INTRODUCE VARCHAR(50) not null COMMENT '介绍',
     ADD_TIME datetime not null COMMENT '添加时间',
+	STAUTS VARCHAR(15) not null COMMENT '状态',
     PRIMARY KEY ( ID )
 )
 
+alert table fa_table_type add STAUTS VARCHAR(15) not null COMMENT '状态',
 
 create table fa_table_column (
     ID INT NOT NULL AUTO_INCREMENT,
     TABLE_TYPE_ID INT NOT NULL ,
 	NAME VARCHAR(50) not null COMMENT '表名',
-    COLUMN_NAME VARCHAR(50) not null COMMENT '数据库中列名',
+    COLUMN_NAME VARCHAR(50) set utf8 not null COMMENT '数据库中列名',
     INTRODUCE VARCHAR(50) not null COMMENT '介绍',
     STAUTS VARCHAR(15) not null COMMENT '状态',
     ORDER_INDEX INT NOT NULL ,
