@@ -36,6 +36,8 @@ testem.log
 /typings
 /docs
 /WebApi/UpFiles
+*.out
+**/*.out
 
 # e2e
 /e2e/*.js
