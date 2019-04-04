@@ -29,9 +29,10 @@ namespace Repository
         public async Task<Result<int>> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
             Result<int> reObj = new Result<int>();
-            if(inEnt.Data.AllColumns==null || inEnt.Data.AllColumns.Count()==0){
-                reObj.IsSuccess=false;
-                reObj.Msg="配置列不能为空";
+            if (inEnt.Data.AllColumns == null || inEnt.Data.AllColumns.Count() == 0)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "配置列不能为空";
                 return reObj;
             }
             DapperHelper.TranscationBegin();
@@ -45,17 +46,22 @@ namespace Repository
                 {
                     isAdd = true;
                     inEnt.Data.ID = await new SequenceRepository().GetNextID<FaTableTypeEntity>();
-                    inEnt.Data.ADD_TIME=DateTime.Now;
+                    inEnt.Data.ADD_TIME = DateTime.Now;
                     var opNum = await dbHelper.Save(inEnt);
                     reObj.IsSuccess = opNum > 0;
                     reObj.Msg = "添加成功";
                 }
                 else
                 {
-                    oldEnt =await this.SingleByKey(inEnt.Data.ID);
+                    oldEnt = await this.SingleByKey(inEnt.Data.ID);
                     var opNum = await dbHelper.Update(inEnt);
                     reObj.IsSuccess = opNum > 0;
                     reObj.Msg = "修改成功";
+
+                    if (!oldEnt.TABLE_NAME.Equals(inEnt.Data.TABLE_NAME))
+                    {
+                        var t = DapperHelper.Exec(MakeSqlChangeTableName(oldEnt.TABLE_NAME, inEnt.Data.TABLE_NAME));
+                    }
                 }
                 DapperHelper<FaTableColumnEntity> dapperCol = new DapperHelper<FaTableColumnEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
 
@@ -64,7 +70,7 @@ namespace Repository
                 {
                     if (isAdd || item.ID == 0) //如果是新增加，或列ID为空
                     {
-                        item.TABLE_TYPE_ID=inEnt.Data.ID;
+                        item.TABLE_TYPE_ID = inEnt.Data.ID;
                         item.ID = await new SequenceRepository().GetNextID<FaTableColumnEntity>();
                         var opNum = await dapperCol.Save(new DtoSave<FaTableColumnEntity>
                         {
@@ -142,15 +148,15 @@ namespace Repository
                 {
                     string createSql = MakeSqlCreateTable(inEnt.Data);
                     int opNum = await DapperHelper.Exec(createSql);
-                    
+
                 }
 
                 dbHelper.TranscationCommit();
             }
             catch (Exception e)
             {
-                reObj.IsSuccess=false;
-                reObj.Msg="保存自定义表失败"+e.Message;
+                reObj.IsSuccess = false;
+                reObj.Msg = "保存自定义表失败" + e.Message;
                 LogHelper.WriteErrorLog(this.GetType(), "保存自定义表失败", e);
                 dbHelper.TranscationRollback();
             }
@@ -174,16 +180,18 @@ namespace Repository
             try
             {
                 typeDapper.TranscationBegin();
-                var opNum= await columnHelper.Delete(i=>i.TABLE_TYPE_ID==key);
-                if(opNum<1){
-                    reObj.IsSuccess=false;
-                    reObj.Msg="删除表类型为空";
+                var opNum = await columnHelper.Delete(i => i.TABLE_TYPE_ID == key);
+                if (opNum < 1)
+                {
+                    reObj.IsSuccess = false;
+                    reObj.Msg = "删除表类型为空";
                     return reObj;
                 }
                 opNum = await typeDapper.Delete(i => i.ID == key);
-                if(opNum!=1){
-                    reObj.IsSuccess=false;
-                    reObj.Msg="删除表类字段失败";
+                if (opNum != 1)
+                {
+                    reObj.IsSuccess = false;
+                    reObj.Msg = "删除表类字段失败";
                     return reObj;
                 }
 
@@ -208,7 +216,7 @@ namespace Repository
             foreach (var item in inEnt.AllColumns)
             {
                 allColumns.Add(
-                    string.Format("\r\n  {0} {1}   {2} COMMENT '{3}'",
+                    string.Format("\r\n  {0} {1} {2} COMMENT '{3}'",
                         item.COLUMN_NAME,
                         GetTypeStr(item),
                         (item.IS_REQUIRED > 1) ? "not null" : "null",
@@ -228,6 +236,24 @@ create table {0}(
             return reObj;
         }
 
+
+        /// <summary>
+        /// 修改表名
+        /// </summary>
+        /// <param name="oldTableName"></param>
+        /// <param name="nowTableName"></param>
+        /// <returns></returns>
+        public string MakeSqlChangeTableName(string oldTableName, string nowTableName)
+        {
+
+            string reObj = string.Format(
+                "ALTER TABLE {0} RENAME TO {1};",
+                oldTableName,
+                nowTableName
+                );
+            return reObj;
+        }
+
         /// <summary>
         /// 修改字段类型和注释
         /// alter table {0}  modify column description varchar(255) null COMMENT '应用描述';
@@ -239,7 +265,7 @@ create table {0}(
         {
 
             string reObj = string.Format(
-                "alter table {0}  modify column {1} {2}  {3} COMMENT '{4}';",
+                "alter table {0}  modify column {1} {2} {3} COMMENT '{4}';",
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
@@ -259,7 +285,7 @@ create table {0}(
         public string MakeSqlAlterAddColumn(string tableName, FaTableColumnEntity inEnt)
         {
             string reObj = string.Format(
-                "alter table {0}  add {1} {2}  {3} COMMENT '{4}';",
+                "alter table {0}  add {1} {2} {3} COMMENT '{4}';",
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
@@ -280,7 +306,7 @@ create table {0}(
         public string MakeSqlAlterChangeColumn(string tableName, string oldName, FaTableColumnEntity inEnt)
         {
             string reObj = string.Format(
-                "alter table {0}  change {5} {1} {2}  {3} COMMENT '{4}';",
+                "alter table {0}  change {5} {1} {2} {3} COMMENT '{4}';",
                 tableName,
                 inEnt.COLUMN_NAME,
                 GetTypeStr(inEnt),
