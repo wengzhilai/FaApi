@@ -29,9 +29,10 @@ namespace Repository
         public async Task<Result<int>> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
             Result<int> reObj = new Result<int>();
-            if(inEnt.Data.AllColumns==null || inEnt.Data.AllColumns.Count()==0){
-                reObj.IsSuccess=false;
-                reObj.Msg="配置列不能为空";
+            if (inEnt.Data.AllColumns == null || inEnt.Data.AllColumns.Count() == 0)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "配置列不能为空";
                 return reObj;
             }
             DapperHelper.TranscationBegin();
@@ -45,17 +46,22 @@ namespace Repository
                 {
                     isAdd = true;
                     inEnt.Data.ID = await new SequenceRepository().GetNextID<FaTableTypeEntity>();
-                    inEnt.Data.ADD_TIME=DateTime.Now;
+                    inEnt.Data.ADD_TIME = DateTime.Now;
                     var opNum = await dbHelper.Save(inEnt);
                     reObj.IsSuccess = opNum > 0;
                     reObj.Msg = "添加成功";
                 }
                 else
                 {
-                    oldEnt =await this.SingleByKey(inEnt.Data.ID);
+                    oldEnt = await this.SingleByKey(inEnt.Data.ID);
                     var opNum = await dbHelper.Update(inEnt);
                     reObj.IsSuccess = opNum > 0;
                     reObj.Msg = "修改成功";
+
+                    if (!oldEnt.TABLE_NAME.Equals(inEnt.Data.TABLE_NAME))
+                    {
+                        var t = DapperHelper.Exec(MakeSqlChangeTableName(oldEnt.TABLE_NAME, inEnt.Data.TABLE_NAME));
+                    }
                 }
                 DapperHelper<FaTableColumnEntity> dapperCol = new DapperHelper<FaTableColumnEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
 
@@ -64,7 +70,7 @@ namespace Repository
                 {
                     if (isAdd || item.ID == 0) //如果是新增加，或列ID为空
                     {
-                        item.TABLE_TYPE_ID=inEnt.Data.ID;
+                        item.TABLE_TYPE_ID = inEnt.Data.ID;
                         item.ID = await new SequenceRepository().GetNextID<FaTableColumnEntity>();
                         var opNum = await dapperCol.Save(new DtoSave<FaTableColumnEntity>
                         {
@@ -142,15 +148,15 @@ namespace Repository
                 {
                     string createSql = MakeSqlCreateTable(inEnt.Data);
                     int opNum = await DapperHelper.Exec(createSql);
-                    
+
                 }
 
                 dbHelper.TranscationCommit();
             }
             catch (Exception e)
             {
-                reObj.IsSuccess=false;
-                reObj.Msg="保存自定义表失败"+e.Message;
+                reObj.IsSuccess = false;
+                reObj.Msg = "保存自定义表失败" + e.Message;
                 LogHelper.WriteErrorLog(this.GetType(), "保存自定义表失败", e);
                 dbHelper.TranscationRollback();
             }
@@ -174,16 +180,18 @@ namespace Repository
             try
             {
                 typeDapper.TranscationBegin();
-                var opNum= await columnHelper.Delete(i=>i.TABLE_TYPE_ID==key);
-                if(opNum<1){
-                    reObj.IsSuccess=false;
-                    reObj.Msg="删除表类型为空";
+                var opNum = await columnHelper.Delete(i => i.TABLE_TYPE_ID == key);
+                if (opNum < 1)
+                {
+                    reObj.IsSuccess = false;
+                    reObj.Msg = "删除表类型为空";
                     return reObj;
                 }
                 opNum = await typeDapper.Delete(i => i.ID == key);
-                if(opNum!=1){
-                    reObj.IsSuccess=false;
-                    reObj.Msg="删除表类字段失败";
+                if (opNum != 1)
+                {
+                    reObj.IsSuccess = false;
+                    reObj.Msg = "删除表类字段失败";
                     return reObj;
                 }
 
@@ -225,6 +233,24 @@ create table {0}(
 );
             ";
             reObj = string.Format(reObj, inEnt.TABLE_NAME, string.Join(",", allColumns));
+            return reObj;
+        }
+
+
+        /// <summary>
+        /// 修改表名
+        /// </summary>
+        /// <param name="oldTableName"></param>
+        /// <param name="nowTableName"></param>
+        /// <returns></returns>
+        public string MakeSqlChangeTableName(string oldTableName, string nowTableName)
+        {
+
+            string reObj = string.Format(
+                "ALTER TABLE {0} RENAME TO {1};",
+                oldTableName,
+                nowTableName
+                );
             return reObj;
         }
 
@@ -322,14 +348,14 @@ create table {0}(
                 case "Checkbox":
                 case "Radio":
                 case "auto":
-                    return string.Format("varchar({0})", inEnt.COLUMN_LONG);
+                    return string.Format("varchar({0}) CHARACTER SET utf8", inEnt.COLUMN_LONG);
                 case "int":
                 case "pic":
                     return string.Format("int", inEnt.COLUMN_LONG);
                 case "datatime":
                     return string.Format("datatime", inEnt.COLUMN_LONG);
                 default:
-                    return string.Format("varchar({0})", inEnt.COLUMN_LONG);
+                    return string.Format("varchar({0}) CHARACTER SET utf8", inEnt.COLUMN_LONG);
             }
         }
 

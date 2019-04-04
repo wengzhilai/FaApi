@@ -60,9 +60,11 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result> SaveEquiment(DtoEquipment inEnt)
+        public async Task<Result<DataTable>> SingleEquiment(DtoEquipment inEnt)
         {
-            var reObj = new Result();
+            var reObj = new Result<DataTable>();
+
+
             var tableType = await new TableRepository().SingleByKey(inEnt.TypeId);
             if (tableType == null)
             {
@@ -70,12 +72,52 @@ namespace Repository
                 reObj.Msg = "表不存在";
                 return reObj;
             }
-            string sql = string.Format("insert into {0}({1}) values(2) ",
+
+
+            string sql = string.Format("select * from {0} where ID={1}", tableType.TABLE_NAME, inEnt.Id);
+
+            try
+            {
+                reObj.Data = DapperHelper.GetDataTable(sql);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取单条数据失败", e);
+                return reObj;
+            }
+            return reObj;
+        }
+
+        public async Task<Result> SaveEquiment(DtoEquipment inEnt)
+        {
+            var reObj = new Result();
+
+            var equType = await new EquipmentRepository().SingleByKey(inEnt.TypeId);
+            if (equType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "设备类型ID有误";
+                return reObj;
+            }
+            var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
+            if (tableType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "表不存在";
+                return reObj;
+            }
+            string sql = string.Format("insert into {0}({1}) values({2}) ",
             tableType.TABLE_NAME,
             string.Join(",", tableType.AllColumns.Select(i => i.COLUMN_NAME)),
             string.Join(",", tableType.AllColumns.Select(i => "@" + i.COLUMN_NAME))
             );
-            var opNum = await DapperHelper.Exec(sql, TypeChange.JsonToObject<KeyValuePair<string, object>>(inEnt.DataStr));
+            var par = TypeChange.JsonToObject(inEnt.DataStr);
+            DynamicParameters tmp = new DynamicParameters();
+            foreach (var item in par)
+            {
+                tmp.Add(item.Key, item.Value.ToString());
+            }
+            var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.IsSuccess = false;
@@ -90,18 +132,27 @@ namespace Repository
         public async Task<Result> DeleteEquiment(DtoEquipment inEnt)
         {
             var reObj = new Result();
-            var tableType = await new TableRepository().SingleByKey(inEnt.TypeId);
+            var equType = await new EquipmentRepository().SingleByKey(inEnt.TypeId);
+            if (equType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "设备类型ID有误";
+                return reObj;
+            }
+            var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
                 reObj.IsSuccess = false;
                 reObj.Msg = "表不存在";
                 return reObj;
             }
-            string sql = string.Format("delete {0} where ID={1}",
+            string sql = string.Format("delete from {0} where Id=@Id",
             tableType.TABLE_NAME,
             inEnt.Id
             );
-            var opNum = await DapperHelper.Exec(sql, TypeChange.JsonToObject<KeyValuePair<string, object>>(inEnt.DataStr));
+            DynamicParameters tmp = new DynamicParameters();
+            tmp.Add("Id", inEnt.Id);
+            var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.IsSuccess = false;
@@ -116,7 +167,14 @@ namespace Repository
         public async Task<Result> UpdateEquiment(DtoEquipment inEnt)
         {
             var reObj = new Result();
-            var tableType = await new TableRepository().SingleByKey(inEnt.TypeId);
+            var equType = await new EquipmentRepository().SingleByKey(inEnt.TypeId);
+            if (equType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "设备类型ID有误";
+                return reObj;
+            }
+            var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
                 reObj.IsSuccess = false;
@@ -128,7 +186,14 @@ namespace Repository
             string.Join(",", tableType.AllColumns.Select(i => i.COLUMN_NAME + "=@" + i.COLUMN_NAME)),
             inEnt.Id
             );
-            var opNum = await DapperHelper.Exec(sql, TypeChange.JsonToObject<KeyValuePair<string, object>>(inEnt.DataStr));
+
+            var par = TypeChange.JsonToObject(inEnt.DataStr);
+            DynamicParameters tmp = new DynamicParameters();
+            foreach (var item in par)
+            {
+                tmp.Add(item.Key, item.Value.ToString());
+            }
+            var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.IsSuccess = false;
@@ -140,7 +205,7 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<DataGridDataJson>> GetConfigAndData(QuerySearchModel inEnt)
+        public async Task<Result<DataGridDataJson>> GetData(QuerySearchModel inEnt)
         {
             var reObj = new Result<DataGridDataJson>();
             if (!inEnt.Code.IsInt32())
@@ -149,7 +214,14 @@ namespace Repository
                 reObj.Msg = "代码有误";
                 return reObj;
             }
-            var tableType = await new TableRepository().SingleByKey(Convert.ToInt32(inEnt.Code));
+            var equType = await new EquipmentRepository().SingleByKey(Convert.ToInt32(inEnt.Code));
+            if (equType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "设备类型ID有误";
+                return reObj;
+            }
+            var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
                 reObj.IsSuccess = false;
@@ -157,32 +229,17 @@ namespace Repository
                 return reObj;
             }
             var bindEnt = new DataGridDataJson();
-            bindEnt.Config = new FaQueryEntity();
-            bindEnt.Config.HEARD_BTN = "[]";
-            var allColumns = tableType.AllColumns.Select(x => new QueryCfg
-            {
-                FieldName = x.COLUMN_NAME,
-                Alias = x.NAME,
-                CanSearch = true,
-                Show = true,
-                Sortable = true,
-                FieldType = x.COLUMN_TYPE
-            });
 
-            bindEnt.Config.QUERY_CFG_JSON = TypeChange.ObjectToStr(allColumns);
-            bindEnt.Config.ROWS_BTN="[]";
-            bindEnt.Config.SHOW_CHECKBOX=true;
 
-            string sql=string.Format("select * from {0}",tableType.TABLE_NAME);
+            string sql = string.Format("select * from {0}", tableType.TABLE_NAME);
 
-            var dal=new QueryRepository();
-            string whereStr="";
-            sql=dal.MakeSql(inEnt,sql,ref whereStr);
+            var dal = new QueryRepository();
+            string whereStr = "";
+            sql = dal.MakeSql(inEnt, sql, ref whereStr);
             sql = dal.MakePageSql(sql, inEnt.page, inEnt.rows, inEnt.OrderStr, whereStr);
-
             try
             {
-                var sqlList = reObj.Msg.Split(';');
+                var sqlList = sql.Split(';');
                 if (sqlList.Count() > 0)
                 {
                     bindEnt.rows = DapperHelper.GetDataTable(sqlList[0]);
@@ -196,11 +253,49 @@ namespace Repository
                 }
                 reObj.Data = bindEnt;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                LogHelper.WriteErrorLog(this.GetType(),"执行分页数据失败",e);
+                LogHelper.WriteErrorLog(this.GetType(), "执行分页数据失败", e);
                 return reObj;
             }
+            return reObj;
+        }
+
+        public async Task<Result<SmartTableSetting>> GetConfig(DtoDo<int> inEnt)
+        {
+            var reObj = new Result<SmartTableSetting>();
+
+            var equType = await new EquipmentRepository().SingleByKey(inEnt.Key);
+            if (equType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "设备类型ID有误";
+                return reObj;
+            }
+            var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
+            if (tableType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "表不存在";
+                return reObj;
+            }
+            var setting = new SmartTableSetting();
+            setting.HEARD_BTN = "[]";
+            var allColumns = tableType.AllColumns.Select(x => new SmartTableColumnSetting
+            {
+                ColumnName = x.COLUMN_NAME,
+                title = x.NAME,
+                editable = true,
+                filter = true,
+                Show = true,
+                sort = true,
+                type = x.COLUMN_TYPE
+            }).ToList();
+
+            setting.ColumnsList = allColumns;
+            setting.ROWS_BTN = "[]";
+            setting.SHOW_CHECKBOX = true;
+            reObj.Data = setting;
             return reObj;
         }
     }

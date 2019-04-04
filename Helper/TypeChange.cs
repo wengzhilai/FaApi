@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -52,6 +53,12 @@ namespace Helper
                 };
                 return JsonConvert.DeserializeObject<T>(str, jsonConfig);
             }
+            
+        }
+
+        public static JObject JsonToObject(this string str)
+        {
+            return (JObject)JsonConvert.DeserializeObject(str);
         }
 
 
