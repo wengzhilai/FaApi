@@ -111,8 +111,13 @@ namespace Repository
             string.Join(",", tableType.AllColumns.Select(i => i.COLUMN_NAME)),
             string.Join(",", tableType.AllColumns.Select(i => "@" + i.COLUMN_NAME))
             );
-            var par=TypeChange.JsonToObject<DynamicParameters>(inEnt.DataStr);
-            var opNum = await DapperHelper.Exec(sql, par);
+            var par = TypeChange.JsonToObject(inEnt.DataStr);
+            DynamicParameters tmp = new DynamicParameters();
+            foreach (var item in par)
+            {
+                tmp.Add(item.Key, item.Value.ToString());
+            }
+            var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.IsSuccess = false;
@@ -127,18 +132,27 @@ namespace Repository
         public async Task<Result> DeleteEquiment(DtoEquipment inEnt)
         {
             var reObj = new Result();
-            var tableType = await new TableRepository().SingleByKey(inEnt.TypeId);
+            var equType = await new EquipmentRepository().SingleByKey(inEnt.TypeId);
+            if (equType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "设备类型ID有误";
+                return reObj;
+            }
+            var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
                 reObj.IsSuccess = false;
                 reObj.Msg = "表不存在";
                 return reObj;
             }
-            string sql = string.Format("delete {0} where ID={1}",
+            string sql = string.Format("delete from {0} where Id=@Id",
             tableType.TABLE_NAME,
             inEnt.Id
             );
-            var opNum = await DapperHelper.Exec(sql, TypeChange.JsonToObject<KeyValuePair<string, object>>(inEnt.DataStr));
+            DynamicParameters tmp = new DynamicParameters();
+            tmp.Add("Id", inEnt.Id);
+            var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.IsSuccess = false;
@@ -153,7 +167,14 @@ namespace Repository
         public async Task<Result> UpdateEquiment(DtoEquipment inEnt)
         {
             var reObj = new Result();
-            var tableType = await new TableRepository().SingleByKey(inEnt.TypeId);
+            var equType = await new EquipmentRepository().SingleByKey(inEnt.TypeId);
+            if (equType == null)
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "设备类型ID有误";
+                return reObj;
+            }
+            var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
                 reObj.IsSuccess = false;
@@ -165,7 +186,14 @@ namespace Repository
             string.Join(",", tableType.AllColumns.Select(i => i.COLUMN_NAME + "=@" + i.COLUMN_NAME)),
             inEnt.Id
             );
-            var opNum = await DapperHelper.Exec(sql, TypeChange.JsonToObject<KeyValuePair<string, object>>(inEnt.DataStr));
+
+            var par = TypeChange.JsonToObject(inEnt.DataStr);
+            DynamicParameters tmp = new DynamicParameters();
+            foreach (var item in par)
+            {
+                tmp.Add(item.Key, item.Value.ToString());
+            }
+            var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.IsSuccess = false;
@@ -257,7 +285,7 @@ namespace Repository
             {
                 ColumnName = x.COLUMN_NAME,
                 title = x.NAME,
-                editable=true,
+                editable = true,
                 filter = true,
                 Show = true,
                 sort = true,
