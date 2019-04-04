@@ -367,6 +367,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
                 }
                 switch (nowType)
                 {
+                    case "text":
                     case "string":
                         switch (tmp.OpType)
                         {
