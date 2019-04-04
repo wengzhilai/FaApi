@@ -140,6 +140,30 @@ namespace WebApi.Controllers
             return reObj;
         }
 
+
+
+        /// <summary>
+        /// 获取单条设备
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        async public Task<Result> SingleEquiment(DtoEquipment inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                reObj = await this._dal.SingleEquiment(inEnt);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取单条设备失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
         /// <summary>
         /// 保存设备
         /// </summary>
@@ -208,6 +232,29 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// 获取设备配置失败
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<SmartTableSetting>> GetConfig(DtoDo<int> inEnt)
+        {
+            var reObj = new Result<SmartTableSetting>();
+            try
+            {
+                reObj = await this._dal.GetConfig(inEnt);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取设备配置失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+
+        /// <summary>
         /// 获取配置信息和数据
         /// </summary>
         /// <param name="inEnt"></param>
@@ -218,11 +265,11 @@ namespace WebApi.Controllers
             var reObj = new Result<DataGridDataJson>();
             try
             {
-                reObj = await this._dal.GetConfigAndData(inEnt);
+                reObj = await this._dal.GetData(inEnt);
             }
             catch (Exception e)
             {
-                LogHelper.WriteErrorLog(this.GetType(), "保存设备失败", e);
+                LogHelper.WriteErrorLog(this.GetType(), "获取设备数据失败", e);
                 reObj.IsSuccess = false;
                 reObj.Msg = e.Message;
             }

@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Models;
@@ -39,7 +40,12 @@ namespace IRepository
         /// </summary>
         /// <returns></returns>
         Task<Result<KTV>> GetTree(int? parentId);
-
+        /// <summary>
+        /// 获取单条记录
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result<DataTable>> SingleEquiment(DtoEquipment inEnt);
         /// <summary>
         /// 保存设备
         /// </summary>
@@ -67,6 +73,13 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<DataGridDataJson>> GetConfigAndData(QuerySearchModel inEnt);
+        Task<Result<DataGridDataJson>> GetData(QuerySearchModel inEnt);
+
+        /// <summary>
+        /// 获取配置文件
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result<SmartTableSetting>> GetConfig(DtoDo<int> inEnt);
     }
 }
