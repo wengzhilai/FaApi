@@ -20,6 +20,7 @@ using System.Text;
 using AutoMapper;
 using Models.EntityView;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Controllers
 {
@@ -29,6 +30,7 @@ namespace WebApi.Controllers
     [EnableCors("AllowSameDomain")]
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class FamilyController : ControllerBase
     {
         IConfiguration config;
@@ -59,6 +61,7 @@ namespace WebApi.Controllers
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<Result<Relative>> Relative(DtoKey inObj)
         {
             Result<Relative> reobj = new Result<Relative>();
