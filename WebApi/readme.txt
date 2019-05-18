@@ -5,6 +5,9 @@ sudo curl -o /usr/local/bin/nuget.exe https://dist.nuget.org/win-x86-commandline
 
 scp -r /Users/wengzhilai/Desktop/ExportCsv/ root@45.32.134.176:~/ExportCsv/
 
+scp -r /Users/wengzhilai/Desktop/Angular/FaAdmin/dist.zip root@155.138.209.42:/home/www/
+
+
 mongoimport -u fa -p fa --db fa --collection fa_role --type csv --headerline --ignoreBlanks --file ~/ExportCsv/fa_role.csv
 mongoimport -u fa -p fa --db fa --collection fa_login --type csv --headerline --ignoreBlanks --file ~/ExportCsv/fa_login.csv
 mongoimport -u fa -p fa --db fa --collection fa_user --type csv --headerline --ignoreBlanks --file ~/ExportCsv/fa_user.csv

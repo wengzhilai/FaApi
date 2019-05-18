@@ -121,7 +121,7 @@ namespace Repository
             if (datetime < new DateTime(1900, 1, 1))
             {
                 reObj.IsSuccess = true;
-                reObj.Msg = datetime.ToString("yyyy-MM-dd HH:00");
+                reObj.Msg = datetime.ToString("yyyy-MM-dd HH:mm");
                 return reObj;
             }
 
@@ -130,7 +130,7 @@ namespace Repository
             int lmonth = cc.GetMonth(datetime);
             int lday = cc.GetDayOfMonth(datetime);
             reObj.IsSuccess = true;
-            reObj.Msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:00", lyear, lmonth, lday, datetime.Hour)).ToString("yyyy-MM-dd HH:00");
+            reObj.Msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:mm", lyear, lmonth, lday, datetime.Hour)).ToString("yyyy-MM-dd HH:mm");
             return reObj;
         }
 
@@ -145,7 +145,7 @@ namespace Repository
             if (datetime < new DateTime(1900, 1, 1))
             {
                 reObj.IsSuccess = true;
-                reObj.Msg = datetime.ToString("yyyy-MM-dd HH:00");
+                reObj.Msg = datetime.ToString("yyyy-MM-dd HH:mm");
                 return reObj;
             }
             ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
@@ -161,7 +161,7 @@ namespace Repository
                     dt = dt.AddMonths(1);
 
             reObj.IsSuccess = true;
-            reObj.Msg = dt.ToString("yyyy-MM-dd HH:00");
+            reObj.Msg = dt.ToString("yyyy-MM-dd HH:mm");
             return reObj;
         }
 
