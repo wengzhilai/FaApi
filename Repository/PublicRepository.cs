@@ -130,7 +130,7 @@ namespace Repository
             int lmonth = cc.GetMonth(datetime);
             int lday = cc.GetDayOfMonth(datetime);
             reObj.IsSuccess = true;
-            reObj.Msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:mm", lyear, lmonth, lday, datetime.Hour)).ToString("yyyy-MM-dd HH:mm");
+            reObj.Msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:{4}", lyear, lmonth, lday, datetime.Hour,datetime.Minute)).ToString("yyyy-MM-dd HH:mm");
             return reObj;
         }
 
