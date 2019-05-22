@@ -31,6 +31,7 @@ namespace WebApi
         /// <returns></returns>
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                // .UseStartup<Startup>().UseKestrel().UseUrls("http://*:5000");
                 .UseStartup<Startup>();
     }
 }

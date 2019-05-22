@@ -171,7 +171,7 @@ namespace WebApi.Controllers
         /// 检测版本 key为当前版本号
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
         public Result CheckUpdate(DtoKey inEnt)
         {
