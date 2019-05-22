@@ -173,9 +173,11 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public Result CheckUpdate(DtoKey inEnt)
+        public Result CheckUpdate(DtoKey<int> inEnt)
         {
             Result reObj = new Result();
+            var dapper=new DapperHelper<FaAppVersionEntity>();
+            var singel=dapper.Single(i=>i.TYPE>inEnt.Key,"order by id desc");
             return reObj;
         }
 
