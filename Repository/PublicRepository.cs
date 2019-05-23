@@ -12,6 +12,7 @@ using Dapper;
 using System.Data;
 using System.Linq.Expressions;
 using System.Globalization;
+using Newtonsoft.Json.Linq;
 
 namespace Repository
 {
@@ -41,6 +42,7 @@ namespace Repository
             try
             {
                 dapperLogin.TranscationBegin();
+                #region 如果用户存在，则更新用户表
                 var login = await dapperLogin.Single(x => x.LOGIN_NAME == phone);
                 if (login != null)
                 {
@@ -59,7 +61,22 @@ namespace Repository
                         return reEnt;
                     }
                 }
+                #endregion
 
+
+                #region 极光发送短信
+
+                // reEnt = await SmsSendCode(phone, code);
+                if (!reEnt.IsSuccess)
+                {
+                    reEnt.IsSuccess = false;
+                    reEnt.Msg = "短信服务已欠费，请联系管理员";
+                    dapperLogin.TranscationRollback();
+                    return reEnt;
+                }
+                #endregion
+
+                #region 发送短信后，保存发送的历史
                 FaSmsSendEntity ent = new FaSmsSendEntity()
                 {
                     GUID = Guid.NewGuid().ToString().Replace("-", ""),
@@ -69,15 +86,6 @@ namespace Repository
                     PHONE_NO = phone
                 };
 
-                //发送短信
-                // reEnt.IsSuccess=await SmsSendCode(phone, code);
-                if (!reEnt.IsSuccess)
-                {
-                    reEnt.IsSuccess = false;
-                    reEnt.Msg = "短信服务已欠费，请联系管理员";
-                    dapperLogin.TranscationRollback();
-                    return reEnt;
-                }
                 reEnt.IsSuccess = await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
                 {
                     Data = ent
@@ -89,6 +97,8 @@ namespace Repository
                     dapperLogin.TranscationRollback();
                     return reEnt;
                 }
+                #endregion
+
                 dapperLogin.TranscationCommit();
                 reEnt.IsSuccess = true;
                 reEnt.Msg = "发送成功";
@@ -104,10 +114,29 @@ namespace Repository
             return reEnt;
         }
 
-        public async Task<bool> SmsSendCode(string mobile, string code)
+        public async Task<Result<bool>> SmsSendCode(string mobile, string code)
         {
-            await JiguangHelper.SendValidSms(mobile, code);
-            return true;
+            Result<bool> reObj = new Result<bool>();
+
+            var t = await JiguangHelper.SendValidSms(mobile, code);
+            // {\"error\":{\"code\":50051,\"message\":\"signatures not exist\"}}
+            JObject jb = TypeChange.JsonToObject(t.Content);
+            var msg_id = jb.Value<string>("msg_id");
+            if (string.IsNullOrEmpty(msg_id))
+            {
+                reObj.IsSuccess = false;
+                var errorObj = jb.Value<JObject>("error");
+                if (errorObj != null)
+                {
+                    reObj.Msg = errorObj.Value<string>("message");
+                }
+            }
+            else
+            {
+                reObj.IsSuccess = true;
+            }
+            reObj.Msg = t.Content;
+            return reObj;
         }
 
         /// <summary>
@@ -130,7 +159,7 @@ namespace Repository
             int lmonth = cc.GetMonth(datetime);
             int lday = cc.GetDayOfMonth(datetime);
             reObj.IsSuccess = true;
-            reObj.Msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:{4}", lyear, lmonth, lday, datetime.Hour,datetime.Minute)).ToString("yyyy-MM-dd HH:mm");
+            reObj.Msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:{4}", lyear, lmonth, lday, datetime.Hour, datetime.Minute)).ToString("yyyy-MM-dd HH:mm");
             return reObj;
         }
 
