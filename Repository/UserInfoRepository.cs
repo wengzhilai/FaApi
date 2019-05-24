@@ -460,6 +460,7 @@ namespace Repository
                     userInfo.REMARK = inEnt.Data.REMARK;
                     userInfo.INDUSTRY = inEnt.Data.INDUSTRY;
                     userInfo.EDUCATION = inEnt.Data.EDUCATION;
+                    userInfo.AUTHORITY = inEnt.Data.AUTHORITY;
                     userInfo.UPDATE_TIME = DateTime.Now;
                     userInfo.UPDATE_USER_NAME = opUserName;
                     userInfo.UPDATE_USER_ID = opUserId;
@@ -482,6 +483,7 @@ namespace Repository
                     saveList.Add("UPDATE_TIME");
                     saveList.Add("UPDATE_USER_NAME");
                     saveList.Add("UPDATE_USER_ID");
+                    saveList.Add("AUTHORITY");
                     var addUserInfoNum = await dapperUserInfo.Update(new DtoSave<FaUserInfoEntity>
                     {
                         Data = userInfo,
