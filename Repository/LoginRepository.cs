@@ -425,12 +425,20 @@ namespace Repository
         /// <param name="oldLoginName"></param>
         /// <param name="NewLoginName"></param>
         /// <param name="name"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name)
+        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId)
         {
             DapperHelper<FaUserEntity> userDapper = new DapperHelper<FaUserEntity>();
             Result reObj = new Result();
             #region 检测输入
+            if (string.IsNullOrEmpty(oldLoginName) && userId == 0)
+            {
+                reObj.IsSuccess = false;
+                reObj.Code = "-2";
+                reObj.Msg = "用户主键有误";
+                return reObj;
+            }
             if (!NewLoginName.IsOnlyNumber() || NewLoginName.Length != 11)
             {
                 reObj.IsSuccess = false;
@@ -442,7 +450,7 @@ namespace Repository
             #endregion
 
             #region 检测电话号码是否存在
-            var userList = await userDapper.FindAll(x => x.LOGIN_NAME == NewLoginName);
+            IEnumerable<FaUserEntity> userList = await userDapper.FindAll(x => x.LOGIN_NAME == NewLoginName);
             if (userList.Count() > 0)
             {
                 reObj.IsSuccess = false;
@@ -451,8 +459,15 @@ namespace Repository
                 return reObj;
             }
             #endregion
-
-            var user = await userDapper.Single(x => x.LOGIN_NAME == oldLoginName);
+            FaUserEntity user = new FaUserEntity();
+            if (string.IsNullOrEmpty(oldLoginName))
+            {
+                user = await userDapper.Single(x => x.ID == userId);
+            }
+            else
+            {
+                user = await userDapper.Single(x => x.LOGIN_NAME == oldLoginName);
+            }
             if (user == null)
             {
                 reObj.IsSuccess = false;
@@ -460,23 +475,21 @@ namespace Repository
                 reObj.Msg = string.Format("用户不存在");
                 return reObj;
             }
-            userDapper.TranscationBegin();
 
             #region 修改用户账号
             user.NAME = name;
             user.LOGIN_NAME = NewLoginName;
 
-            reObj.IsSuccess = await userDapper.Save(new DtoSave<FaUserEntity>()
+            reObj.IsSuccess = await userDapper.Update(new DtoSave<FaUserEntity>()
             {
                 Data = user,
                 SaveFieldList = new List<string> { "NAME", "LOGIN_NAME" },
-                WhereList = null
+                WhereList = new List<string> { "ID" }
             }) > 0 ? true : false;
 
             if (!reObj.IsSuccess)
             {
                 reObj.Msg = "保存用户失败";
-                userDapper.TranscationRollback();
                 return reObj;
             }
             #endregion
@@ -512,12 +525,9 @@ namespace Repository
             if (!reObj.IsSuccess)
             {
                 reObj.Msg = "保存账号失败";
-                userDapper.TranscationRollback();
                 return reObj;
             }
             #endregion
-
-            userDapper.TranscationCommit();
             reObj.IsSuccess = true;
             reObj.Msg = user.ID.ToString();
             return reObj;

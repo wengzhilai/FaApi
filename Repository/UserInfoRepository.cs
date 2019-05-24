@@ -148,11 +148,12 @@ namespace Repository
                 #region 修改用户信息
                 var userId = Convert.ToInt32(inEnt.ParentArr[0].K);
                 var user = await new DapperHelper<FaUserEntity>().Single(x => x.ID == userId);
-                
+
                 //更新用户信息
-                var upUser = await new LoginRepository().UserEditLoginName(user.LOGIN_NAME, inEnt.LoginName, inEnt.ParentArr[0].V);
+                var upUser = await new LoginRepository().UserEditLoginName(user.LOGIN_NAME, inEnt.LoginName, inEnt.ParentArr[0].V, Convert.ToInt32(inEnt.ParentArr[0].K));
                 //更新失败则返回
-                if(!upUser.IsSuccess){
+                if (!upUser.IsSuccess)
+                {
                     return upUser;
                 }
                 DapperHelper<FaUserInfoEntity> dbUserInfo = new DapperHelper<FaUserInfoEntity>();
@@ -528,10 +529,11 @@ namespace Repository
             dapperUserInfo.TranscationBegin();
             try
             {
-                var children=await dapperUserInfo.Count(i => i.FAMILY_ID == userId);
-                if(children>0){
-                    reObj.IsSuccess=false;
-                    reObj.Msg="该用户有项子项，不能删除";
+                var children = await dapperUserInfo.Count(i => i.FAMILY_ID == userId);
+                if (children > 0)
+                {
+                    reObj.IsSuccess = false;
+                    reObj.Msg = "该用户有项子项，不能删除";
                     return reObj;
 
                 }
@@ -548,7 +550,7 @@ namespace Repository
                 reObj.IsSuccess = opNum > 0;
                 if (!reObj.IsSuccess)
                 {
-                    reObj.Msg="删除User失败";
+                    reObj.Msg = "删除User失败";
                     dapperUserInfo.TranscationRollback();
                     return reObj;
                 }

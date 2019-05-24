@@ -384,7 +384,7 @@ namespace Helper
         {
             var mh = new ModelHelper<T>(inObj.Data);
             string sql = mh.GetUpdateSql(inObj.SaveFieldList, inObj.IgnoreFieldList, inObj.WhereList);
-            var result = connection.ExecuteAsync(sql, mh.GetDynamicParameters(), transaction);
+            var result = connection.ExecuteAsync(sql, mh.GetDynamicParameters(inObj.SaveFieldList, inObj.IgnoreFieldList), transaction);
             return result;
         }
 

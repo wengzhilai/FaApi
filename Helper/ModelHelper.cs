@@ -37,41 +37,36 @@ namespace Helper
             return results;
         }
 
-        private List<string> _TableFields = null;
         /// <summary>
         /// 获取所有字段列表
         /// </summary>
         /// <returns></returns>
         public List<string> GetTableFields(List<string> saveFieldList = null, List<string> ignoreFieldList = null)
         {
-            if (_TableFields == null)
+            List<string> reFieldStr = new List<string>();   //所有数据字段名
+            Type type = typeof(T);
+            PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
+            foreach (PropertyInfo proInfo in PropertyList)
             {
-                List<string> reFieldStr = new List<string>();   //所有数据字段名
-                Type type = typeof(T);
-                PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
-                foreach (PropertyInfo proInfo in PropertyList)
+                if (
+                    (saveFieldList != null && saveFieldList.Count != 0 && !saveFieldList.Contains(proInfo.Name)) ||
+                    (ignoreFieldList != null && ignoreFieldList.Count != 0 && ignoreFieldList.Contains(proInfo.Name))
+                    )
                 {
-                    if (
-                        (saveFieldList != null && saveFieldList.Count != 0 && !saveFieldList.Contains(proInfo.Name)) ||
-                        (ignoreFieldList != null && ignoreFieldList.Count != 0 && ignoreFieldList.Contains(proInfo.Name))
-                        )
+                    continue;
+                }
+                object[] attrsPi = proInfo.GetCustomAttributes(true);
+                foreach (object obj in attrsPi)
+                {
+                    if (obj is ColumnAttribute)//定义了Display属性的字段为字数库字段
                     {
+                        var column = (ColumnAttribute)obj;
+                        reFieldStr.Add(string.IsNullOrEmpty(column.Name) ? proInfo.Name : column.Name);
                         continue;
                     }
-                    object[] attrsPi = proInfo.GetCustomAttributes(true);
-                    foreach (object obj in attrsPi)
-                    {
-                        if (obj is ColumnAttribute)//定义了Display属性的字段为字数库字段
-                        {
-                            var column = (ColumnAttribute)obj;
-                            reFieldStr.Add(string.IsNullOrEmpty(column.Name) ? proInfo.Name : column.Name);
-                            continue;
-                        }
-                    }
                 }
-                _TableFields = reFieldStr;
             }
-            return _TableFields;
+            return reFieldStr;
         }
 
 
