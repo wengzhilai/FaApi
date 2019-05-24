@@ -148,7 +148,13 @@ namespace Repository
                 #region 修改用户信息
                 var userId = Convert.ToInt32(inEnt.ParentArr[0].K);
                 var user = await new DapperHelper<FaUserEntity>().Single(x => x.ID == userId);
+                
+                //更新用户信息
                 var upUser = await new LoginRepository().UserEditLoginName(user.LOGIN_NAME, inEnt.LoginName, inEnt.ParentArr[0].V);
+                //更新失败则返回
+                if(!upUser.IsSuccess){
+                    return upUser;
+                }
                 DapperHelper<FaUserInfoEntity> dbUserInfo = new DapperHelper<FaUserInfoEntity>();
                 reObj.IsSuccess = await dbUserInfo.Update(new DtoSave<FaUserInfoEntity>
                 {
