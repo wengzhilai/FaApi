@@ -209,17 +209,31 @@ namespace Repository
         async public Task<Result<bool>> Save(DtoSave<FaUserInfoEntityView> inEnt, string opUserName, int opUserId)
         {
             var reObj = new Result<bool>();
-            #region 验证信息是否有误
-            // if (inEnt.Data.ID == 0 && (inEnt.Data.COUPLE_ID == null || inEnt.Data.COUPLE_ID == 0))
-            // {
-            //     reObj.IsSuccess = false;
-            //     reObj.Msg = "添加的用户没有选择COUPLE_ID";
-            //     return reObj;
-            // }
-            #endregion
+
             DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
+            #region 验证信息是否有误
+            if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
+            {
+                reObj.IsSuccess = false;
+                reObj.Msg = "电话号码不能为空";
+                return reObj;
+            }
+            if (inEnt.Data.ID == 0)
+            {
+                if (await dapperUser.Count(i => i.LOGIN_NAME == inEnt.Data.LOGIN_NAME) > 0)
+                {
+                    reObj.IsSuccess = false;
+                    reObj.Msg = "该电话号码已经被注册";
+                    return reObj;
+                }
+            }
+            #endregion
+
             dapperUser.TranscationBegin();
             DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
+
+
+
             try
             {
                 #region 保存头像
@@ -409,7 +423,19 @@ namespace Repository
                     if (inEnt.Data.LOGIN_NAME != user.LOGIN_NAME)
                     {
                         DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
+
+
+                        //原账号
                         var login = await dapperLogin.Single(i => i.LOGIN_NAME == user.LOGIN_NAME);
+                        #region 判断该用账号是否存在
+                        if (await dapperLogin.Count(i => i.ID != login.ID && i.LOGIN_NAME == inEnt.Data.LOGIN_NAME) > 0)
+                        {
+                            dapperUser.TranscationRollback();
+                            reObj.IsSuccess = false;
+                            reObj.Msg = "登录账号已经存在";
+                            return reObj;
+                        }
+                        #endregion
                         if (login != null)
                         {
                             login.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
