@@ -427,7 +427,7 @@ namespace Repository
         /// <param name="name"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId)
+        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId, string pwd,int iconFilesId)
         {
             DapperHelper<FaUserEntity> userDapper = new DapperHelper<FaUserEntity>();
             Result reObj = new Result();
@@ -459,11 +459,11 @@ namespace Repository
                 return reObj;
             }
             #endregion
-            
+
             #region 检测用户是否存在
-                
+
             FaUserEntity user = new FaUserEntity();
-            if (userId!=0)
+            if (userId != 0)
             {
                 user = await userDapper.Single(x => x.ID == userId);
             }
@@ -487,11 +487,12 @@ namespace Repository
 
             user.NAME = name;
             user.LOGIN_NAME = NewLoginName;
+            user.ICON_FILES_ID=iconFilesId;
 
             reObj.IsSuccess = await userDapper.Update(new DtoSave<FaUserEntity>()
             {
                 Data = user,
-                SaveFieldList = new List<string> { "NAME", "LOGIN_NAME" },
+                SaveFieldList = new List<string> { "NAME", "LOGIN_NAME","ICON_FILES_ID" },
                 WhereList = new List<string> { "ID" }
             }) > 0 ? true : false;
 
@@ -512,7 +513,7 @@ namespace Repository
                 FaLoginEntity inLogin = new FaLoginEntity();
                 inLogin.ID = await new SequenceRepository().GetNextID<FaLoginEntity>();
                 inLogin.LOGIN_NAME = NewLoginName;
-                inLogin.PASSWORD = NewLoginName.Md5();
+                inLogin.PASSWORD = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
                 inLogin.IS_LOCKED = 0;
                 inLogin.FAIL_COUNT = 0;
                 reObj.IsSuccess = await loginDapper.Save(new DtoSave<FaLoginEntity>()
@@ -523,10 +524,11 @@ namespace Repository
             else
             {
                 login.LOGIN_NAME = NewLoginName;
+                login.PASSWORD = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
                 reObj.IsSuccess = await loginDapper.Update(new DtoSave<FaLoginEntity>
                 {
                     Data = login,
-                    SaveFieldList = new List<string> { "LOGIN_NAME" },
+                    SaveFieldList = new List<string> { "LOGIN_NAME", "PASSWORD" },
                     WhereList = null
                 }) > 0 ? true : false;
             }

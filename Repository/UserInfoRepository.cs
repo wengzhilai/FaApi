@@ -149,8 +149,30 @@ namespace Repository
                 var userId = Convert.ToInt32(inEnt.ParentArr[0].K);
                 var user = await new DapperHelper<FaUserEntity>().Single(x => x.ID == userId);
 
+                #region 保存头像
+                //如果有新添加的头像，则保存像头地址到数据库
+                if (inEnt.ICON_FILES_ID == 0 && inEnt.IconFiles != null && !string.IsNullOrEmpty(inEnt.IconFiles.PATH))
+                {
+                    DapperHelper<FaFilesEntity> dapperFile = new DapperHelper<FaFilesEntity>();
+                    inEnt.ICON_FILES_ID = await new SequenceRepository().GetNextID<FaFilesEntity>();
+                    inEnt.IconFiles.ID = inEnt.ICON_FILES_ID;
+                    inEnt.IconFiles.UPLOAD_TIME = DateTime.Now;
+                    var saveNum = await dapperFile.Save(new DtoSave<FaFilesEntity>
+                    {
+                        Data = inEnt.IconFiles
+                    });
+                    if (saveNum < 1)
+                    {
+                        reObj.IsSuccess = false;
+                        reObj.Msg = "保存文件失败";
+                        return reObj;
+                    }
+                }
+                #endregion
+
+
                 //更新用户信息
-                var upUser = await new LoginRepository().UserEditLoginName(user.LOGIN_NAME, inEnt.LoginName, inEnt.ParentArr[0].V, Convert.ToInt32(inEnt.ParentArr[0].K));
+                var upUser = await new LoginRepository().UserEditLoginName(user.LOGIN_NAME, inEnt.LoginName, inEnt.ParentArr[0].V, Convert.ToInt32(inEnt.ParentArr[0].K), inEnt.Password, inEnt.ICON_FILES_ID);
                 //更新失败则返回
                 if (!upUser.IsSuccess)
                 {
