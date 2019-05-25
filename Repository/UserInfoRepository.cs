@@ -212,13 +212,13 @@ namespace Repository
 
             DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
             #region 验证信息是否有误
-            if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
-            {
-                reObj.IsSuccess = false;
-                reObj.Msg = "电话号码不能为空";
-                return reObj;
-            }
-            if (inEnt.Data.ID == 0)
+            // if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
+            // {
+            //     reObj.IsSuccess = false;
+            //     reObj.Msg = "电话号码不能为空";
+            //     return reObj;
+            // }
+            if (inEnt.Data.ID == 0 && !string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
             {
                 if (await dapperUser.Count(i => i.LOGIN_NAME == inEnt.Data.LOGIN_NAME) > 0)
                 {
@@ -231,6 +231,7 @@ namespace Repository
 
             dapperUser.TranscationBegin();
             DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
+            DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
 
 
 
@@ -260,12 +261,9 @@ namespace Repository
 
                 if (inEnt.Data.ID == 0)
                 {
-                    // if (inEnt.Data.COUPLE_ID == null && inEnt.Data.FATHER_ID == null)
-                    // {
-                    //     reObj.IsSuccess = false;
-                    //     reObj.Msg = "选择的COUPLE_ID和FATHER_ID不能同时为空";
-                    //     return reObj;
-                    // }
+                    #region 添加新用户
+
+                    #region 保存配
 
                     var userId = await new SequenceRepository().GetNextID<FaUserEntity>();
                     if (inEnt.Data.COUPLE_ID != null)
@@ -301,8 +299,10 @@ namespace Repository
                         #endregion
 
                     }
+                    #endregion
 
                     #region 保存用户
+                    //如果没有输入登录账号，账号默认为用户的ID
                     var addUserId = await dapperUser.Save(new DtoSave<FaUserEntity>
                     {
                         Data = new FaUserEntity
@@ -311,7 +311,7 @@ namespace Repository
                             NAME = inEnt.Data.NAME,
                             ICON_FILES_ID = inEnt.Data.ICON_FILES_ID,
                             CREATE_TIME = DateTime.Now,
-                            LOGIN_NAME = userId.ToString(),
+                            LOGIN_NAME = string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME) ? userId.ToString() : inEnt.Data.LOGIN_NAME,
                             DISTRICT_ID = 1
                         }
                     });
@@ -322,6 +322,30 @@ namespace Repository
                         reObj.Msg = "保存用户失败";
                         return reObj;
                     }
+                    #endregion
+
+
+                    #region 保存用户登录信息
+                    if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
+                    {
+                        //如果没有输入登录账号，账号默认为用户的ID
+                        var addLoginId = await dapperLogin.Save(new DtoSave<FaLoginEntity>
+                        {
+                            Data = new FaLoginEntity
+                            {
+                                LOGIN_NAME = inEnt.Data.LOGIN_NAME,
+                                PASSWORD = inEnt.Data.LOGIN_NAME.Md5()
+                            }
+                        });
+                        if (addLoginId < 1)
+                        {
+                            dapperUser.TranscationRollback();
+                            reObj.IsSuccess = false;
+                            reObj.Msg = "保存用户登录账号失败";
+                            return reObj;
+                        }
+                    }
+
                     #endregion
 
                     #region 保存UserInfo
@@ -364,8 +388,7 @@ namespace Repository
                         return reObj;
                     }
                     #endregion
-
-
+                    #endregion
                 }
                 else
                 {
@@ -422,9 +445,6 @@ namespace Repository
                     //如果账号变动需修改登录账号
                     if (inEnt.Data.LOGIN_NAME != user.LOGIN_NAME)
                     {
-                        DapperHelper<FaLoginEntity> dapperLogin = new DapperHelper<FaLoginEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
-
-
                         //原账号
                         var login = await dapperLogin.Single(i => i.LOGIN_NAME == user.LOGIN_NAME);
                         #region 判断该用账号是否存在
@@ -438,25 +458,42 @@ namespace Repository
                         #endregion
                         if (login != null)
                         {
-                            login.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
-                            var updateLoginNum = await dapperLogin.Update(new DtoSave<FaLoginEntity>
+                            //如果账号为空则删除原有登录账号
+                            if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
                             {
-                                Data = login,
-                                SaveFieldList = new List<string> { "LOGIN_NAME" },
-                                WhereList = null
-                            });
-                            if (updateLoginNum < 1)
-                            {
-                                dapperUser.TranscationRollback();
-                                reObj.IsSuccess = false;
-                                reObj.Msg = "修改账号失败";
-                                return reObj;
+                                var delNum = await dapperLogin.Delete(i => i.ID == login.ID);
+                                if (delNum < 1)
+                                {
+                                    dapperUser.TranscationRollback();
+                                    reObj.IsSuccess = false;
+                                    reObj.Msg = "删除账号失败";
+                                    return reObj;
+                                }
                             }
+                            else
+                            {
+                                login.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
+                                var updateLoginNum = await dapperLogin.Update(new DtoSave<FaLoginEntity>
+                                {
+                                    Data = login,
+                                    SaveFieldList = new List<string> { "LOGIN_NAME" },
+                                    WhereList = null
+                                });
+                                if (updateLoginNum < 1)
+                                {
+                                    dapperUser.TranscationRollback();
+                                    reObj.IsSuccess = false;
+                                    reObj.Msg = "修改账号失败";
+                                    return reObj;
+                                }
+                            }
+
                         }
 
                     }
 
                     #endregion
+                    
                     #region 修改用户
                     user.NAME = inEnt.Data.NAME;
                     user.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
