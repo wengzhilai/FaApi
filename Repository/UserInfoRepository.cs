@@ -326,13 +326,14 @@ namespace Repository
 
 
                     #region 保存用户登录信息
-                    if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
+                    if (!string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
                     {
                         //如果没有输入登录账号，账号默认为用户的ID
                         var addLoginId = await dapperLogin.Save(new DtoSave<FaLoginEntity>
                         {
                             Data = new FaLoginEntity
                             {
+                                ID = await new SequenceRepository().GetNextID<FaLoginEntity>(),
                                 LOGIN_NAME = inEnt.Data.LOGIN_NAME,
                                 PASSWORD = inEnt.Data.LOGIN_NAME.Md5()
                             }
@@ -447,17 +448,21 @@ namespace Repository
                     {
                         //原账号
                         var login = await dapperLogin.Single(i => i.LOGIN_NAME == user.LOGIN_NAME);
-                        #region 判断该用账号是否存在
-                        if (await dapperLogin.Count(i => i.ID != login.ID && i.LOGIN_NAME == inEnt.Data.LOGIN_NAME) > 0)
-                        {
-                            dapperUser.TranscationRollback();
-                            reObj.IsSuccess = false;
-                            reObj.Msg = "登录账号已经存在";
-                            return reObj;
-                        }
-                        #endregion
+
                         if (login != null)
                         {
+                            #region 修改原账号
+
+                            #region 判断该用账号是否存在
+                            // if (await dapperLogin.Count(i => i.ID != login.ID && i.LOGIN_NAME == inEnt.Data.LOGIN_NAME) > 0)
+                            if (await dapperLogin.Count(string.Format("ID<>{0} && LOGIN_NAME='{1}'", login.ID, inEnt.Data.LOGIN_NAME)) > 0)
+                            {
+                                dapperUser.TranscationRollback();
+                                reObj.IsSuccess = false;
+                                reObj.Msg = "登录账号已经存在";
+                                return reObj;
+                            }
+                            #endregion
                             //如果账号为空则删除原有登录账号
                             if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
                             {
@@ -487,13 +492,41 @@ namespace Repository
                                     return reObj;
                                 }
                             }
+                            #endregion
+
+                        }
+                        else
+                        {
+                            #region 保存用户登录信息
+                            if (!string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
+                            {
+                                //如果没有输入登录账号，账号默认为用户的ID
+                                var addLoginId = await dapperLogin.Save(new DtoSave<FaLoginEntity>
+                                {
+                                    Data = new FaLoginEntity
+                                    {
+                                        ID = await new SequenceRepository().GetNextID<FaLoginEntity>(),
+                                        LOGIN_NAME = inEnt.Data.LOGIN_NAME,
+                                        PASSWORD = inEnt.Data.LOGIN_NAME.Md5()
+                                    }
+                                });
+                                if (addLoginId < 1)
+                                {
+                                    dapperUser.TranscationRollback();
+                                    reObj.IsSuccess = false;
+                                    reObj.Msg = "保存用户登录账号失败";
+                                    return reObj;
+                                }
+                            }
+
+                            #endregion
 
                         }
 
                     }
 
                     #endregion
-                    
+
                     #region 修改用户
                     user.NAME = inEnt.Data.NAME;
                     user.LOGIN_NAME = inEnt.Data.LOGIN_NAME;

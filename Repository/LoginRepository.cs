@@ -459,8 +459,11 @@ namespace Repository
                 return reObj;
             }
             #endregion
+            
+            #region 检测用户是否存在
+                
             FaUserEntity user = new FaUserEntity();
-            if (string.IsNullOrEmpty(oldLoginName))
+            if (userId!=0)
             {
                 user = await userDapper.Single(x => x.ID == userId);
             }
@@ -468,6 +471,7 @@ namespace Repository
             {
                 user = await userDapper.Single(x => x.LOGIN_NAME == oldLoginName);
             }
+
             if (user == null)
             {
                 reObj.IsSuccess = false;
@@ -475,8 +479,12 @@ namespace Repository
                 reObj.Msg = string.Format("用户不存在");
                 return reObj;
             }
+            #endregion
+
+            userDapper.TranscationBegin();
 
             #region 修改用户账号
+
             user.NAME = name;
             user.LOGIN_NAME = NewLoginName;
 
@@ -489,6 +497,7 @@ namespace Repository
 
             if (!reObj.IsSuccess)
             {
+                userDapper.TranscationRollback();
                 reObj.Msg = "保存用户失败";
                 return reObj;
             }
@@ -503,7 +512,7 @@ namespace Repository
                 FaLoginEntity inLogin = new FaLoginEntity();
                 inLogin.ID = await new SequenceRepository().GetNextID<FaLoginEntity>();
                 inLogin.LOGIN_NAME = NewLoginName;
-                inLogin.PASSWORD = NewLoginName.Substring(oldLoginName.Length - 6).Md5();
+                inLogin.PASSWORD = NewLoginName.Md5();
                 inLogin.IS_LOCKED = 0;
                 inLogin.FAIL_COUNT = 0;
                 reObj.IsSuccess = await loginDapper.Save(new DtoSave<FaLoginEntity>()
@@ -525,9 +534,12 @@ namespace Repository
             if (!reObj.IsSuccess)
             {
                 reObj.Msg = "保存账号失败";
+                userDapper.TranscationRollback();
                 return reObj;
             }
             #endregion
+            userDapper.TranscationCommit();
+
             reObj.IsSuccess = true;
             reObj.Msg = user.ID.ToString();
             return reObj;
