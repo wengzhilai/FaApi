@@ -92,3 +92,5 @@ create table fa_table_column (
 		"click": "nowThis.onExportXls()"
 	}
 ]
+
+update fa_user_info set `STATUS`='存档',AUTHORITY=4 where ELDER_ID<23

@@ -54,5 +54,27 @@ namespace IRepository
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<Result> Delete(int userId);
+        /// <summary>
+        /// 获取可以编辑的用户ID
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<List<int>> GetCanEditUserIdListAsync(int userId);
+
+        /// <summary>
+        /// 获取指定ElderId的用户ID
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="elderId"></param>
+        /// <returns></returns>
+        Task<int> GetUserIdByElderAsync(int userId,int elderId);
+
+        /// <summary>
+        /// 获取用户的家谱成员
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<List<FaUserBookEntityView>> GetUserBooksAsync(int userId);
+
     }
 }

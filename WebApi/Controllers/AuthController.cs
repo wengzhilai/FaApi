@@ -37,6 +37,7 @@ namespace WebApi.Controllers
         IRoleRepository _role;
         IHttpContextAccessor _accessor;
         IUserRepository _user;
+        IUserInfoRepository _userInfo;
 
         /// <summary>
         /// 授权
@@ -49,6 +50,7 @@ namespace WebApi.Controllers
         public AuthController(
             IConfiguration config,
             ILoginRepository login,
+            IUserInfoRepository userInfo,
             IRoleRepository role,
             IHttpContextAccessor accessor,
             IUserRepository user
@@ -59,6 +61,7 @@ namespace WebApi.Controllers
             _role = role;
             _user = user;
             _accessor = accessor;
+            _userInfo = userInfo;
         }
         /// <summary>
         /// 登录登录 
@@ -74,6 +77,7 @@ namespace WebApi.Controllers
             reobj = await _login.UserLogin(inEnt);
             if (reobj.IsSuccess)
             {
+                reobj.Data.CanEditIdList=await _userInfo.GetCanEditUserIdListAsync(reobj.Data.ID);
                 var claims = new Claim[]
                         {
                         new Claim(ClaimTypes.Name, reobj.Data.LOGIN_NAME),
@@ -91,7 +95,7 @@ namespace WebApi.Controllers
                     creds);
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
 
-                await RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
+                // await RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
             }
             return reobj;
         }

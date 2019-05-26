@@ -111,5 +111,10 @@ namespace Models.Entity
         /// </summary>
         /// <value></value>
         public int roleIdList { get; set; }
+        /// <summary>
+        /// 可编辑的用户ID
+        /// </summary>
+        /// <value></value>
+        public List<int> CanEditIdList { get; set; }
     }
 }

@@ -159,7 +159,7 @@ namespace WebApi.Controllers
             int startX = toRigth + 2;
             for (var i = myPlace + 1; i < sonList.Count; i++)
             {
-                var tmpXY = await AddSonItem(mainList, allSon[i], 1, 1, new XYZ { X = startX, Y = xyz.Y });
+                var tmpXY = await AddSonItem(mainList, allSon[i], 1, 0, new XYZ { X = startX, Y = xyz.Y });
                 startX = tmpXY[1] + 2;
                 sonList[i].x = (tmpXY[0] + tmpXY[1]) / 2;
                 sonList[i].y = xyz.Y;
