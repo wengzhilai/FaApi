@@ -95,7 +95,7 @@ namespace WebApi.Controllers
             Result<FaElderEntity> reObj = new Result<FaElderEntity>();
             try
             {
-                reObj.DataList = await family.GetUserBooksAsync(inObj.Key);
+                reObj = await family.GetUserBooksAsync(inObj.Key);
             }
             catch (Exception e)
             {

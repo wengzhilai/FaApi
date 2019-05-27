@@ -261,7 +261,12 @@ namespace Models.EntityView
         /// </summary>
         /// <value></value>
         public string DiedsolarDate { get; set; }
-
+         /// <summary>
+         /// 格式化后的文本
+         /// </summary>
+         /// <value></value>
+        public string MsgFormat { get; set; }
+      
 
     }
 }

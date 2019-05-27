@@ -98,8 +98,10 @@ namespace Repository
         }
 
 
-        public async Task<List<FaElderEntity>> GetUserBooksAsync(int userId)
+        public async Task<Result<FaElderEntity>> GetUserBooksAsync(int userId)
         {
+            var reObj = new Result<FaElderEntity>();
+
             UserInfoRepository userInfoDal = new UserInfoRepository();
 
             //德字辈排号是24
@@ -112,21 +114,38 @@ namespace Repository
             //转换成用户信息
             var allUserIdList = all.Select(i => i.Id).ToList();
             DapperHelper<FaUserBookEntityView> dapperBooks = new DapperHelper<FaUserBookEntityView>();
-            var reObj = await dapperBooks.FindAll(string.Format("a.ID IN ({0})", string.Join(",", allUserIdList)));
+            var allBooks = await dapperBooks.FindAll(string.Format("a.ID IN ({0})", string.Join(",", allUserIdList)));
 
-            var elderList = reObj.GroupBy(x => x.ELDER_ID).Select(x => x.Key).Where(x => x != null).ToList();
+            var elderList = allBooks.GroupBy(x => x.ELDER_ID).Select(x => x.Key).Where(x => x != null).ToList();
 
             DapperHelper<FaElderEntity> dappElder = new DapperHelper<FaElderEntity>();
             var allElder = await dappElder.FindAll(string.Format("ID IN ({0}) ORDER BY ID", string.Join(",", elderList)));
             foreach (var item in allElder)
             {
-                item.AllUser = reObj.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.FATHER_ID).ThenBy(i => i.SEX).ThenBy(i => i.LEVEL_ID).ToList();
+                item.AllUser = allBooks.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.FATHER_ID).ThenBy(i => i.SEX).ThenBy(i => i.LEVEL_ID).ToList();
                 foreach (var tmpUser in item.AllUser)
                 {
                     if (tmpUser.BIRTHDAY_TIME != null) tmpUser.BirthdaylunlarDate = tmpUser.BIRTHDAY_TIME.Value.ToString("yyyy年MM月dd日HH时");
+                    if (tmpUser.SEX == "男" || tmpUser.BIRTHDAY_TIME != null)
+                    {
+
+                        var msg = string.Format("{0}行{1}", tmpUser.NAME, tmpUser.LEVEL_ID);
+
+                        msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format(",生于{0}", tmpUser.BirthdaylunlarDate) : ",生庚未详";
+                        if (tmpUser.DIED_TIME != null) msg += string.Format(",逝于{0}", tmpUser.DIED_TIME.Value.Hour != 0 ? tmpUser.DIED_TIME.Value.ToString("yyyy年MM月dd日HH时") : tmpUser.DIED_TIME.Value.ToString("yyyy年MM月dd日"));
+                        if (tmpUser.CoupleName != null) msg += string.Format(",妻{0}", tmpUser.CoupleName);
+                        if (tmpUser.ChildSons != null) msg += string.Format(",生子{0}", tmpUser.ChildSons);
+                        if (tmpUser.ChildDaughters != null) msg += string.Format(",生女{0}", tmpUser.ChildDaughters);
+
+                        tmpUser.MsgFormat = msg;
+                    }
                 }
             }
-            return allElder.ToList();
+
+            reObj.DataList = allElder.ToList();
+
+            reObj.Msg = userInfo.NAME;
+            return reObj;
         }
 
 
