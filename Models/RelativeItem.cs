@@ -1,5 +1,8 @@
 namespace Models
 {
+    /// <summary>
+    /// 关系数据
+    /// </summary>
     public class RelativeItem
     {
         /// <summary>

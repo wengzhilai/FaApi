@@ -20,11 +20,18 @@ namespace Models.EntityView
         public string CoupleName { get; set; }
 
 
+
         /// <summary>
-        /// 子女数
+        /// 所有儿子
         /// </summary>
-        [Column("(SELECT count(1) from fa_user_info x where x.FATHER_ID=a.ID) ChildNum")]
-        public int ChildNum { get; set; }
+        [Column("(SELECT GROUP_CONCAT(b1.`NAME`,',') modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='男' ORDER BY a1.LEVEL_ID) ChildSons")]
+        public string ChildSons { get; set; }
+
+        /// <summary>
+        /// 所有女儿
+        /// </summary>
+        [Column("(SELECT GROUP_CONCAT(b1.`NAME`,',') modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='女' ORDER BY a1.LEVEL_ID) ChildDaughters")]
+        public string ChildDaughters { get; set; }
 
         /// <summary>
         /// ID

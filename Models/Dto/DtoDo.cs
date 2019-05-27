@@ -22,4 +22,12 @@ namespace Models
         /// </summary>
         public T Key { get; set; }
     }
+
+    public class DtoKey
+    {
+        /// <summary>
+        /// 传入的值
+        /// </summary>
+        public string Key { get; set; }
+    }
 }

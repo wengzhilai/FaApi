@@ -12,6 +12,7 @@ using Dapper;
 using System.Data;
 using System.Linq.Expressions;
 using Models.EntityView;
+using AutoMapper;
 
 namespace Repository
 {
@@ -691,7 +692,7 @@ namespace Repository
         {
             DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>();
             var allUser = await dapperUserInfo.FindAll(string.Format("FATHER_ID = {0} or ID (select FATHER_ID from {1} where ID = {0})", userId, dapperUserInfo.modelHelper.GetTableName()));
-            var reList=allUser.Select(i => i.ID).ToList();
+            var reList = allUser.Select(i => i.ID).ToList();
             reList.Add(userId);
             return reList;
         }
@@ -699,26 +700,20 @@ namespace Repository
         public async Task<int> GetUserIdByElderAsync(int userId, int elderId)
         {
             DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>();
-            var user=await dapperUserInfo.Single(i=>i.ID==userId);
+            var user = await dapperUserInfo.Single(i => i.ID == userId);
             // ELDER_ID 小表示高
-            if(user.ELDER_ID==null || user.ELDER_ID<=elderId) return userId;
-            int disElder=user.ELDER_ID.Value-elderId;
+            if (user.ELDER_ID == null || user.ELDER_ID <= elderId) return userId;
+            int disElder = user.ELDER_ID.Value - elderId;
             for (int i = 0; i < disElder; i++)
             {
-                if(i==disElder-1){
+                if (i == disElder - 1)
+                {
                     return user.FATHER_ID.Value;
                 }
-                user=await dapperUserInfo.Single(a=>a.ID==user.FATHER_ID);
+                user = await dapperUserInfo.Single(a => a.ID == user.FATHER_ID);
             }
             return userId;
         }
 
-        public async Task<List<FaUserBookEntityView>> GetUserBooksAsync(int userId)
-        {
-            //德字辈排号是24
-            var maskUserId=await GetUserIdByElderAsync(userId,24);
-            
-            throw new NotImplementedException();
-        }
     }
 }

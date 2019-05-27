@@ -13,7 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using WebApi.Comon;
 using Microsoft.Extensions.Options;
-using WebApi.Model.InEnt;
+
 using Helper;
 using Models.Entity;
 using AutoMapper;

@@ -3,12 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AutoMapper;
+using Models;
 using Models.Entity;
+using Models.EntityView;
 
 namespace IRepository
 {
-    public interface IFamilyRepository 
+    public interface IFamilyRepository
     {
+        void SetMapper(IMapper mapper);
         Task<FaFamilyEntity> SingleByKey(int key);
 
         /// <summary>
@@ -17,6 +21,18 @@ namespace IRepository
         /// <param name="inParm"></param>
         /// <returns></returns>
         Task<IEnumerable<FaFamilyEntity>> FindAll(Expression<Func<FaFamilyEntity, bool>> inParm = null);
+        /// <summary>
+        /// 获取
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        Task<Result<Relative>> Relative(DtoDo<int> inObj);
 
+        /// <summary>
+        /// 获取用户的家谱成员
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<List<FaUserBookEntityView>> GetUserBooksAsync(int userId);
     }
 }

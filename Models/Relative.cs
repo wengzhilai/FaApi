@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Models;
 using Models.Entity;
 
-namespace WebApi.Model.InEnt
+namespace Models
 {
     /// <summary>
     /// 操作对象

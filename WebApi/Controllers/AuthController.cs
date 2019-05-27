@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApi.Comon;
-using WebApi.Model;
+
 using IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +11,7 @@ using Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Models.Entity;
-using WebApi.Model.InEnt;
+
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Helper;
@@ -45,6 +45,7 @@ namespace WebApi.Controllers
         /// <param name="config"></param>
         /// <param name="login"></param>
         /// <param name="role"></param>
+        /// <param name="userInfo"></param>
         /// <param name="accessor"></param>
         /// <param name="user"></param>
         public AuthController(

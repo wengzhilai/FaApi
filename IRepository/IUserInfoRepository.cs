@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AutoMapper;
 using Models;
 using Models.Entity;
 using Models.EntityView;
@@ -69,12 +70,7 @@ namespace IRepository
         /// <returns></returns>
         Task<int> GetUserIdByElderAsync(int userId,int elderId);
 
-        /// <summary>
-        /// 获取用户的家谱成员
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<List<FaUserBookEntityView>> GetUserBooksAsync(int userId);
+
 
     }
 }
