@@ -120,7 +120,7 @@ namespace Repository
             var allElder = await dappElder.FindAll(string.Format("ID IN ({0}) ORDER BY ID", string.Join(",", elderList)));
             foreach (var item in allElder)
             {
-                item.AllUser = reObj.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.SEX).OrderBy(i => i.FATHER_ID).OrderBy(i => i.LEVEL_ID).ToList();
+                item.AllUser = reObj.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.FATHER_ID).ThenBy(i => i.SEX).ThenBy(i => i.LEVEL_ID).ToList();
                 foreach (var tmpUser in item.AllUser)
                 {
                     if (tmpUser.BIRTHDAY_TIME != null) tmpUser.BirthdaylunlarDate = tmpUser.BIRTHDAY_TIME.Value.ToString("yyyy年MM月dd日HH时");
