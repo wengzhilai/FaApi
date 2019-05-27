@@ -1,7 +1,9 @@
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Models.EntityView;
 
 namespace Models.Entity
 {
@@ -40,5 +42,11 @@ namespace Models.Entity
         [Display(Name = "排序")]
         [Column]
         public Nullable<int> SORT { get; set; }
+
+        /// <summary>
+        /// 所有用户，用于家谱接口
+        /// </summary>
+        /// <value></value>
+        public List<FaUserBookEntityView> AllUser { get; set; }
     }
 }

@@ -98,7 +98,7 @@ namespace Repository
         }
 
         
-        public async Task<List<FaUserBookEntityView>> GetUserBooksAsync(int userId)
+        public async Task<List<FaElderEntity>> GetUserBooksAsync(int userId)
         {
             UserInfoRepository userInfoDal = new UserInfoRepository();
 
@@ -106,7 +106,7 @@ namespace Repository
             var maskUserId = await userInfoDal.GetUserIdByElderAsync(userId, 24);
 
             //获取所有五福图
-            var userInfo = await userInfoDal.SingleByKey(userId);
+            var userInfo = await userInfoDal.SingleByKey(maskUserId);
             var all = await GetRelativeItems(userInfo);
 
             //转换成用户信息
@@ -114,7 +114,15 @@ namespace Repository
             DapperHelper<FaUserBookEntityView> dapperBooks = new DapperHelper<FaUserBookEntityView>();
             var reObj=await dapperBooks.FindAll(string.Format("a.ID IN ({0})  and a.BIRTHDAY_TIME is not NULL",string.Join(",",allUserIdList)));
 
-            return reObj.ToList();
+            var elderList=reObj.GroupBy(x=>x.ELDER_ID).Select(x=>x.Key).Where(x=>x!=null).ToList();
+
+            DapperHelper<FaElderEntity> dappElder=new DapperHelper<FaElderEntity>();
+            var allElder=await dappElder.FindAll(string.Format("ID IN ({0}) ORDER BY ID",string.Join(",",elderList)));
+            foreach (var item in allElder)
+            {
+                item.AllUser=reObj.Where(x=>x.ELDER_ID==item.ID).ToList();
+            }
+            return allElder.ToList();
         }
 
 

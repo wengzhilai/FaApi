@@ -90,9 +90,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaUserBookEntityView>> GetUserBooks(DtoDo<int> inObj)
+        public async Task<Result<FaElderEntity>> GetUserBooks(DtoDo<int> inObj)
         {
-            Result<FaUserBookEntityView> reObj = new Result<FaUserBookEntityView>();
+            Result<FaElderEntity> reObj = new Result<FaElderEntity>();
             try
             {
                 reObj.DataList = await family.GetUserBooksAsync(inObj.Key);

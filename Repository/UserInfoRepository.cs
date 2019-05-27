@@ -691,7 +691,7 @@ namespace Repository
         public async Task<List<int>> GetCanEditUserIdListAsync(int userId)
         {
             DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>();
-            var allUser = await dapperUserInfo.FindAll(string.Format("FATHER_ID = {0} or ID (select FATHER_ID from {1} where ID = {0})", userId, dapperUserInfo.modelHelper.GetTableName()));
+            var allUser = await dapperUserInfo.FindAll(string.Format("FATHER_ID = {0} OR ID = (select FATHER_ID from {1} where ID = {0})", userId, dapperUserInfo.modelHelper.GetTableName()));
             var reList = allUser.Select(i => i.ID).ToList();
             reList.Add(userId);
             return reList;

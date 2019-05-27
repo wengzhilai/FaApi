@@ -33,6 +33,6 @@ namespace IRepository
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<List<FaUserBookEntityView>> GetUserBooksAsync(int userId);
+        Task<List<FaElderEntity>> GetUserBooksAsync(int userId);
     }
 }

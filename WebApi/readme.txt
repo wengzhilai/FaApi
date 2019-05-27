@@ -94,3 +94,14 @@ create table fa_table_column (
 ]
 
 update fa_user_info set `STATUS`='存档',AUTHORITY=4 where ELDER_ID<23
+
+
+
+DROP TEMPORARY TABLE tmp_table;
+CREATE TEMPORARY TABLE tmp_table select * from fa_user_info where ELDER_ID is NOT NULL;
+UPDATE fa_user_info a 
+SET    a.ELDER_ID = (select ELDER_ID+1 from tmp_table b where b.ID=a.FATHER_ID)
+where a.ELDER_ID is NULL;
+
+
+update fa_user_info set ELDER_ID=(select ELDER_ID+1 from fa_user_info a where a.ID=106)
