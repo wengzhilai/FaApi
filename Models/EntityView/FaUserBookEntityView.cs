@@ -9,14 +9,34 @@ namespace Models.EntityView
     /// <summary>
     /// 用户扩展
     /// </summary>
-    [Table("fa_user_info a left join fa_user b on a.ID=b.ID LEFT JOIN fa_user Couple on Couple.ID=a.COUPLE_ID")]
+    [Table("fa_user_info a left join fa_user b on a.ID=b.ID LEFT JOIN fa_user Couple on Couple.ID=a.COUPLE_ID LEFT JOIN fa_user_info CoupleInfo ON Couple.ID = CoupleInfo.ID")]
     public class FaUserBookEntityView
     {
 
         /// <summary>
         /// 配偶姓名
         /// </summary>
-        [Column("Couple.`NAME` CoupleName")]
+        [Column(@"CASE
+          WHEN CoupleInfo.BIRTHDAY_TIME IS NULL
+          THEN
+             CONCAT(Couple.`NAME`, '生庚未详')
+          ELSE
+             CASE
+                WHEN DATE_FORMAT(CoupleInfo.BIRTHDAY_TIME, '%H') = '00'
+                THEN
+                   CONCAT(
+                      Couple.`NAME`,
+                      '生于',
+                      DATE_FORMAT(CoupleInfo.BIRTHDAY_TIME,
+                                  '%Y年%m月%d日'))
+                ELSE
+                   CONCAT(
+                      Couple.`NAME`,
+                      '生于',
+                      DATE_FORMAT(CoupleInfo.BIRTHDAY_TIME,
+                                  '%Y年%m月%d日%H时'))
+             END
+       END CoupleName")]
         public string CoupleName { get; set; }
 
 
@@ -24,13 +44,13 @@ namespace Models.EntityView
         /// <summary>
         /// 所有儿子
         /// </summary>
-        [Column("(SELECT GROUP_CONCAT(b1.`NAME`,',') modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='男' ORDER BY a1.LEVEL_ID) ChildSons")]
+        [Column("(SELECT GROUP_CONCAT(substring(b1.`NAME`,2)) modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='男' ORDER BY a1.LEVEL_ID) ChildSons")]
         public string ChildSons { get; set; }
 
         /// <summary>
         /// 所有女儿
         /// </summary>
-        [Column("(SELECT GROUP_CONCAT(b1.`NAME`,',') modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='女' ORDER BY a1.LEVEL_ID) ChildDaughters")]
+        [Column("(SELECT GROUP_CONCAT(substring(b1.`NAME`,2)) modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='女' ORDER BY a1.LEVEL_ID) ChildDaughters")]
         public string ChildDaughters { get; set; }
 
         /// <summary>

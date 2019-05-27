@@ -62,7 +62,7 @@ namespace Repository
                 return reobj;
             }
 
-            reEnt.ItemList =await GetRelativeItems(userInfo);
+            reEnt.ItemList = await GetRelativeItems(userInfo);
 
             reEnt.RelativeList = reEnt.ItemList.Select(x => new KV { K = x.Id.ToString(), V = x.FatherId.ToString() }).ToList();
             reEnt.RelativeList.RemoveAt(reEnt.RelativeList.Count() - 1);
@@ -97,7 +97,7 @@ namespace Repository
             return riList;
         }
 
-        
+
         public async Task<List<FaElderEntity>> GetUserBooksAsync(int userId)
         {
             UserInfoRepository userInfoDal = new UserInfoRepository();
@@ -112,15 +112,19 @@ namespace Repository
             //转换成用户信息
             var allUserIdList = all.Select(i => i.Id).ToList();
             DapperHelper<FaUserBookEntityView> dapperBooks = new DapperHelper<FaUserBookEntityView>();
-            var reObj=await dapperBooks.FindAll(string.Format("a.ID IN ({0})  and a.BIRTHDAY_TIME is not NULL",string.Join(",",allUserIdList)));
+            var reObj = await dapperBooks.FindAll(string.Format("a.ID IN ({0})", string.Join(",", allUserIdList)));
 
-            var elderList=reObj.GroupBy(x=>x.ELDER_ID).Select(x=>x.Key).Where(x=>x!=null).ToList();
+            var elderList = reObj.GroupBy(x => x.ELDER_ID).Select(x => x.Key).Where(x => x != null).ToList();
 
-            DapperHelper<FaElderEntity> dappElder=new DapperHelper<FaElderEntity>();
-            var allElder=await dappElder.FindAll(string.Format("ID IN ({0}) ORDER BY ID",string.Join(",",elderList)));
+            DapperHelper<FaElderEntity> dappElder = new DapperHelper<FaElderEntity>();
+            var allElder = await dappElder.FindAll(string.Format("ID IN ({0}) ORDER BY ID", string.Join(",", elderList)));
             foreach (var item in allElder)
             {
-                item.AllUser=reObj.Where(x=>x.ELDER_ID==item.ID).ToList();
+                item.AllUser = reObj.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.SEX).OrderBy(i => i.FATHER_ID).OrderBy(i => i.LEVEL_ID).ToList();
+                foreach (var tmpUser in item.AllUser)
+                {
+                    if (tmpUser.BIRTHDAY_TIME != null) tmpUser.BirthdaylunlarDate = tmpUser.BIRTHDAY_TIME.Value.ToString("yyyy年MM月dd日HH时");
+                }
             }
             return allElder.ToList();
         }
