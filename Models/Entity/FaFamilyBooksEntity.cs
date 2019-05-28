@@ -46,7 +46,7 @@ namespace Models
             /// </summary>
             [Display(Name = "排序")]
             [Column]
-            public Nullable<int> SORT { get; set; }
+            public int SORT { get; set; }
             /// <summary>
             /// 用户ID
             /// </summary>

@@ -145,6 +145,9 @@ namespace Repository
             reObj.DataList = allElder.ToList();
 
             reObj.Msg = userInfo.NAME;
+            DapperHelper<FaFamilyBooksEntity> dapperFb = new DapperHelper<FaFamilyBooksEntity>();
+            var page = await dapperFb.Single(i => i.UserID == userInfo.ID && i.TYPE_ID == 2);
+            reObj.Code = (page == null) ? "10" : page.SORT.ToString();
             return reObj;
         }
 

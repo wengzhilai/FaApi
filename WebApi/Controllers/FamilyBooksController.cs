@@ -125,5 +125,77 @@ namespace WebApi.Controllers
             }
             return reObj;
         }
+
+        /// <summary>
+        /// 获取下一个关系图
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaFamilyBooksEntity>> GetSingleNext(DtoDo<int> inObj)
+        {
+            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            try
+            {
+                DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
+                var single =await dapp.Single(x=>x.SORT>inObj.Key,"order by SORT");
+                reObj.Data = single;
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取下一个关系图失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
+        /// 获取上一个关系图
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaFamilyBooksEntity>> GetSinglePrev(DtoDo<int> inObj)
+        {
+            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            try
+            {
+                DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
+                var single =await dapp.Single(x=>x.SORT<inObj.Key,"order by SORT desc");
+                reObj.Data = single;
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取上一个关系图失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
+        /// 获取指定页码
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaFamilyBooksEntity>> GetSingleBySort(DtoDo<int> inObj)
+        {
+            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            try
+            {
+                DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
+                var single =await dapp.Single(x=>x.SORT==inObj.Key);
+                reObj.Data = single;
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取指定页码", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
     }
 }
