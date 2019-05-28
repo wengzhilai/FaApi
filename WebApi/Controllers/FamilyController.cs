@@ -89,7 +89,6 @@ namespace WebApi.Controllers
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        [AllowAnonymous]
         public async Task<Result<FaElderEntity>> GetUserBooks(DtoDo<int> inObj)
         {
             Result<FaElderEntity> reObj = new Result<FaElderEntity>();
@@ -105,5 +104,72 @@ namespace WebApi.Controllers
             }
             return reObj;
         }
+
+        /// <summary>
+        /// 获取下一个关系图
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaElderEntity>> GetUserBooksNext(DtoDo<int> inObj)
+        {
+            Result<FaElderEntity> reObj = new Result<FaElderEntity>();
+            try
+            {
+                reObj = await family.GetUserBooksAsync(inObj.Key);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取用户获取前谱失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+        
+        /// <summary>
+        /// 获取上一个关系图
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaElderEntity>> GetUserBooksPrev(DtoDo<int> inObj)
+        {
+            Result<FaElderEntity> reObj = new Result<FaElderEntity>();
+            try
+            {
+                reObj = await family.GetUserBooksAsync(inObj.Key);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取用户获取前谱失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
+        /// 指定页码
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaElderEntity>> GetUserBooksGo(DtoDo<int> inObj)
+        {
+            Result<FaElderEntity> reObj = new Result<FaElderEntity>();
+            try
+            {
+                reObj = await family.GetUserBooksAsync(inObj.Key);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取用户获取前谱失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
     }
 }
