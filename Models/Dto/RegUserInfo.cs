@@ -18,7 +18,7 @@ namespace Models
         /// 头像地址
         /// </summary>
         /// <value></value>
-        public int ICON_FILES_ID { get; set; }
+        public int? ICON_FILES_ID { get; set; }
         /// <summary>
         /// 年份类型
         /// </summary>

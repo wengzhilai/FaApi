@@ -427,7 +427,7 @@ namespace Repository
         /// <param name="name"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId, string pwd,int iconFilesId)
+        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId, string pwd,int? iconFilesId)
         {
             DapperHelper<FaUserEntity> userDapper = new DapperHelper<FaUserEntity>();
             Result reObj = new Result();

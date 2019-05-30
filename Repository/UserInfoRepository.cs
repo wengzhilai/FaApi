@@ -54,9 +54,6 @@ namespace Repository
             }
 
 
-
-
-            #region 判断父亲级是否正常，并添加不存在的用户
             //表示新增加用户
             if (string.IsNullOrEmpty(inEnt.ParentArr[0].K))
             {
@@ -155,11 +152,11 @@ namespace Repository
 
                 #region 保存头像
                 //如果有新添加的头像，则保存像头地址到数据库
-                if (inEnt.ICON_FILES_ID == 0 && inEnt.IconFiles != null && !string.IsNullOrEmpty(inEnt.IconFiles.PATH))
+                if (inEnt.ICON_FILES_ID != null && inEnt.IconFiles != null && !string.IsNullOrEmpty(inEnt.IconFiles.PATH))
                 {
                     DapperHelper<FaFilesEntity> dapperFile = new DapperHelper<FaFilesEntity>();
                     inEnt.ICON_FILES_ID = await new SequenceRepository().GetNextID<FaFilesEntity>();
-                    inEnt.IconFiles.ID = inEnt.ICON_FILES_ID;
+                    inEnt.IconFiles.ID = inEnt.ICON_FILES_ID.Value;
                     inEnt.IconFiles.UPLOAD_TIME = DateTime.Now;
                     var saveNum = await dapperFile.Save(new DtoSave<FaFilesEntity>
                     {
@@ -222,7 +219,6 @@ namespace Repository
                 }
                 #endregion
             }
-            #endregion
 
             return reObj;
         }
