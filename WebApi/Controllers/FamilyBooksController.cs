@@ -151,6 +151,30 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// 获取所有家谱
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result<FaFamilyBooksEntity>> GetAllBooks()
+        {
+            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            try
+            {
+                DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
+                var allUser =await dapp.FindAll("");
+                allUser=allUser.OrderBy(i=>i.SORT);
+                reObj.DataList = allUser.ToList();
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取下一个关系图失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+        /// <summary>
         /// 获取上一个关系图
         /// </summary>
         /// <param name="inObj"></param>
