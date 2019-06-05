@@ -155,6 +155,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [AllowAnonymous]
         public async Task<Result<FaFamilyBooksEntity>> GetAllBooks()
         {
             Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
