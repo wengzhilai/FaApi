@@ -133,8 +133,8 @@ namespace Repository
 
                         msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format(",生于{0}", tmpUser.BirthdaylunlarDate) : ",生庚未详";
 
-                        if (tmpUser.EDUCATION != null) msg += string.Format(",毕业于{0}", tmpUser.EDUCATION);
-                        if (tmpUser.INDUSTRY != null) msg += string.Format(",从事{0}行业", tmpUser.INDUSTRY);
+                        if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format(",毕业于{0}", tmpUser.EDUCATION);
+                        if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format(",从事{0}行业", tmpUser.INDUSTRY);
                         if (tmpUser.DIED_TIME != null) msg += string.Format(",逝于{0}", tmpUser.DIED_TIME.Value.Hour != 0 ? tmpUser.DIED_TIME.Value.ToString("yyyy年MM月dd日HH时") : tmpUser.DIED_TIME.Value.ToString("yyyy年MM月dd日"));
 
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
