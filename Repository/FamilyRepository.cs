@@ -142,7 +142,7 @@ namespace Repository
 
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
                         {
-                            if (tmpUser.CoupleName != null) msg += string.Format(",妻{0}", tmpUser.CoupleName);
+                            if (tmpUser.CoupleName != null) msg += string.Format(",{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
                             if (tmpUser.ChildSons != null) msg += string.Format(",生子{0}", tmpUser.ChildSons);
                             if (tmpUser.ChildDaughters != null) msg += string.Format(",生女{0}", tmpUser.ChildDaughters);
                         }

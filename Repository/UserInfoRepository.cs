@@ -399,7 +399,7 @@ namespace Repository
                             CREATE_TIME = DateTime.Now,
                             AUTHORITY = 0,
                             STATUS = "正常",
-                            ELDER_ID = father.ELDER_ID + 1
+                            ELDER_ID = (father == null) ? null : father.ELDER_ID + 1
                         }
                     });
                     if (addUserInfoId < 1)
