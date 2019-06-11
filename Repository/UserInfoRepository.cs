@@ -248,10 +248,10 @@ namespace Repository
             try
             {
                 var father = await dapperUserInfo.Single(x => x.ID == inEnt.Data.FATHER_ID);
-                if (father == null)
+                if (father == null && (inEnt.Data.COUPLE_ID == null || inEnt.Data.COUPLE_ID == 0))
                 {
                     reObj.IsSuccess = false;
-                    reObj.Msg = "父亲有误";
+                    reObj.Msg = "ID有误";
                     return reObj;
                 }
 
@@ -399,7 +399,7 @@ namespace Repository
                             CREATE_TIME = DateTime.Now,
                             AUTHORITY = 0,
                             STATUS = "正常",
-                            ELDER_ID = father.ELDER_ID+1
+                            ELDER_ID = father.ELDER_ID + 1
                         }
                     });
                     if (addUserInfoId < 1)
