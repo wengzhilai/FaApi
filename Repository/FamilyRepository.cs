@@ -125,13 +125,9 @@ namespace Repository
                 item.AllUser = allBooks.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.FATHER_ID).ThenBy(i => i.SEX).ThenBy(i => i.LEVEL_ID).ToList();
                 foreach (var tmpUser in item.AllUser)
                 {
-                    if (tmpUser.BIRTHDAY_TIME != null) {
-                        if( tmpUser.BIRTHDAY_TIME.Value.Hour!=0){
-                            tmpUser.BirthdaylunlarDate = tmpUser.BIRTHDAY_TIME.Value.ToString("yyyy年MM月dd日HH时");
-                        }
-                        else{
-                            tmpUser.BirthdaylunlarDate = tmpUser.BIRTHDAY_TIME.Value.ToString("yyyy年MM月dd日");
-                        }
+                    if (tmpUser.BIRTHDAY_TIME != null)
+                    {
+                        tmpUser.BirthdaylunlarDate = Fun.FormatLunlarTime(tmpUser.BIRTHDAY_TIME);
                     }
                     if (tmpUser.SEX == "男" || tmpUser.BIRTHDAY_TIME != null)
                     {
@@ -142,7 +138,7 @@ namespace Repository
 
                         if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format(",毕业于{0}", tmpUser.EDUCATION);
                         if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format(",从事{0}行业", tmpUser.INDUSTRY);
-                        if (tmpUser.DIED_TIME != null) msg += string.Format(",逝于{0}", tmpUser.DIED_TIME.Value.Hour != 0 ? tmpUser.DIED_TIME.Value.ToString("yyyy年MM月dd日HH时") : tmpUser.DIED_TIME.Value.ToString("yyyy年MM月dd日"));
+                        if (tmpUser.DIED_TIME != null) msg += string.Format(",逝于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
 
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
                         {

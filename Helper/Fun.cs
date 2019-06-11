@@ -743,6 +743,74 @@ namespace Helper
                     return new List<int>() { 4 };
             }
         }
+        /// <summary>
+        /// 格式华农历时间
+        /// </summary>
+        /// <param name="inTime"></param>
+        /// <returns></returns>
+        public static string FormatLunlarTime(DateTime? inTime)
+        {
+
+            var reStr = "";
+
+            var arrList = new List<string>() {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十" };
+
+            if (inTime == null) return reStr;
+            reStr += inTime.Value.Year.ToString() + "年";
+            #region 格式化月
+
+            if (inTime.Value.Month < 10)
+            {
+                reStr += inTime.Value.Month.ToString() + "月";
+            }
+            else if (inTime.Value.Month == 10)
+            {
+                reStr += "十月";
+            }
+            else if (inTime.Value.Month == 11)
+            {
+                reStr += "十一月";
+            }
+            else if (inTime.Value.Month == 12)
+            {
+                reStr += "十二月";
+            }
+            #endregion
+
+            if (inTime.Value.Day < 10)
+            {
+                reStr += "初" + arrList[inTime.Value.Day];
+            }
+            else if (inTime.Value.Day == 10)
+            {
+                reStr += "十日";
+            }
+            else if (inTime.Value.Day < 20)
+            {
+                reStr += "十" + arrList[inTime.Value.Day - 10];
+            }
+            else if (inTime.Value.Day == 20)
+            {
+                reStr += "二十日";
+            }
+            else if (inTime.Value.Day < 30)
+            {
+                reStr += "二十" + arrList[inTime.Value.Day - 20];
+            }
+            else if (inTime.Value.Day == 30)
+            {
+                reStr += "三十日";
+            }
+            else if (inTime.Value.Day <= 31)
+            {
+                reStr += "三十" + arrList[inTime.Value.Day - 30];
+            }
+            if (inTime.Value.Hour != 0)
+            {
+                reStr += inTime.Value.Hour + "时";
+            }
+            return reStr;
+        }
 
     }
 
