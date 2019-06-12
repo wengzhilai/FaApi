@@ -143,6 +143,8 @@ namespace Repository
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
                         {
                             if (tmpUser.CoupleName != null) msg += string.Format("，{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
+                            msg += (tmpUser.CoupleBirthday != null) ? string.Format("，生于{0}",  Fun.FormatLunlarTime(tmpUser.CoupleBirthday)) : "，生庚未详";
+
                             if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",","，"));
                             if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",","，"));
                         }

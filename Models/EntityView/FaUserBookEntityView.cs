@@ -16,28 +16,11 @@ namespace Models.EntityView
         /// <summary>
         /// 配偶姓名
         /// </summary>
-        [Column(@"CASE
-          WHEN CoupleInfo.BIRTHDAY_TIME IS NULL
-          THEN
-             CONCAT(Couple.`NAME`, '生庚未详')
-          ELSE
-             CASE
-                WHEN DATE_FORMAT(CoupleInfo.BIRTHDAY_TIME, '%H') = '00'
-                THEN
-                   CONCAT(
-                      Couple.`NAME`,
-                      '生于',
-                      DATE_FORMAT(CoupleInfo.BIRTHDAY_TIME,
-                                  '%Y年%m月%d日'))
-                ELSE
-                   CONCAT(
-                      Couple.`NAME`,
-                      '生于',
-                      DATE_FORMAT(CoupleInfo.BIRTHDAY_TIME,
-                                  '%Y年%m月%d日%H时'))
-             END
-       END CoupleName")]
+        [Column("Couple.`NAME` CoupleName")]
         public string CoupleName { get; set; }
+
+        [Column("CoupleInfo.BIRTHDAY_TIME")]
+        public DateTime CoupleBirthday { get; set; }
 
 
 
