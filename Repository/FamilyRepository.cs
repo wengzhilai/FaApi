@@ -134,17 +134,17 @@ namespace Repository
 
                         var msg = string.Format("{0}行{1}", tmpUser.NAME, tmpUser.LEVEL_ID);
 
-                        msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format(",生于{0}", tmpUser.BirthdaylunlarDate) : ",生庚未详";
+                        msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format("，生于{0}", tmpUser.BirthdaylunlarDate) : "，生庚未详";
 
-                        if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format(",毕业于{0}", tmpUser.EDUCATION);
-                        if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format(",从事{0}行业", tmpUser.INDUSTRY);
-                        if (tmpUser.DIED_TIME != null) msg += string.Format(",逝于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
+                        if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format("，毕业于{0}", tmpUser.EDUCATION);
+                        if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format("，从事{0}行业", tmpUser.INDUSTRY);
+                        if (tmpUser.DIED_TIME != null) msg += string.Format("，逝于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
 
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
                         {
-                            if (tmpUser.CoupleName != null) msg += string.Format(",{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
-                            if (tmpUser.ChildSons != null) msg += string.Format(",生子{0}", tmpUser.ChildSons);
-                            if (tmpUser.ChildDaughters != null) msg += string.Format(",生女{0}", tmpUser.ChildDaughters);
+                            if (tmpUser.CoupleName != null) msg += string.Format("，{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
+                            if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons);
+                            if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters);
                         }
                         else
                         {
