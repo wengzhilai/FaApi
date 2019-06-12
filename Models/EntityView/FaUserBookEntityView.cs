@@ -19,8 +19,8 @@ namespace Models.EntityView
         [Column("Couple.`NAME` CoupleName")]
         public string CoupleName { get; set; }
 
-        [Column("CoupleInfo.BIRTHDAY_TIME")]
-        public DateTime CoupleBirthday { get; set; }
+        [Column("CoupleInfo.BIRTHDAY_TIME CoupleBirthday")]
+        public DateTime? CoupleBirthday { get; set; }
 
 
 
