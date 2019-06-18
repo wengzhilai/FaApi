@@ -45,5 +45,10 @@ namespace Models
         public string Authority { get; set; }
         public string CreateUserId { get; set; }
 
+        /// <summary>
+        /// 完成比例
+        /// </summary>
+        public int CompletionRatio{get;set;}
+
     }
 }
