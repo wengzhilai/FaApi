@@ -125,23 +125,28 @@ namespace Repository
                 item.AllUser = allBooks.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.FATHER_ID).ThenBy(i => i.SEX).ThenBy(i => i.LEVEL_ID).ToList();
                 foreach (var tmpUser in item.AllUser)
                 {
-                    if (tmpUser.BIRTHDAY_TIME != null) tmpUser.BirthdaylunlarDate = tmpUser.BIRTHDAY_TIME.Value.ToString("yyyy年MM月dd日HH时");
+                    if (tmpUser.BIRTHDAY_TIME != null)
+                    {
+                        tmpUser.BirthdaylunlarDate = Fun.FormatLunlarTime(tmpUser.BIRTHDAY_TIME);
+                    }
                     if (tmpUser.SEX == "男" || tmpUser.BIRTHDAY_TIME != null)
                     {
 
                         var msg = string.Format("{0}行{1}", tmpUser.NAME, tmpUser.LEVEL_ID);
 
-                        msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format(",生于{0}", tmpUser.BirthdaylunlarDate) : ",生庚未详";
+                        msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format("，生于{0}", tmpUser.BirthdaylunlarDate) : "，生庚未详";
 
-                        if (tmpUser.EDUCATION != null) msg += string.Format(",毕业于{0}", tmpUser.EDUCATION);
-                        if (tmpUser.INDUSTRY != null) msg += string.Format(",从事{0}行业", tmpUser.INDUSTRY);
-                        if (tmpUser.DIED_TIME != null) msg += string.Format(",逝于{0}", tmpUser.DIED_TIME.Value.Hour != 0 ? tmpUser.DIED_TIME.Value.ToString("yyyy年MM月dd日HH时") : tmpUser.DIED_TIME.Value.ToString("yyyy年MM月dd日"));
+                        if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format("，毕业于{0}", tmpUser.EDUCATION);
+                        if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format("，从事{0}行业", tmpUser.INDUSTRY);
+                        if (tmpUser.DIED_TIME != null) msg += string.Format("，逝于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
 
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
                         {
-                            if (tmpUser.CoupleName != null) msg += string.Format(",妻{0}", tmpUser.CoupleName);
-                            if (tmpUser.ChildSons != null) msg += string.Format(",生子{0}", tmpUser.ChildSons);
-                            if (tmpUser.ChildDaughters != null) msg += string.Format(",生女{0}", tmpUser.ChildDaughters);
+                            if (tmpUser.CoupleName != null) msg += string.Format("，{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
+                            msg += (tmpUser.CoupleBirthday != null) ? string.Format("，生于{0}",  Fun.FormatLunlarTime(tmpUser.CoupleBirthday)) : "，生庚未详";
+
+                            if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",","，"));
+                            if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",","，"));
                         }
                         else
                         {

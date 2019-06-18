@@ -106,6 +106,8 @@ where a.ELDER_ID is NULL;
 
 update fa_user_info set ELDER_ID=(select ELDER_ID+1 from fa_user_info a where a.ID=106)
 
+ALTER TABLE fa_family_books DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
+
 
 
 rz -b

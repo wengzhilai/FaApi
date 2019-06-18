@@ -234,21 +234,9 @@ namespace Repository
 
             DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
             #region 验证信息是否有误
-            // if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
-            // {
-            //     reObj.IsSuccess = false;
-            //     reObj.Msg = "电话号码不能为空";
-            //     return reObj;
-            // }
-            if (inEnt.Data.ID == 0 && !string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
-            {
-                if (await dapperUser.Count(i => i.LOGIN_NAME == inEnt.Data.LOGIN_NAME) > 0)
-                {
-                    reObj.IsSuccess = false;
-                    reObj.Msg = "该电话号码已经被注册";
-                    return reObj;
-                }
-            }
+
+
+
             #endregion
 
             dapperUser.TranscationBegin();
@@ -259,6 +247,15 @@ namespace Repository
 
             try
             {
+                var father = await dapperUserInfo.Single(x => x.ID == inEnt.Data.FATHER_ID);
+                if (father == null && (inEnt.Data.COUPLE_ID == null || inEnt.Data.COUPLE_ID == 0))
+                {
+                    reObj.IsSuccess = false;
+                    reObj.Msg = "ID有误";
+                    return reObj;
+                }
+
+
                 #region 保存头像
                 //如果有新添加的头像，则保存像头地址到数据库
                 if ((inEnt.Data.ICON_FILES_ID == null || inEnt.Data.ICON_FILES_ID == 0) && inEnt.Data.IconFiles != null && !string.IsNullOrEmpty(inEnt.Data.IconFiles.PATH))
@@ -372,6 +369,8 @@ namespace Repository
                     #endregion
 
                     #region 保存UserInfo
+
+
                     var addUserInfoId = await dapperUserInfo.Save(new DtoSave<FaUserInfoEntity>
                     {
                         Data = new FaUserInfoEntity
@@ -400,7 +399,7 @@ namespace Repository
                             CREATE_TIME = DateTime.Now,
                             AUTHORITY = 0,
                             STATUS = "正常",
-
+                            ELDER_ID = (father == null) ? null : father.ELDER_ID + 1
                         }
                     });
                     if (addUserInfoId < 1)
