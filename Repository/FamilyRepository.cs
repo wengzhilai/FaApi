@@ -173,6 +173,10 @@ namespace Repository
             var ent = mapper.Map<RelativeItem>(userInfo);
             ent.x = x;
             ent.y = y;
+            ent.CompletionRatio=0;
+            if(userInfo.BIRTHDAY_TIME!=null){
+                ent.CompletionRatio=60;
+            }
             return ent;
         }
         private async Task<IList<int>> AddSonItem(IList<RelativeItem> mainList, FaUserInfoEntityView inFather, int levelId, int maxLevelId, XYZ xyz)
