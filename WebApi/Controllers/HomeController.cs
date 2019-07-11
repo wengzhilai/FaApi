@@ -18,6 +18,8 @@ using Helper;
 using Models.Entity;
 using AutoMapper;
 using Models;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WebApi.Controllers
 {
@@ -29,6 +31,7 @@ namespace WebApi.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
+        private readonly IHostingEnvironment _env;
         private readonly IConfiguration _configuration;
         private IMapper _mapper { get; set; }
         /// <summary>
@@ -36,10 +39,13 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="mapper"></param>
-        public HomeController(IConfiguration configuration, IMapper mapper)
+        /// <param name="env"></param>
+        public HomeController(IConfiguration configuration, IMapper mapper, IHostingEnvironment env)
         {
+            _env = env;
             _mapper = mapper;
             _configuration = configuration;
+
         }
 
         /// <summary>
@@ -61,6 +67,26 @@ namespace WebApi.Controllers
             }
             LogHelper.WriteLog<HomeController>("测试正常日志");
             return "home-index";
+        }
+
+        /// <summary>
+        /// 测试word文档
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public string TestDocx()
+        {
+            try
+            {
+                var allPath = Path.Combine(_env.ContentRootPath, "..\\Doc\\Family.docx");
+                var t = new WordHelper(allPath);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog<HomeController>("测试错误日志", e);
+            }
+            return "normal";
         }
 
         /// <summary>
