@@ -16,11 +16,9 @@ public class WordHelper
     private static String BINARY_EXTENSION = "xls";
     private static String OPENXML_EXTENSION = "xlsx";
 
-    public WordHelper(string path)
+    public WordHelper()
     {
-        var doc = MakeXWPFDocument(path);
-        UpdateEmbeddedDoc1(doc);
-        SaveDoc(doc, path);
+        
         // CheckUpdatedDoc();
     }
 
@@ -55,7 +53,7 @@ public class WordHelper
         }
     }
 
-    public XWPFDocument UpdateEmbeddedDoc1(XWPFDocument doc)
+    public XWPFDocument UpdateEmbeddedDoc1(XWPFDocument doc,int tableIndex,int rowIndex)
     {
         var cell = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[1].GetCell(0);
         cell.RemoveParagraph(0);
@@ -113,7 +111,7 @@ public class WordHelper
     /// </summary>
     /// <param name="cell"></param>
     /// <param name="txt"></param>
-    private void AddElder(XWPFTableCell cell, string txt)
+    public void AddElder(XWPFTableCell cell, string txt)
     {
         XWPFParagraph p3 = cell.AddParagraph();
         p3.IndentFromLeft = 113;
@@ -135,7 +133,7 @@ public class WordHelper
     /// </summary>
     /// <param name="cell"></param>
     /// <param name="txt"></param>
-    private void AddName(XWPFTableCell cell, string txt)
+    public void AddName(XWPFTableCell cell, string txt)
     {
         XWPFParagraph p3 = cell.AddParagraph();
         p3.IndentFromLeft = 113;
@@ -151,7 +149,7 @@ public class WordHelper
     /// </summary>
     /// <param name="cell"></param>
     /// <param name="txt"></param>
-    private void AddRemark(XWPFTableCell cell, string txt)
+    public void AddRemark(XWPFTableCell cell, string txt)
     {
         XWPFParagraph p4 = cell.AddParagraph();
         p4.IndentFromLeft = 113;

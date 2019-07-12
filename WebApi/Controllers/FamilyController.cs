@@ -19,6 +19,8 @@ using AutoMapper;
 using Models.EntityView;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace WebApi.Controllers
 {
@@ -31,6 +33,7 @@ namespace WebApi.Controllers
     [Authorize]
     public class FamilyController : ControllerBase
     {
+        private readonly IHostingEnvironment env;
         IConfiguration config;
         IUserInfoRepository userInfo;
         private IMapper mapper;
@@ -44,12 +47,13 @@ namespace WebApi.Controllers
         /// <param name="_mapper"></param>
         /// <param name="_family"></param>
         /// <param name="_user"></param>
+        /// <param name="_env"></param>
         public FamilyController(
             IConfiguration _config,
             IUserInfoRepository _userInfo,
             IMapper _mapper,
-        IFamilyRepository _family,
-
+            IFamilyRepository _family,
+            IHostingEnvironment _env,
              IUserRepository _user)
         {
             config = _config;
@@ -57,6 +61,7 @@ namespace WebApi.Controllers
             mapper = _mapper;
             user = _user;
             family = _family;
+            env = _env;
 
             family.SetMapper(mapper);
         }
@@ -105,7 +110,54 @@ namespace WebApi.Controllers
             return reObj;
         }
 
-        
+        /// <summary>
+        /// 生成DOC文档
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<Result> MakeUserBooks(DtoDo<int> inObj)
+        {
+            Result reObj = new Result();
+            try
+            {
+                var tmp = await family.GetUserBooksAsync(inObj.Key);
+                var allPath = Path.Combine(env.ContentRootPath, "..\\Doc\\Family.docx");
+                WordHelper word = new WordHelper();
+                var doc = word.MakeXWPFDocument(allPath);
+
+                for (int i = 0; i < tmp.DataList.Count; i++)
+                {
+                    if (i >= 5) break;
+                    var item = tmp.DataList[i];
+                    var cell = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
+                    // word.AddElder(cell, "第" + item.NAME + "世");
+                    int clm=0;
+                    foreach (var user in item.AllUser)
+                    {
+                        if(string.IsNullOrEmpty(user.MsgFormat))continue;
+                        word.AddName(cell, user.NAME);
+                        word.AddRemark(cell, Helper.Fun.FormatNumToChinese(user.MsgFormat));
+                        clm+=user.MsgFormat.Length/8;
+                        clm+=(user.MsgFormat.Length%8 ==0)?1:2;
+                        if(clm>11){
+                            cell = doc.Tables[0].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
+                        }
+                    }
+                }
+                word.SaveDoc(doc, allPath);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), "获取用户获取前谱失败", e);
+                reObj.IsSuccess = false;
+                reObj.Msg = e.Message;
+            }
+            return reObj;
+        }
+
+
 
     }
 }

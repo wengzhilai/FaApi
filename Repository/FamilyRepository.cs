@@ -82,7 +82,7 @@ namespace Repository
             var tmpXY = await AddSonItem(riList, userInfo, 1, 10, new XYZ { X = 0, Y = 0, Z = 0 });
             var nowInfo = InfoToItem(userInfo, (tmpXY[0] + tmpXY[1]) / 2, 0);
             riList.Add(nowInfo);
-            await AddFatherItem(riList, userInfo, 1, 3, new XYZ { X = nowInfo.x, Y = nowInfo.y, Z = userInfo.ChildNum }, tmpXY[0], tmpXY[1]);
+            await AddFatherItem(riList, userInfo, 1, 1, new XYZ { X = nowInfo.x, Y = nowInfo.y, Z = userInfo.ChildNum }, tmpXY[0], tmpXY[1]);
             var minX = riList.Min(x => x.x);
             var minY = riList.Max(x => x.y);
             minY = -minY;
@@ -132,7 +132,7 @@ namespace Repository
                     if (tmpUser.SEX == "男" || tmpUser.BIRTHDAY_TIME != null)
                     {
 
-                        var msg = string.Format("{0}行{1}", tmpUser.NAME, tmpUser.LEVEL_ID);
+                        var msg = string.Format("行{1}", tmpUser.NAME, tmpUser.LEVEL_ID);
 
                         msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format("，生于{0}", tmpUser.BirthdaylunlarDate) : "，生庚未详";
 
