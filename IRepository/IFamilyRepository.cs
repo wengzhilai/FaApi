@@ -33,6 +33,14 @@ namespace IRepository
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<Result<FaElderEntity>> GetUserBooksAsync(int userId);
+        Task<Result<FaElderEntity>> GetUserBooksAsync(int userId,int targerId=24);
+
+        /// <summary>
+        /// 获取用户的父节点
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        /// <param name="parentNum">最大层级数</param>
+        /// <returns></returns>
+        Task<List<KV>> GetUserTreeAsync(int userId,int parentNum);
     }
 }

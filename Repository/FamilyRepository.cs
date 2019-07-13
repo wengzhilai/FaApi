@@ -98,14 +98,14 @@ namespace Repository
         }
 
 
-        public async Task<Result<FaElderEntity>> GetUserBooksAsync(int userId)
+        public async Task<Result<FaElderEntity>> GetUserBooksAsync(int userId, int targerId = 24)
         {
             var reObj = new Result<FaElderEntity>();
-
             UserInfoRepository userInfoDal = new UserInfoRepository();
 
             //德字辈排号是24
-            var maskUserId = await userInfoDal.GetUserIdByElderAsync(userId, 24);
+            var maskUserId = await userInfoDal.GetUserIdByElderAsync(userId, targerId);
+            reObj.Tmp=maskUserId;
 
             //获取所有五福图
             var userInfo = await userInfoDal.SingleByKey(maskUserId);
@@ -142,11 +142,13 @@ namespace Repository
 
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
                         {
-                            if (tmpUser.CoupleName != null) msg += string.Format("，{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
-                            msg += (tmpUser.CoupleBirthday != null) ? string.Format("，生于{0}",  Fun.FormatLunlarTime(tmpUser.CoupleBirthday)) : "，生庚未详";
-
-                            if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",","，"));
-                            if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",","，"));
+                            if (tmpUser.CoupleName != null)
+                            {
+                                msg += string.Format("，{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
+                                msg += (tmpUser.CoupleBirthday != null) ? string.Format("，生于{0}", Fun.FormatLunlarTime(tmpUser.CoupleBirthday)) : "，生庚未详";
+                            }
+                            if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",", "，"));
+                            if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",", "，"));
                         }
                         else
                         {
@@ -173,9 +175,10 @@ namespace Repository
             var ent = mapper.Map<RelativeItem>(userInfo);
             ent.x = x;
             ent.y = y;
-            ent.CompletionRatio=0;
-            if(userInfo.BIRTHDAY_TIME!=null){
-                ent.CompletionRatio=60;
+            ent.CompletionRatio = 0;
+            if (userInfo.BIRTHDAY_TIME != null)
+            {
+                ent.CompletionRatio = 60;
             }
             return ent;
         }
@@ -254,5 +257,20 @@ namespace Repository
             return true;
         }
 
+        public async Task<List<KV>> GetUserTreeAsync(int userId, int parentNum)
+        {
+            var reObj = new List<KV>();
+            DapperHelper<FaUserInfoEntityView> dapperUserInfo = new DapperHelper<FaUserInfoEntityView>();
+            var user = await dapperUserInfo.Single(i => i.ID == userId);
+            if (user == null) return reObj;
+            reObj.Add(new KV { K = user.ID.ToString(), V = user.NAME });
+            for (int i = 0; i < parentNum; i++)
+            {
+                user = await dapperUserInfo.Single(a => a.ID == user.FATHER_ID);
+                if (user == null) return reObj;
+                reObj.Add(new KV { K = user.ID.ToString(), V = user.NAME });
+            }
+            return reObj;
+        }
     }
 }

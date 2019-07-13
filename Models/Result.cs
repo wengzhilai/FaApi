@@ -27,7 +27,7 @@ namespace Models
     /// 返回的数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Result<T>:Result
+    public class Result<T> : Result
     {
         /// <summary>
         /// 返回数据
@@ -39,14 +39,20 @@ namespace Models
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T> DataList{get;set;}=new List<T>();
+        public List<T> DataList { get; set; } = new List<T>();
+
+        /// <summary>
+        /// 备注字段
+        /// </summary>
+        /// <value></value>
+        public object Tmp { get; set; }
     }
 
     /// <summary>
     /// 分页数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ResultPaging<T>:Result<T>
+    public class ResultPaging<T> : Result<T>
     {
         /// <summary>
         /// 当前页码

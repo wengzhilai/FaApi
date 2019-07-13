@@ -63,10 +63,9 @@ public class WordHelper
         return doc;
     }
 
-    public void SaveDoc(XWPFDocument doc, string path)
+    public void SaveDoc(XWPFDocument doc, string savePath)
     {
-        string file = Path.GetFileNameWithoutExtension(path) + "tmp" + Path.GetExtension(path);
-        var fs = new FileStream(file, FileMode.Create);
+        var fs = new FileStream(savePath, FileMode.Create);
         doc.Write(fs);
         fs.Close();
         fs.Dispose();
@@ -130,6 +129,22 @@ public class WordHelper
         r.SetText(txt);
         r.FontFamily = "黑体";
         r.FontSize = 18;
+    }
+
+    public void AddNavigation(XWPFTableCell cell, string txt)
+    {
+        //清除表格的第一个元素
+        if(cell.Paragraphs!=null && cell.Paragraphs.Count()==1 && cell.Paragraphs[0].Runs.Count==0){
+            cell.RemoveParagraph(0);
+        }
+        XWPFParagraph p3 = cell.AddParagraph();
+        p3.IndentFromLeft = 113;
+        p3.IndentFromRight = 113;
+        p3.Alignment = ParagraphAlignment.RIGHT;
+        var r = p3.CreateRun();
+        r.SetText(txt);
+        r.FontFamily = "楷体";
+        r.FontSize = 14;
     }
 
     /// <summary>
