@@ -113,6 +113,10 @@ public class WordHelper
     /// <param name="txt"></param>
     public void AddElder(XWPFTableCell cell, string txt)
     {
+        //清除表格的第一个元素
+        if(cell.Paragraphs!=null && cell.Paragraphs.Count()==1 && cell.Paragraphs[0].Runs.Count==0){
+            cell.RemoveParagraph(0);
+        }
         XWPFParagraph p3 = cell.AddParagraph();
         p3.IndentFromLeft = 113;
         p3.IndentFromRight = 113;
@@ -135,6 +139,10 @@ public class WordHelper
     /// <param name="txt"></param>
     public void AddName(XWPFTableCell cell, string txt)
     {
+        //清除表格的第一个元素
+        if(cell.Paragraphs!=null && cell.Paragraphs.Count()==1 && cell.Paragraphs[0].Runs.Count==0){
+            cell.RemoveParagraph(0);
+        }
         XWPFParagraph p3 = cell.AddParagraph();
         p3.IndentFromLeft = 113;
         p3.IndentFromRight = 113;
@@ -151,6 +159,10 @@ public class WordHelper
     /// <param name="txt"></param>
     public void AddRemark(XWPFTableCell cell, string txt)
     {
+        //清除表格的第一个元素
+        if(cell.Paragraphs!=null && cell.Paragraphs.Count()==1 && cell.Paragraphs[0].Runs.Count==0){
+            cell.RemoveParagraph(0);
+        }
         XWPFParagraph p4 = cell.AddParagraph();
         p4.IndentFromLeft = 113;
         p4.IndentFromRight = 113;

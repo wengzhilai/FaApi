@@ -807,7 +807,7 @@ namespace Helper
             }
             if (inTime.Value.Hour != 0)
             {
-                reStr += inTime.Value.Hour + "时";
+                reStr +="，"+ inTime.Value.Hour + "时";
             }
             return reStr;
         }

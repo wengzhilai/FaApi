@@ -120,43 +120,67 @@ namespace WebApi.Controllers
         public async Task<Result> MakeUserBooks(DtoDo<int> inObj)
         {
             Result reObj = new Result();
-            try
-            {
-                var tmp = await family.GetUserBooksAsync(inObj.Key);
-                var allPath = Path.Combine(env.ContentRootPath, "..\\Doc\\Family.docx");
-                WordHelper word = new WordHelper();
-                var doc = word.MakeXWPFDocument(allPath);
+            // try
+            // {
+            var tmp = await family.GetUserBooksAsync(inObj.Key);
+            var allPath = Path.Combine(env.ContentRootPath, "../Doc/Family.docx");
+            WordHelper word = new WordHelper();
+            var doc = word.MakeXWPFDocument(allPath);
 
-                for (int i = 0; i < tmp.DataList.Count; i++)
-                {
-                    if (i >= 5) break;
-                    var item = tmp.DataList[i];
-                    var cell = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
-                    // word.AddElder(cell, "第" + item.NAME + "世");
-                    int clm=0;
-                    foreach (var user in item.AllUser)
-                    {
-                        if(string.IsNullOrEmpty(user.MsgFormat))continue;
-                        word.AddName(cell, user.NAME);
-                        word.AddRemark(cell, Helper.Fun.FormatNumToChinese(user.MsgFormat));
-                        clm+=user.MsgFormat.Length/8;
-                        clm+=(user.MsgFormat.Length%8 ==0)?1:2;
-                        if(clm>11){
-                            cell = doc.Tables[0].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
-                        }
-                    }
-                }
-                word.SaveDoc(doc, allPath);
-            }
-            catch (Exception e)
+            for (int i = 0; i < tmp.DataList.Count; i++)
             {
-                LogHelper.WriteErrorLog(this.GetType(), "获取用户获取前谱失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                if (i >= 5) break;
+                var item = tmp.DataList[i];
+                var cell1 = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
+                // cell1.RemoveParagraph(0);
+                var cell2 = doc.Tables[0].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
+                // cell2.RemoveParagraph(0);
+                var cell = cell1;
+
+                // word.AddElder(cell, "第" + item.NAME + "世");
+                int clm = 0;
+                foreach (var user in item.AllUser)
+                {
+                    if (string.IsNullOrEmpty(user.MsgFormat)) continue;
+                    word.AddName(cell, user.NAME);
+                    //判断加了姓名是否该换行
+                    clm = clm + 1;
+                    if (clm >= 13)
+                    {
+                        cell = cell2;
+                    }
+                    var msgCNum = user.MsgFormat.Length / 8;
+                    msgCNum += (user.MsgFormat.Length % 8 == 0) ? 0 : 1;
+                    if (clm > 13)
+                    {
+                        cell = cell2;
+                        word.AddRemark(cell, Helper.Fun.FormatNumToChinese(user.MsgFormat));
+                    }
+                    else if ((clm + msgCNum) <= 13)
+                    {
+                        word.AddRemark(cell, Helper.Fun.FormatNumToChinese(user.MsgFormat));
+                    }
+                    else
+                    {
+                        var tmpMsg = user.MsgFormat.Substring(0, 8 * (13 - clm));
+                        word.AddRemark(cell, Helper.Fun.FormatNumToChinese(tmpMsg));
+                        cell = cell2;
+                        word.AddRemark(cell, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (13 - clm) - 1)));
+                    }
+                    clm += msgCNum;
+
+                }
             }
+            word.SaveDoc(doc, allPath);
+            // }
+            // catch (Exception e)
+            // {
+            //     LogHelper.WriteErrorLog(this.GetType(), "获取用户获取前谱失败", e);
+            //     reObj.IsSuccess = false;
+            //     reObj.Msg = e.Message;
+            // }
             return reObj;
         }
-
 
 
     }
