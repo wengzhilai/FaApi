@@ -791,11 +791,11 @@ namespace Helper
             }
             else if (inTime.Value.Day == 20)
             {
-                reStr += "二十日";
+                reStr += "廿日";
             }
             else if (inTime.Value.Day < 30)
             {
-                reStr += "二十" + arrList[inTime.Value.Day - 20];
+                reStr += "廿" + arrList[inTime.Value.Day - 20];
             }
             else if (inTime.Value.Day == 30)
             {
