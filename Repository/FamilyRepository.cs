@@ -274,5 +274,11 @@ namespace Repository
             }
             return reObj;
         }
+    
+        public async Task<List<FaFamilyBooksEntity>> GetUserBooks(){
+            DapperHelper<FaFamilyBooksEntity> dapper=new DapperHelper<FaFamilyBooksEntity>();
+            var reObj=await dapper.FindAll(x=>x.TYPE_ID==2);
+            return reObj.ToList();
+        }
     }
 }

@@ -43,5 +43,11 @@ namespace IRepository
         /// <param name="parentNum">最大层级数</param>
         /// <returns></returns>
         Task<List<KV>> GetUserTreeAsync(int userId,int parentNum);
+
+        /// <summary>
+        /// 获取用户的书页
+        /// </summary>
+        /// <returns></returns>
+        Task<List<FaFamilyBooksEntity>> GetUserBooks();
     }
 }
