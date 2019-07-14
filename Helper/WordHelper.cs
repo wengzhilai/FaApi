@@ -18,7 +18,7 @@ public class WordHelper
 
     public WordHelper()
     {
-        
+
         // CheckUpdatedDoc();
     }
 
@@ -53,7 +53,7 @@ public class WordHelper
         }
     }
 
-    public XWPFDocument UpdateEmbeddedDoc1(XWPFDocument doc,int tableIndex,int rowIndex)
+    public XWPFDocument UpdateEmbeddedDoc1(XWPFDocument doc, int tableIndex, int rowIndex)
     {
         var cell = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[1].GetCell(0);
         cell.RemoveParagraph(0);
@@ -113,7 +113,8 @@ public class WordHelper
     public void AddElder(XWPFTableCell cell, string txt)
     {
         //清除表格的第一个元素
-        if(cell.Paragraphs!=null && cell.Paragraphs.Count()==1 && cell.Paragraphs[0].Runs.Count==0){
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
             cell.RemoveParagraph(0);
         }
         XWPFParagraph p3 = cell.AddParagraph();
@@ -134,7 +135,8 @@ public class WordHelper
     public void AddNavigation(XWPFTableCell cell, string txt)
     {
         //清除表格的第一个元素
-        if(cell.Paragraphs!=null && cell.Paragraphs.Count()==1 && cell.Paragraphs[0].Runs.Count==0){
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
             cell.RemoveParagraph(0);
         }
         XWPFParagraph p3 = cell.AddParagraph();
@@ -155,7 +157,8 @@ public class WordHelper
     public void AddName(XWPFTableCell cell, string txt)
     {
         //清除表格的第一个元素
-        if(cell.Paragraphs!=null && cell.Paragraphs.Count()==1 && cell.Paragraphs[0].Runs.Count==0){
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
             cell.RemoveParagraph(0);
         }
         XWPFParagraph p3 = cell.AddParagraph();
@@ -175,7 +178,8 @@ public class WordHelper
     public void AddRemark(XWPFTableCell cell, string txt)
     {
         //清除表格的第一个元素
-        if(cell.Paragraphs!=null && cell.Paragraphs.Count()==1 && cell.Paragraphs[0].Runs.Count==0){
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
             cell.RemoveParagraph(0);
         }
         XWPFParagraph p4 = cell.AddParagraph();
@@ -187,5 +191,19 @@ public class WordHelper
         r4.FontSize = 14;
     }
 
+    public void AddPageNum(XWPFTableCell cell, string txt)
+    {
+        //清除表格的第一个元素
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
+            cell.RemoveParagraph(0);
+        }
+        XWPFParagraph p4 = cell.AddParagraph();
+        p4.Alignment = ParagraphAlignment.CENTER;
+        var r4 = p4.CreateRun();
+        r4.SetText(txt);
+        r4.FontFamily = "楷体";
+        r4.FontSize = 14;
+    }
 
 }

@@ -122,8 +122,9 @@ namespace WebApi.Controllers
             Result reObj = new Result();
             // try
             // {
-            var tmp = await family.GetUserBooksAsync(inObj.Key, 24);
+            var tmp = await family.GetUserBooksAsync(inObj.Key, 0);
             var userId = Convert.ToInt32(tmp.Tmp);
+            //获取父节点数
             var parentList = await family.GetUserTreeAsync(userId, 6);
             parentList.Reverse();
             var allPath = Path.Combine(env.ContentRootPath, "../Doc/Family.docx");
@@ -131,9 +132,23 @@ namespace WebApi.Controllers
             WordHelper word1 = new WordHelper();
             var doc = word.MakeXWPFDocument(allPath);
             var doc1 = word1.MakeXWPFDocument(allPath);
+            //标题
             var cellTitle = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[0].GetCell(0);
             word.AddNavigation(cellTitle, string.Join("----", parentList.Select(x => x.V.Substring(1))));
 
+            #region 设置页码
+            {
+                var cell1 = doc.Tables[1].Rows[3].GetCell(1);
+                var cell2 = doc.Tables[0].Rows[3].GetCell(0);
+                var cell3 = doc1.Tables[1].Rows[3].GetCell(1);
+                var cell4 = doc1.Tables[0].Rows[3].GetCell(0);
+                word.AddPageNum(cell1, tmp.Code);
+                word.AddPageNum(cell2, tmp.Code);
+                word1.AddPageNum(cell3, tmp.Code + "-1");
+                word1.AddPageNum(cell4, tmp.Code + "-1");
+            }
+            #endregion
+            int elder=Convert.ToInt32(tmp.Code);
             bool isSec = false;
             for (int i = 0; i < tmp.DataList.Count; i++)
             {
@@ -144,9 +159,11 @@ namespace WebApi.Controllers
                 var cell3 = doc1.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
                 var cell4 = doc1.Tables[0].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
                 var cell = cell1;
-
-                // word.AddElder(cell, "第" + item.NAME + "世");
                 int clm = 0;
+                if(elder<100){
+                    word.AddElder(cell, "第" + Helper.Fun.FormatNumToChinese(elder) + "世");
+                    clm++;
+                }
                 foreach (var user in item.AllUser)
                 {
                     if (string.IsNullOrEmpty(user.MsgFormat)) continue;
@@ -155,9 +172,9 @@ namespace WebApi.Controllers
                     word.AddName(cell, user.NAME);
                     //判断加了姓名是否该换行
                     clm = clm + 1;
-                    if (user.NAME == "翁小毛")
+                    if (user.NAME == "翁炳富")
                     {
-                        user.NAME = "翁小毛";
+                        user.NAME = "翁炳富";
                     }
                     var msgCNum = user.MsgFormat.Length / 8;
                     msgCNum += (user.MsgFormat.Length % 8 == 0) ? 0 : 1;
@@ -199,8 +216,8 @@ namespace WebApi.Controllers
                     if (clm > 26) isSec = true;
                 }
             }
-            var savePath1 = Path.Combine(env.ContentRootPath, string.Format( "UpFiles/Doc/{0}{1}.docx",tmp.Code,tmp.Msg));
-            var savePath2 = Path.Combine(env.ContentRootPath, string.Format( "UpFiles/Doc/{0}{1}1.docx",tmp.Code,tmp.Msg));
+            var savePath1 = Path.Combine(env.ContentRootPath, string.Format("UpFiles/Doc/{0}{1}.docx", tmp.Code, tmp.Msg));
+            var savePath2 = Path.Combine(env.ContentRootPath, string.Format("UpFiles/Doc/{0}{1}1.docx", tmp.Code, tmp.Msg));
             word.SaveDoc(doc, savePath1);
 
             if (isSec)

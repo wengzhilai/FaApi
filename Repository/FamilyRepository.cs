@@ -98,17 +98,19 @@ namespace Repository
         }
 
 
-        public async Task<Result<FaElderEntity>> GetUserBooksAsync(int userId, int targerId = 24)
+        public async Task<Result<FaElderEntity>> GetUserBooksAsync(int userId, int targerEderId = 24)
         {
             var reObj = new Result<FaElderEntity>();
             UserInfoRepository userInfoDal = new UserInfoRepository();
 
             //德字辈排号是24
-            var maskUserId = await userInfoDal.GetUserIdByElderAsync(userId, targerId);
-            reObj.Tmp=maskUserId;
+            if(targerEderId!=0){
+                userId = await userInfoDal.GetUserIdByElderAsync(userId, targerEderId);
+            }
+            reObj.Tmp=userId;
 
             //获取所有五福图
-            var userInfo = await userInfoDal.SingleByKey(maskUserId);
+            var userInfo = await userInfoDal.SingleByKey(userId);
             var all = await GetRelativeItems(userInfo);
 
             //转换成用户信息
