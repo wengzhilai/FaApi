@@ -96,7 +96,7 @@ namespace WebApi.Controllers
                     creds);
                 reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
 
-                // await RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
+                RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
             }
             return reobj;
         }

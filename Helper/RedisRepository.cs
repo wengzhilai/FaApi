@@ -13,11 +13,11 @@ namespace Helper
         /// <param name="userId"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static bool UserTokenSet<T>(int userId, string key)where T : class, new()
+        public static bool UserTokenSet(int userId, string key)
         {
             try
             {
-                return Helper.RedisWriteHelper.HashSetKey<T>("UserToken", string.Format(_userTokenKey, userId), key);
+                return Helper.RedisWriteHelper.HashSetKey<Models.Redis.UserRedis>(string.Format(_userTokenKey, userId), "Token", key);
             }
             catch
             {

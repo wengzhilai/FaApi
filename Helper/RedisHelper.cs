@@ -95,7 +95,7 @@ namespace Helper
         /// <param name="key"></param>
         /// <param name="value"></param>
         public static bool HashSetKey<T>(string hash, string key, string value) where T : class, new()
-        {
+        {  
             return cache.ReplaceHashSetKey<T>(hash, key, value);
         }
 
