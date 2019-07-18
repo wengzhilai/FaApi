@@ -753,7 +753,7 @@ namespace Helper
 
             var reStr = "";
 
-            var arrList = new List<string>() {"零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十" };
+            var arrList = new List<string>() { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十" };
 
             if (inTime == null) return reStr;
             reStr += inTime.Value.Year.ToString() + "年";
@@ -791,11 +791,11 @@ namespace Helper
             }
             else if (inTime.Value.Day == 20)
             {
-                reStr += "二十日";
+                reStr += "廿日";
             }
             else if (inTime.Value.Day < 30)
             {
-                reStr += "二十" + arrList[inTime.Value.Day - 20];
+                reStr += "廿" + arrList[inTime.Value.Day - 20];
             }
             else if (inTime.Value.Day == 30)
             {
@@ -807,11 +807,35 @@ namespace Helper
             }
             if (inTime.Value.Hour != 0)
             {
-                reStr += inTime.Value.Hour + "时";
+                reStr +="，"+ inTime.Value.Hour + "时";
             }
             return reStr;
         }
 
+        public static string FormatNumToChinese(int? inV)
+        {
+            if (inV == null) return "";
+            return FormatNumToChinese(inV.ToString());
+        }
+
+        public static string FormatNumToChinese(string inV)
+        {
+            if (inV == null) return "";
+            var arrList = new List<string>() { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十" };
+            StringBuilder sb = new StringBuilder();
+            foreach (var item in inV)
+            {
+                if (item.ToString().IsInt32())
+                {
+                    sb.Append(arrList[Convert.ToInt32(item.ToString())]);
+                }
+                else
+                {
+                    sb.Append(item);
+                }
+            }
+            return sb.ToString();
+        }
     }
 
 }

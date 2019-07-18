@@ -32,7 +32,16 @@ namespace IRepository
         /// 获取用户的家谱成员
         /// </summary>
         /// <param name="userId"></param>
+        /// <param name="targerElderId">查找辈字用户，如果为0表示取当前用户</param>
         /// <returns></returns>
-        Task<Result<FaElderEntity>> GetUserBooksAsync(int userId);
+        Task<Result<FaElderEntity>> GetUserBooksAsync(int userId,int targerId=24);
+
+        /// <summary>
+        /// 获取用户的父节点
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        /// <param name="parentNum">最大层级数</param>
+        /// <returns></returns>
+        Task<List<KV>> GetUserTreeAsync(int userId,int parentNum);
     }
 }

@@ -16,11 +16,9 @@ public class WordHelper
     private static String BINARY_EXTENSION = "xls";
     private static String OPENXML_EXTENSION = "xlsx";
 
-    public WordHelper(string path)
+    public WordHelper()
     {
-        var doc = MakeXWPFDocument(path);
-        UpdateEmbeddedDoc1(doc);
-        SaveDoc(doc, path);
+
         // CheckUpdatedDoc();
     }
 
@@ -55,7 +53,7 @@ public class WordHelper
         }
     }
 
-    public XWPFDocument UpdateEmbeddedDoc1(XWPFDocument doc)
+    public XWPFDocument UpdateEmbeddedDoc1(XWPFDocument doc, int tableIndex, int rowIndex)
     {
         var cell = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[1].GetCell(0);
         cell.RemoveParagraph(0);
@@ -65,10 +63,9 @@ public class WordHelper
         return doc;
     }
 
-    public void SaveDoc(XWPFDocument doc, string path)
+    public void SaveDoc(XWPFDocument doc, string savePath)
     {
-        string file = Path.GetFileNameWithoutExtension(path) + "tmp" + Path.GetExtension(path);
-        var fs = new FileStream(file, FileMode.Create);
+        var fs = new FileStream(savePath, FileMode.Create);
         doc.Write(fs);
         fs.Close();
         fs.Dispose();
@@ -113,8 +110,13 @@ public class WordHelper
     /// </summary>
     /// <param name="cell"></param>
     /// <param name="txt"></param>
-    private void AddElder(XWPFTableCell cell, string txt)
+    public void AddElder(XWPFTableCell cell, string txt)
     {
+        //清除表格的第一个元素
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
+            cell.RemoveParagraph(0);
+        }
         XWPFParagraph p3 = cell.AddParagraph();
         p3.IndentFromLeft = 113;
         p3.IndentFromRight = 113;
@@ -130,13 +132,35 @@ public class WordHelper
         r.FontSize = 18;
     }
 
+    public void AddNavigation(XWPFTableCell cell, string txt)
+    {
+        //清除表格的第一个元素
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
+            cell.RemoveParagraph(0);
+        }
+        XWPFParagraph p3 = cell.AddParagraph();
+        p3.IndentFromLeft = 113;
+        p3.IndentFromRight = 113;
+        p3.Alignment = ParagraphAlignment.RIGHT;
+        var r = p3.CreateRun();
+        r.SetText(txt);
+        r.FontFamily = "楷体";
+        r.FontSize = 14;
+    }
+
     /// <summary>
     /// 添加名称
     /// </summary>
     /// <param name="cell"></param>
     /// <param name="txt"></param>
-    private void AddName(XWPFTableCell cell, string txt)
+    public void AddName(XWPFTableCell cell, string txt)
     {
+        //清除表格的第一个元素
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
+            cell.RemoveParagraph(0);
+        }
         XWPFParagraph p3 = cell.AddParagraph();
         p3.IndentFromLeft = 113;
         p3.IndentFromRight = 113;
@@ -151,8 +175,13 @@ public class WordHelper
     /// </summary>
     /// <param name="cell"></param>
     /// <param name="txt"></param>
-    private void AddRemark(XWPFTableCell cell, string txt)
+    public void AddRemark(XWPFTableCell cell, string txt)
     {
+        //清除表格的第一个元素
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
+            cell.RemoveParagraph(0);
+        }
         XWPFParagraph p4 = cell.AddParagraph();
         p4.IndentFromLeft = 113;
         p4.IndentFromRight = 113;
@@ -162,5 +191,19 @@ public class WordHelper
         r4.FontSize = 14;
     }
 
+    public void AddPageNum(XWPFTableCell cell, string txt)
+    {
+        //清除表格的第一个元素
+        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        {
+            cell.RemoveParagraph(0);
+        }
+        XWPFParagraph p4 = cell.AddParagraph();
+        p4.Alignment = ParagraphAlignment.CENTER;
+        var r4 = p4.CreateRun();
+        r4.SetText(txt);
+        r4.FontFamily = "楷体";
+        r4.FontSize = 14;
+    }
 
 }

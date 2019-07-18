@@ -80,7 +80,7 @@ namespace WebApi.Controllers
             try
             {
                 var allPath = Path.Combine(_env.ContentRootPath, "..\\Doc\\Family.docx");
-                var t = new WordHelper(allPath);
+                var t = new WordHelper();
             }
             catch (Exception e)
             {
