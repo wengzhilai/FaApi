@@ -215,7 +215,7 @@ namespace Repository
 
             #endregion
 
-            reObj.IsSuccess = await RedisRepository.UserTokenDelete(inEnt.Data.USER_ID.Value);
+            reObj.IsSuccess = RedisRepository.UserTokenDelete(inEnt.Data.USER_ID.Value);
             return reObj;
         }
         /// <summary>

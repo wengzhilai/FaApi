@@ -109,13 +109,14 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<string> TestRedis()
+        public FaUserEntity TestRedis()
         {
-            await RedisWriteHelper.HashSetKey("user", "user_1", "翁志来测试1");
-            await RedisWriteHelper.HashSetKey("user", "user_2", "翁志来测试2");
-            await RedisWriteHelper.HashDelete("user", "user_2");
-            var t = await RedisReadHelper.HashGetKey("user", "user_1");
-            return t;
+            RedisWriteHelper.HashSetKey<FaUserEntity>("User_1", "NAME", "翁志来测试1");
+            RedisWriteHelper.HashSetKey<FaUserEntity>("User_1", "NAME", "翁志来测试2");
+            // RedisWriteHelper.HashDelete<FaUserEntity>("User_1", "NAME");
+            //RedisWriteHelper.KeyDelete("User_1");
+            var t = RedisReadHelper.GetObject<FaUserEntity>("User_1");
+            return t.Item1;
         }
 
         /// <summary>
