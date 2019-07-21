@@ -122,34 +122,34 @@ namespace WebApi.Controllers
             Result reObj = new Result();
             // try
             // {
-            // var allUser = await family.GetUserBooks();
-            // foreach (var userItem in allUser)
-            // {
-            //     var tmp = await family.GetUserBooksAsync(userItem.UserID.Value, 0);
-                var tmp = await family.GetUserBooksAsync(inObj.Key, 0);
+            var allUser = await family.GetUserBooks();
+            foreach (var userItem in allUser)
+            {
+                var tmp = await family.GetUserBooksAsync(userItem.UserID.Value, 0);
+                // var tmp = await family.GetUserBooksAsync(inObj.Key, 0);
                 var userId = Convert.ToInt32(tmp.Tmp);
                 //获取父节点数
                 var parentList = await family.GetUserTreeAsync(userId, 6);
                 parentList.Reverse();
-                var allPath = Path.Combine(env.ContentRootPath, "../Doc/Family.docx");
+                var allPath = Path.Combine(env.ContentRootPath, "../Doc/Family1.docx");
                 WordHelper word = new WordHelper();
                 WordHelper word1 = new WordHelper();
                 var doc = word.MakeXWPFDocument(allPath);
                 var doc1 = word1.MakeXWPFDocument(allPath);
                 //标题
-                var cellTitle = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[0].GetCell(0);
+                var cellTitle = doc.Tables[0].Rows[0].GetCell(0).Tables[0].Rows[0].GetCell(0);
                 word.AddNavigation(cellTitle, string.Join("----", parentList.Select(x => x.V.Substring(1))));
 
                 #region 设置页码
                 {
-                    var cell1 = doc.Tables[1].Rows[3].GetCell(1);
-                    var cell2 = doc.Tables[0].Rows[3].GetCell(0);
-                    var cell3 = doc1.Tables[1].Rows[3].GetCell(1);
-                    var cell4 = doc1.Tables[0].Rows[3].GetCell(0);
-                    word.AddPageNum(cell1, tmp.Code);
-                    word.AddPageNum(cell2, tmp.Code);
-                    word1.AddPageNum(cell3, tmp.Code + "-1");
-                    word1.AddPageNum(cell4, tmp.Code + "-1");
+                    var cell1 = doc.Tables[0].Rows[3].GetCell(1);
+                    var cell2 = doc.Tables[1].Rows[3].GetCell(0);
+                    var cell3 = doc1.Tables[0].Rows[3].GetCell(1);
+                    var cell4 = doc1.Tables[1].Rows[3].GetCell(0);
+                    word.AddPageNum(cell1, tmp.Msg);
+                    word.AddPageNum(cell2, "");
+                    word1.AddPageNum(cell3, "");
+                    word1.AddPageNum(cell4, "");
                 }
                 #endregion
                 int elder = Convert.ToInt32(tmp.Code);
@@ -158,10 +158,10 @@ namespace WebApi.Controllers
                 {
                     if (i >= 5) break;
                     var item = tmp.DataList[i];
-                    var cell1 = doc.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
-                    var cell2 = doc.Tables[0].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
-                    var cell3 = doc1.Tables[1].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
-                    var cell4 = doc1.Tables[0].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
+                    var cell1 = doc.Tables[0].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
+                    var cell2 = doc.Tables[1].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
+                    var cell3 = doc1.Tables[0].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
+                    var cell4 = doc1.Tables[1].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
                     var cell = cell1;
                     int clm = 0;
                     if (elder < 100)
@@ -231,7 +231,7 @@ namespace WebApi.Controllers
                 }
                 doc1.Close();
                 doc.Close();
-            // }
+            }
 
             // }
             // catch (Exception e)

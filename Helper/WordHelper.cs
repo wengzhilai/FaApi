@@ -194,16 +194,20 @@ public class WordHelper
     public void AddPageNum(XWPFTableCell cell, string txt)
     {
         //清除表格的第一个元素
-        if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        // if (cell.Paragraphs != null && cell.Paragraphs.Count() == 1 && cell.Paragraphs[0].Runs.Count == 0)
+        // {
+        //     cell.RemoveParagraph(0);
+        // }
+        XWPFParagraph p4 = cell.Paragraphs[0];
+        // p4.Alignment = ParagraphAlignment.CENTER;
+        if (p4.Runs.Count > 0)
         {
-            cell.RemoveParagraph(0);
+            var r4 = p4.Runs[0];
+            r4.SetText(txt);
         }
-        XWPFParagraph p4 = cell.AddParagraph();
-        p4.Alignment = ParagraphAlignment.CENTER;
-        var r4 = p4.CreateRun();
-        r4.SetText(txt);
-        r4.FontFamily = "楷体";
-        r4.FontSize = 14;
+
+        // r4.FontFamily = "楷体";
+        // r4.FontSize = 14;
     }
 
 }
