@@ -19,9 +19,26 @@ namespace Models.EntityView
         [Column("Couple.`NAME` CoupleName")]
         public string CoupleName { get; set; }
 
+        /// <summary>
+        /// 配偶出生
+        /// </summary>
+        /// <value></value>
         [Column("CoupleInfo.BIRTHDAY_TIME CoupleBirthday")]
         public DateTime? CoupleBirthday { get; set; }
 
+        /// <summary>
+        /// 配偶
+        /// </summary>
+        /// <value></value>
+        [Column("CoupleInfo.`DIED_TIME` CoupleDiedTime")]
+        public DateTime? CoupleDiedTime { get; set; }
+
+        /// <summary>
+        /// 配偶
+        /// </summary>
+        /// <value></value>
+        [Column("CoupleInfo.`DIED_PLACE` CoupleDiedPlace")]
+        public string CoupleDiedPlace { get; set; }
 
 
         /// <summary>
@@ -244,12 +261,12 @@ namespace Models.EntityView
         /// </summary>
         /// <value></value>
         public string DiedsolarDate { get; set; }
-         /// <summary>
-         /// 格式化后的文本
-         /// </summary>
-         /// <value></value>
+        /// <summary>
+        /// 格式化后的文本
+        /// </summary>
+        /// <value></value>
         public string MsgFormat { get; set; }
-      
+
 
     }
 }

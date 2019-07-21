@@ -104,10 +104,11 @@ namespace Repository
             UserInfoRepository userInfoDal = new UserInfoRepository();
 
             //德字辈排号是24
-            if(targerEderId!=0){
+            if (targerEderId != 0)
+            {
                 userId = await userInfoDal.GetUserIdByElderAsync(userId, targerEderId);
             }
-            reObj.Tmp=userId;
+            reObj.Tmp = userId;
 
             //获取所有五福图
             var userInfo = await userInfoDal.SingleByKey(userId);
@@ -140,7 +141,8 @@ namespace Repository
 
                         if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format("，毕业于{0}", tmpUser.EDUCATION);
                         if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format("，从事{0}行业", tmpUser.INDUSTRY);
-                        if (tmpUser.DIED_TIME != null) msg += string.Format("，逝于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
+                        if (tmpUser.DIED_TIME != null) msg += string.Format("，殁于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
+                        if (!string.IsNullOrEmpty(tmpUser.DIED_PLACE))  msg += string.Format("，殁葬{0}", tmpUser.DIED_PLACE);
 
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
                         {
@@ -148,6 +150,8 @@ namespace Repository
                             {
                                 msg += string.Format("，{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
                                 msg += (tmpUser.CoupleBirthday != null) ? string.Format("，生于{0}", Fun.FormatLunlarTime(tmpUser.CoupleBirthday)) : "，生庚未详";
+                                if (tmpUser.CoupleDiedTime != null) msg += string.Format("，殁于{0}", Fun.FormatLunlarTime(tmpUser.CoupleDiedTime));
+                                if (!string.IsNullOrEmpty(tmpUser.CoupleDiedPlace)) msg += string.Format("，殁葬{0}", tmpUser.CoupleDiedPlace);
                             }
                             if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",", "，"));
                             if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",", "，"));
@@ -274,10 +278,11 @@ namespace Repository
             }
             return reObj;
         }
-    
-        public async Task<List<FaFamilyBooksEntity>> GetUserBooks(){
-            DapperHelper<FaFamilyBooksEntity> dapper=new DapperHelper<FaFamilyBooksEntity>();
-            var reObj=await dapper.FindAll(x=>x.TYPE_ID==2);
+
+        public async Task<List<FaFamilyBooksEntity>> GetUserBooks()
+        {
+            DapperHelper<FaFamilyBooksEntity> dapper = new DapperHelper<FaFamilyBooksEntity>();
+            var reObj = await dapper.FindAll(x => x.TYPE_ID == 2);
             return reObj.ToList();
         }
     }
