@@ -13,3 +13,7 @@ select (@rownum :=@rownum + 1) AS ID,1 FAMILY_ID, b.`NAME`,@rownum SORT, 2 TYPE_
 where a.ID in (1288,1297,1367)
 
 廿
+
+insert into fa_family_books(ID,FAMILY_ID,NAME,SORT,TYPE_ID,UserID,FileID) 
+select (@rownum :=@rownum + 1) AS ID,1 FAMILY_ID, b.`NAME`,@rownum SORT, 2 TYPE_ID,a.ID UserID,0 FileID from fa_user_info a left join fa_user b on a.ID=b.ID,(SELECT @rownum := 80) run 
+where b.`NAME` in('翁光纹','翁廷玺','翁道德','翁庆三' )

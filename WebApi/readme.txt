@@ -120,5 +120,5 @@ unzip
 mysql.server start
 
 
-# mysqldump --opt -h127.0.0.1 -uroot -pWcnfngo123 --skip-lock-tables fa>fa0721.sql 
-scp  root@155.138.209.42:/root/fa0721.sql /Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/fa0721.sql
+# mysqldump --opt -h127.0.0.1 -uroot -pWcnfngo123 --skip-lock-tables fa>fa0728.sql 
+scp  root@155.138.209.42:/root/fa0728.sql /Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/fa0728.sql

@@ -140,7 +140,7 @@ namespace Repository
                         msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format("，生于{0}", tmpUser.BirthdaylunlarDate) : "，生庚未详";
 
                         if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format("，毕业于{0}", tmpUser.EDUCATION);
-                        if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format("，从事{0}行业", tmpUser.INDUSTRY);
+                        if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format("，从事{0}", tmpUser.INDUSTRY);
                         if (tmpUser.DIED_TIME != null) msg += string.Format("，殁于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
                         if (!string.IsNullOrEmpty(tmpUser.DIED_PLACE))  msg += string.Format("，殁葬{0}", tmpUser.DIED_PLACE);
 
@@ -219,10 +219,10 @@ namespace Repository
             if (levelId > maxLevelId) return true;
             if (inSon.FATHER_ID == null) return true;
 
-            List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.FATHER_ID == inSon.FATHER_ID)).OrderBy(x => x.LEVEL_ID).ToList();
+            List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.FATHER_ID == inSon.FATHER_ID && x.ID==inSon.ID)).OrderBy(x => x.LEVEL_ID).ToList();
 
             var sonList = mapper.Map<IList<RelativeItem>>(allSon);
-            #region 计算坐标
+            #region 计算坐标，并添加兄弟项
             var myPlace = 0;
             for (var i = 0; i < sonList.Count; i++)
             {
