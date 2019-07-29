@@ -128,21 +128,19 @@ namespace Repository
                 item.AllUser = allBooks.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.FATHER_ID).ThenBy(i => i.SEX).ThenBy(i => i.LEVEL_ID).ToList();
                 foreach (var tmpUser in item.AllUser)
                 {
-                    if (tmpUser.BIRTHDAY_TIME != null)
+                    if (tmpUser.NAME == "翁志来")
                     {
-                        tmpUser.BirthdaylunlarDate = Fun.FormatLunlarTime(tmpUser.BIRTHDAY_TIME);
+                        tmpUser.NAME = "翁志来";
                     }
                     if (tmpUser.SEX == "男" || tmpUser.BIRTHDAY_TIME != null)
                     {
-
                         var msg = string.Format("行{1}", tmpUser.NAME, tmpUser.LEVEL_ID);
-
-                        msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format("，生于{0}", tmpUser.BirthdaylunlarDate) : "，生庚未详";
+                        msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format("，生于{0}", Fun.FormatLunlarTime(tmpUser.BIRTHDAY_TIME)) : "，生庚未详";
 
                         if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format("，毕业于{0}", tmpUser.EDUCATION);
                         if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format("，从事{0}", tmpUser.INDUSTRY);
                         if (tmpUser.DIED_TIME != null) msg += string.Format("，殁于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
-                        if (!string.IsNullOrEmpty(tmpUser.DIED_PLACE))  msg += string.Format("，殁葬{0}", tmpUser.DIED_PLACE);
+                        if (!string.IsNullOrEmpty(tmpUser.DIED_PLACE)) msg += string.Format("，殁葬{0}", tmpUser.DIED_PLACE);
 
                         if (string.IsNullOrEmpty(tmpUser.REMARK))
                         {
@@ -219,7 +217,7 @@ namespace Repository
             if (levelId > maxLevelId) return true;
             if (inSon.FATHER_ID == null) return true;
 
-            List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.FATHER_ID == inSon.FATHER_ID && x.ID==inSon.ID)).OrderBy(x => x.LEVEL_ID).ToList();
+            List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.FATHER_ID == inSon.FATHER_ID && x.ID == inSon.ID)).OrderBy(x => x.LEVEL_ID).ToList();
 
             var sonList = mapper.Map<IList<RelativeItem>>(allSon);
             #region 计算坐标，并添加兄弟项

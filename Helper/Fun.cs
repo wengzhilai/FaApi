@@ -756,12 +756,12 @@ namespace Helper
             var arrList = new List<string>() { "零", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十" };
 
             if (inTime == null) return reStr;
-            reStr += inTime.Value.Year.ToString() + "年";
+            reStr += FormatNumToChinese(inTime.Value.Year) + "年";
             #region 格式化月
 
             if (inTime.Value.Month < 10)
             {
-                reStr += inTime.Value.Month.ToString() + "月";
+                reStr += FormatNumToChinese(inTime.Value.Month) + "月";
             }
             else if (inTime.Value.Month == 10)
             {
@@ -783,7 +783,7 @@ namespace Helper
             }
             else if (inTime.Value.Day == 10)
             {
-                reStr += "十日";
+                reStr += "十";
             }
             else if (inTime.Value.Day < 20)
             {
@@ -791,7 +791,7 @@ namespace Helper
             }
             else if (inTime.Value.Day == 20)
             {
-                reStr += "廿日";
+                reStr += "廿";
             }
             else if (inTime.Value.Day < 30)
             {
@@ -799,16 +799,18 @@ namespace Helper
             }
             else if (inTime.Value.Day == 30)
             {
-                reStr += "三十日";
+                reStr += "三十";
             }
             else if (inTime.Value.Day <= 31)
             {
                 reStr += "三十" + arrList[inTime.Value.Day - 30];
             }
+
             if (inTime.Value.Hour != 0)
             {
-                reStr += "，" + inTime.Value.Hour + "时";
+                reStr += HourToShiChen(inTime.Value.Hour) + "时";
             }
+            
             return reStr;
         }
 
@@ -904,8 +906,15 @@ namespace Helper
                 }
                 res += NumberToChinese(int.Parse(str.Substring(1, str.Length - 1)));
             }
-            res=res.Trim('零');
+            res = res.Trim('零');
             return res;
+        }
+
+        public static string HourToShiChen(int hour)
+        {
+            if (hour >= 23) return "子";
+            string nameList = "子丑寅卯辰巳午未申酉戌亥";
+            return nameList[(hour + 1) / 2].ToString();
         }
     }
 

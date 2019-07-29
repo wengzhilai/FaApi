@@ -119,8 +119,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<Result> MakeUserBooks(DtoDo<int> inObj)
         {
-            int maxCum=19;
-            int titleNum=2;
+            int maxCum = 13;
+            int titleNum = 1;
             Result reObj = new Result();
             // try
             // {
@@ -169,65 +169,65 @@ namespace WebApi.Controllers
                     if (elder < 100)
                     {
                         word.AddElder(cell, "第" + Helper.Fun.NumberToChinese(item.ID) + "世");
-                        
-                        clm+=titleNum;
+
+                        clm += titleNum;
                     }
                     foreach (var user in item.AllUser)
                     {
-                        if (user.NAME == "翁定勇")
-                        {
-                            user.NAME = "翁定勇";
-                        }
-                        
+                        // if (user.NAME == "翁定勇")
+                        // {
+                        //     user.NAME = "翁定勇";
+                        // }
+
                         if (string.IsNullOrEmpty(user.MsgFormat)) continue;
 
-                        if (clm > maxCum*3-titleNum) cell = cell4;
-                        else if (clm >= maxCum*2-titleNum) cell = cell3;
-                        else if (clm >= maxCum*1-titleNum) cell = cell2;
+                        if (clm > maxCum * 3 - titleNum) cell = cell4;
+                        else if (clm >= maxCum * 2 - titleNum) cell = cell3;
+                        else if (clm >= maxCum * 1 - titleNum) cell = cell2;
 
                         word.AddName(cell, user.NAME);
                         //判断加了姓名是否该换行
                         clm = clm + titleNum;
-                        
+
                         var msgCNum = user.MsgFormat.Length / 8;
                         msgCNum += (user.MsgFormat.Length % 8 == 0) ? 0 : 1;
-                        if (clm > maxCum*3)
+                        if (clm > maxCum * 3)
                         {
                             word.AddRemark(cell4, Helper.Fun.FormatNumToChinese(user.MsgFormat));
                         }
-                        else if ((clm + msgCNum) > maxCum*3)
+                        else if ((clm + msgCNum) > maxCum * 3)
                         {
-                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum*3 - clm));
+                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum * 3 - clm));
                             word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(tmpMsg));
-                            word.AddRemark(cell4, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum*3 - clm))));
+                            word.AddRemark(cell4, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum * 3 - clm))));
                         }
-                        else if (clm > maxCum*2)
+                        else if (clm > maxCum * 2)
                         {
                             word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(user.MsgFormat));
                         }
-                        else if ((clm + msgCNum) > maxCum*2)
+                        else if ((clm + msgCNum) > maxCum * 2)
                         {
-                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum*2 - clm));
+                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum * 2 - clm));
                             word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(tmpMsg));
-                            word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum*2 - clm))));
+                            word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum * 2 - clm))));
                         }
-                        else if (clm > maxCum*1)
+                        else if (clm > maxCum * 1)
                         {
                             word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(user.MsgFormat));
                         }
-                        else if ((clm + msgCNum) > maxCum*1)
+                        else if ((clm + msgCNum) > maxCum * 1)
                         {
-                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum*1 - clm));
+                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum * 1 - clm));
                             word.AddRemark(cell, Helper.Fun.FormatNumToChinese(tmpMsg));
-                            word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum*1 - clm))));
+                            word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum * 1 - clm))));
                         }
-                        else if ((clm + msgCNum) <= maxCum*1)
+                        else if ((clm + msgCNum) <= maxCum * 1)
                         {
                             word.AddRemark(cell, Helper.Fun.FormatNumToChinese(user.MsgFormat));
                         }
 
                         clm += msgCNum;
-                        if (clm > maxCum*2) isSec = true;
+                        if (clm > maxCum * 2) isSec = true;
                     }
                 }
                 var savePath1 = Path.Combine(env.ContentRootPath, string.Format("UpFiles/Doc/{0}{1}.docx", tmp.Code, tmp.Msg));
