@@ -166,18 +166,17 @@ namespace WebApi.Controllers
                     var cell4 = doc1.Tables[1].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
                     var cell = cell1;
                     int clm = 0;
-                    if (elder < 100)
-                    {
+                    // if (elder < 100)
+                    // {
                         word.AddElder(cell, "第" + Helper.Fun.NumberToChinese(item.ID) + "世");
-
                         clm += titleNum;
-                    }
+                    // }
                     foreach (var user in item.AllUser)
                     {
-                        // if (user.NAME == "翁定勇")
-                        // {
-                        //     user.NAME = "翁定勇";
-                        // }
+                        if (user.NAME == "翁志成")
+                        {
+                            user.NAME = "翁志成";
+                        }
 
                         if (string.IsNullOrEmpty(user.MsgFormat)) continue;
 

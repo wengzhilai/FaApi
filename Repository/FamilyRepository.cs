@@ -128,10 +128,7 @@ namespace Repository
                 item.AllUser = allBooks.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.FATHER_ID).ThenBy(i => i.SEX).ThenBy(i => i.LEVEL_ID).ToList();
                 foreach (var tmpUser in item.AllUser)
                 {
-                    if (tmpUser.NAME == "翁志来")
-                    {
-                        tmpUser.NAME = "翁志来";
-                    }
+       
                     if (tmpUser.SEX == "男" || tmpUser.BIRTHDAY_TIME != null)
                     {
                         var msg = string.Format("行{1}", tmpUser.NAME, tmpUser.LEVEL_ID);
