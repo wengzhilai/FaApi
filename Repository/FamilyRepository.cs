@@ -151,9 +151,15 @@ namespace Repository
                             if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",", "，"));
                             if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",", "，"));
                         }
+                        else if(tmpUser.REMARK.IndexOf("生子")>0 || tmpUser.REMARK.IndexOf("生女")>0)
+                        {
+                            msg += tmpUser.REMARK;
+                        }
                         else
                         {
                             msg += tmpUser.REMARK;
+                            if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",", "，"));
+                            if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",", "，"));
                         }
 
                         tmpUser.MsgFormat = msg;

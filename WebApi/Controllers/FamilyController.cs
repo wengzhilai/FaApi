@@ -119,8 +119,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<Result> MakeUserBooks(DtoDo<int> inObj)
         {
-            int maxCum = 13;
-            int titleNum = 1;
+            int maxCum = 19;
+            int titleNum = 2;
             Result reObj = new Result();
             // try
             // {
@@ -128,7 +128,7 @@ namespace WebApi.Controllers
             foreach (var userItem in allUser)
             {
                 var tmp = await family.GetUserBooksAsync(userItem.UserID.Value, 0);
-                // var tmp = await family.GetUserBooksAsync(inObj.Key, 0);
+                // var tmp = await family.GetUserBooksAsync(139, 0);
                 var userId = Convert.ToInt32(tmp.Tmp);
                 //获取父节点数
                 var parentList = await family.GetUserTreeAsync(userId, 6);
@@ -173,9 +173,9 @@ namespace WebApi.Controllers
                     // }
                     foreach (var user in item.AllUser)
                     {
-                        if (user.NAME == "翁志成")
+                        if (user.NAME == "翁定学")
                         {
-                            user.NAME = "翁志成";
+                            user.NAME = "翁定学";
                         }
 
                         if (string.IsNullOrEmpty(user.MsgFormat)) continue;

@@ -117,4 +117,5 @@ namespace Models.Entity
         [Column]
         public int AUTHORITY { get; set; }
     }
+
 }
