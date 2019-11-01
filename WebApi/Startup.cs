@@ -165,8 +165,8 @@ namespace WebApi
             #endregion
             services.AddMvc().AddJsonOptions(options =>
             {
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm";
+                // options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                // options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm";
             });
             // 添加Quartz任务监控
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();//注册ISchedulerFactory的实例。
