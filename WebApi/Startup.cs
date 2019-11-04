@@ -163,7 +163,7 @@ namespace WebApi
             });
 
             #endregion
-            services.AddMvc().AddJsonOptions(options =>
+            services.AddControllers().AddJsonOptions(options =>
             {
                 // options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 // options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm";
@@ -231,10 +231,10 @@ namespace WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-            }
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
 
             //请求错误提示配置
             app.UseErrorHandling();
@@ -253,7 +253,13 @@ namespace WebApi
 
             // app.UseHttpsRedirection();
 
-            app.UseMvc();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
 
         }
     }
