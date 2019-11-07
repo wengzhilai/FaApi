@@ -24,13 +24,13 @@ namespace Helper
         /// <param name="ex"></param>
         public static void WriteErrorLog<T>(string msg,Exception ec=null)
         {
-            LogManager.GetLogger("NETCoreRepository",typeof(T)).Error(msg, ec);
+            //LogManager.GetLogger("NETCoreRepository",typeof(T)).Error(msg, ec);
             //log.ErrorFormat(msg);
         }
 
         public static void WriteErrorLog(Type type,string msg,Exception ec=null)
         {
-            LogManager.GetLogger("NETCoreRepository",type).Error(msg, ec);
+            //LogManager.GetLogger("NETCoreRepository",type).Error(msg, ec);
         }
         #endregion
 

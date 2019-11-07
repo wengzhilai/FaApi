@@ -1,36 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+using Helper;
+using log4net;
+using log4net.Config;
+using log4net.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
-using WebApi.Comon;
-using Swashbuckle.AspNetCore.Swagger;
-using System.IO;
-using Autofac.Extensions.DependencyInjection;
-using Autofac;
-using System.Reflection;
-using WebApi.Unit;
-using Helper;
-using Newtonsoft.Json.Serialization;
-using AutoMapper;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using Microsoft.OpenApi.Models;
 using Quartz;
 using Quartz.Impl;
-using log4net.Repository;
-using log4net;
-using log4net.Config;
+using Swashbuckle.AspNetCore.Swagger;
+using WebApi.Comon;
+using WebApi.Unit;
 
 namespace WebApi
 {
@@ -39,24 +37,18 @@ namespace WebApi
     /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// log4net
-        /// </summary>
-        /// <value></value>
-        public ILoggerRepository repository { get; set; }
-        private readonly IHostingEnvironment _hostingEnvironment;
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="hostingEnvironment"></param>
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
             Configuration = configuration;
-            _hostingEnvironment = hostingEnvironment;
             //log4net
-            repository = LogManager.CreateRepository("NETCoreRepository");
-            XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
+            //repository = LogManager.CreateRepository("NETCoreRepository");
+            //XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
         }
 
 
@@ -77,25 +69,18 @@ namespace WebApi
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             //初始化注入IOptions<T>
             // services.AddOptions();
-            Configuration.Bind("Logging", AppSettingsManager.Logging);
+            Configuration.Bind(AppSettingsManager.self);
 
-            services.Configure<JwtSettings>(Configuration.GetSection("RedisConfig"));
-            Configuration.Bind("RedisConfig", AppSettingsManager.RedisConfig);
+            Configuration.Bind("JwtSettings", AppSettingsManager.self.JwtSettings);
 
-            services.Configure<MongoSettings>(Configuration.GetSection("MongoSettings"));
-            Configuration.Bind("MongoSettings", AppSettingsManager.MongoSettings);
-
-            services.Configure<BaseConfig>(Configuration.GetSection("BaseConfig"));
-            Configuration.Bind("BaseConfig", AppSettingsManager.BaseConfig);
 
             #region JWT认证
             //Bearer 
-            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
-            Configuration.Bind("JwtSettings", AppSettingsManager.JwtSettings);
+
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -104,9 +89,9 @@ namespace WebApi
             {
                 config.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidAudience = AppSettingsManager.JwtSettings.Audience,
-                    ValidIssuer = AppSettingsManager.JwtSettings.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.JwtSettings.SecretKey))
+                    ValidAudience = AppSettingsManager.self.JwtSettings.Audience,
+                    ValidIssuer = AppSettingsManager.self.JwtSettings.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.self.JwtSettings.SecretKey))
                 };
 
                 config.Events = new JwtBearerEvents()
@@ -173,24 +158,23 @@ namespace WebApi
             #region  添加SwaggerUI
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new Info
+                options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Dinner API接口文档",
                     Version = "v1",
                     Description = "RESTful API for Dinner",
-                    TermsOfService = "None",
-                    Contact = new Contact { Name = "wangshibang", Email = "wangyulong0505@sina.com", Url = "" }
+                    Contact = new OpenApiContact { Name = "wangshibang", Email = "wangyulong0505@sina.com" }
                 });
                 options.IgnoreObsoleteActions();
                 options.DocInclusionPredicate((docName, description) => true);
-                options.IncludeXmlComments(_hostingEnvironment.ContentRootPath + "/bin/Debug/netcoreapp2.2/WebApi.xml");
-                options.DescribeAllEnumsAsStrings();
-                options.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
+                //options.IncludeXmlComments(_hostingEnvironment.ContentRootPath + "/TestWebApi.xml");
+                //options.DescribeAllEnumsAsStrings();
+                //options.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
             });
             #endregion
 
 
-            services.AddAutoMapper(typeof(Startup));
+            //services.AddAutoMapper(typeof(Startup));
 
             services.AddHttpContextAccessor();
 
@@ -199,24 +183,20 @@ namespace WebApi
 
             #region 依赖注入
 
-            var builder = new ContainerBuilder();//实例化容器
-            //注册所有模块module
-            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
-            //获取所有的程序集
-            var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
-            // Assembly amy = Assembly.LoadFrom(_hostingEnvironment.ContentRootPath+"/../Repository/bin/Debug/netstandard2.0/Repository.dll"); 
-            //注册仓储，所有IRepository接口到Repository的映射
-            builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository") && !t.Name.StartsWith("I")).AsImplementedInterfaces();
-            //注册服务，所有IApplicationService到ApplicationService的映射
-            builder.Populate(services);
-            ApplicationContainer = builder.Build();
+            
 
 
-
-            return new AutofacServiceProvider(ApplicationContainer); //第三方IOC接管 core内置DI容器 
             #endregion
 
         }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+            var assemblys = RuntimeHelper.GetAllAssemblies().Where(x=>x.GetName().Name.EndsWith("Repository") && !x.GetName().Name.StartsWith("I")).ToArray();
+            builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository") && !t.Name.StartsWith("I")).AsImplementedInterfaces();
+        }
+
 
         /// <summary>
         /// 
@@ -224,9 +204,8 @@ namespace WebApi
         /// <param name="app"></param>
         /// <param name="env"></param>
         /// <param name="loggerFactory"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // LogHelper.Init(LogManager.GetLogger(repository.Name,typeof(Startup)));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -234,7 +213,6 @@ namespace WebApi
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
 
             //请求错误提示配置
             app.UseErrorHandling();

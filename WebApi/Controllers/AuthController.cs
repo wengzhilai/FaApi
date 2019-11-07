@@ -85,11 +85,11 @@ namespace WebApi.Controllers
                         new Claim(ClaimTypes.NameIdentifier, reobj.Data.ID.ToString()),
                         new Claim(ClaimTypes.Role, "admin, Manage")
                         };
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.JwtSettings.SecretKey));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.self.JwtSettings.SecretKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var token = new JwtSecurityToken(
-                    AppSettingsManager.JwtSettings.Issuer,
-                    AppSettingsManager.JwtSettings.Audience,
+                    AppSettingsManager.self.JwtSettings.Issuer,
+                    AppSettingsManager.self.JwtSettings.Audience,
                     claims,
                     DateTime.Now,
                     DateTime.Now.AddDays(7),

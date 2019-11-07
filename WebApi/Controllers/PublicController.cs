@@ -37,7 +37,7 @@ namespace WebApi.Controllers
     public class PublicController : ControllerBase
     {
 
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private IFileRepository _file;
         IPublicRepository _public;
         /// <summary>
@@ -46,7 +46,7 @@ namespace WebApi.Controllers
         public PublicController(
             IPublicRepository pub,
             IFileRepository file,
-             IHostingEnvironment hostingEnvironment)
+             IWebHostEnvironment hostingEnvironment)
         {
             _file = file;
             _public = pub;
