@@ -37,26 +37,27 @@ namespace WebApi
     /// </summary>
     public class Startup
     {
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="configuration"></param>
-        /// <param name="hostingEnvironment"></param>
-        public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
+        /// <param name="webHostEnvironment"></param>
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
             //log4net
-            //repository = LogManager.CreateRepository("NETCoreRepository");
-            //XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
+            repository = LogManager.CreateRepository("NETCoreRepository");
+            XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
         }
 
-
+        public ILoggerRepository repository { get; set; }
         /// <summary>
         /// 
         /// </summary>
         /// <value></value>
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         /// <summary>
         /// 
@@ -148,11 +149,6 @@ namespace WebApi
             });
 
             #endregion
-            services.AddControllers().AddJsonOptions(options =>
-            {
-                // options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                // options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm";
-            });
             // 添加Quartz任务监控
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();//注册ISchedulerFactory的实例。
             #region  添加SwaggerUI
@@ -167,34 +163,30 @@ namespace WebApi
                 });
                 options.IgnoreObsoleteActions();
                 options.DocInclusionPredicate((docName, description) => true);
-                //options.IncludeXmlComments(_hostingEnvironment.ContentRootPath + "/TestWebApi.xml");
+                options.IncludeXmlComments(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/WebApi.xml");
                 //options.DescribeAllEnumsAsStrings();
                 //options.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
             });
             #endregion
 
 
-            //services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddHttpContextAccessor();
+            services.AddControllers();
 
-            services.AddCors(options => options.AddPolicy("AllowSameDomain",
-            x => x.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials()));
-
-            #region 依赖注入
+            //services.AddCors(options => options.AddPolicy("AllowSameDomain",
+            //x => x.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials()));
 
             
-
-
-            #endregion
 
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
-            var assemblys = RuntimeHelper.GetAllAssemblies().Where(x=>x.GetName().Name.EndsWith("Repository") && !x.GetName().Name.StartsWith("I")).ToArray();
-            builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository") && !t.Name.StartsWith("I")).AsImplementedInterfaces();
+            //builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+            //var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
+            //builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository", StringComparison.Ordinal) && !t.Name.StartsWith("I", StringComparison.Ordinal)).AsImplementedInterfaces();
         }
 
 
@@ -203,7 +195,6 @@ namespace WebApi
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="loggerFactory"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -238,6 +229,7 @@ namespace WebApi
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseCors("AllowSameDomain");
 
         }
     }
