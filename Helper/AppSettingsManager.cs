@@ -42,7 +42,7 @@ namespace Helper
         /// <returns></returns>
         public MongoSettings MongoSettings=new MongoSettings();
         
-
+        public MysqlSettings MysqlSettings { get; set; }
     }
 
     /// <summary>
@@ -130,6 +130,17 @@ namespace Helper
         public string sslmode { get; set; }="none";
 
         
+    }
+    public class MysqlSettings
+    {
+        public string server { get; set; }
+        public string userid { get; set; }
+        public string pwd { get; set; }
+        public string port { get; set; } 
+        public string database { get; set; }
+        public string sslmode { get; set; }
+
+
     }
 
     public class LogLevel

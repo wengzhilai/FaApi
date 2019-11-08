@@ -26,6 +26,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Quartz;
 using Quartz.Impl;
+using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using WebApi.Comon;
 using WebApi.Unit;
@@ -158,16 +159,22 @@ namespace WebApi
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Dinner API接口文档",
+                    Title = "学习 API接口文档",
                     Version = "v1",
-                    Description = "RESTful API for Dinner",
-                    Contact = new OpenApiContact { Name = "wangshibang", Email = "wangyulong0505@sina.com" }
+                    Description = "RESTful API for 学习",
+                    Contact = new OpenApiContact { Name = "翁志来", Email = "3188894@qq.com" }
                 });
                 options.IgnoreObsoleteActions();
                 options.DocInclusionPredicate((docName, description) => true);
                 options.IncludeXmlComments(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/WebApi.xml");
-                //options.DescribeAllEnumsAsStrings();
-                //options.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.AddSecurityDefinition("JWT授权", new OpenApiSecurityScheme
+                {
+                    Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）\"",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.ApiKey
+                });
             });
             #endregion
 
@@ -176,8 +183,6 @@ namespace WebApi
 
             services.AddHttpContextAccessor();
 
-            //services.AddCors(options => options.AddPolicy(MyAllowSpecificOrigins,
-            //x => x.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials()));
 
             services.AddCors(options =>
             {
@@ -201,6 +206,9 @@ namespace WebApi
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+            //var assemblys = RuntimeHelper.GetAllAssemblies().Where(t => t.GetName().Name.EndsWith("Repository", StringComparison.Ordinal) && !t.GetName().Name.StartsWith("I", StringComparison.Ordinal)).ToArray();
+            //Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
+            //builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
             var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
             builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository", StringComparison.Ordinal) && !t.Name.StartsWith("I", StringComparison.Ordinal)).AsImplementedInterfaces();
         }
