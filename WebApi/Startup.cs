@@ -37,6 +37,8 @@ namespace WebApi
     /// </summary>
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "AllowSameDomain";
+
         /// <summary>
         /// 
         /// </summary>
@@ -173,20 +175,34 @@ namespace WebApi
             services.AddAutoMapper(typeof(Startup));
 
             services.AddHttpContextAccessor();
-            services.AddControllers();
 
-            //services.AddCors(options => options.AddPolicy("AllowSameDomain",
+            //services.AddCors(options => options.AddPolicy(MyAllowSpecificOrigins,
             //x => x.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials()));
 
-            
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder
+                            //.WithOrigins("http://localhost:8100")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                    });
+            });
+
+
+            services.AddControllers();
+
 
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            //builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
-            //var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
-            //builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository", StringComparison.Ordinal) && !t.Name.StartsWith("I", StringComparison.Ordinal)).AsImplementedInterfaces();
+            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+            var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
+            builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository", StringComparison.Ordinal) && !t.Name.StartsWith("I", StringComparison.Ordinal)).AsImplementedInterfaces();
         }
 
 
@@ -208,7 +224,6 @@ namespace WebApi
             //请求错误提示配置
             app.UseErrorHandling();
 
-            app.UseAuthentication();//启用验证
 
             #region 使用SwaggerUI
 
@@ -220,16 +235,20 @@ namespace WebApi
 
             #endregion
 
-            // app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+            // 跨域必须要 routing后面
+            app.UseCors(MyAllowSpecificOrigins);
+            //启用验证 必须在cors下面
+            app.UseAuthentication();//
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-            app.UseCors("AllowSameDomain");
 
         }
     }
