@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -24,11 +26,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using Quartz;
 using Quartz.Impl;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using WebApi.Comon;
+using WebApi.Config;
 using WebApi.Unit;
 
 namespace WebApi
@@ -198,7 +202,24 @@ namespace WebApi
             });
 
 
-            services.AddControllers();
+            services.AddControllers()
+            //.AddJsonOptions(option =>
+            //{
+            //    option.JsonSerializerOptions.Converters.Add(new DateTimeConverter()); //设置时间格式
+            //    //option.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            //    option.JsonSerializerOptions.PropertyNamingPolicy = null;//取消驼峰命名
+
+            //})
+            .AddNewtonsoftJson(options =>
+            {
+                // 忽略循环引用
+                // 不使用驼峰
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                // 设置时间格式
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                // 如字段为null值，该字段不会返回到前端
+                // options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
 
         }

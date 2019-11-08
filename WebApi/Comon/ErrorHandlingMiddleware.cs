@@ -44,7 +44,7 @@ namespace WebApi.Comon
                 {
                     statusCode = 200;
                 }
-                await HandleExceptionAsync(context, statusCode, ex.Message);
+                HandleExceptionAsync(context, statusCode, ex.Message);
             }
             finally
             {
@@ -73,16 +73,16 @@ namespace WebApi.Comon
                 
                 if (!string.IsNullOrWhiteSpace(msg))
                 {
-                    await HandleExceptionAsync(context, statusCode, msg);
+                    HandleExceptionAsync(context, statusCode, msg);
                 }
             }
         }
 　　　　 //异常错误信息捕获，将错误信息用Json方式返回
-        private static Task HandleExceptionAsync(HttpContext context, int statusCode, string msg)
+        private static void HandleExceptionAsync(HttpContext context, int statusCode, string msg)
         {
-            var result = JsonConvert.SerializeObject(new Result() { IsSuccess=false,Msg=msg,Code= statusCode.ToString() });
-            context.Response.ContentType = "application/json;charset=utf-8";
-            return context.Response.WriteAsync(result);
+            //var result = JsonConvert.SerializeObject(new Result() { IsSuccess=false,Msg=msg,Code= statusCode.ToString() });
+            //context.Response.ContentType = "application/json;charset=utf-8";
+            //return context.Response.WriteAsync(result);
         }
     }
     /// <summary>
