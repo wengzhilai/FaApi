@@ -124,11 +124,11 @@ namespace WebApi.Controllers
             Result reObj = new Result();
             // try
             // {
-            var allUser = await family.GetUserBooks();
-            foreach (var userItem in allUser)
-            {
-                var tmp = await family.GetUserBooksAsync(userItem.UserID.Value, 0);
-                // var tmp = await family.GetUserBooksAsync(139, 0);
+            // var allUser = await family.GetUserBooks();
+            // foreach (var userItem in allUser)
+            // {
+                // var tmp = await family.GetUserBooksAsync(userItem.UserID.Value, 0);
+                var tmp = await family.GetUserBooksAsync(137, 0);
                 var userId = Convert.ToInt32(tmp.Tmp);
                 //获取父节点数
                 var parentList = await family.GetUserTreeAsync(userId, 6);
@@ -239,7 +239,7 @@ namespace WebApi.Controllers
                 }
                 doc1.Close();
                 doc.Close();
-            }
+            // }
 
             // }
             // catch (Exception e)
