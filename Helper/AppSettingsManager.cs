@@ -6,42 +6,43 @@ namespace Helper
     /// </summary>
     public class AppSettingsManager
     {
-        
+        public static AppSettingsManager self = new AppSettingsManager();
+
         /// <summary>
         /// 获取jwt配置
         /// </summary>
         /// <returns></returns>
-        public static JwtSettings JwtSettings = new JwtSettings();
+        public JwtSettings JwtSettings = new JwtSettings();
 
         /// <summary>
         /// log4net配置
         /// </summary>
         /// <returns></returns>
-        public static Logging Logging = new Logging();
+        public Logging Logging = new Logging();
 
         /// <summary>
         /// 基本配置
         /// </summary>
         /// <returns></returns>
-        public static BaseConfig BaseConfig=new BaseConfig();
+        public BaseConfig BaseConfig=new BaseConfig();
         /// <summary>
         /// redis配置
         /// </summary>
         /// <returns></returns>
-        public static RedisConfig RedisConfig=new RedisConfig();
+        public RedisConfig RedisConfig=new RedisConfig();
         
         /// <summary>
         /// 极光配置
         /// </summary>
         /// <returns></returns>
-        public static JpushCfg JpushCfg=new JpushCfg();
+        public JpushCfg JpushCfg=new JpushCfg();
         /// <summary>
         /// 数据库连接
         /// </summary>
         /// <returns></returns>
-        public static MongoSettings MongoSettings=new MongoSettings();
+        public MongoSettings MongoSettings=new MongoSettings();
         
-
+        public MysqlSettings MysqlSettings { get; set; }
     }
 
     /// <summary>
@@ -129,6 +130,17 @@ namespace Helper
         public string sslmode { get; set; }="none";
 
         
+    }
+    public class MysqlSettings
+    {
+        public string server { get; set; }
+        public string userid { get; set; }
+        public string pwd { get; set; }
+        public string port { get; set; } 
+        public string database { get; set; }
+        public string sslmode { get; set; }
+
+
     }
 
     public class LogLevel

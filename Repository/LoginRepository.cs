@@ -88,7 +88,7 @@ namespace Repository
                 return reObj;
             }
 
-            if (!Fun.CheckPassword(inEnt.Password, AppSettingsManager.BaseConfig.PwdComplexity))
+            if (!Fun.CheckPassword(inEnt.Password, AppSettingsManager.self.BaseConfig.PwdComplexity))
             {
                 reObj.IsSuccess = false;
                 reObj.Code = "-2";
@@ -98,7 +98,7 @@ namespace Repository
             #endregion
 
             #region 检测验证码
-            if (AppSettingsManager.BaseConfig.VerifyCode)
+            if (AppSettingsManager.self.BaseConfig.VerifyCode)
             {
                 var nowDate = DateTime.Now.AddMinutes(-30);
 
@@ -346,7 +346,7 @@ namespace Repository
                 return reObj;
             }
             //检测密码复杂度
-            if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.BaseConfig.PwdComplexity))
+            if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.self.BaseConfig.PwdComplexity))
             {
                 reObj.IsSuccess = false;
                 reObj.Msg = "密码复杂度不够：";
@@ -377,7 +377,7 @@ namespace Repository
                 reObj.Msg = "两次密码不一致";
                 return reObj;
             }
-            if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.BaseConfig.PwdComplexity))
+            if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.self.BaseConfig.PwdComplexity))
             {
                 reObj.IsSuccess = false;
                 reObj.Code = "-2";

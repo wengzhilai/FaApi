@@ -24,7 +24,7 @@ namespace Helper
             {
                 if (_connection == null)
                 {
-                    var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
+                    var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.self.MongoSettings);
                     var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
                     _connection = new MySqlConnection(alldict + ";CharSet=utf8");
                 }
@@ -177,7 +177,7 @@ namespace Helper
         public DapperHelper()
         {
             modelHelper = new ModelHelper<T>();
-            var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.MongoSettings);
+            var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.self.MysqlSettings);
             var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
             connection = new MySqlConnection(alldict + ";CharSet=utf8");
         }

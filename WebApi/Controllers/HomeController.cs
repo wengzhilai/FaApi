@@ -31,7 +31,6 @@ namespace WebApi.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly IHostingEnvironment _env;
         private readonly IConfiguration _configuration;
         private IMapper _mapper { get; set; }
         /// <summary>
@@ -40,9 +39,8 @@ namespace WebApi.Controllers
         /// <param name="configuration"></param>
         /// <param name="mapper"></param>
         /// <param name="env"></param>
-        public HomeController(IConfiguration configuration, IMapper mapper, IHostingEnvironment env)
+        public HomeController(IConfiguration configuration, IMapper mapper)
         {
-            _env = env;
             _mapper = mapper;
             _configuration = configuration;
 
@@ -79,7 +77,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                var allPath = Path.Combine(_env.ContentRootPath, "..\\Doc\\Family.docx");
+                ////var allPath = Path.Combine(_env.ContentRootPath, "..\\Doc\\Family.docx");
                 var t = new WordHelper();
             }
             catch (Exception e)

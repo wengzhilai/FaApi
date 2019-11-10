@@ -1,36 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+using Helper;
+using log4net;
+using log4net.Config;
+using log4net.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
-using WebApi.Comon;
-using Swashbuckle.AspNetCore.Swagger;
-using System.IO;
-using Autofac.Extensions.DependencyInjection;
-using Autofac;
-using System.Reflection;
-using WebApi.Unit;
-using Helper;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
-using AutoMapper;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Quartz;
 using Quartz.Impl;
-using log4net.Repository;
-using log4net;
-using log4net.Config;
+using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.Swagger;
+using WebApi.Comon;
+using WebApi.Config;
+using WebApi.Unit;
 
 namespace WebApi
 {
@@ -39,32 +42,29 @@ namespace WebApi
     /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// log4net
-        /// </summary>
-        /// <value></value>
-        public ILoggerRepository repository { get; set; }
-        private readonly IHostingEnvironment _hostingEnvironment;
+        readonly string MyAllowSpecificOrigins = "AllowSameDomain";
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="configuration"></param>
-        /// <param name="hostingEnvironment"></param>
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        /// <param name="webHostEnvironment"></param>
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
-            _hostingEnvironment = hostingEnvironment;
+            WebHostEnvironment = webHostEnvironment;
             //log4net
             repository = LogManager.CreateRepository("NETCoreRepository");
             XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
         }
 
-
+        public ILoggerRepository repository { get; set; }
         /// <summary>
         /// 
         /// </summary>
         /// <value></value>
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         /// <summary>
         /// 
@@ -77,25 +77,18 @@ namespace WebApi
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             //初始化注入IOptions<T>
             // services.AddOptions();
-            Configuration.Bind("Logging", AppSettingsManager.Logging);
+            Configuration.Bind(AppSettingsManager.self);
 
-            services.Configure<JwtSettings>(Configuration.GetSection("RedisConfig"));
-            Configuration.Bind("RedisConfig", AppSettingsManager.RedisConfig);
+            Configuration.Bind("JwtSettings", AppSettingsManager.self.JwtSettings);
 
-            services.Configure<MongoSettings>(Configuration.GetSection("MongoSettings"));
-            Configuration.Bind("MongoSettings", AppSettingsManager.MongoSettings);
-
-            services.Configure<BaseConfig>(Configuration.GetSection("BaseConfig"));
-            Configuration.Bind("BaseConfig", AppSettingsManager.BaseConfig);
 
             #region JWT认证
             //Bearer 
-            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
-            Configuration.Bind("JwtSettings", AppSettingsManager.JwtSettings);
+
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -104,9 +97,9 @@ namespace WebApi
             {
                 config.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidAudience = AppSettingsManager.JwtSettings.Audience,
-                    ValidIssuer = AppSettingsManager.JwtSettings.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.JwtSettings.SecretKey))
+                    ValidAudience = AppSettingsManager.self.JwtSettings.Audience,
+                    ValidIssuer = AppSettingsManager.self.JwtSettings.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.self.JwtSettings.SecretKey))
                 };
 
                 config.Events = new JwtBearerEvents()
@@ -163,29 +156,29 @@ namespace WebApi
             });
 
             #endregion
-            services.AddMvc().AddJsonOptions(options =>
-            {
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm";
-            });
             // 添加Quartz任务监控
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();//注册ISchedulerFactory的实例。
             #region  添加SwaggerUI
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new Info
+                options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Dinner API接口文档",
+                    Title = "学习 API接口文档",
                     Version = "v1",
-                    Description = "RESTful API for Dinner",
-                    TermsOfService = "None",
-                    Contact = new Contact { Name = "wangshibang", Email = "wangyulong0505@sina.com", Url = "" }
+                    Description = "RESTful API for 学习",
+                    Contact = new OpenApiContact { Name = "翁志来", Email = "3188894@qq.com" }
                 });
                 options.IgnoreObsoleteActions();
                 options.DocInclusionPredicate((docName, description) => true);
-                options.IncludeXmlComments(_hostingEnvironment.ContentRootPath + "/bin/Debug/netcoreapp2.2/WebApi.xml");
-                options.DescribeAllEnumsAsStrings();
-                options.OperationFilter<HttpHeaderOperation>(); // 添加httpHeader参数
+                options.IncludeXmlComments(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/WebApi.xml");
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.AddSecurityDefinition("JWT授权", new OpenApiSecurityScheme
+                {
+                    Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）\"",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.ApiKey
+                });
             });
             #endregion
 
@@ -194,52 +187,72 @@ namespace WebApi
 
             services.AddHttpContextAccessor();
 
-            services.AddCors(options => options.AddPolicy("AllowSameDomain",
-            x => x.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials()));
 
-            #region 依赖注入
-
-            var builder = new ContainerBuilder();//实例化容器
-            //注册所有模块module
-            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
-            //获取所有的程序集
-            var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
-            // Assembly amy = Assembly.LoadFrom(_hostingEnvironment.ContentRootPath+"/../Repository/bin/Debug/netstandard2.0/Repository.dll"); 
-            //注册仓储，所有IRepository接口到Repository的映射
-            builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository") && !t.Name.StartsWith("I")).AsImplementedInterfaces();
-            //注册服务，所有IApplicationService到ApplicationService的映射
-            builder.Populate(services);
-            ApplicationContainer = builder.Build();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder
+                            //.WithOrigins("http://localhost:8100")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                    });
+            });
 
 
+            services.AddControllers()
+            //.AddJsonOptions(option =>
+            //{
+            //    option.JsonSerializerOptions.Converters.Add(new DateTimeConverter()); //设置时间格式
+            //    //option.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            //    option.JsonSerializerOptions.PropertyNamingPolicy = null;//取消驼峰命名
 
-            return new AutofacServiceProvider(ApplicationContainer); //第三方IOC接管 core内置DI容器 
-            #endregion
+            //})
+            .AddNewtonsoftJson(options =>
+            {
+                // 忽略循环引用
+                // 不使用驼峰
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                // 设置时间格式
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                // 如字段为null值，该字段不会返回到前端
+                // options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
 
         }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+            //var assemblys = RuntimeHelper.GetAllAssemblies().Where(t => t.GetName().Name.EndsWith("Repository", StringComparison.Ordinal) && !t.GetName().Name.StartsWith("I", StringComparison.Ordinal)).ToArray();
+            //Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
+            //builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
+            var assemblys = RuntimeHelper.GetAllAssemblies().ToArray();
+            builder.RegisterAssemblyTypes(assemblys).Where(t => t.Name.EndsWith("Repository", StringComparison.Ordinal) && !t.Name.StartsWith("I", StringComparison.Ordinal)).AsImplementedInterfaces();
+        }
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        /// <param name="loggerFactory"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // LogHelper.Init(LogManager.GetLogger(repository.Name,typeof(Startup)));
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-            }
+
+            app.UseHttpsRedirection();
+
 
             //请求错误提示配置
             app.UseErrorHandling();
 
-            app.UseAuthentication();//启用验证
 
             #region 使用SwaggerUI
 
@@ -251,9 +264,20 @@ namespace WebApi
 
             #endregion
 
-            // app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
-            app.UseMvc();
+            app.UseRouting();
+            // 跨域必须要 routing后面
+            app.UseCors(MyAllowSpecificOrigins);
+            //启用验证 必须在cors下面
+            app.UseAuthentication();//
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+            });
 
         }
     }

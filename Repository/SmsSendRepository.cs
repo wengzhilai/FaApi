@@ -44,7 +44,7 @@ namespace Repository
         /// <returns></returns>
         public Task<int> Count(string phone,string code)
         {
-            var nowDate = DateTime.Now.AddMinutes(-AppSettingsManager.BaseConfig.VerifyExpireMinute);
+            var nowDate = DateTime.Now.AddMinutes(-AppSettingsManager.self.BaseConfig.VerifyExpireMinute);
             
             return dbHelper.Count(x=>x.ADD_TIME>nowDate && x.PHONE_NO==phone && x.CONTENT==code);
         }

@@ -19,7 +19,7 @@ namespace Helper
         /// <param name="code"></param>
         /// <returns></returns>
         public static async Task<HttpResponse> SendValidSms(string mobile,string code){
-            JSMSClient jp=new JSMSClient(AppSettingsManager.JpushCfg.AppKey,AppSettingsManager.JpushCfg.MasterSecret);
+            JSMSClient jp=new JSMSClient(AppSettingsManager.self.JpushCfg.AppKey,AppSettingsManager.self.JpushCfg.MasterSecret);
             var senEnt=new TemplateMessage();
             senEnt.Type=1;
             senEnt.Mobile=mobile;

@@ -9,6 +9,7 @@
 # IDEs and editors
 /.idea
 .project
+.vs
 .classpath
 .c9/
 *.launch
@@ -48,3 +49,4 @@ testem.log
 .DS_Store
 Thumbs.db
 WebApi/.DS_Store
+*.user

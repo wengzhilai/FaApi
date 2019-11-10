@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ItemType>GenericProject</ItemType>
+    <ProjectGuid>{049536F8-AE5C-4BFD-B035-574445E794C2}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Default|AnyCPU' ">
+    <OutputPath>.\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="仪陇翁氏族谱序.docx" />
+    <None Include="Doc.mdproj" />
+    <None Include="Family_mysql.pdm" />
+    <None Include="Family.docx" />
+    <None Include="Family1.docx" />
+    <None Include="关系图\19-2翁允伍.png" />
+    <None Include="关系图\19-1翁允倡.png" />
+    <None Include="关系图\09翁万达.png" />
+    <None Include="关系图\01翁均甫.png" />
+  </ItemGroup>
+</Project>

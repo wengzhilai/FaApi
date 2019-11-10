@@ -19,15 +19,15 @@ public class RedisCacheService : ICacheService
 
     public RedisCacheService()
     {
-        _connection_read = GetManager(AppSettingsManager.RedisConfig.readRedisstr);
-        _connection_write = GetManager(AppSettingsManager.RedisConfig.writeRedisstr);
+        _connection_read = GetManager(AppSettingsManager.self.RedisConfig.readRedisstr);
+        _connection_write = GetManager(AppSettingsManager.self.RedisConfig.writeRedisstr);
         _cache_read = _connection_read.GetDatabase();
         _cache_write = _connection_write.GetDatabase();
     }
 
     private ConnectionMultiplexer GetManager(string connectionString = null)
     {
-        connectionString = connectionString ?? AppSettingsManager.RedisConfig.readRedisstr;
+        connectionString = connectionString ?? AppSettingsManager.self.RedisConfig.readRedisstr;
         var connect = ConnectionMultiplexer.Connect(connectionString);
         return connect;
     }

@@ -33,7 +33,7 @@ namespace WebApi.Controllers
     [Authorize]
     public class FamilyController : ControllerBase
     {
-        private readonly IHostingEnvironment env;
+        private readonly IWebHostEnvironment env;
         IConfiguration config;
         IUserInfoRepository userInfo;
         private IMapper mapper;
@@ -53,7 +53,7 @@ namespace WebApi.Controllers
             IUserInfoRepository _userInfo,
             IMapper _mapper,
             IFamilyRepository _family,
-            IHostingEnvironment _env,
+            IWebHostEnvironment _env,
              IUserRepository _user)
         {
             config = _config;
