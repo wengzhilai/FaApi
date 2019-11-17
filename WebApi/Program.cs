@@ -33,7 +33,7 @@ namespace WebApi
             .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>().UseUrls("http://*:5000");
                 });
     }
 }
