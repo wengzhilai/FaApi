@@ -23,13 +23,14 @@ namespace ApiGateway
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://localhost:5000")
+
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config
                         .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                         .AddJsonFile("appsettings.json", true, true)
                         .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+                        .AddJsonFile("hosts.json", false, false)
                         .AddJsonFile("ocelot.json", false, false)
                         .AddEnvironmentVariables();
                 })

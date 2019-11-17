@@ -14,7 +14,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilesUp", "FilesUp\FilesUp.csproj", "{EFAFA719-A603-48D0-BEB0-87A09082C5B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{D3489D69-53C6-4398-AB49-3E2E81C7C1AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{D3489D69-53C6-4398-AB49-3E2E81C7C1AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiUser", "ApiUser\ApiUser.csproj", "{02748D96-9E67-4DA8-8956-DBC4891601BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,12 @@ Global
 		{D3489D69-53C6-4398-AB49-3E2E81C7C1AA}.Default|Any CPU.Build.0 = Debug|Any CPU
 		{D3489D69-53C6-4398-AB49-3E2E81C7C1AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3489D69-53C6-4398-AB49-3E2E81C7C1AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
