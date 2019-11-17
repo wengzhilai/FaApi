@@ -43,6 +43,16 @@ namespace WebApi
     public class Startup
     {
         readonly string MyAllowSpecificOrigins = "AllowSameDomain";
+        /// <summary>
+        /// 加载日志资源
+        /// </summary>
+        /// <value></value>
+        public ILoggerRepository repository { get; set; }
+        /// <summary>
+        /// 环境
+        /// </summary>
+        /// <value></value>
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
         /// <summary>
         /// 
@@ -58,13 +68,11 @@ namespace WebApi
             XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
         }
 
-        public ILoggerRepository repository { get; set; }
         /// <summary>
         /// 
         /// </summary>
         /// <value></value>
         public IConfiguration Configuration { get; }
-        public IWebHostEnvironment WebHostEnvironment { get; }
 
         /// <summary>
         /// 
@@ -224,6 +232,10 @@ namespace WebApi
 
         }
 
+        /// <summary>
+        /// 配置autofac
+        /// </summary>
+        /// <param name="builder"></param>
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
