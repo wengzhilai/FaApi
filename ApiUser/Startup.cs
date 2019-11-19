@@ -17,6 +17,7 @@ namespace ApiUser
         {
             services.AddIdentityServer()
                     .AddDeveloperSigningCredential()//添加开发人员签名凭据
+                    .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
                     .AddInMemoryApiResources(IdentityConfig.GetApiResources())//添加内存apiresource
                     .AddInMemoryClients(IdentityConfig.GetClients());//添加内存client
         }
