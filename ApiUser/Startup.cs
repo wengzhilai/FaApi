@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiUser.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,13 +13,14 @@ namespace ApiUser
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentityServer()
+                    .AddDeveloperSigningCredential()//添加开发人员签名凭据
+                    .AddInMemoryApiResources(IdentityConfig.GetApiResources())//添加内存apiresource
+                    .AddInMemoryClients(IdentityConfig.GetClients());//添加内存client
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -28,7 +30,7 @@ namespace ApiUser
 
 
             app.UseRouting();
-
+            app.UseIdentityServer();//使用IdentityServer
             app.UseEndpoints(endpoints =>
             {
 

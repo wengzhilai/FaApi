@@ -36,9 +36,7 @@ namespace ApiGateway
                 })
                 .ConfigureServices(s =>
                 {
-                    s.AddOcelot()
-                        .AddEureka()
-                        .AddPolly();
+                    s.AddOcelot();
                 })
                 .Configure(a =>
                 {
