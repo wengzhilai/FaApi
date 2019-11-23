@@ -21,6 +21,7 @@ namespace ApiUser.Configuration
         {
             List<ApiResource> resources = new List<ApiResource>();
             resources.Add(new ApiResource("UsersService", "用户服务API"));
+            resources.Add(new ApiResource("FileUpService", "文件上传服务API"));
             resources.Add(new ApiResource("ProductService", "产品服务API"));
             return resources;
         }
@@ -106,7 +107,8 @@ namespace ApiUser.Configuration
                     AllowOfflineAccess = true,
                     AllowedScopes = new List<string>
                     {
-                        "UsersService"
+                        "UsersService",
+                        "FileUpService"
                     }
                 },
                 new Client

@@ -14,7 +14,18 @@ namespace FilesUp
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddGrpc();
+            //services.AddGrpc();
+            services.AddControllers();
+
+            //IdentityServer
+            services.AddAuthentication("Bearer")
+               .AddIdentityServerAuthentication(options =>
+               {
+                   options.RequireHttpsMetadata = false;
+                   options.Authority = "http://localhost:9002";
+                   options.ApiName = "FileUpService";
+               });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -26,12 +37,13 @@ namespace FilesUp
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }
