@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using ApiUser.Configuration;
+using ApiUser.IdentityServerExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,10 +19,20 @@ namespace ApiUser
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentityServer()
-                    .AddDeveloperSigningCredential()//添加开发人员签名凭据
+                    .AddDeveloperSigningCredential()
+                    //配置身份资源
                     .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
-                    .AddInMemoryApiResources(IdentityConfig.GetApiResources())//添加内存apiresource
-                    .AddInMemoryClients(IdentityConfig.GetClients());//添加内存client
+                    //配置API资源
+                    .AddInMemoryApiResources(IdentityConfig.GetApiResources())
+                    //预置Client
+                    .AddInMemoryClients(IdentityConfig.GetClients())
+                   //自定义登录返回信息
+                   .AddProfileService<ProfileService>()
+                   //添加Password模式下用于自定义登录验证 
+                   .AddResourceOwnerValidator<ResourceOwnerPasswordValidator>()
+                  //添加自定义授权模式
+                  .AddExtensionGrantValidator<SMSGrantValidator>()
+                    ;
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
