@@ -1,5 +1,4 @@
-﻿using ApiUser.Helper;
-using IdentityModel;
+﻿using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using System;
@@ -8,11 +7,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ApiUser.IdentityServerExtensions
+namespace Idsvr4.IdentityServerExtensions
 {
+    /// <summary>
+    /// 短信登录
+    /// </summary>
     public class SMSGrantValidator : IExtensionGrantValidator
     {
-        public string GrantType => ExtensionGrantTypes.SMSGrantType;
+        public string GrantType => "SMSGrantType";
 
         public Task ValidateAsync(ExtensionGrantValidationContext context)
         {
@@ -27,14 +29,10 @@ namespace ApiUser.IdentityServerExtensions
             if (phoneNumber == "13488888888" && smsCode == "123456")
             {
                 List<Claim> claimList = new List<Claim>();
-                claimList.Add(new Claim("userID", "1"));
-                claimList.Add(new Claim("roleId", "10"));
-                claimList.Add(new Claim("roleName", "cc"));
                 claimList.Add(new Claim(JwtClaimTypes.Role, "superadmin"));
-
                 context.Result = new GrantValidationResult(
                  subject: phoneNumber,
-                 authenticationMethod: ExtensionGrantTypes.SMSGrantType,
+                 authenticationMethod: GrantType,
                  claims: claimList);
             }
             else

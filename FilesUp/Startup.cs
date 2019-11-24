@@ -22,7 +22,7 @@ namespace FilesUp
                .AddIdentityServerAuthentication(options =>
                {
                    options.RequireHttpsMetadata = false;
-                   options.Authority = "http://localhost:9002";
+                   options.Authority = "http://192.168.2.34:9002";
                    options.ApiName = "FileUpService";
                });
 

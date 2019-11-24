@@ -47,7 +47,6 @@ namespace ApiUser
             app.UseIdentityServer();//使用IdentityServer
             app.UseEndpoints(endpoints =>
             {
-
                 endpoints.MapGet("/", async context =>
                 {
                     await context.Response.WriteAsync("Hello World!");

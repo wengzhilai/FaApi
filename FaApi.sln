@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiUser", "ApiUser\ApiUser.csproj", "{02748D96-9E67-4DA8-8956-DBC4891601BB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Idsvr4", "Idsvr4\Idsvr4.csproj", "{DAAB7C36-4352-42E7-9D5B-F7BDC84B843E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,12 @@ Global
 		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Default|Any CPU.Build.0 = Debug|Any CPU
 		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02748D96-9E67-4DA8-8956-DBC4891601BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAAB7C36-4352-42E7-9D5B-F7BDC84B843E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAAB7C36-4352-42E7-9D5B-F7BDC84B843E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAAB7C36-4352-42E7-9D5B-F7BDC84B843E}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAAB7C36-4352-42E7-9D5B-F7BDC84B843E}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{DAAB7C36-4352-42E7-9D5B-F7BDC84B843E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAAB7C36-4352-42E7-9D5B-F7BDC84B843E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

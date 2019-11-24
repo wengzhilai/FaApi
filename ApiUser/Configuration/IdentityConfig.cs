@@ -1,4 +1,5 @@
 ﻿using ApiUser.Helper;
+using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
@@ -20,7 +21,7 @@ namespace ApiUser.Configuration
         public static IEnumerable<ApiResource> GetApiResources()
         {
             List<ApiResource> resources = new List<ApiResource>();
-            resources.Add(new ApiResource("UsersService", "用户服务API"));
+            resources.Add(new ApiResource("UsersService", "用户服务API", new List<string>() { JwtClaimTypes.Role }));
             resources.Add(new ApiResource("FileUpService", "文件上传服务API"));
             resources.Add(new ApiResource("ProductService", "产品服务API"));
             return resources;
