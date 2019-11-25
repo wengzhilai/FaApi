@@ -72,22 +72,25 @@ namespace ApiUser.Controllers
             var disco = await client.GetDiscoveryDocumentAsync("http://localhost:9001/");
             if (disco.IsError)
                 return new Result<String>(false, disco.Error);
-            var token = await client.RequestPasswordTokenAsync(new PasswordTokenRequest()
+            Dictionary<string, string> par=new Dictionary<string, string>();
+            par.Add("phoneNumber",inEnt.LoginName);
+            par.Add("smsCode",inEnt.Code);
+            var token = await client.RequestTokenAsync(new TokenRequest()
             {
                 //获取Token的地址
                 Address = disco.TokenEndpoint,
                 //客户端Id
-                ClientId = "pwd",
+                ClientId = "sms",
                 //客户端密码
-                ClientSecret = "clientsecret",
-                GrantType = "password",
-                UserName = inEnt.LoginName,
-                Password = inEnt.Password,
+                ClientSecret = "123456",
+                GrantType = "SMSGrantType",
+                Parameters=par
             });
 
             if (token.IsError)
             {
                 reobj.IsSuccess = false;
+                reobj.Msg = token.ErrorDescription;
             }
             else
             {

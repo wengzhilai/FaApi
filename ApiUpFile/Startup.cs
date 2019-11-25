@@ -8,24 +8,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace FilesUp
+namespace ApiUpFile
 {
     public class Startup
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddGrpc();
             services.AddControllers();
-
-            //IdentityServer
-            services.AddAuthentication("Bearer")
-               .AddIdentityServerAuthentication(options =>
-               {
-                   options.RequireHttpsMetadata = false;
-                   options.Authority = "http://192.168.2.34:9002";
-                   options.ApiName = "FileUpService";
-               });
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -37,12 +26,12 @@ namespace FilesUp
 
             app.UseRouting();
 
-            app.UseAuthentication();
-
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
+                });
                 endpoints.MapControllers();
             });
         }

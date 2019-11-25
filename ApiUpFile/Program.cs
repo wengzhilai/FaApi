@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace FilesUp
+namespace ApiUpFile
 {
     public class Program
     {
@@ -29,7 +29,6 @@ namespace FilesUp
                             .AddJsonFile("hosts.json", false, false)
                             .AddEnvironmentVariables();
                     });
-
                     webBuilder.UseStartup<Startup>();
                 });
     }
