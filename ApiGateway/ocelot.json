@@ -2,7 +2,7 @@
 {
   "ReRoutes": [
     {
-      "DownstreamPathTemplate": "/",
+      "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -10,7 +10,18 @@
           "Port": 9002
         }
       ],
-      "UpstreamPathTemplate": "/api/ApiUser/"
+      "UpstreamPathTemplate": "/user/{url}"
+    },
+    {
+      "DownstreamPathTemplate": "/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 9001
+        }
+      ],
+      "UpstreamPathTemplate": "/token/{url}"
     }
   ],
   "GlobalConfiguration": {

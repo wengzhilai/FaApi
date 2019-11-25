@@ -1,6 +1,7 @@
 ﻿using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
+using IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,16 @@ namespace Idsvr4.IdentityServerExtensions
     /// </summary>
     public class SMSGrantValidator : IExtensionGrantValidator
     {
+        private readonly ISmsSendRepository smsSend;
+
         public string GrantType => "SMSGrantType";
 
-        public Task ValidateAsync(ExtensionGrantValidationContext context)
+        public SMSGrantValidator(ISmsSendRepository smsSend)
+        {
+            this.smsSend = smsSend;
+        }
+
+        public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
             var smsCode = context.Request.Raw.Get("smsCode");
             var phoneNumber = context.Request.Raw.Get("phoneNumber");
@@ -26,7 +34,9 @@ namespace Idsvr4.IdentityServerExtensions
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
             }
 
-            if (phoneNumber == "13488888888" && smsCode == "123456")
+            var result = await smsSend.Count(phoneNumber, smsCode);
+            //表示验证码有效
+            if (result>0)
             {
                 List<Claim> claimList = new List<Claim>();
                 claimList.Add(new Claim(JwtClaimTypes.Role, "superadmin"));
@@ -42,8 +52,6 @@ namespace Idsvr4.IdentityServerExtensions
                     "短信码错误!"
                     );
             }
-            return Task.FromResult(0);
-
         }
     }
 }

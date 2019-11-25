@@ -110,7 +110,7 @@ namespace Models.Entity
         /// 用户角色
         /// </summary>
         /// <value></value>
-        public int roleIdList { get; set; }
+        public List<int> roleIdList { get; set; }
         /// <summary>
         /// 可编辑的用户ID
         /// </summary>

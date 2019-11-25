@@ -1,11 +1,13 @@
-using System.IO;
-using Autofac.Extensions.DependencyInjection;
-//using Autofac.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace Idsvr4
+namespace ApiSms
 {
     public class Program
     {
@@ -18,8 +20,6 @@ namespace Idsvr4
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseContentRoot(Directory.GetCurrentDirectory());
-
                     webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
                     {
                         config
@@ -30,9 +30,6 @@ namespace Idsvr4
                             .AddEnvironmentVariables();
                     });
                     webBuilder.UseStartup<Startup>();
-                })
-                //Ìí¼ÓAutofac
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-            ;
+                });
     }
 }

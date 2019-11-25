@@ -29,6 +29,18 @@ namespace Models
     /// <typeparam name="T"></typeparam>
     public class Result<T> : Result
     {
+        public Result()
+        {
+
+        }
+
+        public Result(bool success,string msg)
+        {
+            this.IsSuccess = success;
+            this.Msg = msg;
+        }
+
+
         /// <summary>
         /// 返回数据
         /// </summary>

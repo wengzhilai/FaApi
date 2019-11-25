@@ -25,7 +25,7 @@ namespace Repository
         public async Task<FaUserEntity> SingleByKey(int key)
         {
             var ent=await dbHelper.SingleByKey(key);
-            ent.roleIdList=(await new DapperHelper<FaUserRoleEntityView>().Single(i=>i.USER_ID==key)).ROLE_ID;
+            ent.roleIdList = (await new DapperHelper<FaUserRoleEntityView>().FindAll(i => i.USER_ID == key)).Select(x => x.ROLE_ID).ToList();
             return ent;
         }
         

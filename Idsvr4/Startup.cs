@@ -1,3 +1,5 @@
+using Autofac;
+using Helper;
 using Idsvr4.Configuration;
 using Idsvr4.IdentityServerExtensions;
 using Microsoft.AspNetCore.Builder;
@@ -13,30 +15,30 @@ namespace Idsvr4
 {
     public class Startup
     {
-        //public IConfiguration Configuration { get; }
-        //public IWebHostEnvironment WebHostEnvironment { get; }
+        public IConfiguration Configuration { get; }
+        public IWebHostEnvironment WebHostEnvironment { get; }
 
-        //public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
-        //{
-        //    Configuration = configuration;
-        //    WebHostEnvironment = webHostEnvironment;
-        //}
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+        {
+            Configuration = configuration;
+            WebHostEnvironment = webHostEnvironment;
+        }
 
 
         /// <summary>
         /// ≈‰÷√autofac
         /// </summary>
         /// <param name="builder"></param>
-        //public void ConfigureContainer(ContainerBuilder builder)
-        //{
-        //    builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
-        //    Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
-        //    builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
-        //}
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+            Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
+            builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
+        }
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //Configuration.Bind(AppSettingsManager.self);
+            Configuration.Bind(AppSettingsManager.self);
 
 
             services.AddIdentityServer()
@@ -72,6 +74,7 @@ namespace Idsvr4
                 {
                     await context.Response.WriteAsync("IdentityServer4");
                 });
+
             });
         }
     }

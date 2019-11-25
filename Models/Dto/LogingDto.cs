@@ -16,12 +16,10 @@ namespace Models
         /// <summary>
         /// 登录名
         /// </summary>
-        [Required, MaxLength(20)]
         public string LoginName { get; set; }
         /// <summary>
         /// 密码
         /// </summary>
-        [Required, MaxLength(32)]
         public string Password { get; set; }
         /// <summary>
         /// 手机串号
