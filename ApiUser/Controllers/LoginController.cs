@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Helper;
 using IdentityModel.Client;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Newtonsoft.Json.Linq;
@@ -11,12 +13,13 @@ using Newtonsoft.Json.Linq;
 namespace ApiUser.Controllers
 {
     [Route("[controller]/[action]")]
+    [EnableCors]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class LoginController : ControllerBase
     {
         private readonly IHttpClientFactory clientFactory;
 
-        public AuthController(IHttpClientFactory clientFactory)
+        public LoginController(IHttpClientFactory clientFactory)
         {
             this.clientFactory = clientFactory;
         }
@@ -27,13 +30,14 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<String>> UserLogin(UserLoginDto inEnt)
+        [HttpOptions]
+        public async Task<Result<String>> userLogin(UserLoginDto inEnt)
         {
             Result<String> reobj = new Result<String>();
 
             var client = new HttpClient();
 
-            var disco = await client.GetDiscoveryDocumentAsync("http://localhost:9001/");
+            var disco = await client.GetDiscoveryDocumentAsync(AppSettingsManager.self.Idsvr4Url);
             if (disco.IsError)
                 return new Result<String>(false, disco.Error);
             var token = await client.RequestPasswordTokenAsync(new PasswordTokenRequest()
@@ -51,13 +55,14 @@ namespace ApiUser.Controllers
 
             if (token.IsError)
             {
-                reobj.IsSuccess = false;
+                reobj.success = false;
+                reobj.msg = token.ErrorDescription;
             }
             else
             {
-                reobj.IsSuccess = true;
+                reobj.success = true;
 
-                reobj.Data = token.Json.TryGetString("access_token");
+                reobj.data = token.Json.TryGetString("access_token");
             }
             return reobj;
         }
@@ -89,14 +94,14 @@ namespace ApiUser.Controllers
 
             if (token.IsError)
             {
-                reobj.IsSuccess = false;
-                reobj.Msg = token.ErrorDescription;
+                reobj.success = false;
+                reobj.msg = token.ErrorDescription;
             }
             else
             {
-                reobj.IsSuccess = true;
+                reobj.success = true;
 
-                reobj.Data = token.Json.TryGetString("access_token");
+                reobj.data = token.Json.TryGetString("access_token");
             }
             return reobj;
         }

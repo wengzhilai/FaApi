@@ -82,8 +82,8 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取用户获取关系图失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -104,8 +104,8 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取用户获取前谱失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -129,7 +129,7 @@ namespace WebApi.Controllers
             // {
                 // var tmp = await family.GetUserBooksAsync(userItem.UserID.Value, 0);
                 var tmp = await family.GetUserBooksAsync(137, 0);
-                var userId = Convert.ToInt32(tmp.Tmp);
+                var userId = Convert.ToInt32(tmp.tmp);
                 //获取父节点数
                 var parentList = await family.GetUserTreeAsync(userId, 6);
                 parentList.Reverse();
@@ -148,18 +148,18 @@ namespace WebApi.Controllers
                     var cell2 = doc.Tables[1].Rows[3].GetCell(0);
                     var cell3 = doc1.Tables[0].Rows[3].GetCell(1);
                     var cell4 = doc1.Tables[1].Rows[3].GetCell(0);
-                    word.AddPageNum(cell1, tmp.Msg);
+                    word.AddPageNum(cell1, tmp.msg);
                     word.AddPageNum(cell2, "");
                     word1.AddPageNum(cell3, "");
                     word1.AddPageNum(cell4, "");
                 }
                 #endregion
-                int elder = Convert.ToInt32(tmp.Code);
+                int elder = Convert.ToInt32(tmp.code);
                 bool isSec = false;
-                for (int i = 0; i < tmp.DataList.Count; i++)
+                for (int i = 0; i < tmp.dataList.Count; i++)
                 {
                     if (i >= 5) break;
-                    var item = tmp.DataList[i];
+                    var item = tmp.dataList[i];
                     var cell1 = doc.Tables[0].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
                     var cell2 = doc.Tables[1].Rows[0].GetCell(1).Tables[0].Rows[i + 1].GetCell(0);
                     var cell3 = doc1.Tables[0].Rows[0].GetCell(0).Tables[0].Rows[i + 1].GetCell(0);
@@ -229,8 +229,8 @@ namespace WebApi.Controllers
                         if (clm > maxCum * 2) isSec = true;
                     }
                 }
-                var savePath1 = Path.Combine(env.ContentRootPath, string.Format("UpFiles/Doc/{0}{1}.docx", tmp.Code, tmp.Msg));
-                var savePath2 = Path.Combine(env.ContentRootPath, string.Format("UpFiles/Doc/{0}{1}1.docx", tmp.Code, tmp.Msg));
+                var savePath1 = Path.Combine(env.ContentRootPath, string.Format("UpFiles/Doc/{0}{1}.docx", tmp.code, tmp.msg));
+                var savePath2 = Path.Combine(env.ContentRootPath, string.Format("UpFiles/Doc/{0}{1}1.docx", tmp.code, tmp.msg));
                 word.SaveDoc(doc, savePath1);
 
                 if (isSec)

@@ -24,8 +24,8 @@ namespace Repository
         public async Task<Result<int>> Delete(int key)
         {
             Result<int> reObj = new Result<int>();
-            reObj.Data = await dbHelper.Delete(i => i.ID == key);
-            reObj.IsSuccess = reObj.Data > 0;
+            reObj.data = await dbHelper.Delete(i => i.ID == key);
+            reObj.success = reObj.data > 0;
             return reObj;
         }
 
@@ -33,10 +33,10 @@ namespace Repository
         {
             var reObj = new Result<KTV>();
             var entList = await dbHelper.FindAll(i => i.PARENT_ID == parentId);
-            reObj.DataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
-            foreach (var item in reObj.DataList)
+            reObj.dataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
+            foreach (var item in reObj.dataList)
             {
-                item.child = (await GetTree(Convert.ToInt32(item.K))).DataList;
+                item.child = (await GetTree(Convert.ToInt32(item.K))).dataList;
             }
             return reObj;
         }
@@ -48,14 +48,14 @@ namespace Repository
             {
                 inEnt.Data.ID = await new SequenceRepository().GetNextID<FaEquipmentEntity>();
                 var opNum = await dbHelper.Save(inEnt);
-                reObj.IsSuccess = opNum > 0;
-                reObj.Msg = "添加成功";
+                reObj.success = opNum > 0;
+                reObj.msg = "添加成功";
             }
             else
             {
                 var opNum = await dbHelper.Update(inEnt);
-                reObj.IsSuccess = opNum > 0;
-                reObj.Msg = "修改成功";
+                reObj.success = opNum > 0;
+                reObj.msg = "修改成功";
             }
             return reObj;
         }
@@ -68,8 +68,8 @@ namespace Repository
             var tableType = await new TableRepository().SingleByKey(inEnt.TypeId);
             if (tableType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "表不存在";
+                reObj.success = false;
+                reObj.msg = "表不存在";
                 return reObj;
             }
 
@@ -78,7 +78,7 @@ namespace Repository
 
             try
             {
-                reObj.Data = DapperHelper.GetDataTable(sql);
+                reObj.data = DapperHelper.GetDataTable(sql);
             }
             catch (Exception e)
             {
@@ -95,15 +95,15 @@ namespace Repository
             var equType = await new EquipmentRepository().SingleByKey(inEnt.TypeId);
             if (equType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "设备类型ID有误";
+                reObj.success = false;
+                reObj.msg = "设备类型ID有误";
                 return reObj;
             }
             var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "表不存在";
+                reObj.success = false;
+                reObj.msg = "表不存在";
                 return reObj;
             }
             string sql = string.Format("insert into {0}({1}) values({2}) ",
@@ -120,12 +120,12 @@ namespace Repository
             var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "保存失败";
+                reObj.success = false;
+                reObj.msg = "保存失败";
                 return reObj;
             }
-            reObj.IsSuccess = true;
-            reObj.Msg = "保存成功";
+            reObj.success = true;
+            reObj.msg = "保存成功";
             return reObj;
         }
 
@@ -135,15 +135,15 @@ namespace Repository
             var equType = await new EquipmentRepository().SingleByKey(inEnt.TypeId);
             if (equType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "设备类型ID有误";
+                reObj.success = false;
+                reObj.msg = "设备类型ID有误";
                 return reObj;
             }
             var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "表不存在";
+                reObj.success = false;
+                reObj.msg = "表不存在";
                 return reObj;
             }
             string sql = string.Format("delete from {0} where Id=@Id",
@@ -155,12 +155,12 @@ namespace Repository
             var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "删除失败";
+                reObj.success = false;
+                reObj.msg = "删除失败";
                 return reObj;
             }
-            reObj.IsSuccess = true;
-            reObj.Msg = "删除成功";
+            reObj.success = true;
+            reObj.msg = "删除成功";
             return reObj;
         }
 
@@ -170,15 +170,15 @@ namespace Repository
             var equType = await new EquipmentRepository().SingleByKey(inEnt.TypeId);
             if (equType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "设备类型ID有误";
+                reObj.success = false;
+                reObj.msg = "设备类型ID有误";
                 return reObj;
             }
             var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "表不存在";
+                reObj.success = false;
+                reObj.msg = "表不存在";
                 return reObj;
             }
             string sql = string.Format("update {0} set {1} where ID={2}",
@@ -196,12 +196,12 @@ namespace Repository
             var opNum = await DapperHelper.Exec(sql, tmp);
             if (opNum != 1)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "修改失败";
+                reObj.success = false;
+                reObj.msg = "修改失败";
                 return reObj;
             }
-            reObj.IsSuccess = true;
-            reObj.Msg = "修改成功";
+            reObj.success = true;
+            reObj.msg = "修改成功";
             return reObj;
         }
 
@@ -210,22 +210,22 @@ namespace Repository
             var reObj = new Result<DataGridDataJson>();
             if (!inEnt.Code.IsInt32())
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "代码有误";
+                reObj.success = false;
+                reObj.msg = "代码有误";
                 return reObj;
             }
             var equType = await new EquipmentRepository().SingleByKey(Convert.ToInt32(inEnt.Code));
             if (equType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "设备类型ID有误";
+                reObj.success = false;
+                reObj.msg = "设备类型ID有误";
                 return reObj;
             }
             var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "表不存在";
+                reObj.success = false;
+                reObj.msg = "表不存在";
                 return reObj;
             }
             var bindEnt = new DataGridDataJson();
@@ -251,7 +251,7 @@ namespace Repository
                     int.TryParse(await DapperHelper.ExecuteScalarAsync(sqlList[1]), out allNum);
                     bindEnt.total = allNum;
                 }
-                reObj.Data = bindEnt;
+                reObj.data = bindEnt;
             }
             catch (Exception e)
             {
@@ -268,15 +268,15 @@ namespace Repository
             var equType = await new EquipmentRepository().SingleByKey(inEnt.Key);
             if (equType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "设备类型ID有误";
+                reObj.success = false;
+                reObj.msg = "设备类型ID有误";
                 return reObj;
             }
             var tableType = await new TableRepository().SingleByKey(equType.TABLE_TYPE_ID);
             if (tableType == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "表不存在";
+                reObj.success = false;
+                reObj.msg = "表不存在";
                 return reObj;
             }
             var setting = new SmartTableSetting();
@@ -295,7 +295,7 @@ namespace Repository
             setting.ColumnsList = allColumns;
             setting.ROWS_BTN = "[]";
             setting.SHOW_CHECKBOX = true;
-            reObj.Data = setting;
+            reObj.data = setting;
             return reObj;
         }
     }

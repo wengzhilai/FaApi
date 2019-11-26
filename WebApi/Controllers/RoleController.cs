@@ -62,14 +62,14 @@ namespace WebApi.Controllers
             try
             {
                 var ent = await _role.SingleByKey(inEnt.Key);
-                reObj.Data = ent;
-                reObj.IsSuccess = true;
+                reObj.data = ent;
+                reObj.success = true;
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取用户详情失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
 
@@ -91,8 +91,8 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "修改角色信息失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -114,8 +114,8 @@ namespace WebApi.Controllers
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取用户详情失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }

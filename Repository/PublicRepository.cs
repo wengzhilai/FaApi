@@ -24,15 +24,15 @@ namespace Repository
             Result reEnt = new Result();
             if (string.IsNullOrEmpty(phone))
             {
-                reEnt.IsSuccess = false;
-                reEnt.Msg = "电话号码不能为空";
+                reEnt.success = false;
+                reEnt.msg = "电话号码不能为空";
                 return reEnt;
             }
 
             if (!phone.IsOnlyNumber() || phone.Length != 11)
             {
-                reEnt.IsSuccess = false;
-                reEnt.Msg = "电话号码格式不正确";
+                reEnt.success = false;
+                reEnt.msg = "电话号码格式不正确";
                 return reEnt;
             }
 
@@ -48,15 +48,15 @@ namespace Repository
                 {
                     login.VERIFY_CODE = code;
                     login.VERIFY_TIME = DateTime.Now;
-                    reEnt.IsSuccess = await dapperLogin.Update(new DtoSave<FaLoginEntity>
+                    reEnt.success = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
                         Data = login,
                         SaveFieldList = new List<string> { "VERIFY_CODE", "VERIFY_TIME" },
                         IgnoreFieldList = null
                     }) > 0;
-                    if (!reEnt.IsSuccess)
+                    if (!reEnt.success)
                     {
-                        reEnt.Msg = "更新用户验证码失败";
+                        reEnt.msg = "更新用户验证码失败";
                         dapperLogin.TranscationRollback();
                         return reEnt;
                     }
@@ -67,10 +67,10 @@ namespace Repository
                 #region 极光发送短信
 
                 reEnt = await SmsSendCode(phone, code);
-                if (!reEnt.IsSuccess)
+                if (!reEnt.success)
                 {
-                    reEnt.IsSuccess = false;
-                    reEnt.Msg = "短信服务已欠费，请联系管理员";
+                    reEnt.success = false;
+                    reEnt.msg = "短信服务已欠费，请联系管理员";
                     dapperLogin.TranscationRollback();
                     return reEnt;
                 }
@@ -86,27 +86,27 @@ namespace Repository
                     PHONE_NO = phone
                 };
 
-                reEnt.IsSuccess = await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
+                reEnt.success = await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
                 {
                     Data = ent
                 }) > 0;
-                if (!reEnt.IsSuccess)
+                if (!reEnt.success)
                 {
-                    reEnt.IsSuccess = false;
-                    reEnt.Msg = "保存发送记录失败";
+                    reEnt.success = false;
+                    reEnt.msg = "保存发送记录失败";
                     dapperLogin.TranscationRollback();
                     return reEnt;
                 }
                 #endregion
 
                 dapperLogin.TranscationCommit();
-                reEnt.IsSuccess = true;
-                reEnt.Msg = "发送成功";
+                reEnt.success = true;
+                reEnt.msg = "发送成功";
             }
             catch (Exception e)
             {
-                reEnt.IsSuccess = false;
-                reEnt.Msg = e.Message;
+                reEnt.success = false;
+                reEnt.msg = e.Message;
 
                 LogHelper.WriteErrorLog<PublicRepository>(e.ToString());
                 dapperLogin.TranscationRollback();
@@ -124,18 +124,18 @@ namespace Repository
             var msg_id = jb.Value<string>("msg_id");
             if (string.IsNullOrEmpty(msg_id))
             {
-                reObj.IsSuccess = false;
+                reObj.success = false;
                 var errorObj = jb.Value<JObject>("error");
                 if (errorObj != null)
                 {
-                    reObj.Msg = errorObj.Value<string>("message");
+                    reObj.msg = errorObj.Value<string>("message");
                 }
             }
             else
             {
-                reObj.IsSuccess = true;
+                reObj.success = true;
             }
-            reObj.Msg = t.Content;
+            reObj.msg = t.Content;
             return reObj;
         }
 
@@ -149,8 +149,8 @@ namespace Repository
             Result reObj = new Result();
             if (datetime < new DateTime(1900, 1, 1))
             {
-                reObj.IsSuccess = true;
-                reObj.Msg = datetime.ToString("yyyy-MM-dd HH:mm");
+                reObj.success = true;
+                reObj.msg = datetime.ToString("yyyy-MM-dd HH:mm");
                 return reObj;
             }
 
@@ -158,8 +158,8 @@ namespace Repository
             int lyear = cc.GetYear(datetime);
             int lmonth = cc.GetMonth(datetime);
             int lday = cc.GetDayOfMonth(datetime);
-            reObj.IsSuccess = true;
-            reObj.Msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:{4}", lyear, lmonth, lday, datetime.Hour, datetime.Minute)).ToString("yyyy-MM-dd HH:mm");
+            reObj.success = true;
+            reObj.msg = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:{4}", lyear, lmonth, lday, datetime.Hour, datetime.Minute)).ToString("yyyy-MM-dd HH:mm");
             return reObj;
         }
 
@@ -173,8 +173,8 @@ namespace Repository
             Result reObj = new Result();
             if (datetime < new DateTime(1900, 1, 1))
             {
-                reObj.IsSuccess = true;
-                reObj.Msg = datetime.ToString("yyyy-MM-dd HH:mm");
+                reObj.success = true;
+                reObj.msg = datetime.ToString("yyyy-MM-dd HH:mm");
                 return reObj;
             }
             ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
@@ -189,8 +189,8 @@ namespace Repository
                 if (cc.IsLeapMonth(datetime.Year, i))
                     dt = dt.AddMonths(1);
 
-            reObj.IsSuccess = true;
-            reObj.Msg = dt.ToString("yyyy-MM-dd HH:mm");
+            reObj.success = true;
+            reObj.msg = dt.ToString("yyyy-MM-dd HH:mm");
             return reObj;
         }
 

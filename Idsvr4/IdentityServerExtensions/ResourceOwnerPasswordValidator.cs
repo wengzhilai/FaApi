@@ -35,15 +35,15 @@ namespace Idsvr4.IdentityServerExtensions
 
             var opObj = await login.UserLogin(new Models.LogingDto { LoginName = context.UserName, Password = context.Password });
 
-            if (opObj.IsSuccess && opObj.Data!=null)
+            if (opObj.success && opObj.data!=null)
             {
 
                 List<Claim> claimList = new List<Claim>();
 
-                claimList.Add(new Claim(JwtClaimTypes.Id, opObj.Data.ID.ToString()));
-                if(opObj.Data.roleIdList!=null) claimList.Add(new Claim(JwtClaimTypes.Role, string.Join(",", opObj.Data.roleIdList)));
-                claimList.Add(new Claim(JwtClaimTypes.Name, opObj.Data.NAME));
-                claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, opObj.Data.LOGIN_NAME));
+                claimList.Add(new Claim(JwtClaimTypes.Id, opObj.data.ID.ToString()));
+                if(opObj.data.roleIdList!=null) claimList.Add(new Claim(JwtClaimTypes.Role, string.Join(",", opObj.data.roleIdList)));
+                claimList.Add(new Claim(JwtClaimTypes.Name, opObj.data.NAME));
+                claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, opObj.data.LOGIN_NAME));
                 
                 context.Result = new GrantValidationResult(
                  subject: context.UserName,
@@ -55,7 +55,7 @@ namespace Idsvr4.IdentityServerExtensions
                 //验证失败
                 context.Result = new GrantValidationResult(
                     TokenRequestErrors.InvalidGrant,
-                    opObj.Msg
+                    opObj.msg
                     );
             }
         }

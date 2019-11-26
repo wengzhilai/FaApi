@@ -62,7 +62,7 @@ namespace WebApi.Controllers
             Result<bool> reObj = new Result<bool>();
             //1、通过调度工厂获得调度器
             _scheduler = await _schedulerFactory.GetScheduler();
-            reObj.Data = _scheduler.IsStarted;
+            reObj.data = _scheduler.IsStarted;
             return reObj;
         }
 
@@ -166,15 +166,15 @@ namespace WebApi.Controllers
                     await _scheduler.UnscheduleJob(triggerKey);// 移除触发器
                     var trigger = await _scheduler.GetTrigger(triggerKey);
                     await _scheduler.DeleteJob(trigger.JobKey);// 删除任务
-                    reObj.IsSuccess = true;
-                    reObj.Data = true;
+                    reObj.success = true;
+                    reObj.data = true;
                 }
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Data = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.data = false;
+                reObj.msg = e.Message;
             }
 
             return reObj;
@@ -213,7 +213,7 @@ namespace WebApi.Controllers
                 task.Priority = jobTrigger.Priority;
                 //触发器调度应该开始的时间
                 task.StartTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
-                reObj.DataList.Add(task);
+                reObj.dataList.Add(task);
             }
             return reObj;
         }

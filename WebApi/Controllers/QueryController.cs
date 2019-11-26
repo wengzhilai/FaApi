@@ -62,8 +62,8 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.Msg = ex.Message;
-                reObj.IsSuccess = false;
+                reObj.msg = ex.Message;
+                reObj.success = false;
             }
             return reObj;
         }
@@ -84,8 +84,8 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.Msg = ex.Message;
-                reObj.IsSuccess = false;
+                reObj.msg = ex.Message;
+                reObj.success = false;
             }
             return reObj;
         }
@@ -128,8 +128,8 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.IsSuccess = false;
-                reObj.Msg = ex.Message;
+                reObj.success = false;
+                reObj.msg = ex.Message;
             }
             return reObj;
 
@@ -147,14 +147,14 @@ namespace WebApi.Controllers
             Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
             try
             {
-                reObj.Data = await _query.Single(i => i.CODE == inEnt.Key);
-                reObj.IsSuccess = true;
+                reObj.data = await _query.Single(i => i.CODE == inEnt.Key);
+                reObj.success = true;
             }
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.Msg = ex.Message;
-                reObj.IsSuccess = false;
+                reObj.msg = ex.Message;
+                reObj.success = false;
             }
             return reObj;
         }
@@ -178,13 +178,13 @@ namespace WebApi.Controllers
                     reStr = reStr.Replace("%0d", " ");
                 }
                 catch { }
-                reObj.Data = reStr;
+                reObj.data = reStr;
             }
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.Msg = ex.Message;
-                reObj.IsSuccess = false;
+                reObj.msg = ex.Message;
+                reObj.success = false;
             }
             return reObj;
         }
@@ -202,7 +202,7 @@ namespace WebApi.Controllers
             // var reData =await _query.QueryExecuteCsv(querySearchModel);
             // Session[string.Format("SQL_{0}", querySearchModel.Code)] = sqlStr;
             var tmepObj = await _query.QueryExecuteCsv(querySearchModel);
-            return File(tmepObj.Data.ToArray(), "application/octet-stream", string.Format("{0}.csv", querySearchModel.Code));
+            return File(tmepObj.data.ToArray(), "application/octet-stream", string.Format("{0}.csv", querySearchModel.Code));
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace WebApi.Controllers
                 page=1,
                 rows=10000
             });
-            return File(tmepObj.Data.ToArray(), "application/octet-stream", string.Format("{0}.csv", code));
+            return File(tmepObj.data.ToArray(), "application/octet-stream", string.Format("{0}.csv", code));
         }
 
         /// <summary>
@@ -238,8 +238,8 @@ namespace WebApi.Controllers
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.Msg = ex.Message;
-                reObj.IsSuccess = false;
+                reObj.msg = ex.Message;
+                reObj.success = false;
             }
             return reObj;
         }
@@ -265,7 +265,7 @@ namespace WebApi.Controllers
                 "REPORT_SCRIPT",
                 };
             reObj = await _query.FindAllPage(inEnt);
-            reObj.IsSuccess = true;
+            reObj.success = true;
             return reObj;
         }
 
@@ -282,19 +282,19 @@ namespace WebApi.Controllers
             {
                 if (inEnt.Data.ID == 0)
                 {
-                    reObj.Data = await _query.Save(inEnt);
+                    reObj.data = await _query.Save(inEnt);
                 }
                 else
                 {
-                    reObj.Data = await _query.Update(inEnt);
+                    reObj.data = await _query.Update(inEnt);
                 }
 
             }
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.Msg = ex.Message;
-                reObj.IsSuccess = false;
+                reObj.msg = ex.Message;
+                reObj.success = false;
             }
             return reObj;
         }
@@ -310,13 +310,13 @@ namespace WebApi.Controllers
             Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
             try
             {
-                reObj.Data = await _query.Single(x=>x.ID==inEnt.Key);
+                reObj.data = await _query.Single(x=>x.ID==inEnt.Key);
             }
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.Msg = ex.Message;
-                reObj.IsSuccess = false;
+                reObj.msg = ex.Message;
+                reObj.success = false;
             }
             return reObj;
         }
@@ -332,14 +332,14 @@ namespace WebApi.Controllers
             Result<int> reObj = new Result<int>();
             try
             {
-                reObj.Data = await _query.Delete(x=>x.ID==inEnt.Key);
+                reObj.data = await _query.Delete(x=>x.ID==inEnt.Key);
 
             }
             catch (Exception ex)
             {
                 LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.Msg = ex.Message;
-                reObj.IsSuccess = false;
+                reObj.msg = ex.Message;
+                reObj.success = false;
             }
             return reObj;
         }

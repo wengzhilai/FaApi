@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Idsvr4", "Idsvr4\Idsvr4.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiSms", "ApiSms\ApiSms.csproj", "{933E6FB9-5830-445F-88BE-18F42D57A597}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiUpFile", "ApiUpFile\ApiUpFile.csproj", "{3524B631-69BD-4718-8F51-ADBE6353479D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiUpFile", "ApiUpFile\ApiUpFile.csproj", "{3524B631-69BD-4718-8F51-ADBE6353479D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

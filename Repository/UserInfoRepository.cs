@@ -63,15 +63,15 @@ namespace Repository
                 int.TryParse(inEnt.ParentArr[1].K, out fatherId);
                 if (fatherId == 0)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Msg = "父级ID有误";
+                    reObj.success = false;
+                    reObj.msg = "父级ID有误";
                     return reObj;
                 }
                 var fatherEnt = await dbHelper.Single(x => x.ID == fatherId);
                 if (fatherEnt == null)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Msg = "父级有误";
+                    reObj.success = false;
+                    reObj.msg = "父级有误";
                     return reObj;
                 }
                 DapperHelper<FaLoginEntity> dbHelperLogin = new DapperHelper<FaLoginEntity>();
@@ -87,18 +87,18 @@ namespace Repository
                         code = inEnt.Code
                     }, dbHelperLogin);
 
-                    if (rustle.IsSuccess)
+                    if (rustle.success)
                     {
                         DapperHelper<FaUserInfoEntity> dbUserInfo = new DapperHelper<FaUserInfoEntity>(dbHelperLogin.GetConnection(), dbHelperLogin.GetTransaction());
-                        var userinfoId = rustle.Data;
+                        var userinfoId = rustle.data;
                         var userInfo = await dbUserInfo.Single(x => x.ID == userinfoId);
                         if (userInfo == null)
                         {
-                            reObj.IsSuccess = await dbUserInfo.Save(new DtoSave<FaUserInfoEntity>
+                            reObj.success = await dbUserInfo.Save(new DtoSave<FaUserInfoEntity>
                             {
                                 Data = new FaUserInfoEntity
                                 {
-                                    ID = rustle.Data,
+                                    ID = rustle.data,
                                     LEVEL_ID = inEnt.LevelId,
                                     FAMILY_ID = 1,
                                     FATHER_ID = fatherId,
@@ -115,11 +115,11 @@ namespace Repository
                                 }
                             }) > 0 ? true : false;
 
-                            if (!reObj.IsSuccess)
+                            if (!reObj.success)
                             {
-                                reObj.IsSuccess = false;
-                                reObj.Code = "-6";
-                                reObj.Msg = string.Format("添加userinfo失败");
+                                reObj.success = false;
+                                reObj.code = "-6";
+                                reObj.msg = string.Format("添加userinfo失败");
                                 return reObj;
                             }
                         }
@@ -128,16 +128,16 @@ namespace Repository
                     }
                     else
                     {
-                        reObj.IsSuccess = false;
-                        reObj.Msg = rustle.Msg;
+                        reObj.success = false;
+                        reObj.msg = rustle.msg;
                         dbHelperLogin.TranscationRollback();
                     }
                 }
                 catch (Exception e)
                 {
                     dbHelperLogin.TranscationRollback();
-                    reObj.IsSuccess = false;
-                    reObj.Msg = e.Message;
+                    reObj.success = false;
+                    reObj.msg = e.Message;
                 }
                 return reObj;
 
@@ -164,8 +164,8 @@ namespace Repository
                     });
                     if (saveNum < 1)
                     {
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "保存文件失败";
+                        reObj.success = false;
+                        reObj.msg = "保存文件失败";
                         return reObj;
                     }
                 }
@@ -175,12 +175,12 @@ namespace Repository
                 //更新用户信息
                 var upUser = await new LoginRepository().UserEditLoginName(user.LOGIN_NAME, inEnt.LoginName, inEnt.ParentArr[0].V, Convert.ToInt32(inEnt.ParentArr[0].K), inEnt.Password, inEnt.ICON_FILES_ID);
                 //更新失败则返回
-                if (!upUser.IsSuccess)
+                if (!upUser.success)
                 {
                     return upUser;
                 }
                 DapperHelper<FaUserInfoEntity> dbUserInfo = new DapperHelper<FaUserInfoEntity>();
-                reObj.IsSuccess = await dbUserInfo.Update(new DtoSave<FaUserInfoEntity>
+                reObj.success = await dbUserInfo.Update(new DtoSave<FaUserInfoEntity>
                 {
 
                     Data = new FaUserInfoEntity
@@ -210,11 +210,11 @@ namespace Repository
                     WhereList = null
                 }) > 0 ? true : false;
 
-                if (!reObj.IsSuccess)
+                if (!reObj.success)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Code = "-6";
-                    reObj.Msg = string.Format("修改userinfo失败");
+                    reObj.success = false;
+                    reObj.code = "-6";
+                    reObj.msg = string.Format("修改userinfo失败");
                     return reObj;
                 }
                 #endregion
@@ -250,8 +250,8 @@ namespace Repository
                 var father = await dapperUserInfo.Single(x => x.ID == inEnt.Data.FATHER_ID);
                 if (father == null && (inEnt.Data.COUPLE_ID == null || inEnt.Data.COUPLE_ID == 0))
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Msg = "ID有误";
+                    reObj.success = false;
+                    reObj.msg = "ID有误";
                     return reObj;
                 }
 
@@ -271,8 +271,8 @@ namespace Repository
                     if (saveNum < 1)
                     {
                         dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "保存文件失败";
+                        reObj.success = false;
+                        reObj.msg = "保存文件失败";
                         return reObj;
                     }
                 }
@@ -290,8 +290,8 @@ namespace Repository
                         var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.Data.COUPLE_ID);
                         if (coupleEnt == null)
                         {
-                            reObj.IsSuccess = false;
-                            reObj.Msg = "选择的COUPLE_ID不存在";
+                            reObj.success = false;
+                            reObj.msg = "选择的COUPLE_ID不存在";
                             return reObj;
                         }
 
@@ -311,8 +311,8 @@ namespace Repository
                         if (addUserInfoNum < 1)
                         {
                             dapperUser.TranscationRollback();
-                            reObj.IsSuccess = false;
-                            reObj.Msg = "修改用户失败";
+                            reObj.success = false;
+                            reObj.msg = "修改用户失败";
                             return reObj;
                         }
                         #endregion
@@ -337,8 +337,8 @@ namespace Repository
                     if (addUserId < 1)
                     {
                         dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "保存用户失败";
+                        reObj.success = false;
+                        reObj.msg = "保存用户失败";
                         return reObj;
                     }
                     #endregion
@@ -360,8 +360,8 @@ namespace Repository
                         if (addLoginId < 1)
                         {
                             dapperUser.TranscationRollback();
-                            reObj.IsSuccess = false;
-                            reObj.Msg = "保存用户登录账号失败";
+                            reObj.success = false;
+                            reObj.msg = "保存用户登录账号失败";
                             return reObj;
                         }
                     }
@@ -405,8 +405,8 @@ namespace Repository
                     if (addUserInfoId < 1)
                     {
                         dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "保存用户信息失败";
+                        reObj.success = false;
+                        reObj.msg = "保存用户信息失败";
                         return reObj;
                     }
                     #endregion
@@ -424,15 +424,15 @@ namespace Repository
                     if (userInfo.STATUS == "存档")
                     {
                         dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "用户信息已经存档，不可修改，请联系管理员";
+                        reObj.success = false;
+                        reObj.msg = "用户信息已经存档，不可修改，请联系管理员";
                         return reObj;
                     }
                     if (userInfo.STATUS == "锁定" && userInfo.CREATE_USER_ID != opUserId)
                     {
                         dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "用户信息已经锁定，不可修改，请联系管理员，和添加用户";
+                        reObj.success = false;
+                        reObj.msg = "用户信息已经锁定，不可修改，请联系管理员，和添加用户";
                         return reObj;
                     }
 
@@ -448,8 +448,8 @@ namespace Repository
                         if (!isPower)
                         {
                             dapperUser.TranscationRollback();
-                            reObj.IsSuccess = false;
-                            reObj.Msg = "您无权限操作该用户请联系管理员";
+                            reObj.success = false;
+                            reObj.msg = "您无权限操作该用户请联系管理员";
                             return reObj;
                         }
                     }
@@ -457,8 +457,8 @@ namespace Repository
                     if (user == null || userInfo == null)
                     {
                         dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "用户信息不存在";
+                        reObj.success = false;
+                        reObj.msg = "用户信息不存在";
                         return reObj;
                     }
                     #endregion
@@ -479,8 +479,8 @@ namespace Repository
                             if (await dapperLogin.Count(string.Format("ID<>{0} && LOGIN_NAME='{1}'", login.ID, inEnt.Data.LOGIN_NAME)) > 0)
                             {
                                 dapperUser.TranscationRollback();
-                                reObj.IsSuccess = false;
-                                reObj.Msg = "登录账号已经存在";
+                                reObj.success = false;
+                                reObj.msg = "登录账号已经存在";
                                 return reObj;
                             }
                             #endregion
@@ -491,8 +491,8 @@ namespace Repository
                                 if (delNum < 1)
                                 {
                                     dapperUser.TranscationRollback();
-                                    reObj.IsSuccess = false;
-                                    reObj.Msg = "删除账号失败";
+                                    reObj.success = false;
+                                    reObj.msg = "删除账号失败";
                                     return reObj;
                                 }
                             }
@@ -508,8 +508,8 @@ namespace Repository
                                 if (updateLoginNum < 1)
                                 {
                                     dapperUser.TranscationRollback();
-                                    reObj.IsSuccess = false;
-                                    reObj.Msg = "修改账号失败";
+                                    reObj.success = false;
+                                    reObj.msg = "修改账号失败";
                                     return reObj;
                                 }
                             }
@@ -534,8 +534,8 @@ namespace Repository
                                 if (addLoginId < 1)
                                 {
                                     dapperUser.TranscationRollback();
-                                    reObj.IsSuccess = false;
-                                    reObj.Msg = "保存用户登录账号失败";
+                                    reObj.success = false;
+                                    reObj.msg = "保存用户登录账号失败";
                                     return reObj;
                                 }
                             }
@@ -561,8 +561,8 @@ namespace Repository
                     if (addUserNum < 1)
                     {
                         dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "修改用户失败";
+                        reObj.success = false;
+                        reObj.msg = "修改用户失败";
                         return reObj;
                     }
                     #endregion
@@ -617,24 +617,24 @@ namespace Repository
                     if (addUserInfoNum < 1)
                     {
                         dapperUser.TranscationRollback();
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "修改用户失败";
+                        reObj.success = false;
+                        reObj.msg = "修改用户失败";
                         return reObj;
                     }
                     #endregion
                 }
                 dapperUser.TranscationCommit();
-                reObj.Data = true;
-                reObj.IsSuccess = true;
-                reObj.Msg = "保存成功";
+                reObj.data = true;
+                reObj.success = true;
+                reObj.msg = "保存成功";
                 return reObj;
 
             }
             catch (Exception e)
             {
                 dapperUser.TranscationRollback();
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
                 return reObj;
             }
         }
@@ -649,8 +649,8 @@ namespace Repository
                 var children = await dapperUserInfo.Count(i => i.FAMILY_ID == userId);
                 if (children > 0)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Msg = "该用户有项子项，不能删除";
+                    reObj.success = false;
+                    reObj.msg = "该用户有项子项，不能删除";
                     return reObj;
 
                 }
@@ -664,10 +664,10 @@ namespace Repository
                 // }
                 DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>(dapperUserInfo.GetConnection(), dapperUserInfo.GetTransaction());
                 opNum = await dapperUser.Delete(i => i.ID == userId);
-                reObj.IsSuccess = opNum > 0;
-                if (!reObj.IsSuccess)
+                reObj.success = opNum > 0;
+                if (!reObj.success)
                 {
-                    reObj.Msg = "删除User失败";
+                    reObj.msg = "删除User失败";
                     dapperUserInfo.TranscationRollback();
                     return reObj;
                 }
@@ -676,8 +676,8 @@ namespace Repository
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog<UserInfoRepository>(e.ToString());
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
                 dapperUserInfo.TranscationRollback();
             }
             return reObj;

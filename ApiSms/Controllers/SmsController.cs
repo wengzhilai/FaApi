@@ -45,11 +45,11 @@ namespace ApiSms.Controllers
             var errorObj = jb.Value<JObject>("error");
             if (string.IsNullOrEmpty(msg_id) || errorObj != null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = errorObj.Value<string>("message");
+                reObj.success = false;
+                reObj.msg = errorObj.Value<string>("message");
             }else
             {
-                reObj.IsSuccess = true;
+                reObj.success = true;
             }
             return reObj;
 

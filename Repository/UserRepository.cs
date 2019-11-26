@@ -54,16 +54,16 @@ namespace Repository
             {
                 if (login.PASSWORD.ToLower().Equals(Helper.StringHelp.Get32MD5One(password).ToLower()))
                 {
-                    reObj.Data =await new DapperHelper<FaUserEntity>().Single(x=>x.LOGIN_NAME==username);
+                    reObj.data =await new DapperHelper<FaUserEntity>().Single(x=>x.LOGIN_NAME==username);
                 }
                 else
                 {
-                    reObj.Msg = "密码错误";
+                    reObj.msg = "密码错误";
                 }
             }
             else
             {
-                reObj.Msg = "用户名不存在";
+                reObj.msg = "用户名不存在";
             }
             return reObj;
         }
@@ -77,17 +77,17 @@ namespace Repository
                 if (inEnt.Data.ID == 0)
                 {
                     inEnt.Data.ID = await new SequenceRepository().GetNextID<FaUserEntity>();
-                    reObj.Data = await dbHelper.Save(inEnt);
+                    reObj.data = await dbHelper.Save(inEnt);
                 }
                 else
                 {
-                    reObj.Data = await dbHelper.Update(inEnt);
+                    reObj.data = await dbHelper.Update(inEnt);
                 }
 
-                reObj.IsSuccess = reObj.Data > 0;
-                if (!reObj.IsSuccess)
+                reObj.success = reObj.data > 0;
+                if (!reObj.success)
                 {
-                    reObj.Msg = "保存角色失败";
+                    reObj.msg = "保存角色失败";
                     dbHelper.TranscationRollback();
                 }
                 else
@@ -98,13 +98,13 @@ namespace Repository
                     var opNum = await DapperHelper.Exec(string.Format("insert into fa_user_role(ROLE_ID,USER_ID) values({0},{1}) ",inEnt.Data.roleIdList, inEnt.Data.ID));
                     if (opNum != 1)
                     {
-                        reObj.IsSuccess = false;
-                        reObj.Msg = "保存用户模块失败";
+                        reObj.success = false;
+                        reObj.msg = "保存用户模块失败";
                         dbHelper.TranscationRollback();
                     }
                     else
                     {
-                        reObj.IsSuccess=true;
+                        reObj.success=true;
                         dbHelper.TranscationCommit();
                     }
                 }
@@ -112,9 +112,9 @@ namespace Repository
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "保存用户失败";
-                LogHelper.WriteErrorLog(this.GetType(), reObj.Msg, e);
+                reObj.success = false;
+                reObj.msg = "保存用户失败";
+                LogHelper.WriteErrorLog(this.GetType(), reObj.msg, e);
                 dbHelper.TranscationRollback();
             }
             return reObj;
@@ -123,8 +123,8 @@ namespace Repository
         public async Task<Result<int>> Delete(int keyId)
         {
             Result<int> reObj = new Result<int>();
-            reObj.Data = await dbHelper.Delete(i => i.ID == keyId);
-            reObj.IsSuccess = reObj.Data > 0;
+            reObj.data = await dbHelper.Delete(i => i.ID == keyId);
+            reObj.success = reObj.data > 0;
             return reObj;
         }
     }

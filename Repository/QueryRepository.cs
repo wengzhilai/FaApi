@@ -44,7 +44,7 @@ namespace Repository
 
             string whereStr = "";
             string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
-            reObj.Msg = AllSql;
+            reObj.msg = AllSql;
             if (string.IsNullOrEmpty(inEnt.OrderStr)) inEnt.OrderStr = "(SELECT 0)";
             try
             {
@@ -52,7 +52,7 @@ namespace Repository
                 reEnt.rows = dt;
                 reEnt.rows.TableName = "tables1";
                 reEnt.total = reEnt.rows.Rows.Count;
-                reObj.Data = reEnt;
+                reObj.data = reEnt;
 
             }
             catch
@@ -97,8 +97,8 @@ namespace Repository
             }
             try
             {
-                reObj.Msg = AllSql;
-                reObj.Data = DapperHelper.ExecuteBytesAsync(AllSql);
+                reObj.msg = AllSql;
+                reObj.data = DapperHelper.ExecuteBytesAsync(AllSql);
             }
             catch
             {
@@ -128,10 +128,10 @@ namespace Repository
             string whereStr = "";
             string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
             if (string.IsNullOrWhiteSpace(inEnt.OrderStr)) inEnt.OrderStr = "(SELECT 0)";
-            reObj.Msg = MakePageSql(AllSql, inEnt.page, inEnt.rows, inEnt.OrderStr, whereStr);
+            reObj.msg = MakePageSql(AllSql, inEnt.page, inEnt.rows, inEnt.OrderStr, whereStr);
             try
             {
-                var sqlList = reObj.Msg.Split(';');
+                var sqlList = reObj.msg.Split(';');
                 if (sqlList.Count() > 0)
                 {
                     reEnt.rows = DapperHelper.GetDataTable(sqlList[0]);
@@ -143,7 +143,7 @@ namespace Repository
                     int.TryParse(await DapperHelper.ExecuteScalarAsync(sqlList[1]), out allNum);
                     reEnt.total = allNum;
                 }
-                reObj.Data = reEnt;
+                reObj.data = reEnt;
             }
             catch(Exception e)
             {
@@ -178,11 +178,11 @@ namespace Repository
 
             string whereStr = "";
             string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
-            reObj.Msg = MakePageSql(AllSql);
+            reObj.msg = MakePageSql(AllSql);
             try
             {
 
-                DataTable dt = DapperHelper.GetDataTable(reObj.Msg);
+                DataTable dt = DapperHelper.GetDataTable(reObj.msg);
                 for (int i = 0; i < dt.Columns.Count; i++)
                 {
                     var t = dt.Columns[i];
@@ -239,7 +239,7 @@ namespace Repository
                     }
                 }
                 #endregion
-                reObj.DataList = reEnt;
+                reObj.dataList = reEnt;
                 return reObj;
             }
             catch
@@ -431,9 +431,9 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
         {
             var reObj=new Result<FaQueryEntity>();
             var reList = await dal.FindAllS<FaQueryEntity,KV>(inSearch);
-            reObj.DataList=reList.Item1.ToList();
+            reObj.dataList=reList.Item1.ToList();
             if(reList.Item2!=null && reList.Item2.Count()>0){
-                reObj.Msg=reList.Item2.ToList()[0].V;
+                reObj.msg=reList.Item2.ToList()[0].V;
             }
             return reObj;
         }

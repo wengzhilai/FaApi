@@ -25,6 +25,19 @@ namespace ApiUser
             services.AddControllers();
             //添加HTTP请求
             services.AddHttpClient();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSameDomain",
+                    builder =>
+                    {
+                        builder
+                            //.WithOrigins("http://localhost:8100")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,6 +51,7 @@ namespace ApiUser
 
 
             app.UseRouting();
+            app.UseCors("AllowSameDomain");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>

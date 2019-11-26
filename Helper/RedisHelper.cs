@@ -23,7 +23,7 @@ namespace Helper
 
             Result result = new Result();
             T reEnt = cache.Get<T>(name);
-            result.IsSuccess = true;
+            result.success = true;
             return Tuple.Create<T, Result>(reEnt, result);
         }
 

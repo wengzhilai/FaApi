@@ -63,14 +63,14 @@ namespace WebApi.Controllers
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
                 var ent = await dapp.SingleByKey(inEnt.Key);
-                reObj.Data = ent;
-                reObj.IsSuccess = true;
+                reObj.data = ent;
+                reObj.success = true;
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取详情失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -91,13 +91,13 @@ namespace WebApi.Controllers
                 {
                     inEnt.Data.ID = await new SequenceRepository().GetNextID<FaFamilyBooksEntity>();
                 }
-                reObj.IsSuccess = await dapp.Save(inEnt) > 0;
+                reObj.success = await dapp.Save(inEnt) > 0;
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "修改角色信息失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -115,13 +115,13 @@ namespace WebApi.Controllers
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
-                reObj.IsSuccess = await dapp.Delete(x => x.ID == inEnt.Key) > 0;
+                reObj.success = await dapp.Delete(x => x.ID == inEnt.Key) > 0;
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取用户详情失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -139,13 +139,13 @@ namespace WebApi.Controllers
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
                 var single =await dapp.Single(x=>x.SORT>inObj.Key,"order by SORT");
-                reObj.Data = single;
+                reObj.data = single;
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取下一个关系图失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -164,13 +164,13 @@ namespace WebApi.Controllers
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
                 var allUser =await dapp.FindAll("");
                 allUser=allUser.OrderBy(i=>i.SORT);
-                reObj.DataList = allUser.ToList();
+                reObj.dataList = allUser.ToList();
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取下一个关系图失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -188,13 +188,13 @@ namespace WebApi.Controllers
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
                 var single =await dapp.Single(x=>x.SORT<inObj.Key,"order by SORT desc");
-                reObj.Data = single;
+                reObj.data = single;
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取上一个关系图失败", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -212,13 +212,13 @@ namespace WebApi.Controllers
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
                 var single =await dapp.Single(x=>x.SORT==inObj.Key);
-                reObj.Data = single;
+                reObj.data = single;
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog(this.GetType(), "获取指定页码", e);
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }

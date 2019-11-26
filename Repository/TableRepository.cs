@@ -22,7 +22,7 @@ namespace Repository
             DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>();
             var reObj = new Result<KTV>();
             var entList = await dbHelper.FindAll(x => x.STAUTS == "启用");
-            reObj.DataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
+            reObj.dataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
             return reObj;
         }
 
@@ -31,8 +31,8 @@ namespace Repository
             Result<int> reObj = new Result<int>();
             if (inEnt.Data.AllColumns == null || inEnt.Data.AllColumns.Count() == 0)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "配置列不能为空";
+                reObj.success = false;
+                reObj.msg = "配置列不能为空";
                 return reObj;
             }
             DapperHelper.TranscationBegin();
@@ -48,15 +48,15 @@ namespace Repository
                     inEnt.Data.ID = await new SequenceRepository().GetNextID<FaTableTypeEntity>();
                     inEnt.Data.ADD_TIME = DateTime.Now;
                     var opNum = await dbHelper.Save(inEnt);
-                    reObj.IsSuccess = opNum > 0;
-                    reObj.Msg = "添加成功";
+                    reObj.success = opNum > 0;
+                    reObj.msg = "添加成功";
                 }
                 else
                 {
                     oldEnt = await this.SingleByKey(inEnt.Data.ID);
                     var opNum = await dbHelper.Update(inEnt);
-                    reObj.IsSuccess = opNum > 0;
-                    reObj.Msg = "修改成功";
+                    reObj.success = opNum > 0;
+                    reObj.msg = "修改成功";
 
                     if (!oldEnt.TABLE_NAME.Equals(inEnt.Data.TABLE_NAME))
                     {
@@ -80,8 +80,8 @@ namespace Repository
                         {
                             LogHelper.WriteErrorLog(this.GetType(), "保存字段失败");
                             DapperHelper.TranscationRollback();
-                            reObj.IsSuccess = false;
-                            reObj.Msg = "保存字段失败";
+                            reObj.success = false;
+                            reObj.msg = "保存字段失败";
                             return reObj;
                         }
                         //如果是修改，才修改数据库
@@ -137,8 +137,8 @@ namespace Repository
                         {
                             LogHelper.WriteErrorLog(this.GetType(), "修改字段失败");
                             dbHelper.TranscationRollback();
-                            reObj.IsSuccess = false;
-                            reObj.Msg = "修改字段失败";
+                            reObj.success = false;
+                            reObj.msg = "修改字段失败";
                             return reObj;
                         }
                     }
@@ -155,8 +155,8 @@ namespace Repository
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "保存自定义表失败" + e.Message;
+                reObj.success = false;
+                reObj.msg = "保存自定义表失败" + e.Message;
                 LogHelper.WriteErrorLog(this.GetType(), "保存自定义表失败", e);
                 dbHelper.TranscationRollback();
             }
@@ -183,15 +183,15 @@ namespace Repository
                 var opNum = await columnHelper.Delete(i => i.TABLE_TYPE_ID == key);
                 if (opNum < 1)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Msg = "删除表类型为空";
+                    reObj.success = false;
+                    reObj.msg = "删除表类型为空";
                     return reObj;
                 }
                 opNum = await typeDapper.Delete(i => i.ID == key);
                 if (opNum != 1)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Msg = "删除表类字段失败";
+                    reObj.success = false;
+                    reObj.msg = "删除表类字段失败";
                     return reObj;
                 }
 

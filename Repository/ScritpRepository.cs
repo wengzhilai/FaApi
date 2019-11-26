@@ -27,16 +27,16 @@ namespace Repository
             var single = await dapper.SingleByKey(taskId);
             if (single == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "任务不存在";
+                reObj.success = false;
+                reObj.msg = "任务不存在";
             }
             if (single.RUN_STATE == "停止")
             {
-                reObj.IsSuccess = true;
+                reObj.success = true;
             }
             else
             {
-                reObj.IsSuccess = (await dapper.Update("RUN_STATE='停止'", "ID=" + taskId)) > 0;
+                reObj.success = (await dapper.Update("RUN_STATE='停止'", "ID=" + taskId)) > 0;
             }
             return reObj;
         }
@@ -54,14 +54,14 @@ namespace Repository
                 var opNum = await dapperTaskLog.Delete(string.Format("SCRIPT_TASK_ID IN ( SELECT a.ID from fa_script_task a where a.SCRIPT_ID={0})", scriptId));
                 opNum = await dapperTask.Delete(i => i.SCRIPT_ID == scriptId);
                 opNum = await dapper.Delete(i => i.ID == scriptId);
-                reObj.IsSuccess = opNum > 0;
+                reObj.success = opNum > 0;
                 dapper.TranscationCommit();
             }
             catch (Exception e)
             {
                 dapper.TranscationRollback();
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
 
             return reObj;
@@ -83,14 +83,14 @@ namespace Repository
             {
                 inEnt.Data.ID = await new SequenceRepository().GetNextID<FaScriptEntity>();
                 var opNum = await dapper.Save(inEnt);
-                reObj.IsSuccess = opNum > 0;
-                reObj.Msg = "添加成功";
+                reObj.success = opNum > 0;
+                reObj.msg = "添加成功";
             }
             else
             {
                 var opNum = await dapper.Update(inEnt);
-                reObj.IsSuccess = opNum > 0;
-                reObj.Msg = "修改成功";
+                reObj.success = opNum > 0;
+                reObj.msg = "修改成功";
             }
             return reObj;
         }
@@ -131,14 +131,14 @@ namespace Repository
             {
                 inEnt.Data.ID = await new SequenceRepository().GetNextID<FaScriptTaskLogEntity>();
                 var opNum = await dapper.Save(inEnt);
-                reObj.IsSuccess = opNum > 0;
-                reObj.Msg = "添加成功";
+                reObj.success = opNum > 0;
+                reObj.msg = "添加成功";
             }
             else
             {
                 var opNum = await dapper.Update(inEnt);
-                reObj.IsSuccess = opNum > 0;
-                reObj.Msg = "修改成功";
+                reObj.success = opNum > 0;
+                reObj.msg = "修改成功";
             }
             return reObj;
         }
@@ -152,9 +152,9 @@ namespace Repository
                 inEnt.Data.ID = await new SequenceRepository().GetNextID<FaScriptTaskEntity>();
             }
             var opNum = await dapper.Save(inEnt);
-            reObj.IsSuccess = opNum > 0;
-            reObj.Msg = "添加成功";
-            reObj.Data=inEnt.Data.ID;
+            reObj.success = opNum > 0;
+            reObj.msg = "添加成功";
+            reObj.data=inEnt.Data.ID;
             return reObj;
         }
 

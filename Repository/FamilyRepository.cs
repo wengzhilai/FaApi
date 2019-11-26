@@ -57,8 +57,8 @@ namespace Repository
             var userInfo = await this.userInfo.SingleByKey(userId);
             if (userInfo == null)
             {
-                reobj.IsSuccess = false;
-                reobj.Msg = "用户ID有误";
+                reobj.success = false;
+                reobj.msg = "用户ID有误";
                 return reobj;
             }
 
@@ -66,7 +66,7 @@ namespace Repository
 
             reEnt.RelativeList = reEnt.ItemList.Select(x => new KV { K = x.Id.ToString(), V = x.FatherId.ToString() }).ToList();
             reEnt.RelativeList.RemoveAt(reEnt.RelativeList.Count() - 1);
-            reobj.Data = reEnt;
+            reobj.data = reEnt;
             return reobj;
         }
 
@@ -108,7 +108,7 @@ namespace Repository
             {
                 userId = await userInfoDal.GetUserIdByElderAsync(userId, targerEderId);
             }
-            reObj.Tmp = userId;
+            reObj.tmp = userId;
 
             //获取所有五福图
             var userInfo = await userInfoDal.SingleByKey(userId);
@@ -167,12 +167,12 @@ namespace Repository
                 }
             }
 
-            reObj.DataList = allElder.ToList();
+            reObj.dataList = allElder.ToList();
 
-            reObj.Msg = userInfo.NAME;
+            reObj.msg = userInfo.NAME;
             DapperHelper<FaFamilyBooksEntity> dapperFb = new DapperHelper<FaFamilyBooksEntity>();
             var page = await dapperFb.Single(i => i.UserID == userInfo.ID && i.TYPE_ID == 2);
-            reObj.Code = (page == null) ? "10" : page.SORT.ToString();
+            reObj.code = (page == null) ? "10" : page.SORT.ToString();
             return reObj;
         }
 

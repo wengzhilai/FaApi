@@ -51,7 +51,7 @@ namespace Repository
             DapperHelper<FaLoginEntity> dbHelper = new DapperHelper<FaLoginEntity>();
             dbHelper.TranscationBegin();
             Result<int> reObj = await LoginReg(inEnt, dbHelper);
-            if (reObj.IsSuccess)
+            if (reObj.success)
             {
                 dbHelper.TranscationCommit();
             }
@@ -70,9 +70,9 @@ namespace Repository
             var errList = modelHelper.Validate();
             if (errList.Count() > 0)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-1";
-                reObj.Msg = string.Format(",", errList.Select(x => x.ErrorMessage));
+                reObj.success = false;
+                reObj.code = "-1";
+                reObj.msg = string.Format(",", errList.Select(x => x.ErrorMessage));
                 return reObj;
             }
             #endregion
@@ -82,17 +82,17 @@ namespace Repository
 
             if (!inEnt.LoginName.IsOnlyNumber() || inEnt.LoginName.Length != 11)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-1";
-                reObj.Msg = "电话号码格式不正确";
+                reObj.success = false;
+                reObj.code = "-1";
+                reObj.msg = "电话号码格式不正确";
                 return reObj;
             }
 
             if (!Fun.CheckPassword(inEnt.Password, AppSettingsManager.self.BaseConfig.PwdComplexity))
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-2";
-                reObj.Msg = string.Format("密码复杂度不够：{0}");
+                reObj.success = false;
+                reObj.code = "-2";
+                reObj.msg = string.Format("密码复杂度不够：{0}");
                 return reObj;
             }
             #endregion
@@ -105,9 +105,9 @@ namespace Repository
                 var codeNum = await new SmsSendRepository().Count(inEnt.LoginName, inEnt.code);
                 if (codeNum == 0)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Code = "-3";
-                    reObj.Msg = string.Format("验证码无效");
+                    reObj.success = false;
+                    reObj.code = "-3";
+                    reObj.msg = string.Format("验证码无效");
                     return reObj;
                 }
             }
@@ -117,9 +117,9 @@ namespace Repository
             #region 检测电话号码是否存在
             if (userList.Count() > 0)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-4";
-                reObj.Msg = string.Format("电话号码已经存在，请更换电话号码");
+                reObj.success = false;
+                reObj.code = "-4";
+                reObj.msg = string.Format("电话号码已经存在，请更换电话号码");
                 return reObj;
             }
             #endregion
@@ -137,15 +137,15 @@ namespace Repository
                     inLogin.PASSWORD = inEnt.Password.Md5();
                     inLogin.IS_LOCKED = 0;
                     inLogin.FAIL_COUNT = 0;
-                    reObj.IsSuccess = await dbHelper.Save(new DtoSave<FaLoginEntity>()
+                    reObj.success = await dbHelper.Save(new DtoSave<FaLoginEntity>()
                     {
                         Data = inLogin
                     }) > 0 ? true : false;
-                    if (!reObj.IsSuccess)
+                    if (!reObj.success)
                     {
-                        reObj.IsSuccess = false;
-                        reObj.Code = "-5";
-                        reObj.Msg = string.Format("添加账号失败");
+                        reObj.success = false;
+                        reObj.code = "-5";
+                        reObj.msg = string.Format("添加账号失败");
                         return reObj;
                     }
                 }
@@ -160,26 +160,26 @@ namespace Repository
                 inUser.DISTRICT_ID = 1;
                 inUser.CREATE_TIME = DateTime.Now;
                 inUser.IS_LOCKED = 0;
-                reObj.IsSuccess = await new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
+                reObj.success = await new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
                 {
                     Data = inUser,
                     IgnoreFieldList = new List<string>()
                 }) > 0 ? true : false;
-                if (!reObj.IsSuccess)
+                if (!reObj.success)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Code = "-6";
-                    reObj.Msg = string.Format("添加user失败");
+                    reObj.success = false;
+                    reObj.code = "-6";
+                    reObj.msg = string.Format("添加user失败");
                     return reObj;
                 }
                 #endregion
 
-                reObj.Data = inUser.ID;
+                reObj.data = inUser.ID;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
 
 
@@ -200,12 +200,12 @@ namespace Repository
             #region 记录登出历史
             var userDal = new UserRepository();
             //正常退出，修改退出日志
-            reObj.IsSuccess = await userDal.Update(new DtoSave<FaUserEntity>
+            reObj.success = await userDal.Update(new DtoSave<FaUserEntity>
             {
                 Data = new FaUserEntity { ID = inEnt.Data.USER_ID.Value, LAST_ACTIVE_TIME = DateTime.Now, LAST_LOGOUT_TIME = DateTime.Now },
                 SaveFieldList = new List<string> { "LAST_ACTIVE_TIME", "LAST_LOGOUT_TIME" }
             }) > 0;
-            if (!reObj.IsSuccess)
+            if (!reObj.success)
             {
                 return reObj;
             }
@@ -215,7 +215,7 @@ namespace Repository
 
             #endregion
 
-            reObj.IsSuccess = RedisRepository.UserTokenDelete(inEnt.Data.USER_ID.Value);
+            reObj.success = RedisRepository.UserTokenDelete(inEnt.Data.USER_ID.Value);
             return reObj;
         }
         /// <summary>
@@ -231,8 +231,8 @@ namespace Repository
 
             if (string.IsNullOrEmpty(inEnt.LoginName) || string.IsNullOrEmpty(inEnt.Password))
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "用户名和密码不能为空";
+                reObj.success = false;
+                reObj.msg = "用户名和密码不能为空";
                 return reObj;
             }
             DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
@@ -244,16 +244,16 @@ namespace Repository
             var user = await dapperUser.Single(x => x.LOGIN_NAME == inEnt.LoginName);
             if (Login == null || user == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "用户名或者密码错误";
+                reObj.success = false;
+                reObj.msg = "用户名或者密码错误";
                 return reObj;
             }
             else
             {
                 if (Login.IS_LOCKED == 1)
                 {
-                    reObj.IsSuccess = false;
-                    reObj.Msg = string.Format("用户已被锁定【{0}】", Login.LOCKED_REASON);
+                    reObj.success = false;
+                    reObj.msg = string.Format("用户已被锁定【{0}】", Login.LOCKED_REASON);
                     return reObj;
                 }
 
@@ -266,8 +266,8 @@ namespace Repository
                         Login.FAIL_COUNT = 1;
                     }
 
-                    reObj.IsSuccess = false;
-                    reObj.Msg = string.Format("用户名或者密码错误,还有{0}次尝试机会", (times - Login.FAIL_COUNT).ToString());
+                    reObj.success = false;
+                    reObj.msg = string.Format("用户名或者密码错误,还有{0}次尝试机会", (times - Login.FAIL_COUNT).ToString());
                     if (Login.FAIL_COUNT >= times)
                     {
                         Login.IS_LOCKED = 1;
@@ -296,7 +296,7 @@ namespace Repository
                 {
 
                     Login.FAIL_COUNT = 0;
-                    reObj.IsSuccess = await dapperLogin.Update(new DtoSave<FaLoginEntity>
+                    reObj.success = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
                         Data = Login,
                         SaveFieldList = new List<string> { "FAIL_COUNT" }
@@ -306,7 +306,7 @@ namespace Repository
                     var role = await dapperUserRole.FindAll(i => i.USER_ID == user.ID);
                     user.IsAdmin = role.Count(i => i.ROLE_ID == 1) > 0;
                     user.IsLeader = role.Count(i => i.ROLE_ID == 2) > 0;
-                    reObj.Data = user;
+                    reObj.data = user;
                 }
 
             }
@@ -326,8 +326,8 @@ namespace Repository
             Result reObj = new Result();
             if (string.IsNullOrEmpty(inEnt.VerifyCode) || string.IsNullOrEmpty(inEnt.LoginName) || string.IsNullOrEmpty(inEnt.NewPwd))
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "参数不正确";
+                reObj.success = false;
+                reObj.msg = "参数不正确";
                 return reObj;
             }
             var dapper = new DapperHelper<FaLoginEntity>();
@@ -335,21 +335,21 @@ namespace Repository
             var login = await dapper.Single(x => x.LOGIN_NAME == inEnt.LoginName);
             if (login == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "登录名不存在";
+                reObj.success = false;
+                reObj.msg = "登录名不存在";
                 return reObj;
             }
             if (login.VERIFY_CODE != inEnt.VerifyCode)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "验证码不正确";
+                reObj.success = false;
+                reObj.msg = "验证码不正确";
                 return reObj;
             }
             //检测密码复杂度
             if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.self.BaseConfig.PwdComplexity))
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "密码复杂度不够：";
+                reObj.success = false;
+                reObj.msg = "密码复杂度不够：";
                 return reObj;
             }
             login.PASSWORD = inEnt.NewPwd.Md5();
@@ -370,32 +370,32 @@ namespace Repository
         async public Task<Result<bool>> UserEditPwd(EditPwdDto inEnt)
         {
             var reObj = new Result<bool>();
-            reObj.Data = false;
+            reObj.data = false;
             if (!inEnt.NewPwd.Equals(inEnt.ReNewPwd))
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "两次密码不一致";
+                reObj.success = false;
+                reObj.msg = "两次密码不一致";
                 return reObj;
             }
             if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.self.BaseConfig.PwdComplexity))
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-2";
-                reObj.Msg = string.Format("密码复杂度不够：{0}");
+                reObj.success = false;
+                reObj.code = "-2";
+                reObj.msg = string.Format("密码复杂度不够：{0}");
                 return reObj;
             }
             DapperHelper<FaLoginEntity> dapper = new DapperHelper<FaLoginEntity>();
             var single = await dapper.Single(i => i.LOGIN_NAME == inEnt.LoginName);
             if (single == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "账号不存在";
+                reObj.success = false;
+                reObj.msg = "账号不存在";
                 return reObj;
             }
             if (single.PASSWORD != inEnt.OldPwd.Md5())
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "原密码有误";
+                reObj.success = false;
+                reObj.msg = "原密码有误";
                 return reObj;
             }
 
@@ -408,13 +408,13 @@ namespace Repository
             });
             if (upRows < 1)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = "修改密码失败";
+                reObj.success = false;
+                reObj.msg = "修改密码失败";
                 return reObj;
             }
 
-            reObj.IsSuccess = true;
-            reObj.Data = true;
+            reObj.success = true;
+            reObj.data = true;
             return reObj;
         }
 
@@ -433,16 +433,16 @@ namespace Repository
             #region 检测输入
             if (string.IsNullOrEmpty(oldLoginName) && userId == 0)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-2";
-                reObj.Msg = "用户主键有误";
+                reObj.success = false;
+                reObj.code = "-2";
+                reObj.msg = "用户主键有误";
                 return reObj;
             }
             if (!NewLoginName.IsOnlyNumber() || NewLoginName.Length != 11)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-1";
-                reObj.Msg = "电话号码格式不正确";
+                reObj.success = false;
+                reObj.code = "-1";
+                reObj.msg = "电话号码格式不正确";
                 return reObj;
             }
 
@@ -452,9 +452,9 @@ namespace Repository
             IEnumerable<FaUserEntity> userList = await userDapper.FindAll(x => x.LOGIN_NAME == NewLoginName);
             if (userList.Count() > 0)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-4";
-                reObj.Msg = string.Format("电话号码已经存在，请更换电话号码");
+                reObj.success = false;
+                reObj.code = "-4";
+                reObj.msg = string.Format("电话号码已经存在，请更换电话号码");
                 return reObj;
             }
             #endregion
@@ -473,9 +473,9 @@ namespace Repository
 
             if (user == null)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = "-5";
-                reObj.Msg = string.Format("用户不存在");
+                reObj.success = false;
+                reObj.code = "-5";
+                reObj.msg = string.Format("用户不存在");
                 return reObj;
             }
             #endregion
@@ -488,17 +488,17 @@ namespace Repository
             user.LOGIN_NAME = NewLoginName;
             user.ICON_FILES_ID = iconFilesId;
 
-            reObj.IsSuccess = await userDapper.Update(new DtoSave<FaUserEntity>()
+            reObj.success = await userDapper.Update(new DtoSave<FaUserEntity>()
             {
                 Data = user,
                 SaveFieldList = new List<string> { "NAME", "LOGIN_NAME", "ICON_FILES_ID" },
                 WhereList = new List<string> { "ID" }
             }) > 0 ? true : false;
 
-            if (!reObj.IsSuccess)
+            if (!reObj.success)
             {
                 userDapper.TranscationRollback();
-                reObj.Msg = "保存用户失败";
+                reObj.msg = "保存用户失败";
                 return reObj;
             }
             #endregion
@@ -515,7 +515,7 @@ namespace Repository
                 inLogin.PASSWORD = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
                 inLogin.IS_LOCKED = 0;
                 inLogin.FAIL_COUNT = 0;
-                reObj.IsSuccess = await loginDapper.Save(new DtoSave<FaLoginEntity>()
+                reObj.success = await loginDapper.Save(new DtoSave<FaLoginEntity>()
                 {
                     Data = inLogin
                 }) > 0 ? true : false;
@@ -524,7 +524,7 @@ namespace Repository
             {
                 login.LOGIN_NAME = NewLoginName;
                 login.PASSWORD = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
-                reObj.IsSuccess = await loginDapper.Update(new DtoSave<FaLoginEntity>
+                reObj.success = await loginDapper.Update(new DtoSave<FaLoginEntity>
                 {
                     Data = login,
                     SaveFieldList = new List<string> { "LOGIN_NAME", "PASSWORD" },
@@ -532,17 +532,17 @@ namespace Repository
                 }) > 0 ? true : false;
             }
 
-            if (!reObj.IsSuccess)
+            if (!reObj.success)
             {
-                reObj.Msg = "保存账号失败";
+                reObj.msg = "保存账号失败";
                 userDapper.TranscationRollback();
                 return reObj;
             }
             #endregion
             userDapper.TranscationCommit();
 
-            reObj.IsSuccess = true;
-            reObj.Msg = user.ID.ToString();
+            reObj.success = true;
+            reObj.msg = user.ID.ToString();
             return reObj;
         }
 

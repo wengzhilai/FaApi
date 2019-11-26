@@ -66,8 +66,8 @@ namespace WebApi.Controllers
             Result reEnt = new Result();
             if (string.IsNullOrEmpty(inEnt.Key) || !inEnt.Key.IsPhoneNumber())
             {
-                reEnt.IsSuccess = false;
-                reEnt.Msg = "电话号码格式有误";
+                reEnt.success = false;
+                reEnt.msg = "电话号码格式有误";
                 return reEnt;
             }
             reEnt = await _public.SendCode(inEnt.Key);
@@ -102,9 +102,9 @@ namespace WebApi.Controllers
                     using (var stream = new FileStream(allPath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);
-                        reEnt.IsSuccess = true;
-                        reEnt.Msg = filePath;
-                        reEnt.Data = new FaFilesEntity
+                        reEnt.success = true;
+                        reEnt.msg = filePath;
+                        reEnt.data = new FaFilesEntity
                         {
                             NAME = fileName,
                             PATH = allPath,
@@ -177,7 +177,7 @@ namespace WebApi.Controllers
         {
             Result<FaAppVersionEntity> reObj = new Result<FaAppVersionEntity>();
             var dapper=new DapperHelper<FaAppVersionEntity>();
-            reObj.Data=await dapper.Single(i=>i.TYPE>inEnt.Key,"order by id desc");
+            reObj.data=await dapper.Single(i=>i.TYPE>inEnt.Key,"order by id desc");
             return reObj;
         }
 
@@ -199,14 +199,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -229,14 +229,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }

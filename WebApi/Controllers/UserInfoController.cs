@@ -81,13 +81,13 @@ namespace WebApi.Controllers
             {
                 if (user.YEARS_TYPE==("阴历") || user.YEARS_TYPE==("国号"))
                 {
-                    user.BirthdaysolarDate = this._public.GetSolarDate(user.BIRTHDAY_TIME.Value).Msg;
+                    user.BirthdaysolarDate = this._public.GetSolarDate(user.BIRTHDAY_TIME.Value).msg;
                     user.BirthdaylunlarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                     
                 }
                 else
                 {
-                    user.BirthdaylunlarDate = this._public.GetLunarDate(user.BIRTHDAY_TIME.Value).Msg;
+                    user.BirthdaylunlarDate = this._public.GetLunarDate(user.BIRTHDAY_TIME.Value).msg;
                     user.BirthdaysolarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             }
@@ -95,18 +95,18 @@ namespace WebApi.Controllers
             {
                 if (user.YEARS_TYPE==("阴历") || user.YEARS_TYPE==("国号"))
                 {
-                    user.DiedsolarDate = this._public.GetSolarDate(user.DIED_TIME.Value).Msg;
+                    user.DiedsolarDate = this._public.GetSolarDate(user.DIED_TIME.Value).msg;
                     user.DiedlunlarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
                 else
                 {
-                    user.DiedlunlarDate = this._public.GetLunarDate(user.DIED_TIME.Value).Msg;
+                    user.DiedlunlarDate = this._public.GetLunarDate(user.DIED_TIME.Value).msg;
                     user.DiedsolarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             }
 
-            reObj.Data = user;
-            reObj.IsSuccess = true;
+            reObj.data = user;
+            reObj.success = true;
             return reObj;
         }
 
@@ -121,8 +121,8 @@ namespace WebApi.Controllers
         {
             Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
             var user = await _userInfo.FindAll(x => x.NAME == inEnt.Key);
-            reObj.DataList = user.ToList();
-            reObj.IsSuccess = true;
+            reObj.dataList = user.ToList();
+            reObj.success = true;
             return reObj;
         }
 
@@ -139,8 +139,8 @@ namespace WebApi.Controllers
             inEnt.FilterList = x => x.LOGIN_NAME.Length == 11;
             inEnt.OrderType = "id asc";
             var user = await _userInfo.List(inEnt);
-            reObj.DataList = user.ToList();
-            reObj.IsSuccess = true;
+            reObj.dataList = user.ToList();
+            reObj.success = true;
             return reObj;
         }
 
@@ -160,14 +160,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -187,14 +187,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -215,14 +215,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }

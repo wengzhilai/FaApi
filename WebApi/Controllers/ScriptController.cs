@@ -62,18 +62,18 @@ namespace WebApi.Controllers
                 DtoSearch<FaScriptEntity> postEnt=new DtoSearch<FaScriptEntity>();
                 postEnt.PageIndex=inEnt.PageIndex;
                 postEnt.PageSize=inEnt.PageSize;
-                reObj.DataList = (await _script.ScriptList(postEnt)).ToList();
+                reObj.dataList = (await _script.ScriptList(postEnt)).ToList();
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -94,18 +94,18 @@ namespace WebApi.Controllers
                 postEnt.PageIndex=inEnt.PageIndex;
                 postEnt.PageSize=inEnt.PageSize;
                 postEnt.FilterList=x=>x.SCRIPT_ID==SCRIPT_ID;
-                reObj.DataList = (await _script.ScriptTaskList(postEnt)).ToList();
+                reObj.dataList = (await _script.ScriptTaskList(postEnt)).ToList();
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -126,18 +126,18 @@ namespace WebApi.Controllers
                 postEnt.PageIndex=inEnt.PageIndex;
                 postEnt.PageSize=inEnt.PageSize;
                 postEnt.FilterList=x=>x.SCRIPT_TASK_ID==SCRIPT_TASK_ID;
-                reObj.DataList = (await _script.ScriptTaskLogList(postEnt)).ToList();
+                reObj.dataList = (await _script.ScriptTaskLogList(postEnt)).ToList();
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -157,14 +157,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -184,14 +184,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }

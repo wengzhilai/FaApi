@@ -11,17 +11,17 @@ namespace Models
         /// 是否成功
         /// </summary>
         /// <value></value>
-        public bool IsSuccess { get; set; } = true;
+        public bool success { get; set; } = true;
         /// <summary>
         /// 消息
         /// </summary>
         /// <value></value>
-        public string Msg { get; set; } = "";
+        public string msg { get; set; } = "";
         /// <summary>
         /// 代码
         /// </summary>
         /// <value></value>
-        public string Code { get; set; } = "";
+        public string code { get; set; } = "";
     }
     /// <summary>
     /// 返回的数据
@@ -36,8 +36,8 @@ namespace Models
 
         public Result(bool success,string msg)
         {
-            this.IsSuccess = success;
-            this.Msg = msg;
+            this.success = success;
+            this.msg = msg;
         }
 
 
@@ -45,19 +45,19 @@ namespace Models
         /// 返回数据
         /// </summary>
         /// <value></value>
-        public T Data { get; set; }
+        public T data { get; set; }
         /// <summary>
         /// 返回列表数据
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T> DataList { get; set; } = new List<T>();
+        public List<T> dataList { get; set; } = new List<T>();
 
         /// <summary>
         /// 备注字段
         /// </summary>
         /// <value></value>
-        public object Tmp { get; set; }
+        public object tmp { get; set; }
     }
 
     /// <summary>
@@ -69,18 +69,18 @@ namespace Models
         /// <summary>
         /// 当前页码
         /// </summary>
-        public int CurrentPage { get; set; }
+        public int currentPage { get; set; }
         /// <summary>
         /// 页面条数
         /// </summary>
-        public int PageSize { get; set; }
+        public int pageSize { get; set; }
         /// <summary>
         /// 总页数
         /// </summary>
-        public int TotalPage { get; set; }
+        public int totalPage { get; set; }
         /// <summary>
         /// 总记录数
         /// </summary>
-        public int TotalCount { get; set; }
+        public int totalCount { get; set; }
     }
 }

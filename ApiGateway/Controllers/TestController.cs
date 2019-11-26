@@ -22,9 +22,9 @@ namespace ApiSms.Controllers
         public Result TestUser(DtoKey inEnt)
         {
             Result reEnt = new Result();
-            reEnt.IsSuccess = true;
-            reEnt.Msg = "User.Identity:" + TypeChange.ObjectToStr(User.Identity);
-            reEnt.Msg += "User.Claims:" + TypeChange.ObjectToStr(from c in User.Claims select new { c.Type, c.Value });
+            reEnt.success = true;
+            reEnt.msg = "User.Identity:" + TypeChange.ObjectToStr(User.Identity);
+            reEnt.msg += "User.Claims:" + TypeChange.ObjectToStr(from c in User.Claims select new { c.Type, c.Value });
 
             return reEnt;
         }
@@ -37,8 +37,8 @@ namespace ApiSms.Controllers
         public Result Test(DtoKey inEnt)
         {
             Result reEnt = new Result();
-            reEnt.IsSuccess = true;
-            reEnt.Msg = "接口测试成功";
+            reEnt.success = true;
+            reEnt.msg = "接口测试成功";
             return reEnt;
         }
         /// <summary>
@@ -51,8 +51,8 @@ namespace ApiSms.Controllers
         public Result TestAuth(DtoKey inEnt)
         {
             Result reEnt = new Result();
-            reEnt.IsSuccess = true;
-            reEnt.Msg = "权限接口测试成功";
+            reEnt.success = true;
+            reEnt.msg = "权限接口测试成功";
             return reEnt;
         }
     }

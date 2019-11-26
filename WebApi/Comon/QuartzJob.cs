@@ -47,9 +47,9 @@ namespace WebApi.Comon
                     {
                         Data = addEnt
                     });
-                    if (!taskId.IsSuccess)
+                    if (!taskId.success)
                     {
-                        LogHelper.WriteErrorLog(this.GetType(), "添加任务出错：" + taskId.Msg);
+                        LogHelper.WriteErrorLog(this.GetType(), "添加任务出错：" + taskId.msg);
                         Fun.LockRunScript = null;
                         return;
                     }
@@ -62,7 +62,7 @@ namespace WebApi.Comon
                         int opNum = 0;
                         var log = new FaScriptTaskLogEntity()
                         {
-                            SCRIPT_TASK_ID = taskId.Data,
+                            SCRIPT_TASK_ID = taskId.data,
                             LOG_TIME = DateTime.Now,
                             SQL_TEXT = item,
                             MESSAGE = opNum.ToString()

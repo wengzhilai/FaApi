@@ -36,7 +36,7 @@ namespace Repository
         {
             Result<FaModuleEntity> reObj = new Result<FaModuleEntity>();
             var allModel = await dbHelper.FindAll(where);
-            reObj.DataList = GetChildItems(allModel, null);
+            reObj.dataList = GetChildItems(allModel, null);
             return reObj;
         }
 
@@ -55,8 +55,8 @@ namespace Repository
         public async Task<Result<int>> Delete(int key)
         {
             Result<int> reObj = new Result<int>();
-            reObj.Data = await dbHelper.Delete(i => i.ID == key);
-            reObj.IsSuccess = reObj.Data > 0;
+            reObj.data = await dbHelper.Delete(i => i.ID == key);
+            reObj.success = reObj.data > 0;
             return reObj;
         }
 
@@ -66,14 +66,14 @@ namespace Repository
             if (inEnt.Data.ID == 0)
             {
                 inEnt.Data.ID = await new SequenceRepository().GetNextID<FaModuleEntity>();
-                reObj.Data = await dbHelper.Save(inEnt);
+                reObj.data = await dbHelper.Save(inEnt);
             }
             else
             {
-                reObj.Data = await dbHelper.Update(inEnt);
+                reObj.data = await dbHelper.Update(inEnt);
             }
 
-            reObj.IsSuccess = reObj.Data > 0;
+            reObj.success = reObj.data > 0;
             return reObj;
         }
 
@@ -84,11 +84,11 @@ namespace Repository
             {
                 DapperHelper<FaRoleModuleEntityView> roleModule = new DapperHelper<FaRoleModuleEntityView>();
                 var allModel = await roleModule.FindAll(string.Format("c.IS_HIDE==0 and a.ROLE_ID in ({0})", string.Join(",", roleIdList)));
-                reObj.DataList = GetChildItems(Fun.ClassListToCopy<FaRoleModuleEntityView, FaModuleEntity>(allModel.ToList()), null);
+                reObj.dataList = GetChildItems(Fun.ClassListToCopy<FaRoleModuleEntityView, FaModuleEntity>(allModel.ToList()), null);
             }
             else
             {
-                reObj.DataList = GetChildItems(await new DapperHelper<FaModuleEntity>().FindAll(i=>i.IS_HIDE==0), null);
+                reObj.dataList = GetChildItems(await new DapperHelper<FaModuleEntity>().FindAll(i=>i.IS_HIDE==0), null);
             }
             return reObj;
         }

@@ -76,13 +76,13 @@ namespace WebApi.Controllers
             //Bearer 
             Result<FaUserEntity> reobj = new Result<FaUserEntity>();
             reobj = await _login.UserLogin(inEnt);
-            if (reobj.IsSuccess)
+            if (reobj.success)
             {
-                reobj.Data.CanEditIdList=await _userInfo.GetCanEditUserIdListAsync(reobj.Data.ID);
+                reobj.data.CanEditIdList=await _userInfo.GetCanEditUserIdListAsync(reobj.data.ID);
                 var claims = new Claim[]
                         {
-                        new Claim(ClaimTypes.Name, reobj.Data.LOGIN_NAME),
-                        new Claim(ClaimTypes.NameIdentifier, reobj.Data.ID.ToString()),
+                        new Claim(ClaimTypes.Name, reobj.data.LOGIN_NAME),
+                        new Claim(ClaimTypes.NameIdentifier, reobj.data.ID.ToString()),
                         new Claim(ClaimTypes.Role, "admin, Manage")
                         };
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.self.JwtSettings.SecretKey));
@@ -94,9 +94,9 @@ namespace WebApi.Controllers
                     DateTime.Now,
                     DateTime.Now.AddDays(7),
                     creds);
-                reobj.Code = new JwtSecurityTokenHandler().WriteToken(token);
+                reobj.code = new JwtSecurityTokenHandler().WriteToken(token);
 
-                RedisRepository.UserTokenSet(reobj.Data.ID, reobj.Code);
+                RedisRepository.UserTokenSet(reobj.data.ID, reobj.code);
             }
             return reobj;
         }
@@ -117,14 +117,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -158,14 +158,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -188,14 +188,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -216,14 +216,14 @@ namespace WebApi.Controllers
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }
@@ -239,19 +239,19 @@ namespace WebApi.Controllers
             var reObj = new Result<bool>();
             try
             {
-                reObj.Data = await this._role.CheckAuth(inEnt);
-                reObj.IsSuccess=true;
+                reObj.data = await this._role.CheckAuth(inEnt);
+                reObj.success=true;
             }
             catch (ExceptionExtend e)
             {
-                reObj.IsSuccess = false;
-                reObj.Code = e.RealCode;
-                reObj.Msg = e.RealMsg;
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
             }
             catch (Exception e)
             {
-                reObj.IsSuccess = false;
-                reObj.Msg = e.Message;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
             return reObj;
         }

@@ -43,6 +43,11 @@ namespace Helper
         public MongoSettings MongoSettings=new MongoSettings();
         
         public MysqlSettings MysqlSettings { get; set; }
+
+        /// <summary>
+        /// 认证服务器地址
+        /// </summary>
+        public string Idsvr4Url { get; set; }
     }
 
     /// <summary>
