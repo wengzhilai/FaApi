@@ -226,8 +226,8 @@ namespace Models.EntityView
         /// 头像图片
         /// </summary>
         [Display(Name = "头像图片")]
-        [Column("b.`ICON_FILES_ID`")]
-        public Nullable<int> ICON_FILES_ID { get; set; }
+        [Column("b.`ICON_FILES`")]
+        public string ICON_FILES { get; set; }
         /// <summary>
         /// 归属地
         /// </summary>

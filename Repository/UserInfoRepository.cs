@@ -256,27 +256,6 @@ namespace Repository
                 }
 
 
-                #region 保存头像
-                //如果有新添加的头像，则保存像头地址到数据库
-                if ((inEnt.Data.ICON_FILES_ID == null || inEnt.Data.ICON_FILES_ID == 0) && inEnt.Data.IconFiles != null && !string.IsNullOrEmpty(inEnt.Data.IconFiles.PATH))
-                {
-                    DapperHelper<FaFilesEntity> dapperFile = new DapperHelper<FaFilesEntity>(dapperUser.GetConnection(), dapperUser.GetTransaction());
-                    inEnt.Data.ICON_FILES_ID = await new SequenceRepository().GetNextID<FaFilesEntity>();
-                    inEnt.Data.IconFiles.ID = inEnt.Data.ICON_FILES_ID.Value;
-                    inEnt.Data.IconFiles.UPLOAD_TIME = DateTime.Now;
-                    var saveNum = await dapperFile.Save(new DtoSave<FaFilesEntity>
-                    {
-                        Data = inEnt.Data.IconFiles
-                    });
-                    if (saveNum < 1)
-                    {
-                        dapperUser.TranscationRollback();
-                        reObj.success = false;
-                        reObj.msg = "保存文件失败";
-                        return reObj;
-                    }
-                }
-                #endregion
 
                 if (inEnt.Data.ID == 0)
                 {
@@ -328,7 +307,7 @@ namespace Repository
                         {
                             ID = userId,
                             NAME = inEnt.Data.NAME,
-                            ICON_FILES_ID = inEnt.Data.ICON_FILES_ID,
+                            ICON_FILES = inEnt.Data.ICON_FILES,
                             CREATE_TIME = DateTime.Now,
                             LOGIN_NAME = string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME) ? userId.ToString() : inEnt.Data.LOGIN_NAME,
                             DISTRICT_ID = 1
@@ -551,7 +530,7 @@ namespace Repository
                     #region 修改用户
                     user.NAME = inEnt.Data.NAME;
                     user.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
-                    user.ICON_FILES_ID = inEnt.Data.ICON_FILES_ID;
+                    user.ICON_FILES = inEnt.Data.ICON_FILES;
                     var addUserNum = await dapperUser.Update(new DtoSave<FaUserEntity>
                     {
                         Data = user,

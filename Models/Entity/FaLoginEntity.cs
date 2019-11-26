@@ -15,10 +15,10 @@ namespace Models.Entity
         /// <summary>
         /// ID
         /// </summary>
-        [Key]
-        [Required]
+        [Range(0, 2147483647)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "ID")]
+        [Key]
         [Column]
         public int ID { get; set; }
         /// <summary>
@@ -36,17 +36,17 @@ namespace Models.Entity
         [Column]
         public string PASSWORD { get; set; }
         /// <summary>
-        /// 电话
+        /// 电话号码
         /// </summary>
         [StringLength(20)]
-        [Display(Name = "电话")]
+        [Display(Name = "电话号码")]
         [Column]
         public string PHONE_NO { get; set; }
         /// <summary>
-        /// 邮件
+        /// 电子邮件
         /// </summary>
         [StringLength(255)]
-        [Display(Name = "邮件")]
+        [Display(Name = "电子邮件")]
         [Column]
         public string EMAIL_ADDR { get; set; }
         /// <summary>
@@ -57,38 +57,38 @@ namespace Models.Entity
         [Column]
         public string VERIFY_CODE { get; set; }
         /// <summary>
-        /// 验证时间
+        /// 验证码时间
         /// </summary>
-        [Display(Name = "验证时间")]
+        [Display(Name = "验证码时间")]
         [Column]
-        public Nullable<DateTime> VERIFY_TIME { get; set; }
+        public DateTime VERIFY_TIME { get; set; }
         /// <summary>
-        /// 锁定
+        /// 是否禁用
         /// </summary>
         [Range(0, 2147483647)]
-        [Display(Name = "锁定")]
+        [Display(Name = "是否禁用")]
         [Column]
-        public Nullable<decimal> IS_LOCKED { get; set; }
+        public int IS_LOCKED { get; set; }
         /// <summary>
-        /// 修改密码时间
+        /// 更新密码时间
         /// </summary>
-        [Display(Name = "修改密码时间")]
+        [Display(Name = "更新密码时间")]
         [Column]
-        public Nullable<DateTime> PASS_UPDATE_DATE { get; set; }
+        public DateTime PASS_UPDATE_DATE { get; set; }
         /// <summary>
-        /// 锁定原因
+        /// 禁用原因
         /// </summary>
         [StringLength(255)]
-        [Display(Name = "锁定原因")]
+        [Display(Name = "禁用原因")]
         [Column]
         public string LOCKED_REASON { get; set; }
-
         /// <summary>
-        /// 失败次数
+        /// 登录失败次数
         /// </summary>
-        [Display(Name = "失败次数")]
+        [Range(0, 2147483647)]
+        [Display(Name = "登录失败次数")]
         [Column]
-        public Nullable<int> FAIL_COUNT { get; set; }
+        public int FAIL_COUNT { get; set; }
 
 
     }

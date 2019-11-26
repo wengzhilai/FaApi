@@ -486,7 +486,7 @@ namespace Repository
 
             user.NAME = name;
             user.LOGIN_NAME = NewLoginName;
-            user.ICON_FILES_ID = iconFilesId;
+            user.ICON_FILES = iconFilesId.ToString();
 
             reObj.success = await userDapper.Update(new DtoSave<FaUserEntity>()
             {

@@ -4,9 +4,20 @@
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+    {
+        "name": "Idsvr4",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/Idsvr4/bin/Debug/netcoreapp3.0/Idsvr4.dll",
+        "args": [],
+        "cwd": "${workspaceFolder}/Idsvr4/",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+    },
         
         {
-            "name": ".NET Core Launch (web)",
+            "name": "WebApi(web)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -41,7 +52,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/mstest/bin/Debug/netcoreapp2.2/mstest.dll",
+            "program": "${workspaceFolder}/mstest/bin/Debug/netcoreapp3.0/mstest.dll",
             "args": [],
             "cwd": "${workspaceFolder}/mstest",
             "stopAtEntry": false,

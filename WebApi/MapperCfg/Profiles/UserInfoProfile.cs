@@ -66,7 +66,7 @@ namespace WebApi.MapperCfg.Profiles
                 ); })
                 .ForMember(d => d.FatherId, opt => { opt.MapFrom(m =>m.FATHER_ID); })
                 .ForMember(d => d.IcoUrl, opt => { opt.MapFrom(m =>
-                file.SingleByKey(user.SingleByKey(m.ID).Result.ICON_FILES_ID.Value).Result.URL
+                user.SingleByKey(m.ID).Result.ICON_FILES
                 ); })
                 .ForMember(d => d.Id, opt => { opt.MapFrom(m =>m.ID); })
                 .ForMember(d => d.Name, opt => { opt.MapFrom(m => user.SingleByKey(m.ID).Result.NAME); })

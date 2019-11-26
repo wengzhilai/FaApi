@@ -17,11 +17,11 @@ namespace Models.Entity
         /// ID
         /// </summary>
         [Key]
-        [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "ID")]
         [Column]
         public int ID { get; set; }
+
         /// <summary>
         /// 姓名
         /// </summary>
@@ -37,55 +37,57 @@ namespace Models.Entity
         [Column]
         public string LOGIN_NAME { get; set; }
         /// <summary>
-        /// 头像图片
+        /// 头像
         /// </summary>
-        [Display(Name = "头像图片")]
+        [StringLength(100)]
+        [Display(Name = "头像")]
         [Column]
-        public Nullable<int> ICON_FILES_ID { get; set; }
+        public string ICON_FILES { get; set; }
         /// <summary>
-        /// 归属地
+        /// 区域
         /// </summary>
-        [Required]
-        [Display(Name = "归属地")]
+        [Range(0, 2147483647)]
+        [Display(Name = "区域")]
         [Column]
         public int DISTRICT_ID { get; set; }
         /// <summary>
-        /// 锁定
+        /// 状态
         /// </summary>
         [Range(0, 2147483647)]
-        [Display(Name = "锁定")]
+        [Display(Name = "状态")]
         [Column]
-        public Nullable<decimal> IS_LOCKED { get; set; }
+        public decimal IS_LOCKED { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>
         [Display(Name = "创建时间")]
         [Column]
-        public Nullable<DateTime> CREATE_TIME { get; set; }
+        public DateTime CREATE_TIME { get; set; }
         /// <summary>
         /// 登录次数
         /// </summary>
+        [Range(0, 2147483647)]
         [Display(Name = "登录次数")]
         [Column]
-        public Nullable<int> LOGIN_COUNT { get; set; }
+        public int LOGIN_COUNT { get; set; }
         /// <summary>
         /// 最后登录时间
         /// </summary>
         [Display(Name = "最后登录时间")]
         [Column]
-        public Nullable<DateTime> LAST_LOGIN_TIME { get; set; }
+        public DateTime LAST_LOGIN_TIME { get; set; }
         /// <summary>
         /// 最后离开时间
         /// </summary>
         [Display(Name = "最后离开时间")]
         [Column]
-        public Nullable<DateTime> LAST_LOGOUT_TIME { get; set; }
+        public DateTime LAST_LOGOUT_TIME { get; set; }
         /// <summary>
-        /// 最后活动时间
+        /// 上次活动时间
         /// </summary>
-        [Display(Name = "最后活动时间")]
+        [Display(Name = "上次活动时间")]
         [Column]
-        public Nullable<DateTime> LAST_ACTIVE_TIME { get; set; }
+        public DateTime LAST_ACTIVE_TIME { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
