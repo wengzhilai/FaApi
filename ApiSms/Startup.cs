@@ -31,6 +31,13 @@ namespace ApiSms
         {
             Configuration.Bind("JpushCfg", AppSettingsManager.self.JpushCfg);
 
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.Authority = "http://127.0.0.1:9001";
+                options.Audience = "SmsService";
+            }
+            );
             services.AddControllers();
         }
 
@@ -44,7 +51,8 @@ namespace ApiSms
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();//ÈÏÖ¤
+            app.UseAuthorization();//ÊÚÈ¨
 
             app.UseEndpoints(endpoints =>
             {

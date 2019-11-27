@@ -21,6 +21,8 @@ namespace Idsvr4.Configuration
         {
             List<ApiResource> resources = new List<ApiResource>();
             resources.Add(new ApiResource("UsersService", "用户服务API", new List<string>() { JwtClaimTypes.Role }));
+            resources.Add(new ApiResource("SmsService", "短信服务API", new List<string>() { JwtClaimTypes.Role }));
+            
             resources.Add(new ApiResource("FileUpService", "文件上传服务API"));
             resources.Add(new ApiResource("ProductService", "产品服务API"));
             return resources;
@@ -62,7 +64,8 @@ namespace Idsvr4.Configuration
                     AllowedScopes = new List<string>
                     {
                         "UsersService",
-                        "FileUpService"
+                        "FileUpService",
+                        "SmsService",
                     }
                 },
                 new Client
@@ -72,7 +75,8 @@ namespace Idsvr4.Configuration
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     AllowedScopes = new [] { 
                         "UsersService",
-                        "FileUpService" 
+                        "FileUpService",
+                        "SmsService",
                     }
                 },
                 

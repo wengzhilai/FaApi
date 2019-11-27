@@ -6,8 +6,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 9002
+          "Host": "127.0.0.1",
+          "Port": 9100
         }
       ],
       "UpstreamPathTemplate": "/user/{url}"
@@ -17,14 +17,25 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
+          "Host": "127.0.0.1",
           "Port": 9001
         }
       ],
       "UpstreamPathTemplate": "/token/{url}"
+    },
+    {
+      "DownstreamPathTemplate": "/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "127.0.0.1",
+          "Port": 9002
+        }
+      ],
+      "UpstreamPathTemplate": "/sms/{url}"
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:9000"
+    "BaseUrl": "http://127.0.0.1:9000"
   }
 }

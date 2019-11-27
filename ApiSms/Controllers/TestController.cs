@@ -10,6 +10,7 @@ namespace ApiSms.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class TestController : ControllerBase
     {
         /// <summary>
@@ -18,7 +19,6 @@ namespace ApiSms.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "superadmin")]
         public Result TestUser(DtoKey inEnt)
         {
             Result reEnt = new Result();
@@ -47,7 +47,6 @@ namespace ApiSms.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize]
         public Result TestAuth(DtoKey inEnt)
         {
             Result reEnt = new Result();

@@ -1,8 +1,10 @@
 
 using Helper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,10 +24,30 @@ namespace ApiUser
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            //IdentityServer
+            services.AddAuthentication("Bearer")
+               .AddIdentityServerAuthentication(options =>
+               {
+                   options.RequireHttpsMetadata = false;
+                   options.Authority = "http://localhost:9001";
+                   options.ApiName = "UsersService";
+               });
+
+            services.AddControllers(options =>
+            {
+                //options.Filters.Add(typeof(AuthorizeAttribute));
+                //options.Filters.Add(new RequireHttpsAttribute());
+
+                //var policy = new AuthorizationPolicyBuilder()
+                // .RequireAuthenticatedUser()
+                // .RequireRole("superadmin")
+                // .Build();
+                //options.Filters.Add(new AuthorizeFilter(policy));
+            });
             //添加HTTP请求
             services.AddHttpClient();
 
+            //
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSameDomain",
@@ -38,6 +60,8 @@ namespace ApiUser
                             .AllowAnyOrigin();
                     });
             });
+
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -52,6 +76,8 @@ namespace ApiUser
 
             app.UseRouting();
             app.UseCors("AllowSameDomain");
+            app.UseAuthorization();
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>

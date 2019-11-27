@@ -40,14 +40,16 @@ namespace Idsvr4.IdentityServerExtensions
 
                 List<Claim> claimList = new List<Claim>();
 
-                claimList.Add(new Claim(JwtClaimTypes.Id, opObj.data.ID.ToString()));
-                if(opObj.data.roleIdList!=null) claimList.Add(new Claim(JwtClaimTypes.Role, string.Join(",", opObj.data.roleIdList)));
-                claimList.Add(new Claim(JwtClaimTypes.Name, opObj.data.NAME));
-                claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, opObj.data.LOGIN_NAME));
-                
+                //claimList.Add(new Claim(JwtClaimTypes.Id, opObj.data.ID.ToString()));
+                //if(opObj.data.roleIdList!=null) claimList.Add(new Claim(JwtClaimTypes.Role, string.Join(",", opObj.data.roleIdList)));
+                //claimList.Add(new Claim(JwtClaimTypes.Name, opObj.data.NAME));
+                //claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, opObj.data.LOGIN_NAME));
+                claimList.Add(new Claim(JwtClaimTypes.Role, "superadmin"));
+
                 context.Result = new GrantValidationResult(
                  subject: context.UserName,
                  authenticationMethod: OidcConstants.AuthenticationMethods.Password,
+                 DateTime.Now.AddDays(1),
                  claims: claimList);
             }
             else

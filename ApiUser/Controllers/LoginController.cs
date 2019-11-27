@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -61,8 +62,12 @@ namespace ApiUser.Controllers
             else
             {
                 reobj.success = true;
+                
+                reobj.code = token.AccessToken;
 
-                reobj.data = token.Json.TryGetString("access_token");
+                var t = new JwtSecurityTokenHandler().ReadJwtToken(token.AccessToken);
+                
+                reobj.data = TypeChange.ObjectToStr(t.Payload);
             }
             return reobj;
         }

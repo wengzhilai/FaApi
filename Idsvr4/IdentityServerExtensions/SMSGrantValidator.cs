@@ -34,24 +34,24 @@ namespace Idsvr4.IdentityServerExtensions
                 context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
             }
 
-            var result = await smsSend.Count(phoneNumber, smsCode);
-            //表示验证码有效
-            if (result>0)
-            {
+            //var result = await smsSend.Count(phoneNumber, smsCode);
+            ////表示验证码有效
+            //if (result>0)
+            //{
                 List<Claim> claimList = new List<Claim>();
                 claimList.Add(new Claim(JwtClaimTypes.Role, "superadmin"));
                 context.Result = new GrantValidationResult(
                  subject: phoneNumber,
                  authenticationMethod: GrantType,
                  claims: claimList);
-            }
-            else
-            {
-                context.Result = new GrantValidationResult(
-                    TokenRequestErrors.InvalidGrant,
-                    "短信码错误!"
-                    );
-            }
+            //}
+            //else
+            //{
+            //    context.Result = new GrantValidationResult(
+            //        TokenRequestErrors.InvalidGrant,
+            //        "短信码错误!"
+            //        );
+            //}
         }
     }
 }
