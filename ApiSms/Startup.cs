@@ -23,6 +23,7 @@ namespace ApiSms
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
+            Configuration.Bind(AppSettingsManager.self);
         }
 
 
@@ -34,7 +35,7 @@ namespace ApiSms
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
                 options.RequireHttpsMetadata = false;
-                options.Authority = "http://127.0.0.1:9001";
+                options.Authority = AppSettingsManager.self.Idsvr4Url;
                 options.Audience = "SmsService";
             }
             );

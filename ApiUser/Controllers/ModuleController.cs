@@ -30,7 +30,10 @@ namespace ApiUser.Controllers
             var reObj = new Result();
             try
             {
-                var userId = User.Claims.Single(a => a.Type == ClaimTypes.NameIdentifier).Value;
+                //var allKey = User.Claims.Select(x => new KV { K = x.Type, V = x.Value }).ToList();
+
+                var userId = User.Claims.Single(a => a.Type == "id").Value;
+
                 reObj = await this._module.GetMGetMenuByUserId(Convert.ToInt32(userId));
             }
             catch (Exception e)

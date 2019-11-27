@@ -16,12 +16,14 @@ namespace Idsvr4.IdentityServerExtensions
     public class SMSGrantValidator : IExtensionGrantValidator
     {
         private readonly ISmsSendRepository smsSend;
+        private readonly ILoginRepository login;
 
         public string GrantType => "SMSGrantType";
 
-        public SMSGrantValidator(ISmsSendRepository smsSend)
+        public SMSGrantValidator(ISmsSendRepository smsSend, ILoginRepository login)
         {
             this.smsSend = smsSend;
+            this.login = login;
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
@@ -38,9 +40,15 @@ namespace Idsvr4.IdentityServerExtensions
             ////表示验证码有效
             //if (result>0)
             //{
+                var opObj = await login.UserLogin(new Models.LogingDto { LoginName = phoneNumber });
+
                 List<Claim> claimList = new List<Claim>();
-                claimList.Add(new Claim(JwtClaimTypes.Role, "superadmin"));
-                context.Result = new GrantValidationResult(
+            claimList.Add(new Claim(JwtClaimTypes.Id, opObj.data.ID.ToString()));
+            if (opObj.data.roleIdList != null) claimList.Add(new Claim(JwtClaimTypes.Role, string.Join(",", opObj.data.roleIdList)));
+            claimList.Add(new Claim(JwtClaimTypes.Name, opObj.data.NAME));
+            claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, opObj.data.LOGIN_NAME));
+            claimList.Add(new Claim(JwtClaimTypes.Role, "superadmin"));
+            context.Result = new GrantValidationResult(
                  subject: phoneNumber,
                  authenticationMethod: GrantType,
                  claims: claimList);

@@ -36,11 +36,11 @@ namespace Repository
         {
             Result<FaModuleEntity> reObj = new Result<FaModuleEntity>();
             var allModel = await dbHelper.FindAll(where);
-            reObj.dataList = GetChildItems(allModel, null);
+            reObj.dataList = GetChildItems(allModel, 0);
             return reObj;
         }
 
-        private List<FaModuleEntity> GetChildItems(IEnumerable<FaModuleEntity> inList, int? parentId)
+        private List<FaModuleEntity> GetChildItems(IEnumerable<FaModuleEntity> inList, int parentId)
         {
             var childList = inList.Where(i => i.PARENT_ID == parentId).ToList();
             List<FaModuleEntity> reObj = new List<FaModuleEntity>();
@@ -84,11 +84,11 @@ namespace Repository
             {
                 DapperHelper<FaRoleModuleEntityView> roleModule = new DapperHelper<FaRoleModuleEntityView>();
                 var allModel = await roleModule.FindAll(string.Format("c.IS_HIDE==0 and a.ROLE_ID in ({0})", string.Join(",", roleIdList)));
-                reObj.dataList = GetChildItems(Fun.ClassListToCopy<FaRoleModuleEntityView, FaModuleEntity>(allModel.ToList()), null);
+                reObj.dataList = GetChildItems(Fun.ClassListToCopy<FaRoleModuleEntityView, FaModuleEntity>(allModel.ToList()), 0);
             }
             else
             {
-                reObj.dataList = GetChildItems(await new DapperHelper<FaModuleEntity>().FindAll(i=>i.IS_HIDE==0), null);
+                reObj.dataList = GetChildItems(await new DapperHelper<FaModuleEntity>().FindAll(i=>i.IS_HIDE==0), 0);
             }
             return reObj;
         }

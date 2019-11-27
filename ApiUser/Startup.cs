@@ -1,4 +1,5 @@
 
+using Autofac;
 using Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 
 namespace ApiUser
 {
@@ -20,30 +22,34 @@ namespace ApiUser
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
+
+            Configuration.Bind(AppSettingsManager.self);
+
+        }
+
+        /// <summary>
+        /// 配置autofac
+        /// </summary>
+        /// <param name="builder"></param>
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
+            Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
+            builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            //IdentityServer
-            services.AddAuthentication("Bearer")
-               .AddIdentityServerAuthentication(options =>
-               {
-                   options.RequireHttpsMetadata = false;
-                   options.Authority = "http://localhost:9001";
-                   options.ApiName = "UsersService";
-               });
-
-            services.AddControllers(options =>
+ 
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
-                //options.Filters.Add(typeof(AuthorizeAttribute));
-                //options.Filters.Add(new RequireHttpsAttribute());
+                options.RequireHttpsMetadata = false;
+                options.Authority = AppSettingsManager.self.Idsvr4Url;
+                options.Audience = "UsersService";
+            }
+            );
 
-                //var policy = new AuthorizationPolicyBuilder()
-                // .RequireAuthenticatedUser()
-                // .RequireRole("superadmin")
-                // .Build();
-                //options.Filters.Add(new AuthorizeFilter(policy));
-            });
+            services.AddControllers();
             //添加HTTP请求
             services.AddHttpClient();
 
@@ -66,7 +72,6 @@ namespace ApiUser
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            Configuration.Bind(AppSettingsManager.self);
 
             if (env.IsDevelopment())
             {
@@ -76,8 +81,8 @@ namespace ApiUser
 
             app.UseRouting();
             app.UseCors("AllowSameDomain");
-            app.UseAuthorization();
-            app.UseAuthentication();
+            app.UseAuthentication();//认证
+            app.UseAuthorization();//授权
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
