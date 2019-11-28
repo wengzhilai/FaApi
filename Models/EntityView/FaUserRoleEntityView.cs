@@ -16,15 +16,15 @@ namespace Models.Entity
         /// </summary>
         [StringLength(80)]
         [Display(Name = "角色名")]
-        [Column("r.`NAME` RoleName")]
-        public string RoleName { get; set; }
+        [Column("r.`NAME`")]
+        public string roleName { get; set; }
 
         /// <summary>
         /// 类型
         /// </summary>
         [Display(Name = "类型")]
-        [Column("r.`TYPE` RoleType")]
-        public Nullable<int> TYPE { get; set; }
+        [Column("r.`TYPE`")]
+        public Nullable<int> roleType { get; set; }
 
         /// <summary>
         /// ROLE_ID
@@ -32,7 +32,7 @@ namespace Models.Entity
         [Required]
         [Display(Name = "ROLE_ID")]
         [Column("ur.ROLE_ID")]
-        public int ROLE_ID { get; set; }
+        public int roleId { get; set; }
         /// <summary>
         /// USER_ID
         /// </summary>
@@ -40,14 +40,14 @@ namespace Models.Entity
         [Key]
         [Display(Name = "USER_ID")]
         [Column("ur.USER_ID")]
-        public int USER_ID { get; set; }
+        public int userId { get; set; }
 
         /// <summary>
         /// 用户姓名
         /// </summary>
         [StringLength(80)]
         [Display(Name = "用户姓名")]
-        [Column("u.`NAME` UserName")]
-        public string UserName { get; set; }
+        [Column("u.`NAME`")]
+        public string userName { get; set; }
     }
 }

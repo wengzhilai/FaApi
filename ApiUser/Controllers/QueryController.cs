@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApi.Comon;
 using IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -23,14 +22,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Models.EntityView;
 
-namespace WebApi.Controllers
+namespace ApiUser.Controllers
 {
-    /// <summary>
-    /// 授权管理
-    /// </summary>
-    [EnableCors("AllowSameDomain")]
-    [Route("api/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     [ApiController]
+    [EnableCors]
     [Authorize]
     public class QueryController : ControllerBase
     {
@@ -57,7 +53,7 @@ namespace WebApi.Controllers
             Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
             try
             {
-                reObj =await GeListData(querySearchModel);
+                reObj =await getListData(querySearchModel);
             }
             catch (Exception ex)
             {
@@ -79,7 +75,7 @@ namespace WebApi.Controllers
             Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
             try
             {
-                reObj =await GeListData(querySearchModel);
+                reObj =await getListData(querySearchModel);
             }
             catch (Exception ex)
             {
@@ -97,7 +93,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<DataGridDataJson>> GeListData(QuerySearchModel querySearchModel)
+        public async Task<Result<DataGridDataJson>> getListData(QuerySearchModel querySearchModel)
         {
             Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
             try

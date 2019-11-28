@@ -78,11 +78,11 @@ namespace WebApi.Controllers
             reobj = await _login.UserLogin(inEnt);
             if (reobj.success)
             {
-                reobj.data.CanEditIdList=await _userInfo.GetCanEditUserIdListAsync(reobj.data.ID);
+                reobj.data.canEditIdList=await _userInfo.GetCanEditUserIdListAsync(reobj.data.id);
                 var claims = new Claim[]
                         {
-                        new Claim(ClaimTypes.Name, reobj.data.LOGIN_NAME),
-                        new Claim(ClaimTypes.NameIdentifier, reobj.data.ID.ToString()),
+                        new Claim(ClaimTypes.Name, reobj.data.loginName),
+                        new Claim(ClaimTypes.NameIdentifier, reobj.data.id.ToString()),
                         new Claim(ClaimTypes.Role, "admin, Manage")
                         };
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettingsManager.self.JwtSettings.SecretKey));
@@ -96,7 +96,7 @@ namespace WebApi.Controllers
                     creds);
                 reobj.code = new JwtSecurityTokenHandler().WriteToken(token);
 
-                RedisRepository.UserTokenSet(reobj.data.ID, reobj.code);
+                RedisRepository.UserTokenSet(reobj.data.id, reobj.code);
             }
             return reobj;
         }
@@ -149,10 +149,10 @@ namespace WebApi.Controllers
                 outEnt.Data.LOGIN_HOST = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
                 outEnt.Data.LOGOUT_TIME = DateTime.Now;
                 outEnt.Data.MESSAGE = "正常退出";
-                var userEntList = await _user.FindAll(x => x.LOGIN_NAME == User.Identity.Name);
+                var userEntList = await _user.FindAll(x => x.loginName == User.Identity.Name);
                 if (userEntList.Count() > 0)
                 {
-                    outEnt.Data.USER_ID = userEntList.ToList()[0].ID;
+                    outEnt.Data.USER_ID = userEntList.ToList()[0].id;
                 }
                 reObj = await _login.LoginOut(outEnt);
             }

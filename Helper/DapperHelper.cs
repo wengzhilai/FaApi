@@ -24,7 +24,7 @@ namespace Helper
             {
                 if (_connection == null)
                 {
-                    var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.self.MongoSettings);
+                    var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.self.MysqlSettings);
                     var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
                     _connection = new MySqlConnection(alldict + ";CharSet=utf8");
                 }
@@ -128,6 +128,11 @@ namespace Helper
                 return result.ToString();
             else
                 return "";
+        }
+
+        public static IEnumerable<T> Query<T>(string sql, object param = null)
+        {
+            return connection.Query<T>(sql, param, transaction);
         }
 
 
@@ -414,7 +419,7 @@ namespace Helper
         {
             string sql = modelHelper.GetSingleSql();
             DynamicParameters dynamicP = new DynamicParameters();
-            dynamicP.Add(modelHelper.GetKeyField(), key);
+            dynamicP.Add(modelHelper.GetKeyField().Key, key);
 
             var query = await connection.QueryFirstOrDefaultAsync<T>(sql, dynamicP, transaction);
             return query;

@@ -43,10 +43,10 @@ namespace Idsvr4.IdentityServerExtensions
                 var opObj = await login.UserLogin(new Models.LogingDto { LoginName = phoneNumber });
 
                 List<Claim> claimList = new List<Claim>();
-            claimList.Add(new Claim(JwtClaimTypes.Id, opObj.data.ID.ToString()));
+            claimList.Add(new Claim(JwtClaimTypes.Id, opObj.data.id.ToString()));
             if (opObj.data.roleIdList != null) claimList.Add(new Claim(JwtClaimTypes.Role, string.Join(",", opObj.data.roleIdList)));
-            claimList.Add(new Claim(JwtClaimTypes.Name, opObj.data.NAME));
-            claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, opObj.data.LOGIN_NAME));
+            claimList.Add(new Claim(JwtClaimTypes.Name, opObj.data.name));
+            claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, opObj.data.loginName));
             claimList.Add(new Claim(JwtClaimTypes.Role, "superadmin"));
             context.Result = new GrantValidationResult(
                  subject: phoneNumber,

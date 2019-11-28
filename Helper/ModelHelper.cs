@@ -38,12 +38,12 @@ namespace Helper
         }
 
         /// <summary>
-        /// 获取所有字段列表
+        /// 获取所有字段列表,Key表示属性名，Value表示字段名
         /// </summary>
         /// <returns></returns>
-        public List<string> GetTableFields(List<string> saveFieldList = null, List<string> ignoreFieldList = null)
+        public Dictionary<string, object> GetTableFields(List<string> saveFieldList = null, List<string> ignoreFieldList = null)
         {
-            List<string> reFieldStr = new List<string>();   //所有数据字段名
+            Dictionary<string, object> reFieldStr = new Dictionary<string, object>();   //所有数据字段名
             Type type = typeof(T);
             PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
             foreach (PropertyInfo proInfo in PropertyList)
@@ -61,7 +61,7 @@ namespace Helper
                     if (obj is ColumnAttribute)//定义了Display属性的字段为字数库字段
                     {
                         var column = (ColumnAttribute)obj;
-                        reFieldStr.Add(string.IsNullOrEmpty(column.Name) ? proInfo.Name : column.Name);
+                        reFieldStr.Add(proInfo.Name, string.IsNullOrEmpty(column.Name) ? proInfo.Name : column.Name);
                         continue;
                     }
                 }
@@ -117,7 +117,7 @@ namespace Helper
             Type type = typeof(T);
             if (saveFieldList != null)
             {
-                saveFieldList.Add(GetKeyField());
+                saveFieldList.Add(GetKeyField().Key);
             }
             PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
             foreach (PropertyInfo proInfo in PropertyList)
@@ -246,48 +246,13 @@ namespace Helper
             return _TableName;
         }
 
-        string _key;
         /// <summary>
-        /// 获取主键
+        /// 获取主键,Key为属性名，Value为数据名
         /// </summary>
         /// <returns></returns>
-        public string GetKeyField()
+        public KeyValuePair<string, string> GetKeyField()
         {
-            if (_key == null)
-            {
-
-                Type type = typeof(T);
-                PropertyInfo[] proInfoArr = type.GetProperties();//得到该类的所有公共属性
-                for (int a = 0; a < proInfoArr.Length; a++)
-                {
-                    PropertyInfo proInfo = proInfoArr[a];
-                    object[] attrsPro = proInfo.GetCustomAttributes(typeof(KeyAttribute), true);
-                    if (attrsPro.Length > 0)
-                    {
-                        _key = proInfo.Name;
-
-                        object[] attrsGenerated = proInfo.GetCustomAttributes(typeof(DatabaseGeneratedAttribute), true);
-                        if (attrsGenerated.Length > 0)
-                        {
-                            _IsAuto = ((DatabaseGeneratedAttribute)attrsGenerated[0]).DatabaseGeneratedOption == DatabaseGeneratedOption.None;
-                        }
-                        else
-                        {
-                            _IsAuto = true;
-                        }
-                        break;
-                    }
-                }
-            }
-            return _key;
-        }
-
-        /// <summary>
-        /// 获取主键数据库字段
-        /// </summary>
-        /// <returns></returns>
-        public string GetKeyTableField()
-        {
+            var reObj = new KeyValuePair<string, string>();
             Type type = typeof(T);
             PropertyInfo[] proInfoArr = type.GetProperties();//得到该类的所有公共属性
             for (int a = 0; a < proInfoArr.Length; a++)
@@ -296,18 +261,32 @@ namespace Helper
                 object[] attrsPro = proInfo.GetCustomAttributes(typeof(KeyAttribute), true);
                 if (attrsPro.Length > 0)
                 {
-                    _key = proInfo.Name;
 
                     object[] attrsColumn = proInfo.GetCustomAttributes(typeof(ColumnAttribute), true);
-                    if (attrsColumn.Length > 0)
+                    if (attrsColumn.Length > 0 && !string.IsNullOrEmpty(((ColumnAttribute)attrsColumn[0]).Name))
                     {
-                        var column = (ColumnAttribute)attrsColumn[0];
-                        return string.IsNullOrEmpty(column.Name) ? _key : column.Name;
+                        reObj = new KeyValuePair<string, string>(proInfo.Name, ((ColumnAttribute)attrsColumn[0]).Name);
                     }
+                    else
+                    {
+                        reObj = new KeyValuePair<string, string> (proInfo.Name, proInfo.Name );
+                    }
+                    object[] attrsGenerated = proInfo.GetCustomAttributes(typeof(DatabaseGeneratedAttribute), true);
+                    if (attrsGenerated.Length > 0)
+                    {
+                        _IsAuto = ((DatabaseGeneratedAttribute)attrsGenerated[0]).DatabaseGeneratedOption == DatabaseGeneratedOption.None;
+                    }
+                    else
+                    {
+                        _IsAuto = true;
+                    }
+                    break;
                 }
             }
-            return _key;
+            return reObj;
         }
+
+        
 
         bool? _IsAuto;
         /// <summary>
@@ -358,14 +337,14 @@ namespace Helper
             {
                 if (ignoreFieldList == null)
                 {
-                    ignoreFieldList = new List<string> { GetKeyField() };
+                    ignoreFieldList = new List<string> { GetKeyField().Key };
                 }
                 else
                 {
-                    ignoreFieldList.Add(GetKeyField());
+                    ignoreFieldList.Add(GetKeyField().Key);
                 }
             }
-            sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList)) + ") VALUES(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => "@" + x)) + ")";
+            sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x=>x.Value)) + ") VALUES(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => "@" + x.Value)) + ")";
             if (GetKeyIsAuto())
             {
                 sql += "\r\n select @@IDENTITY ";
@@ -376,8 +355,8 @@ namespace Helper
         public string GetSaveSqlNoIdentity(List<string> saveFieldList = null)
         {
             string sql = null;
-            var ignoreFieldList = new List<string> { GetKeyField() };
-            sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList)) + ") VALUES(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => "@" + x)) + ")";
+            var ignoreFieldList = new List<string> { GetKeyField().Key };
+            sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => x.Value)) + ") VALUES(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => "@" + x.Value)) + ")";
             return sql;
         }
 
@@ -391,12 +370,12 @@ namespace Helper
         /// <returns></returns>
         public string GetUpdateSql(List<string> saveFieldList = null, List<string> ignoreFieldList = null, List<string> whereList = null)
         {
-            string key = GetKeyField();
+            string key = GetKeyField().Key;
             if (ignoreFieldList == null) ignoreFieldList = new List<string> { key };
             if (whereList == null) whereList = new List<string> { key };
             string sql = null;
             sql = "UPDATE " + GetTableName() + " SET ";
-            sql += string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => string.Format("{0}=@{0}", x)));
+            sql += string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => string.Format("{0}=@{1}", x.Value,x.Key)));
             sql += " WHERE ";
             sql += string.Join(" AND ", whereList.Select(x => string.Format("{0}=@{0}", x)));
             return sql;
@@ -444,7 +423,7 @@ namespace Helper
         /// <returns></returns>
         public string GetFindAllSql(DtoSearch inSearch)
         {
-            string key = GetKeyField();
+            string key = GetKeyField().Key;
             if (string.IsNullOrEmpty(inSearch.OrderType))
             {
                 inSearch.OrderType = string.Format("{0} DESC", key);
@@ -452,14 +431,15 @@ namespace Helper
             string whereSql = "";
             if (inSearch.FilterList != null && inSearch.FilterList.Count() > 0)
             {
-                whereSql = " where " + string.Join(" AND ", inSearch.FilterList.Select(x => string.Format("{0}=@{0}", x)));
+                var whereDict = GetTableFields(inSearch.FilterList.Select(x=>x.Key).ToList());
+                whereSql = " where " + string.Join(" AND ", whereDict.Select(x => string.Format("{0}=@{1}", x.Value,x.Key)));
             }
             if (inSearch.PageIndex < 1) inSearch.PageIndex = 1;
             if (inSearch.PageSize < 1) inSearch.PageSize = 10;
             string sql = string.Format(@"
                 select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
                 ",
-                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList)),
+                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList).Select(x => x.Value + " " + x.Key)),
                 GetTableName(),
                 whereSql,
                 (inSearch.PageIndex - 1) * inSearch.PageSize,
@@ -472,7 +452,7 @@ namespace Helper
 
         public string[] GetFindAllAndCountSql(DtoSearch inSearch)
         {
-            string key = GetKeyField();
+            string key = GetKeyField().Value;
             if (string.IsNullOrEmpty(inSearch.OrderType))
             {
                 inSearch.OrderType = string.Format("{0} DESC", key);
@@ -488,7 +468,7 @@ namespace Helper
                 select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
                 select count(1) V from {1} {2}
                 ",
-                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList)),
+                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList).Select(x => x.Value + " " + x.Key)),
                 GetTableName(),
                 whereSql,
                 (inSearch.PageIndex - 1) * inSearch.PageSize,
@@ -502,7 +482,7 @@ namespace Helper
         {
             if (inSearch.OrderType == null)
             {
-                string key = GetKeyField();
+                string key = GetKeyField().Value;
                 inSearch.OrderType = string.Format("{0} DESC", key);
             }
 
@@ -516,7 +496,7 @@ namespace Helper
             string sql = string.Format(@"
                 select {0} from {1} {2} ORDER  BY  {5} limit {3},{4};
                 ",
-                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList)),
+                string.Join(",", GetTableFields(null, inSearch.IgnoreFieldList).Select(x => x.Value + " " + x.Key)),
                 GetTableName(),
                 whereSql,
                 (inSearch.PageIndex - 1) * inSearch.PageSize,
@@ -544,11 +524,11 @@ namespace Helper
             if (string.IsNullOrEmpty(whereStr))
             {
                 sql = "SELECT {0} FROM {1}";
-                sql = string.Format(sql, string.Join(",", GetTableFields(allItems)), GetTableName());
+                sql = string.Format(sql, string.Join(",", GetTableFields(allItems).Select(x=>x.Value +" "+x.Key)), GetTableName());
             }
             else
             {
-                sql = string.Format(sql, string.Join(",", GetTableFields(allItems)), GetTableName(), whereStr);
+                sql = string.Format(sql, string.Join(",", GetTableFields(allItems).Select(x => x.Value + " " + x.Key)), GetTableName(), whereStr);
             }
             return sql;
         }
@@ -560,8 +540,6 @@ namespace Helper
         /// <returns></returns>
         public string GetFindNumSql(DtoSearch inSearch)
         {
-            string key = GetKeyField();
-
             string sql = "SELECT Count(1) num FROM {0} WHERE {1}";
             if (inSearch.FilterList == null)
             {
@@ -615,17 +593,15 @@ namespace Helper
         /// <returns></returns>
         public string GetSingleSql(List<string> filterList, string orderByStr = "")
         {
-            string key = GetKeyField();
-
             string sql = "SELECT {0} FROM {1} WHERE {2} {3}";
             if (filterList == null || filterList.Count() == 0)
             {
                 sql = "SELECT  {0} FROM {1} {2}";
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), orderByStr);
+                sql = string.Format(sql, string.Join(",", GetTableFields().Select(x => x.Value + " " + x.Key)), GetTableName(), orderByStr);
             }
             else
             {
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), string.Join(" AND ", filterList.Select(x => string.Format("{0}=@{0}", x))), orderByStr);
+                sql = string.Format(sql, string.Join(",", GetTableFields().Select(x => x.Value + " " + x.Key)), GetTableName(), string.Join(" AND ", filterList.Select(x => string.Format("{0}=@{0}", x))), orderByStr);
             }
             return sql;
         }
@@ -636,24 +612,24 @@ namespace Helper
         /// <returns></returns>
         public string GetSingleSql()
         {
-            string key = GetKeyField();
+            var key = GetKeyField();
             string sql = "SELECT  {0} FROM {1} WHERE {2}=@{3}";
-            sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), GetKeyTableField(), key);
+            sql = string.Format(sql, string.Join(",", GetTableFields().Select(x => x.Value + " " + x.Key)), GetTableName(), key.Value, key.Key);
             return sql;
         }
 
         public string GetSingleSql(string whereStr = "", string orderByStr = "")
         {
-            string key = GetKeyField();
-            string sql = "SELECT  {0} FROM {1} WHERE {2}=@{2} {3}";
+            var key = GetKeyField();
+            string sql = "SELECT  {0} FROM {1} WHERE {2}=@{3} {4}";
             if (string.IsNullOrEmpty(whereStr))
             {
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), key, orderByStr);
+                sql = string.Format(sql, string.Join(",", GetTableFields().Select(x => x.Value + " " + x.Key)), GetTableName(), key.Value,key.Key, orderByStr);
             }
             else
             {
                 sql = "SELECT  {0} FROM {1} WHERE {2} {3}";
-                sql = string.Format(sql, string.Join(",", GetTableFields()), GetTableName(), whereStr, orderByStr);
+                sql = string.Format(sql, string.Join(",", GetTableFields().Select(x => x.Value + " " + x.Key)), GetTableName(), whereStr, orderByStr);
 
             }
             return sql;

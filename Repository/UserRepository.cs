@@ -25,7 +25,7 @@ namespace Repository
         public async Task<FaUserEntity> SingleByKey(int key)
         {
             var ent=await dbHelper.SingleByKey(key);
-            ent.roleIdList = (await new DapperHelper<FaUserRoleEntityView>().FindAll(i => i.USER_ID == key)).Select(x => x.ROLE_ID).ToList();
+            ent.roleIdList = (await new DapperHelper<FaUserRoleEntityView>().FindAll(i => i.userId == key)).Select(x => x.roleId).ToList();
             return ent;
         }
         
@@ -49,12 +49,12 @@ namespace Repository
         {
             Result<FaUserEntity> reObj = new Result<FaUserEntity>();
             DapperHelper<FaLoginEntity> dapper=new DapperHelper<FaLoginEntity>();
-            var login=await dapper.Single(x=>x.LOGIN_NAME==username);
+            var login=await dapper.Single(x=>x.loginName==username);
             if (login != null)
             {
-                if (login.PASSWORD.ToLower().Equals(Helper.StringHelp.Get32MD5One(password).ToLower()))
+                if (login.password.ToLower().Equals(Helper.StringHelp.Get32MD5One(password).ToLower()))
                 {
-                    reObj.data =await new DapperHelper<FaUserEntity>().Single(x=>x.LOGIN_NAME==username);
+                    reObj.data =await new DapperHelper<FaUserEntity>().Single(x=>x.loginName == username);
                 }
                 else
                 {
@@ -74,9 +74,9 @@ namespace Repository
             try
             {
                 dbHelper.TranscationBegin();
-                if (inEnt.Data.ID == 0)
+                if (inEnt.Data.id == 0)
                 {
-                    inEnt.Data.ID = await new SequenceRepository().GetNextID<FaUserEntity>();
+                    inEnt.Data.id = await new SequenceRepository().GetNextID<FaUserEntity>();
                     reObj.data = await dbHelper.Save(inEnt);
                 }
                 else
@@ -94,8 +94,8 @@ namespace Repository
                 {
                     
                     DapperHelper.Init(dbHelper.GetConnection(), dbHelper.GetTransaction());
-                    await DapperHelper.Exec("delete from fa_user_role where USER_ID = " + inEnt.Data.ID);
-                    var opNum = await DapperHelper.Exec(string.Format("insert into fa_user_role(ROLE_ID,USER_ID) values({0},{1}) ",inEnt.Data.roleIdList, inEnt.Data.ID));
+                    await DapperHelper.Exec("delete from fa_user_role where USER_ID = " + inEnt.Data.id);
+                    var opNum = await DapperHelper.Exec(string.Format("insert into fa_user_role(ROLE_ID,USER_ID) values({0},{1}) ",inEnt.Data.roleIdList, inEnt.Data.id));
                     if (opNum != 1)
                     {
                         reObj.success = false;
@@ -123,7 +123,7 @@ namespace Repository
         public async Task<Result<int>> Delete(int keyId)
         {
             Result<int> reObj = new Result<int>();
-            reObj.data = await dbHelper.Delete(i => i.ID == keyId);
+            reObj.data = await dbHelper.Delete(i => i.id == keyId);
             reObj.success = reObj.data > 0;
             return reObj;
         }

@@ -43,7 +43,7 @@ namespace Repository
         async public Task<List<FaUserRoleEntityView>> UserRoleList(int userId)
         {
             DapperHelper<FaUserRoleEntityView> dp = new DapperHelper<FaUserRoleEntityView>();
-            var reList = await dp.FindAll(x => x.USER_ID == userId);
+            var reList = await dp.FindAll(x => x.userId == userId);
             return reList.ToList();
         }
 
@@ -69,13 +69,13 @@ namespace Repository
 
             var allRole = await UserRoleList(inEnt.UserId);
             //是普通管理员
-            if (allRole.SingleOrDefault(i => i.ROLE_ID == 2) != null && inEnt.Authority.Length > 1)
+            if (allRole.SingleOrDefault(i => i.roleId == 2) != null && inEnt.Authority.Length > 1)
             {
                 if (Fun.GetPowerList(inEnt.Authority.Substring(1, 1)).Contains(inEnt.PowerNum)) return true;
             }
 
             //是超级管理员
-            if (allRole.SingleOrDefault(i => i.ROLE_ID == 1) != null && inEnt.Authority.Length > 2)
+            if (allRole.SingleOrDefault(i => i.roleId == 1) != null && inEnt.Authority.Length > 2)
             {
                 if (Fun.GetPowerList(inEnt.Authority.Substring(2, 1)).Contains(inEnt.PowerNum)) return true;
             }

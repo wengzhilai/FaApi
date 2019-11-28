@@ -148,7 +148,7 @@ namespace Repository
             {
                 #region 修改用户信息
                 var userId = Convert.ToInt32(inEnt.ParentArr[0].K);
-                var user = await new DapperHelper<FaUserEntity>().Single(x => x.ID == userId);
+                var user = await new DapperHelper<FaUserEntity>().Single(x => x.id == userId);
 
                 #region 保存头像
                 //如果有新添加的头像，则保存像头地址到数据库
@@ -173,7 +173,7 @@ namespace Repository
 
 
                 //更新用户信息
-                var upUser = await new LoginRepository().UserEditLoginName(user.LOGIN_NAME, inEnt.LoginName, inEnt.ParentArr[0].V, Convert.ToInt32(inEnt.ParentArr[0].K), inEnt.Password, inEnt.ICON_FILES_ID);
+                var upUser = await new LoginRepository().UserEditLoginName(user.loginName, inEnt.LoginName, inEnt.ParentArr[0].V, Convert.ToInt32(inEnt.ParentArr[0].K), inEnt.Password, inEnt.ICON_FILES_ID);
                 //更新失败则返回
                 if (!upUser.success)
                 {
@@ -305,12 +305,12 @@ namespace Repository
                     {
                         Data = new FaUserEntity
                         {
-                            ID = userId,
-                            NAME = inEnt.Data.NAME,
-                            ICON_FILES = inEnt.Data.ICON_FILES,
-                            CREATE_TIME = DateTime.Now,
-                            LOGIN_NAME = string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME) ? userId.ToString() : inEnt.Data.LOGIN_NAME,
-                            DISTRICT_ID = 1
+                            id = userId,
+                            name = inEnt.Data.NAME,
+                            iconFiles = inEnt.Data.ICON_FILES,
+                            createTime = DateTime.Now,
+                            loginName = string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME) ? userId.ToString() : inEnt.Data.LOGIN_NAME,
+                            districtId = 1
                         }
                     });
                     if (addUserId < 1)
@@ -331,9 +331,9 @@ namespace Repository
                         {
                             Data = new FaLoginEntity
                             {
-                                ID = await new SequenceRepository().GetNextID<FaLoginEntity>(),
-                                LOGIN_NAME = inEnt.Data.LOGIN_NAME,
-                                PASSWORD = inEnt.Data.LOGIN_NAME.Md5()
+                                id = await new SequenceRepository().GetNextID<FaLoginEntity>(),
+                                loginName = inEnt.Data.LOGIN_NAME,
+                                password = inEnt.Data.LOGIN_NAME.Md5()
                             }
                         });
                         if (addLoginId < 1)
@@ -394,7 +394,7 @@ namespace Repository
                 else
                 {
                     var userId = inEnt.Data.ID;
-                    var user = await dapperUser.Single((x) => x.ID == userId);
+                    var user = await dapperUser.Single((x) => x.id == userId);
                     var userInfo = await dapperUserInfo.Single((x) => x.ID == userId);
                     #region 检测数据是否正确权限
                     // 正常：所有人都可修改
@@ -444,10 +444,10 @@ namespace Repository
 
                     #region 修改账号
                     //如果账号变动需修改登录账号
-                    if (inEnt.Data.LOGIN_NAME != user.LOGIN_NAME)
+                    if (inEnt.Data.LOGIN_NAME != user.loginName)
                     {
                         //原账号
-                        var login = await dapperLogin.Single(i => i.LOGIN_NAME == user.LOGIN_NAME);
+                        var login = await dapperLogin.Single(i => i.loginName == user.loginName);
 
                         if (login != null)
                         {
@@ -455,7 +455,7 @@ namespace Repository
 
                             #region 判断该用账号是否存在
                             // if (await dapperLogin.Count(i => i.ID != login.ID && i.LOGIN_NAME == inEnt.Data.LOGIN_NAME) > 0)
-                            if (await dapperLogin.Count(string.Format("ID<>{0} && LOGIN_NAME='{1}'", login.ID, inEnt.Data.LOGIN_NAME)) > 0)
+                            if (await dapperLogin.Count(string.Format("ID<>{0} && LOGIN_NAME='{1}'", login.id, inEnt.Data.LOGIN_NAME)) > 0)
                             {
                                 dapperUser.TranscationRollback();
                                 reObj.success = false;
@@ -466,7 +466,7 @@ namespace Repository
                             //如果账号为空则删除原有登录账号
                             if (string.IsNullOrEmpty(inEnt.Data.LOGIN_NAME))
                             {
-                                var delNum = await dapperLogin.Delete(i => i.ID == login.ID);
+                                var delNum = await dapperLogin.Delete(i => i.id == login.id);
                                 if (delNum < 1)
                                 {
                                     dapperUser.TranscationRollback();
@@ -477,7 +477,7 @@ namespace Repository
                             }
                             else
                             {
-                                login.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
+                                login.loginName = inEnt.Data.LOGIN_NAME;
                                 var updateLoginNum = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                                 {
                                     Data = login,
@@ -505,9 +505,9 @@ namespace Repository
                                 {
                                     Data = new FaLoginEntity
                                     {
-                                        ID = await new SequenceRepository().GetNextID<FaLoginEntity>(),
-                                        LOGIN_NAME = inEnt.Data.LOGIN_NAME,
-                                        PASSWORD = inEnt.Data.LOGIN_NAME.Md5()
+                                        id = await new SequenceRepository().GetNextID<FaLoginEntity>(),
+                                        loginName = inEnt.Data.LOGIN_NAME,
+                                        password = inEnt.Data.LOGIN_NAME.Md5()
                                     }
                                 });
                                 if (addLoginId < 1)
@@ -528,13 +528,13 @@ namespace Repository
                     #endregion
 
                     #region 修改用户
-                    user.NAME = inEnt.Data.NAME;
-                    user.LOGIN_NAME = inEnt.Data.LOGIN_NAME;
-                    user.ICON_FILES = inEnt.Data.ICON_FILES;
+                    user.name = inEnt.Data.NAME;
+                    user.loginName = inEnt.Data.LOGIN_NAME;
+                    user.iconFiles = inEnt.Data.ICON_FILES;
                     var addUserNum = await dapperUser.Update(new DtoSave<FaUserEntity>
                     {
                         Data = user,
-                        SaveFieldList = new List<string> { "NAME", "ICON_FILES_ID", "LOGIN_NAME" },
+                        SaveFieldList = new List<string> { "name", "iconFilesId", "loginName" },
                         WhereList = null
                     });
                     if (addUserNum < 1)
@@ -642,7 +642,7 @@ namespace Repository
                 //     return reObj;
                 // }
                 DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>(dapperUserInfo.GetConnection(), dapperUserInfo.GetTransaction());
-                opNum = await dapperUser.Delete(i => i.ID == userId);
+                opNum = await dapperUser.Delete(i => i.id == userId);
                 reObj.success = opNum > 0;
                 if (!reObj.success)
                 {

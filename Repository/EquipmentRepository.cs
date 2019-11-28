@@ -208,13 +208,13 @@ namespace Repository
         public async Task<Result<DataGridDataJson>> GetData(QuerySearchModel inEnt)
         {
             var reObj = new Result<DataGridDataJson>();
-            if (!inEnt.Code.IsInt32())
+            if (!inEnt.code.IsInt32())
             {
                 reObj.success = false;
                 reObj.msg = "代码有误";
                 return reObj;
             }
-            var equType = await new EquipmentRepository().SingleByKey(Convert.ToInt32(inEnt.Code));
+            var equType = await new EquipmentRepository().SingleByKey(Convert.ToInt32(inEnt.code));
             if (equType == null)
             {
                 reObj.success = false;
@@ -236,7 +236,7 @@ namespace Repository
             var dal = new QueryRepository();
             string whereStr = "";
             sql = dal.MakeSql(inEnt, sql, ref whereStr);
-            sql = dal.MakePageSql(sql, inEnt.page, inEnt.rows, inEnt.OrderStr, whereStr);
+            sql = dal.MakePageSql(sql, inEnt.page, inEnt.rows, inEnt.orderStr, whereStr);
             try
             {
                 var sqlList = sql.Split(';');

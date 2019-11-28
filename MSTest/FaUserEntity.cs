@@ -6,13 +6,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Entity
 {
+
     /// <summary>
-    /// 系统用户
+    /// 自定义表
     /// </summary>
     [Table("fa_user")]
-    public class FaUserEntity : BaseModel
-    {
+    public class FaUserEntity {
 
+    
         /// <summary>
         /// ID
         /// </summary>
@@ -101,26 +102,87 @@ namespace Models.Entity
         public String remark { get; set; }
 
 
-        /// <summary>
-        /// 是管理管理员
-        /// </summary>
-        /// <value></value>
-        public bool isAdmin{ get; set; }
-        
-        /// <summary>
-        /// 是普通管理员
-        /// </summary>
-        /// <value></value>
-        public bool isLeader{ get; set; }
-        /// <summary>
-        /// 用户角色
-        /// </summary>
-        /// <value></value>
-        public List<int> roleIdList { get; set; }
-        /// <summary>
-        /// 可编辑的用户ID
-        /// </summary>
-        /// <value></value>
-        public List<int> canEditIdList { get; set; }
     }
+
 }
+/*
+select 
+  ID id,
+  NAME name,
+  LOGIN_NAME loginName,
+  ICON_FILES iconFiles,
+  DISTRICT_ID districtId,
+  IS_LOCKED isLocked,
+  CREATE_TIME createTime,
+  LOGIN_COUNT loginCount,
+  LAST_LOGIN_TIME lastLoginTime,
+  LAST_LOGOUT_TIME lastLogoutTime,
+  LAST_ACTIVE_TIME lastActiveTime,
+  REMARK remark 
+from fa_user
+
+
+{
+  "id": {
+    "title": "ID",
+    "type": "int(11)",
+    "editable": true
+  },
+  "name": {
+    "title": "姓名",
+    "type": "varchar(80)",
+    "editable": true
+  },
+  "loginName": {
+    "title": "登录账号",
+    "type": "varchar(20)",
+    "editable": true
+  },
+  "iconFiles": {
+    "title": "头像",
+    "type": "varchar(100)",
+    "editable": true
+  },
+  "districtId": {
+    "title": "区域",
+    "type": "int(11)",
+    "editable": true
+  },
+  "isLocked": {
+    "title": "是否可用",
+    "type": "decimal(1,0)",
+    "editable": true
+  },
+  "createTime": {
+    "title": "创建时间",
+    "type": "datetime",
+    "editable": true
+  },
+  "loginCount": {
+    "title": "登录次数",
+    "type": "int(11)",
+    "editable": true
+  },
+  "lastLoginTime": {
+    "title": "最后登录时间",
+    "type": "datetime",
+    "editable": true
+  },
+  "lastLogoutTime": {
+    "title": "最后登出时间",
+    "type": "datetime",
+    "editable": true
+  },
+  "lastActiveTime": {
+    "title": "最后活动时间",
+    "type": "datetime",
+    "editable": true
+  },
+  "remark": {
+    "title": "备注",
+    "type": "varchar(2000)",
+    "editable": true
+  }
+}
+*/
+

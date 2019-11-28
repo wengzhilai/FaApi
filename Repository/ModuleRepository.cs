@@ -97,8 +97,8 @@ namespace Repository
         {
 
             DapperHelper<FaUserRoleEntityView> userRole = new DapperHelper<FaUserRoleEntityView>();
-            var allRole = await userRole.FindAll(i => i.USER_ID == userId);
-            return await GetMenuByRoleId(allRole.Select(i => i.ROLE_ID).ToList());
+            var allRole = await userRole.FindAll(i => i.userId == userId);
+            return await GetMenuByRoleId(allRole.Select(i => i.roleId).ToList());
         }
     }
 }

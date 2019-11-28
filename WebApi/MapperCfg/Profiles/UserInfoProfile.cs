@@ -66,10 +66,10 @@ namespace WebApi.MapperCfg.Profiles
                 ); })
                 .ForMember(d => d.FatherId, opt => { opt.MapFrom(m =>m.FATHER_ID); })
                 .ForMember(d => d.IcoUrl, opt => { opt.MapFrom(m =>
-                user.SingleByKey(m.ID).Result.ICON_FILES
+                user.SingleByKey(m.ID).Result.iconFiles
                 ); })
                 .ForMember(d => d.Id, opt => { opt.MapFrom(m =>m.ID); })
-                .ForMember(d => d.Name, opt => { opt.MapFrom(m => user.SingleByKey(m.ID).Result.NAME); })
+                .ForMember(d => d.Name, opt => { opt.MapFrom(m => user.SingleByKey(m.ID).Result.name); })
                 .ForMember(d => d.Sex, opt => { opt.MapFrom(m =>m.SEX); })
                 ;
         }

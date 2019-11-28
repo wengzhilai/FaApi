@@ -43,11 +43,11 @@ namespace Repository
             {
                 dapperLogin.TranscationBegin();
                 #region 如果用户存在，则更新用户表
-                var login = await dapperLogin.Single(x => x.LOGIN_NAME == phone);
+                var login = await dapperLogin.Single(x => x.loginName == phone);
                 if (login != null)
                 {
-                    login.VERIFY_CODE = code;
-                    login.VERIFY_TIME = DateTime.Now;
+                    login.verifyCode = code;
+                    login.verifyTime = DateTime.Now;
                     reEnt.success = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
                         Data = login,

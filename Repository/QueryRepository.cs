@@ -35,17 +35,17 @@ namespace Repository
             Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
             DataGridDataJson reEnt = new DataGridDataJson();
 
-            FaQueryEntity query = await dal.Single(i => i.CODE == inEnt.Code);
+            FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
             if (query == null)
             {
                 return reObj;
             }
-            IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.QUERY_CFG_JSON);
+            IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.queryCfgJson);
 
             string whereStr = "";
-            string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
+            string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
             reObj.msg = AllSql;
-            if (string.IsNullOrEmpty(inEnt.OrderStr)) inEnt.OrderStr = "(SELECT 0)";
+            if (string.IsNullOrEmpty(inEnt.orderStr)) inEnt.orderStr = "(SELECT 0)";
             try
             {
                 DataTable dt = DapperHelper.GetDataTable(AllSql);
@@ -72,16 +72,16 @@ namespace Repository
             Result<List<byte>> reObj = new Result<List<byte>>();
             List<byte> reEnt = new List<byte>();
 
-            FaQueryEntity query = await dal.Single(i => i.CODE == inEnt.Code);
+            FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
             if (query == null)
             {
 
                 return reObj;
             }
-            IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.QUERY_CFG_JSON);
+            IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.queryCfgJson);
 
             string whereStr = "";
-            string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
+            string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
             //如果条件为空
             if (!string.IsNullOrEmpty(whereStr))
             {
@@ -118,17 +118,16 @@ namespace Repository
         {
             Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
             DataGridDataJson reEnt = new DataGridDataJson();
-            FaQueryEntity query = await dal.Single(i => i.CODE == inEnt.Code);
+            FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
             if (query == null)
             {
                 return reObj;
             }
-            IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.QUERY_CFG_JSON);
 
             string whereStr = "";
-            string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
-            if (string.IsNullOrWhiteSpace(inEnt.OrderStr)) inEnt.OrderStr = "(SELECT 0)";
-            reObj.msg = MakePageSql(AllSql, inEnt.page, inEnt.rows, inEnt.OrderStr, whereStr);
+            string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
+            if (string.IsNullOrWhiteSpace(inEnt.orderStr)) inEnt.orderStr = "(SELECT 0)";
+            reObj.msg = MakePageSql(AllSql, inEnt.page, inEnt.rows, inEnt.orderStr, whereStr);
             try
             {
                 var sqlList = reObj.msg.Split(';');
@@ -162,22 +161,22 @@ namespace Repository
         public async Task<Result<QueryCfg>> MakeQueryCfg(string code)
         {
             Result<QueryCfg> reObj = new Result<QueryCfg>();
-            QuerySearchModel inEnt = new QuerySearchModel() { Code = code };
+            QuerySearchModel inEnt = new QuerySearchModel() { code = code };
             List<QueryCfg> reEnt = new List<QueryCfg>();
-            FaQueryEntity query = await dal.Single(i => i.CODE == inEnt.Code);
+            FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
 
             if (query == null)
             {
                 return reObj;
             }
             IList<QueryCfg> cfg = new List<QueryCfg>();
-            if (!string.IsNullOrEmpty(query.QUERY_CFG_JSON))
+            if (!string.IsNullOrEmpty(query.queryCfgJson))
             {
-                cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.QUERY_CFG_JSON);
+                cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.queryCfgJson);
             }
 
             string whereStr = "";
-            string AllSql = MakeSql(inEnt, query.QUERY_CONF, ref whereStr);
+            string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
             reObj.msg = MakePageSql(AllSql);
             try
             {
@@ -211,28 +210,28 @@ namespace Repository
 
                     reEnt.Add(new QueryCfg()
                     {
-                        FieldName = t.ColumnName,
-                        Show = true,
-                        FieldType = t.DataType.FullName,
-                        Width = "120",
-                        CanSearch = true,
-                        SearchType = searchType,
-                        SearchScript = searchScript,
-                        Sortable = true,
-                        Alias = t.Caption,
-                        IsVariable = "false"
+                        fieldName = t.ColumnName,
+                        show = true,
+                        fieldType = t.DataType.FullName,
+                        width = "120",
+                        canSearch = true,
+                        searchType = searchType,
+                        searchScript = searchScript,
+                        sortable = true,
+                        alias = t.Caption,
+                        isVariable = "false"
                     });
                 }
                 #region 获取当前状态
                 {
                     if (query != null)
                     {
-                        IList<QueryCfg> old = TypeChange.ToJsonObject<List<QueryCfg>>(query.QUERY_CFG_JSON);
+                        IList<QueryCfg> old = TypeChange.ToJsonObject<List<QueryCfg>>(query.queryCfgJson);
                         if (old != null)
                         {
                             for (int i = 0; i < reEnt.Count; i++)
                             {
-                                var t0 = old.SingleOrDefault(x => x.FieldName == reEnt[i].FieldName);
+                                var t0 = old.SingleOrDefault(x => x.fieldName == reEnt[i].fieldName);
                                 if (t0 != null) reEnt[i] = t0;
                             }
                         }
@@ -311,56 +310,56 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
         public string MakeSql(QuerySearchModel inEnt, string querySql, ref string whereStr)
         {
 
-            if (inEnt.ParaList == null) inEnt.ParaList = new List<QueryPara>();
-            if (inEnt.WhereList == null)
+            if (inEnt.paraList == null) inEnt.paraList = new List<QueryPara>();
+            if (inEnt.whereList == null)
             {
-                if (string.IsNullOrEmpty(inEnt.WhereListStr))
+                if (string.IsNullOrEmpty(inEnt.whereListStr))
                 {
-                    inEnt.WhereList = new List<QueryRowBtnShowCondition>();
+                    inEnt.whereList = new List<QueryRowBtnShowCondition>();
                 }
                 else
                 {
-                    inEnt.WhereList = TypeChange.ToJsonObject<List<QueryRowBtnShowCondition>>(inEnt.WhereListStr);
+                    inEnt.whereList = TypeChange.ToJsonObject<List<QueryRowBtnShowCondition>>(inEnt.whereListStr);
                 }
             }
 
-            if (inEnt.ParaList == null)
+            if (inEnt.paraList == null)
             {
-                if (string.IsNullOrEmpty(inEnt.ParaListStr))
+                if (string.IsNullOrEmpty(inEnt.paraListStr))
                 {
-                    inEnt.ParaList = new List<QueryPara>();
+                    inEnt.paraList = new List<QueryPara>();
                 }
                 else
                 {
-                    inEnt.ParaList = TypeChange.ToJsonObject<List<QueryPara>>(inEnt.ParaListStr);
+                    inEnt.paraList = TypeChange.ToJsonObject<List<QueryPara>>(inEnt.paraListStr);
                 }
             }
 
 
             //替换地址参数
-            foreach (var tmp in inEnt.ParaList)
+            foreach (var tmp in inEnt.paraList)
             {
-                if (tmp.Value == "@(NOWDATA)")
+                if (tmp.value == "@(NOWDATA)")
                 {
-                    tmp.Value = DateTime.Today.ToString("yyyy-MM-dd");
+                    tmp.value = DateTime.Today.ToString("yyyy-MM-dd");
                 }
-                querySql = querySql.Replace("@(" + tmp.ParaName + ")", tmp.Value);
+                querySql = querySql.Replace("@(" + tmp.paraName + ")", tmp.value);
             }
 
             //替换搜索的参数
-            foreach (var tmp in inEnt.WhereList)
+            foreach (var tmp in inEnt.whereList)
             {
-                if (string.IsNullOrEmpty(tmp.ObjFiled)) tmp.ObjFiled = tmp.FieldName;
-                if (string.IsNullOrEmpty(tmp.FieldName)) tmp.FieldName = tmp.ObjFiled;
-                querySql = querySql.Replace("@(" + tmp.ObjFiled + ")", tmp.Value);
+                if (string.IsNullOrEmpty(tmp.objFiled)) tmp.objFiled = tmp.fieldName;
+                if (string.IsNullOrEmpty(tmp.fieldName)) tmp.fieldName = tmp.objFiled;
+                querySql = querySql.Replace("@(" + tmp.objFiled + ")", tmp.value);
             }
 
             StringBuilder whereSb = new StringBuilder();
-            foreach (var tmp in inEnt.WhereList.Where(x => x.OpType != null && !string.IsNullOrEmpty(x.OpType) && !string.IsNullOrEmpty(x.Value)))
+            foreach (var tmp in inEnt.whereList.Where(x => x.opType != null && !string.IsNullOrEmpty(x.opType) && !string.IsNullOrEmpty(x.value)))
             {
-                if (tmp.FieldType == null) tmp.FieldType = "string";
-                var nowType = tmp.FieldType.ToLower();
-                int subIndex = tmp.FieldType.IndexOf(".");
+                if (tmp.fieldType == null) tmp.fieldType = "string";
+                var nowType = tmp.fieldType.ToLower();
+                int subIndex = tmp.fieldType.IndexOf(".");
                 if (subIndex > -1)
                 {
                     nowType = nowType.Substring(subIndex + 1);
@@ -369,38 +368,38 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
                 {
                     case "text":
                     case "string":
-                        switch (tmp.OpType)
+                        switch (tmp.opType)
                         {
                             case "in":
-                                whereSb.Append(string.Format(" {0} {1} ('{2}') and ", tmp.ObjFiled, tmp.OpType, tmp.Value.Replace(",", "','")));
+                                whereSb.Append(string.Format(" {0} {1} ('{2}') and ", tmp.objFiled, tmp.opType, tmp.value.Replace(",", "','")));
                                 break;
                             default:
-                                if (tmp.OpType == "like") tmp.Value = "%" + tmp.Value + "%";
-                                whereSb.Append(string.Format(" {0} {1} '{2}' and ", tmp.ObjFiled, tmp.OpType, tmp.Value));
+                                if (tmp.opType == "like") tmp.value = "%" + tmp.value + "%";
+                                whereSb.Append(string.Format(" {0} {1} '{2}' and ", tmp.objFiled, tmp.opType, tmp.value));
                                 break;
                         }
                         break;
                     case "date":
                     case "datetime":
-                        switch (tmp.OpType)
+                        switch (tmp.opType)
                         {
                             case "not between":
                             case "between":
-                                whereSb.Append(string.Format(" {0} {1} '{2}' and ", tmp.ObjFiled, tmp.OpType, string.Join("' and '", tmp.Value.Split('~').ToList().Select(x => x.Trim()))));
+                                whereSb.Append(string.Format(" {0} {1} '{2}' and ", tmp.objFiled, tmp.opType, string.Join("' and '", tmp.value.Split('~').ToList().Select(x => x.Trim()))));
                                 break;
                             default:
-                                whereSb.Append(string.Format(" {0} {1} '{2}' and ", tmp.ObjFiled, tmp.OpType, tmp.Value));
+                                whereSb.Append(string.Format(" {0} {1} '{2}' and ", tmp.objFiled, tmp.opType, tmp.value));
                                 break;
                         }
                         break;
                     default:
-                        if (tmp.OpType == "in")
+                        if (tmp.opType == "in")
                         {
-                            whereSb.Append(string.Format(" {0} {1} ('{2}') and ", tmp.ObjFiled, tmp.OpType, tmp.Value.Replace(",", "','")));
+                            whereSb.Append(string.Format(" {0} {1} ('{2}') and ", tmp.objFiled, tmp.opType, tmp.value.Replace(",", "','")));
                         }
                         else
                         {
-                            whereSb.Append(string.Format(" {0} {1} {2} and ", tmp.ObjFiled, tmp.OpType, tmp.Value));
+                            whereSb.Append(string.Format(" {0} {1} {2} and ", tmp.objFiled, tmp.opType, tmp.value));
                         }
                         break;
                 }
@@ -415,8 +414,8 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
 
         public async Task<int> Save(DtoSave<FaQueryEntity> inEnt)
         {
-            if(inEnt.Data.ID==0){
-                inEnt.Data.ID=await new SequenceRepository().GetNextID<FaQueryEntity>();
+            if(inEnt.Data.id==0){
+                inEnt.Data.id=await new SequenceRepository().GetNextID<FaQueryEntity>();
             }
             return await dal.Save(inEnt);
         }
@@ -447,7 +446,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
         {
             var reEnt = await dal.Single(where);
             reEnt._DictStr = TypeChange.ObjectToStr(new ModelHelper<FaQueryEntity>(reEnt).GetDisplayDirct());
-            reEnt._DictQueryCfgStr = TypeChange.ObjectToStr(new ModelHelper<QueryCfg>(new QueryCfg()).GetDisplayDirct());
+            reEnt._dictQueryCfgStr = TypeChange.ObjectToStr(new ModelHelper<QueryCfg>(new QueryCfg()).GetDisplayDirct());
             return reEnt;
 
         }

@@ -113,7 +113,7 @@ namespace Repository
             }
             #endregion
 
-            var userList = await new UserRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
+            var userList = await new UserRepository().FindAll(x => x.loginName == inEnt.LoginName);
             #region 检测电话号码是否存在
             if (userList.Count() > 0)
             {
@@ -127,16 +127,16 @@ namespace Repository
             //开始事务
             try
             {
-                var loginList = await new LoginRepository().FindAll(x => x.LOGIN_NAME == inEnt.LoginName);
+                var loginList = await new LoginRepository().FindAll(x => x.loginName == inEnt.LoginName);
                 #region 添加登录账号
                 if (loginList.Count() == 0)
                 {
                     FaLoginEntity inLogin = new FaLoginEntity();
-                    inLogin.ID = await new SequenceRepository().GetNextID<FaLoginEntity>();
-                    inLogin.LOGIN_NAME = inEnt.LoginName;
-                    inLogin.PASSWORD = inEnt.Password.Md5();
-                    inLogin.IS_LOCKED = 0;
-                    inLogin.FAIL_COUNT = 0;
+                    inLogin.id = await new SequenceRepository().GetNextID<FaLoginEntity>();
+                    inLogin.loginName = inEnt.LoginName;
+                    inLogin.password = inEnt.Password.Md5();
+                    inLogin.isLocked = 0;
+                    inLogin.failCount = 0;
                     reObj.success = await dbHelper.Save(new DtoSave<FaLoginEntity>()
                     {
                         Data = inLogin
@@ -154,12 +154,12 @@ namespace Repository
                 #region 添加user
 
                 FaUserEntity inUser = new FaUserEntity();
-                inUser.LOGIN_NAME = inEnt.LoginName;
-                inUser.NAME = inEnt.userName;
-                inUser.ID = await new SequenceRepository().GetNextID<FaUserEntity>();
-                inUser.DISTRICT_ID = 1;
-                inUser.CREATE_TIME = DateTime.Now;
-                inUser.IS_LOCKED = 0;
+                inUser.loginName = inEnt.LoginName;
+                inUser.name = inEnt.userName;
+                inUser.id = await new SequenceRepository().GetNextID<FaUserEntity>();
+                inUser.districtId = 1;
+                inUser.createTime = DateTime.Now;
+                inUser.isLocked = 0;
                 reObj.success = await new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
                 {
                     Data = inUser,
@@ -174,7 +174,7 @@ namespace Repository
                 }
                 #endregion
 
-                reObj.data = inUser.ID;
+                reObj.data = inUser.id;
             }
             catch (Exception e)
             {
@@ -202,7 +202,7 @@ namespace Repository
             //正常退出，修改退出日志
             reObj.success = await userDal.Update(new DtoSave<FaUserEntity>
             {
-                Data = new FaUserEntity { ID = inEnt.Data.USER_ID.Value, LAST_ACTIVE_TIME = DateTime.Now, LAST_LOGOUT_TIME = DateTime.Now },
+                Data = new FaUserEntity { id = inEnt.Data.USER_ID.Value, lastActiveTime = DateTime.Now, lastLogoutTime = DateTime.Now },
                 SaveFieldList = new List<string> { "LAST_ACTIVE_TIME", "LAST_LOGOUT_TIME" }
             }) > 0;
             if (!reObj.success)
@@ -240,8 +240,8 @@ namespace Repository
 
 
 
-            var Login = await dapperLogin.Single(x => x.LOGIN_NAME == inEnt.LoginName);
-            var user = await dapperUser.Single(x => x.LOGIN_NAME == inEnt.LoginName);
+            var Login = await dapperLogin.Single(x => x.loginName == inEnt.LoginName);
+            var user = await dapperUser.Single(x => x.loginName == inEnt.LoginName);
             if (Login == null || user == null)
             {
                 reObj.success = false;
@@ -250,29 +250,29 @@ namespace Repository
             }
             else
             {
-                if (Login.IS_LOCKED == 1)
+                if (Login.isLocked == 1)
                 {
                     reObj.success = false;
-                    reObj.msg = string.Format("用户已被锁定【{0}】", Login.LOCKED_REASON);
+                    reObj.msg = string.Format("用户已被锁定【{0}】", Login.lockedReason);
                     return reObj;
                 }
 
-                if ((Login.PASSWORD.ToUpper() != inEnt.Password.Md5().ToUpper() && Login.PASSWORD.ToUpper() != inEnt.Password.SHA1().ToUpper()) && inEnt.Password != "Easyman123@@@")
+                if ((Login.password.ToUpper() != inEnt.Password.Md5().ToUpper() && Login.password.ToUpper() != inEnt.Password.SHA1().ToUpper()) && inEnt.Password != "Easyman123@@@")
                 {
                     #region 密码错误
                     int times = 5;
-                    if (Login.FAIL_COUNT == 0)
+                    if (Login.failCount == 0)
                     {
-                        Login.FAIL_COUNT = 1;
+                        Login.failCount = 1;
                     }
 
                     reObj.success = false;
-                    reObj.msg = string.Format("用户名或者密码错误,还有{0}次尝试机会", (times - Login.FAIL_COUNT).ToString());
-                    if (Login.FAIL_COUNT >= times)
+                    reObj.msg = string.Format("用户名或者密码错误,还有{0}次尝试机会", (times - Login.failCount).ToString());
+                    if (Login.failCount >= times)
                     {
-                        Login.IS_LOCKED = 1;
-                        Login.LOCKED_REASON = string.Format("用户连续5次错误登陆，帐号锁定。");
-                        Login.FAIL_COUNT = 0;
+                        Login.isLocked = 1;
+                        Login.lockedReason = string.Format("用户连续5次错误登陆，帐号锁定。");
+                        Login.failCount = 0;
                         await dapperLogin.Update(new DtoSave<FaLoginEntity>
                         {
                             Data = Login,
@@ -281,7 +281,7 @@ namespace Repository
                     }
                     else
                     {
-                        Login.FAIL_COUNT++;
+                        Login.failCount++;
                         await dapperLogin.Update(new DtoSave<FaLoginEntity>
                         {
                             Data = Login,
@@ -295,17 +295,17 @@ namespace Repository
                 else //密码正确
                 {
 
-                    Login.FAIL_COUNT = 0;
+                    Login.failCount = 0;
                     reObj.success = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
                         Data = Login,
-                        SaveFieldList = new List<string> { "FAIL_COUNT" }
+                        SaveFieldList = new List<string> { "failCount" }
                     }) > 0;
 
                     DapperHelper<FaUserRoleEntityView> dapperUserRole = new DapperHelper<FaUserRoleEntityView>();
-                    var role = await dapperUserRole.FindAll(i => i.USER_ID == user.ID);
-                    user.IsAdmin = role.Count(i => i.ROLE_ID == 1) > 0;
-                    user.IsLeader = role.Count(i => i.ROLE_ID == 2) > 0;
+                    var role = await dapperUserRole.FindAll(i => i.userId == user.id);
+                    user.isAdmin = role.Count(i => i.roleId == 1) > 0;
+                    user.isLeader = role.Count(i => i.roleId == 2) > 0;
                     reObj.data = user;
                 }
 
@@ -332,14 +332,14 @@ namespace Repository
             }
             var dapper = new DapperHelper<FaLoginEntity>();
 
-            var login = await dapper.Single(x => x.LOGIN_NAME == inEnt.LoginName);
+            var login = await dapper.Single(x => x.loginName == inEnt.LoginName);
             if (login == null)
             {
                 reObj.success = false;
                 reObj.msg = "登录名不存在";
                 return reObj;
             }
-            if (login.VERIFY_CODE != inEnt.VerifyCode)
+            if (login.verifyCode != inEnt.VerifyCode)
             {
                 reObj.success = false;
                 reObj.msg = "验证码不正确";
@@ -352,7 +352,7 @@ namespace Repository
                 reObj.msg = "密码复杂度不够：";
                 return reObj;
             }
-            login.PASSWORD = inEnt.NewPwd.Md5();
+            login.password = inEnt.NewPwd.Md5();
             await dapper.Update(new DtoSave<FaLoginEntity>()
             {
                 Data = login,
@@ -385,21 +385,21 @@ namespace Repository
                 return reObj;
             }
             DapperHelper<FaLoginEntity> dapper = new DapperHelper<FaLoginEntity>();
-            var single = await dapper.Single(i => i.LOGIN_NAME == inEnt.LoginName);
+            var single = await dapper.Single(i => i.loginName == inEnt.LoginName);
             if (single == null)
             {
                 reObj.success = false;
                 reObj.msg = "账号不存在";
                 return reObj;
             }
-            if (single.PASSWORD != inEnt.OldPwd.Md5())
+            if (single.password != inEnt.OldPwd.Md5())
             {
                 reObj.success = false;
                 reObj.msg = "原密码有误";
                 return reObj;
             }
 
-            single.PASSWORD = inEnt.NewPwd.Md5();
+            single.password = inEnt.NewPwd.Md5();
             var upRows = await dapper.Update(new DtoSave<FaLoginEntity>
             {
                 Data = single,
@@ -449,7 +449,7 @@ namespace Repository
             #endregion
 
             #region 检测电话号码是否存在
-            IEnumerable<FaUserEntity> userList = await userDapper.FindAll(x => x.LOGIN_NAME == NewLoginName);
+            IEnumerable<FaUserEntity> userList = await userDapper.FindAll(x => x.loginName == NewLoginName);
             if (userList.Count() > 0)
             {
                 reObj.success = false;
@@ -464,11 +464,11 @@ namespace Repository
             FaUserEntity user = new FaUserEntity();
             if (userId != 0)
             {
-                user = await userDapper.Single(x => x.ID == userId);
+                user = await userDapper.Single(x => x.id == userId);
             }
             else
             {
-                user = await userDapper.Single(x => x.LOGIN_NAME == oldLoginName);
+                user = await userDapper.Single(x => x.loginName == oldLoginName);
             }
 
             if (user == null)
@@ -484,9 +484,9 @@ namespace Repository
 
             #region 修改用户账号
 
-            user.NAME = name;
-            user.LOGIN_NAME = NewLoginName;
-            user.ICON_FILES = iconFilesId.ToString();
+            user.name = name;
+            user.loginName = NewLoginName;
+            user.iconFiles = iconFilesId.ToString();
 
             reObj.success = await userDapper.Update(new DtoSave<FaUserEntity>()
             {
@@ -506,15 +506,15 @@ namespace Repository
 
             #region 修改登录账号
             DapperHelper<FaLoginEntity> loginDapper = new DapperHelper<FaLoginEntity>(userDapper.GetConnection(), userDapper.GetTransaction());
-            var login = await loginDapper.Single(x => x.LOGIN_NAME == oldLoginName);
+            var login = await loginDapper.Single(x => x.loginName == oldLoginName);
             if (login == null)
             {
                 FaLoginEntity inLogin = new FaLoginEntity();
-                inLogin.ID = await new SequenceRepository().GetNextID<FaLoginEntity>();
-                inLogin.LOGIN_NAME = NewLoginName;
-                inLogin.PASSWORD = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
-                inLogin.IS_LOCKED = 0;
-                inLogin.FAIL_COUNT = 0;
+                inLogin.id = await new SequenceRepository().GetNextID<FaLoginEntity>();
+                inLogin.loginName = NewLoginName;
+                inLogin.password = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
+                inLogin.isLocked = 0;
+                inLogin.failCount = 0;
                 reObj.success = await loginDapper.Save(new DtoSave<FaLoginEntity>()
                 {
                     Data = inLogin
@@ -522,8 +522,8 @@ namespace Repository
             }
             else
             {
-                login.LOGIN_NAME = NewLoginName;
-                login.PASSWORD = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
+                login.loginName = NewLoginName;
+                login.password = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
                 reObj.success = await loginDapper.Update(new DtoSave<FaLoginEntity>
                 {
                     Data = login,
@@ -542,7 +542,7 @@ namespace Repository
             userDapper.TranscationCommit();
 
             reObj.success = true;
-            reObj.msg = user.ID.ToString();
+            reObj.msg = user.id.ToString();
             return reObj;
         }
 
