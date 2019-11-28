@@ -135,6 +135,11 @@ namespace Helper
             return connection.Query<T>(sql, param, transaction);
         }
 
+        public static IEnumerable<dynamic> Query(string sql, object param = null)
+        {
+            return connection.Query(sql, param, transaction);
+        }
+
 
         /// <summary>
         /// 获取Table

@@ -1,14 +1,14 @@
 
 using Autofac;
 using Helper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System.Reflection;
 
 namespace ApiUser
@@ -49,7 +49,16 @@ namespace ApiUser
             }
             );
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                // 忽略循环引用
+                // 不使用驼峰
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                // 设置时间格式
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                // 如字段为null值，该字段不会返回到前端
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
             //添加HTTP请求
             services.AddHttpClient();
 
