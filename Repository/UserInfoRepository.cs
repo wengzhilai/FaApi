@@ -152,12 +152,12 @@ namespace Repository
 
                 #region 保存头像
                 //如果有新添加的头像，则保存像头地址到数据库
-                if (inEnt.ICON_FILES_ID != null && inEnt.IconFiles != null && !string.IsNullOrEmpty(inEnt.IconFiles.PATH))
+                if (inEnt.ICON_FILES_ID != null && inEnt.IconFiles != null && !string.IsNullOrEmpty(inEnt.IconFiles.path))
                 {
                     DapperHelper<FaFilesEntity> dapperFile = new DapperHelper<FaFilesEntity>();
                     inEnt.ICON_FILES_ID = await new SequenceRepository().GetNextID<FaFilesEntity>();
-                    inEnt.IconFiles.ID = inEnt.ICON_FILES_ID.Value;
-                    inEnt.IconFiles.UPLOAD_TIME = DateTime.Now;
+                    inEnt.IconFiles.id = inEnt.ICON_FILES_ID.Value;
+                    inEnt.IconFiles.uploadTime = DateTime.Now;
                     var saveNum = await dapperFile.Save(new DtoSave<FaFilesEntity>
                     {
                         Data = inEnt.IconFiles

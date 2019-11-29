@@ -1,13 +1,11 @@
 {
   "profiles": {
-
     "ApiUser": {
       "commandName": "Project",
-      "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": ""
+      "applicationUrl": "http://localhost:9100/"
     }
   }
 }
