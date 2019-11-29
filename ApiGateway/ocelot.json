@@ -33,6 +33,17 @@
         }
       ],
       "UpstreamPathTemplate": "/sms/{url}"
+    },
+    {
+      "DownstreamPathTemplate": "/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "127.0.0.1",
+          "Port": 9003
+        }
+      ],
+      "UpstreamPathTemplate": "/file/{url}"
     }
   ],
   "GlobalConfiguration": {
