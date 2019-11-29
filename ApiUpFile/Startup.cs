@@ -15,6 +15,19 @@ namespace ApiUpFile
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSameDomain",
+                    builder =>
+                    {
+                        builder
+                            //.WithOrigins("http://localhost:8100")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -25,7 +38,7 @@ namespace ApiUpFile
             }
 
             app.UseRouting();
-
+            app.UseCors("AllowSameDomain");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>

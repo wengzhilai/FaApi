@@ -38,6 +38,7 @@ testem.log
 /docs
 /WebApi/UpFiles/201902
 /WebApi/UpFiles/Doc
+/ApiUpFile/UpFiles
 *.out
 **/*.out
 
