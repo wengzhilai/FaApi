@@ -16,13 +16,13 @@ namespace ApiUser.Controllers
     [ApiController]
     [EnableCors]
     [Authorize]
-    public class RoleController : ControllerBase, IRoleController
+    public class UserController : ControllerBase, IUserController
     {
-        IRoleRepository _respoitory;
+        IUserRepository _respoitory;
 
-        public RoleController(IRoleRepository Role)
+        public UserController(IUserRepository User)
         {
-            this._respoitory = Role;
+            this._respoitory = User;
         }
 
 
@@ -32,7 +32,7 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResultObj<int>> save(DtoSave<FaRoleEntity> inEnt)
+        public async Task<ResultObj<int>> save(DtoSave<FaUserEntity> inEnt)
         {
             ResultObj<int> reObj = new ResultObj<int>();
             try
@@ -55,9 +55,9 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResultObj<FaRoleEntity>> singleByKey(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaUserEntity>> singleByKey(DtoDo<int> inEnt)
         {
-            ResultObj<FaRoleEntity> reObj = new ResultObj<FaRoleEntity>();
+            ResultObj<FaUserEntity> reObj = new ResultObj<FaUserEntity>();
             try
             {
                 reObj.data = await _respoitory.SingleByKey(inEnt.Key);
