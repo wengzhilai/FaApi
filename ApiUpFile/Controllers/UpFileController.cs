@@ -14,8 +14,8 @@ namespace WebApi.Controllers
     /// <summary>
     /// 授权管理
     /// </summary>
+    [EnableCors("AllowSameDomain")]
     [Route("[controller]/[action]")]
-    [EnableCors]
     [ApiController]
     public class UpFileController : ControllerBase
     {
@@ -52,7 +52,6 @@ namespace WebApi.Controllers
                     var fileName = DateTime.Now.ToString("ddHHmmssfff") +
                                    Path.GetExtension(formFile.FileName);
                     var filePath = Path.Combine(fileFolder, fileName);
-                    
                     var allPath = Path.Combine(_env.ContentRootPath, "UpFiles/" + filePath);
                     using (var stream = new FileStream(allPath, FileMode.Create))
                     {
@@ -61,12 +60,12 @@ namespace WebApi.Controllers
                         reEnt.msg = filePath;
                         reEnt.data = new FaFilesEntity
                         {
-                            name = fileName,
-                            path = allPath,
-                            url = filePath,
-                            length = stream.Length,
-                            uploadTime = DateTime.Now,
-                            fileType = Path.GetExtension(formFile.FileName),
+                            NAME = fileName,
+                            PATH = allPath,
+                            URL = "api/Public/LookfileByPath/" + filePath,
+                            LENGTH = stream.Length,
+                            UPLOAD_TIME = DateTime.Now,
+                            FILE_TYPE = Path.GetExtension(formFile.FileName),
                         };
                         stream.Flush();
                     }

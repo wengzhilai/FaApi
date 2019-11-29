@@ -1,13 +1,13 @@
-{
+﻿{
   "profiles": {
     "ApiSms": {
       "commandName": "Project",
       "launchBrowser": false,
       "launchUrl": "weatherforecast",
+      "applicationUrl": "http://localhost:9002",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:9002"
+      }
     }
   }
 }

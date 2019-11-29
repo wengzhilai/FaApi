@@ -18,62 +18,62 @@ namespace Models.Entity
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "ID")]
         [Column]
-        public int id { get; set; }
+        public int ID { get; set; }
         /// <summary>
         /// 名称
         /// </summary>
         [StringLength(50)]
         [Display(Name = "名称")]
         [Column]
-        public string name { get; set; }
+        public string NAME { get; set; }
         /// <summary>
         /// 路径
         /// </summary>
         [StringLength(200)]
         [Display(Name = "路径")]
         [Column]
-        public string path { get; set; }
+        public string PATH { get; set; }
         /// <summary>
         /// USER_ID
         /// </summary>
         [Range(0, 2147483647)]
         [Display(Name = "USER_ID")]
         [Column]
-        public Nullable<int> userId { get; set; }
+        public Nullable<int> USER_ID { get; set; }
         /// <summary>
         /// 大小
         /// </summary>
         [Range(0, 2147483647)]
         [Display(Name = "大小")]
         [Column]
-        public Int64 length { get; set; }
+        public Int64 LENGTH { get; set; }
         /// <summary>
         /// 添加时间
         /// </summary>
         [Display(Name = "添加时间")]
         [Column]
-        public Nullable<DateTime> uploadTime { get; set; }
+        public Nullable<DateTime> UPLOAD_TIME { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
         [StringLength(2000)]
         [Display(Name = "备注")]
         [Column]
-        public string remark { get; set; }
+        public string REMARK { get; set; }
         /// <summary>
         /// 相对路径
         /// </summary>
         [StringLength(254)]
         [Display(Name = "相对路径")]
         [Column]
-        public string url { get; set; }
+        public string URL { get; set; }
         /// <summary>
         /// 文件类型
         /// </summary>
         [StringLength(50)]
         [Display(Name = "文件类型")]
         [Column]
-        public string fileType { get; set; }
+        public string FILE_TYPE { get; set; }
 
 
     }

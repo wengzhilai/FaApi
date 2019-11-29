@@ -106,12 +106,12 @@ namespace WebApi.Controllers
                         reEnt.msg = filePath;
                         reEnt.data = new FaFilesEntity
                         {
-                            name = fileName,
-                            path = allPath,
-                            url = "api/Public/LookfileByPath/" + filePath,
-                            length = stream.Length,
-                            uploadTime = DateTime.Now,
-                            fileType = Path.GetExtension(formFile.FileName),
+                            NAME = fileName,
+                            PATH = allPath,
+                            URL = "api/Public/LookfileByPath/" + filePath,
+                            LENGTH = stream.Length,
+                            UPLOAD_TIME = DateTime.Now,
+                            FILE_TYPE = Path.GetExtension(formFile.FileName),
                         };
                         stream.Flush();
                     }
@@ -132,21 +132,21 @@ namespace WebApi.Controllers
         {
             Response.Body.Dispose();
             var fileEnt = await _file.SingleByKey(fileId);
-            if (fileEnt == null || fileEnt.path.IsNullOrEmpty())
+            if (fileEnt == null || fileEnt.PATH.IsNullOrEmpty())
             {
                 return File(System.IO.File.ReadAllBytes(_env.ContentRootPath + "/assets/images/defaultPng.png"), @"image/png");
             }
             else
             {
-                if (string.IsNullOrEmpty(fileEnt.fileType))
+                if (string.IsNullOrEmpty(fileEnt.FILE_TYPE))
                 {
-                    fileEnt.fileType = "png";
+                    fileEnt.FILE_TYPE = "png";
                 }
                 else
                 {
-                    fileEnt.fileType = fileEnt.fileType.Replace(".", "");
+                    fileEnt.FILE_TYPE = fileEnt.FILE_TYPE.Replace(".", "");
                 }
-                return File(System.IO.File.ReadAllBytes(fileEnt.path), @"image/" + fileEnt.fileType);
+                return File(System.IO.File.ReadAllBytes(fileEnt.PATH), @"image/" + fileEnt.FILE_TYPE);
             }
         }
 
@@ -176,8 +176,8 @@ namespace WebApi.Controllers
         public async Task<ResultObj<FaAppVersionEntity>> CheckUpdate(DtoDo<int> inEnt)
         {
             ResultObj<FaAppVersionEntity> reObj = new ResultObj<FaAppVersionEntity>();
-            var dapper = new DapperHelper<FaAppVersionEntity>();
-            reObj.data = await dapper.Single(i => i.TYPE > inEnt.Key, "order by id desc");
+            var dapper=new DapperHelper<FaAppVersionEntity>();
+            reObj.data=await dapper.Single(i=>i.TYPE>inEnt.Key,"order by id desc");
             return reObj;
         }
 

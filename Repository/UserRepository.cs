@@ -92,25 +92,21 @@ namespace Repository
                 }
                 else
                 {
-
+                    
                     DapperHelper.Init(dbHelper.GetConnection(), dbHelper.GetTransaction());
                     await DapperHelper.Exec("delete from fa_user_role where USER_ID = " + inEnt.Data.id);
-
-
-                    foreach (var item in inEnt.Data.roleIdList)
+                    var opNum = await DapperHelper.Exec(string.Format("insert into fa_user_role(ROLE_ID,USER_ID) values({0},{1}) ",inEnt.Data.roleIdList, inEnt.Data.id));
+                    if (opNum != 1)
                     {
-                        var opNum = await DapperHelper.Exec(string.Format("insert into fa_user_role(ROLE_ID,USER_ID) values({0},{1}) ", item, inEnt.Data.id));
-                        if (opNum != 1)
-                        {
-                            reObj.success = false;
-                            reObj.msg = "保存用户模块失败";
-                            dbHelper.TranscationRollback();
-                            return reObj;
-                        }
+                        reObj.success = false;
+                        reObj.msg = "保存用户模块失败";
+                        dbHelper.TranscationRollback();
                     }
-
-                    reObj.success = true;
-                    dbHelper.TranscationCommit();
+                    else
+                    {
+                        reObj.success=true;
+                        dbHelper.TranscationCommit();
+                    }
                 }
 
             }
