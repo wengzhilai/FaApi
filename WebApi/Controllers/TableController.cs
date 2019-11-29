@@ -56,9 +56,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaTableTypeEntity>> Single(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaTableTypeEntity>> Single(DtoDo<int> inEnt)
         {
-            Result<FaTableTypeEntity> reObj = new Result<FaTableTypeEntity>();
+            ResultObj<FaTableTypeEntity> reObj = new ResultObj<FaTableTypeEntity>();
             try
             {
                 var ent = await _dal.SingleByKey(inEnt.Key);
@@ -83,7 +83,7 @@ namespace WebApi.Controllers
         [HttpPost]
         async public Task<Result> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
-            var reObj = new Result<int>();
+            var reObj = new ResultObj<int>();
             try
             {
                 reObj = await this._dal.Save(inEnt);
@@ -124,9 +124,9 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<KTV>> GetTableSelect()
+        public async Task<ResultObj<KTV>> GetTableSelect()
         {
-            var reObj = new Result<KTV>();
+            var reObj = new ResultObj<KTV>();
             try
             {
                 reObj = await this._dal.GetTableSelect();

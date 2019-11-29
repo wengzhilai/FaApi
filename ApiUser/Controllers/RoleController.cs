@@ -16,35 +16,15 @@ namespace ApiUser.Controllers
     [ApiController]
     [EnableCors]
     [Authorize]
-    public class ModuleController : ControllerBase, IModuleController
+    public class RoleController : ControllerBase, IRoleController
     {
-        IModuleRepository _respoitory;
+        IRoleRepository _respoitory;
 
-        public ModuleController(IModuleRepository module)
+        public RoleController(IRoleRepository Role)
         {
-            this._respoitory = module;
+            this._respoitory = Role;
         }
 
-        [HttpPost]
-        async public Task<ResultObj<FaModuleEntity>> getUserMenu()
-        {
-            var reObj = new ResultObj<FaModuleEntity>();
-            try
-            {
-                //var allKey = User.Claims.Select(x => new KV { K = x.Type, V = x.Value }).ToList();
-
-                var userId = User.Claims.Single(a => a.Type == "id").Value;
-
-                reObj = await this._respoitory.GetMGetMenuByUserId(Convert.ToInt32(userId));
-            }
-            catch (Exception e)
-            {
-                LogHelper.WriteErrorLog(this.GetType(), "获取用户详情失败", e);
-                reObj.success = false;
-                reObj.msg = e.Message;
-            }
-            return reObj;
-        }
 
         /// <summary>
         /// 保存Query
@@ -52,7 +32,7 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResultObj<int>> save(DtoSave<FaModuleEntity> inEnt)
+        public async Task<ResultObj<int>> save(DtoSave<FaRoleEntity> inEnt)
         {
             ResultObj<int> reObj = new ResultObj<int>();
             try
@@ -75,9 +55,9 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResultObj<FaModuleEntity>> singleByKey(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaRoleEntity>> singleByKey(DtoDo<int> inEnt)
         {
-            ResultObj<FaModuleEntity> reObj = new ResultObj<FaModuleEntity>();
+            ResultObj<FaRoleEntity> reObj = new ResultObj<FaRoleEntity>();
             try
             {
                 reObj.data = await _respoitory.SingleByKey(inEnt.Key);

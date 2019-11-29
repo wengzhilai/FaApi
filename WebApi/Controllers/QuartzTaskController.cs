@@ -57,9 +57,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        async public Task<Result<bool>> IsStarted()
+        async public Task<ResultObj<bool>> IsStarted()
         {
-            Result<bool> reObj = new Result<bool>();
+            ResultObj<bool> reObj = new ResultObj<bool>();
             //1、通过调度工厂获得调度器
             _scheduler = await _schedulerFactory.GetScheduler();
             reObj.data = _scheduler.IsStarted;
@@ -151,9 +151,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        async public Task<Result<bool>> RemoveJob(DtoKey InEnt)
+        async public Task<ResultObj<bool>> RemoveJob(DtoKey InEnt)
         {
-            Result<bool> reObj = new Result<bool>();
+            ResultObj<bool> reObj = new ResultObj<bool>();
             try
             {
                 //1、通过调度工厂获得调度器
@@ -187,9 +187,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        async public Task<Result<QuartzTaskModel>> List()
+        async public Task<ResultObj<QuartzTaskModel>> List()
         {
-            Result<QuartzTaskModel> reObj = new Result<QuartzTaskModel>();
+            ResultObj<QuartzTaskModel> reObj = new ResultObj<QuartzTaskModel>();
             //1、通过调度工厂获得调度器
             _scheduler = await _schedulerFactory.GetScheduler();
             GroupMatcher<TriggerKey> matcherTrigger = GroupMatcher<TriggerKey>.AnyGroup();

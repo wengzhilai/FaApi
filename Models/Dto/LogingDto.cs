@@ -16,11 +16,11 @@ namespace Models
         /// <summary>
         /// 登录名
         /// </summary>
-        public string LoginName { get; set; }
+        public string loginName { get; set; }
         /// <summary>
         /// 密码
         /// </summary>
-        public string Password { get; set; }
+        public string password { get; set; }
         /// <summary>
         /// 手机串号
         /// </summary>

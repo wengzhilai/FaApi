@@ -135,9 +135,22 @@ namespace Helper
             return connection.Query<T>(sql, param, transaction);
         }
 
-        public static IEnumerable<dynamic> Query(string sql, object param = null)
+        public static List<Dictionary<string, object>> Query(string sql, object param = null)
         {
-            return connection.Query(sql, param, transaction);
+            var rows = new List<Dictionary<string, object>>();
+            using (var reader = connection.ExecuteReader(sql, param, transaction))
+            {
+                while (reader.Read())
+                {
+                    var dict = new Dictionary<string, object>();
+                    for (var i = 0; i < reader.FieldCount; i++)
+                    {
+                        dict[reader.GetName(i)] = reader.GetValue(i);
+                    }
+                    rows.Add(dict);
+                }
+            }
+            return rows;
         }
 
 

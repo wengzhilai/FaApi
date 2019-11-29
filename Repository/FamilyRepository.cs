@@ -48,9 +48,9 @@ namespace Repository
             return dbHelper.FindAll(inParm);
         }
 
-        public async Task<Result<Relative>> Relative(DtoDo<int> inObj)
+        public async Task<ResultObj<Relative>> Relative(DtoDo<int> inObj)
         {
-            Result<Relative> reobj = new Result<Relative>();
+            ResultObj<Relative> reobj = new ResultObj<Relative>();
 
             Relative reEnt = new Relative();
             var userId = Convert.ToInt32(inObj.Key);
@@ -98,9 +98,9 @@ namespace Repository
         }
 
 
-        public async Task<Result<FaElderEntity>> GetUserBooksAsync(int userId, int targerEderId = 24)
+        public async Task<ResultObj<FaElderEntity>> GetUserBooksAsync(int userId, int targerEderId = 24)
         {
-            var reObj = new Result<FaElderEntity>();
+            var reObj = new ResultObj<FaElderEntity>();
             UserInfoRepository userInfoDal = new UserInfoRepository();
 
             //德字辈排号是24

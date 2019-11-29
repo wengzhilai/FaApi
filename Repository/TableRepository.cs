@@ -17,18 +17,18 @@ namespace Repository
     public class TableRepository : ITableRepository
     {
 
-        public async Task<Result<KTV>> GetTableSelect()
+        public async Task<ResultObj<KTV>> GetTableSelect()
         {
             DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>();
-            var reObj = new Result<KTV>();
+            var reObj = new ResultObj<KTV>();
             var entList = await dbHelper.FindAll(x => x.STAUTS == "启用");
             reObj.dataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
             return reObj;
         }
 
-        public async Task<Result<int>> Save(DtoSave<FaTableTypeEntity> inEnt)
+        public async Task<ResultObj<int>> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             if (inEnt.Data.AllColumns == null || inEnt.Data.AllColumns.Count() == 0)
             {
                 reObj.success = false;
@@ -172,9 +172,9 @@ namespace Repository
             return ent;
         }
 
-        public async Task<Result<int>> Delete(int key)
+        public async Task<ResultObj<int>> Delete(int key)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             DapperHelper<FaTableTypeEntity> typeDapper = new DapperHelper<FaTableTypeEntity>();
             DapperHelper<FaTableColumnEntity> columnHelper = new DapperHelper<FaTableColumnEntity>(typeDapper.GetConnection(), typeDapper.GetTransaction());
             try

@@ -71,10 +71,10 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaUserEntity>> UserLogin(LogingDto inEnt)
+        public async Task<ResultObj<FaUserEntity>> UserLogin(LogingDto inEnt)
         {
             //Bearer 
-            Result<FaUserEntity> reobj = new Result<FaUserEntity>();
+            ResultObj<FaUserEntity> reobj = new ResultObj<FaUserEntity>();
             reobj = await _login.UserLogin(inEnt);
             if (reobj.success)
             {
@@ -234,9 +234,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<bool>> CheckAuth(CheckAuthDto inEnt)
+        public async Task<ResultObj<bool>> CheckAuth(CheckAuthDto inEnt)
         {
-            var reObj = new Result<bool>();
+            var reObj = new ResultObj<bool>();
             try
             {
                 reObj.data = await this._role.CheckAuth(inEnt);

@@ -36,9 +36,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [RequestSizeLimit(100_000_000)] //最大100m左右
-        async public Task<Result<FaFilesEntity>> UploadPhotos()
+        async public Task<ResultObj<FaFilesEntity>> UploadPhotos()
         {
-            Result<FaFilesEntity> reEnt = new Result<FaFilesEntity>();
+            ResultObj<FaFilesEntity> reEnt = new ResultObj<FaFilesEntity>();
 
             var files = Request.Form.Files;
             var fileFolder = string.Format("{0}", DateTime.Now.ToString("yyyyMM"));

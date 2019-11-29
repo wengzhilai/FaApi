@@ -75,9 +75,9 @@ namespace Repository
             return dapper.FindAll(inEnt);
         }
 
-        async public Task<Result<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt)
+        async public Task<ResultObj<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt)
         {
-            Result<bool> reObj = new Result<bool>();
+            ResultObj<bool> reObj = new ResultObj<bool>();
             DapperHelper<FaScriptEntity> dapper = new DapperHelper<FaScriptEntity>();
             if (inEnt.Data.ID == 0)
             {
@@ -123,9 +123,9 @@ namespace Repository
             return await dapper.SingleByKey(key);
         }
 
-        async public Task<Result<bool>> ScriptTaskLogSave(DtoSave<FaScriptTaskLogEntity> inEnt)
+        async public Task<ResultObj<bool>> ScriptTaskLogSave(DtoSave<FaScriptTaskLogEntity> inEnt)
         {
-            Result<bool> reObj = new Result<bool>();
+            ResultObj<bool> reObj = new ResultObj<bool>();
             DapperHelper<FaScriptTaskLogEntity> dapper = new DapperHelper<FaScriptTaskLogEntity>();
             if (inEnt.Data.ID == 0)
             {
@@ -143,9 +143,9 @@ namespace Repository
             return reObj;
         }
 
-        async public Task<Result<int>> ScriptTaskSave(DtoSave<FaScriptTaskEntity> inEnt)
+        async public Task<ResultObj<int>> ScriptTaskSave(DtoSave<FaScriptTaskEntity> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             DapperHelper<FaScriptTaskEntity> dapper = new DapperHelper<FaScriptTaskEntity>();
             if (inEnt.Data.ID == 0)
             {

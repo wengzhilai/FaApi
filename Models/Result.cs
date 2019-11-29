@@ -27,14 +27,14 @@ namespace Models
     /// 返回的数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Result<T> : Result
+    public class ResultObj<T> : Result
     {
-        public Result()
+        public ResultObj()
         {
 
         }
 
-        public Result(bool success,string msg)
+        public ResultObj(bool success,string msg)
         {
             this.success = success;
             this.msg = msg;
@@ -58,13 +58,18 @@ namespace Models
         /// </summary>
         /// <value></value>
         public object tmp { get; set; }
+
+        /// <summary>
+        /// 总数
+        /// </summary>
+        public int total { get; set; }
     }
 
     /// <summary>
     /// 分页数据
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class ResultPaging<T> : Result<T>
+    public class ResultPaging<T> : ResultObj<T>
     {
         /// <summary>
         /// 当前页码

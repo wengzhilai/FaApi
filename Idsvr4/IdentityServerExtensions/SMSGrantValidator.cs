@@ -40,7 +40,7 @@ namespace Idsvr4.IdentityServerExtensions
             ////表示验证码有效
             //if (result>0)
             //{
-                var opObj = await login.UserLogin(new Models.LogingDto { LoginName = phoneNumber });
+                var opObj = await login.UserLogin(new Models.LogingDto { loginName = phoneNumber });
 
                 List<Claim> claimList = new List<Claim>();
             claimList.Add(new Claim(JwtClaimTypes.Id, opObj.data.id.ToString()));

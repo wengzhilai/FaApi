@@ -82,9 +82,9 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         [HttpPost]
         [RequestSizeLimit(100_000_000)] //最大100m左右
-        async public Task<Result<FaFilesEntity>> UploadPhotos()
+        async public Task<ResultObj<FaFilesEntity>> UploadPhotos()
         {
-            Result<FaFilesEntity> reEnt = new Result<FaFilesEntity>();
+            ResultObj<FaFilesEntity> reEnt = new ResultObj<FaFilesEntity>();
 
             var files = Request.Form.Files;
             var fileFolder = string.Format("{0}", DateTime.Now.ToString("yyyyMM"));
@@ -173,9 +173,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaAppVersionEntity>> CheckUpdate(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaAppVersionEntity>> CheckUpdate(DtoDo<int> inEnt)
         {
-            Result<FaAppVersionEntity> reObj = new Result<FaAppVersionEntity>();
+            ResultObj<FaAppVersionEntity> reObj = new ResultObj<FaAppVersionEntity>();
             var dapper=new DapperHelper<FaAppVersionEntity>();
             reObj.data=await dapper.Single(i=>i.TYPE>inEnt.Key,"order by id desc");
             return reObj;

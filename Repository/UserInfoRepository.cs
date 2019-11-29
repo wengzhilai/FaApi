@@ -82,8 +82,8 @@ namespace Repository
                     var rustle = await new LoginRepository().LoginReg(new LogingDto
                     {
                         userName = inEnt.ParentArr?[0].V,
-                        LoginName = inEnt.LoginName,
-                        Password = inEnt.Password,
+                        loginName = inEnt.LoginName,
+                        password = inEnt.Password,
                         code = inEnt.Code
                     }, dbHelperLogin);
 
@@ -228,9 +228,9 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        async public Task<Result<bool>> Save(DtoSave<FaUserInfoEntityView> inEnt, string opUserName, int opUserId)
+        async public Task<ResultObj<bool>> Save(DtoSave<FaUserInfoEntityView> inEnt, string opUserName, int opUserId)
         {
-            var reObj = new Result<bool>();
+            var reObj = new ResultObj<bool>();
 
             DapperHelper<FaUserEntity> dapperUser = new DapperHelper<FaUserEntity>();
             #region 验证信息是否有误

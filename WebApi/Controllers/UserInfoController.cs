@@ -72,9 +72,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaUserInfoEntityView>> Single(DtoKey inEnt)
+        public async Task<ResultObj<FaUserInfoEntityView>> Single(DtoKey inEnt)
         {
-            Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
+            ResultObj<FaUserInfoEntityView> reObj = new ResultObj<FaUserInfoEntityView>();
             int key = Convert.ToInt32(inEnt.Key);
             FaUserInfoEntityView user = await _userInfo.SingleByKey(key);
             if (user.BIRTHDAY_TIME != null)
@@ -117,9 +117,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaUserInfoEntityView>> SingleByName(DtoKey inEnt)
+        public async Task<ResultObj<FaUserInfoEntityView>> SingleByName(DtoKey inEnt)
         {
-            Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
+            ResultObj<FaUserInfoEntityView> reObj = new ResultObj<FaUserInfoEntityView>();
             var user = await _userInfo.FindAll(x => x.NAME == inEnt.Key);
             reObj.dataList = user.ToList();
             reObj.success = true;
@@ -133,9 +133,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt)
+        public async Task<ResultObj<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt)
         {
-            Result<FaUserInfoEntityView> reObj = new Result<FaUserInfoEntityView>();
+            ResultObj<FaUserInfoEntityView> reObj = new ResultObj<FaUserInfoEntityView>();
             inEnt.FilterList = x => x.LOGIN_NAME.Length == 11;
             inEnt.OrderType = "id asc";
             var user = await _userInfo.List(inEnt);
@@ -180,7 +180,7 @@ namespace WebApi.Controllers
         [HttpPost]
         async public Task<Result> Save(DtoSave<FaUserInfoEntityView> inEnt)
         {
-            var reObj = new Result<bool>();
+            var reObj = new ResultObj<bool>();
             try
             {
                 reObj = await this._userInfo.Save(inEnt, User.Identity.Name, 1);

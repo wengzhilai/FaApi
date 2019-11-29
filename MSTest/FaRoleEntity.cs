@@ -1,17 +1,19 @@
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Entity
 {
+
     /// <summary>
-    /// 系统角色
+    /// 角色
     /// </summary>
     [Table("fa_role")]
-    public class FaRoleEntity : BaseModel
-    {
+    public class FaRoleEntity {
 
+    
         /// <summary>
         /// ID
         /// </summary>
@@ -44,11 +46,39 @@ namespace Models.Entity
         public int type { get; set; }
 
 
-
-        /// <summary>
-        /// 模块ID集合
-        /// </summary>
-        /// <value></value>
-        public int[] moduleIdStr { get; set; }
     }
+
 }
+/*
+select 
+  ID id,
+  NAME name,
+  REMARK remark,
+  TYPE type 
+from fa_role
+
+
+{
+  "id": {
+    "title": "ID",
+    "type": "int(11)",
+    "editable": true
+  },
+  "name": {
+    "title": "角色名",
+    "type": "varchar(80)",
+    "editable": true
+  },
+  "remark": {
+    "title": "备注",
+    "type": "varchar(255)",
+    "editable": true
+  },
+  "type": {
+    "title": "类型",
+    "type": "int(11)",
+    "editable": true
+  }
+}
+*/
+

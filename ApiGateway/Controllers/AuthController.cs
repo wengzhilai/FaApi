@@ -14,9 +14,9 @@ namespace ApiSms.Controllers
     public class AuthController : ControllerBase
     {
         [HttpPost]
-        public async Task<Result<String>> UserLogin(LogingDto inEnt)
+        public async Task<ResultObj<String>> UserLogin(LogingDto inEnt)
         {
-            Result<String> reobj = new Result<String>();
+            ResultObj<String> reobj = new ResultObj<String>();
             
             return reobj;
         }

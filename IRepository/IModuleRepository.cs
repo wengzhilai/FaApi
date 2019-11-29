@@ -23,14 +23,14 @@ namespace IRepository
         /// </summary>
         /// <param name="scriptId">主键 ID</param>
         /// <returns></returns>
-        Task<Result<int>> Delete(int scriptId);
+        Task<ResultObj<int>> Delete(int scriptId);
 
         /// <summary>
         /// 保存基本信息
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<int>> Save(DtoSave<FaModuleEntity> inEnt);
+        Task<ResultObj<int>> Save(DtoSave<FaModuleEntity> inEnt);
 
 
         /// <summary>
@@ -38,11 +38,11 @@ namespace IRepository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        Task<Result<FaModuleEntity>> GetMenu(Expression<Func<FaModuleEntity, bool>> inParm = null);
+        Task<ResultObj<FaModuleEntity>> GetMenu(Expression<Func<FaModuleEntity, bool>> inParm = null);
 
-        Task<Result<FaModuleEntity>> GetMenuByRoleId(List<int> roleIdList);
+        Task<ResultObj<FaModuleEntity>> GetMenuByRoleId(List<int> roleIdList);
         
-        Task<Result<FaModuleEntity>> GetMGetMenuByUserId(int userId);
+        Task<ResultObj<FaModuleEntity>> GetMGetMenuByUserId(int userId);
 
 
     }

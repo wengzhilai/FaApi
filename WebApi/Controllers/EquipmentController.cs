@@ -56,9 +56,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaEquipmentEntity>> Single(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaEquipmentEntity>> Single(DtoDo<int> inEnt)
         {
-            Result<FaEquipmentEntity> reObj = new Result<FaEquipmentEntity>();
+            ResultObj<FaEquipmentEntity> reObj = new ResultObj<FaEquipmentEntity>();
             try
             {
                 var ent = await _dal.SingleByKey(inEnt.Key);
@@ -83,7 +83,7 @@ namespace WebApi.Controllers
         [HttpPost]
         async public Task<Result> Save(DtoSave<FaEquipmentEntity> inEnt)
         {
-            var reObj = new Result<int>();
+            var reObj = new ResultObj<int>();
             try
             {
                 reObj = await this._dal.Save(inEnt);
@@ -124,9 +124,9 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<KTV>> GetTree()
+        public async Task<ResultObj<KTV>> GetTree()
         {
-            var reObj = new Result<KTV>();
+            var reObj = new ResultObj<KTV>();
             try
             {
                 reObj = await this._dal.GetTree(null);
@@ -237,9 +237,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<SmartTableSetting>> GetConfig(DtoDo<int> inEnt)
+        public async Task<ResultObj<SmartTableSetting>> GetConfig(DtoDo<int> inEnt)
         {
-            var reObj = new Result<SmartTableSetting>();
+            var reObj = new ResultObj<SmartTableSetting>();
             try
             {
                 reObj = await this._dal.GetConfig(inEnt);
@@ -260,9 +260,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<DataGridDataJson>> GetConfigAndData(QuerySearchModel inEnt)
+        public async Task<ResultObj<Dictionary<string, object>>> GetConfigAndData(QuerySearchDto inEnt)
         {
-            var reObj = new Result<DataGridDataJson>();
+            var reObj = new ResultObj<Dictionary<string, object>>();
             try
             {
                 reObj = await this._dal.GetData(inEnt);

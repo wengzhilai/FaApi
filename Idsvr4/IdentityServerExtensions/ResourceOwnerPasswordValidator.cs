@@ -36,7 +36,7 @@ namespace Idsvr4.IdentityServerExtensions
             {
 
 
-                var opObj = await login.UserLogin(new Models.LogingDto { LoginName = context.UserName, Password = context.Password });
+                var opObj = await login.UserLogin(new Models.LogingDto { loginName = context.UserName, password = context.Password });
 
                 if (opObj.success && opObj.data != null)
                 {

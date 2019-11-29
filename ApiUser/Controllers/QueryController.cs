@@ -28,7 +28,7 @@ namespace ApiUser.Controllers
     [ApiController]
     [EnableCors]
     [Authorize]
-    public class QueryController : ControllerBase
+    public class QueryController : ControllerBase ,IQueryController
     {
         private IQueryRepository _query;
 
@@ -42,49 +42,7 @@ namespace ApiUser.Controllers
         {
             this._query = query;
         }
-        /// <summary>
-        /// 获取列表数据
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<Result<DataGridDataJson>> GetBindListData(QuerySearchModel querySearchModel)
-        {
-            Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
-            try
-            {
-                reObj =await getListData(querySearchModel);
-            }
-            catch (Exception ex)
-            {
-                LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.msg = ex.Message;
-                reObj.success = false;
-            }
-            return reObj;
-        }
-        /// <summary>
-        /// 只获取列表数据,用于其它地方，需要获取查询的数据，比如用在二级联动
-        /// </summary>
-        /// <param name="querySearchModel"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<Result<DataGridDataJson>> GetOnlyListData(QuerySearchModel querySearchModel)
-        {
-            Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
-            try
-            {
-                reObj =await getListData(querySearchModel);
-            }
-            catch (Exception ex)
-            {
-                LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.msg = ex.Message;
-                reObj.success = false;
-            }
-            return reObj;
-        }
+        
 
         /// <summary>
         /// 获取数据对象
@@ -92,10 +50,10 @@ namespace ApiUser.Controllers
         /// <param name="querySearchModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<Result<DataGridDataJson>> getListData(QuerySearchModel querySearchModel)
+        public async Task<ResultObj<Dictionary<string, object>>> getListData(QuerySearchDto querySearchModel)
         {
-            Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
+
+            ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
             try
             {
                 if (querySearchModel.whereList == null && !string.IsNullOrWhiteSpace(querySearchModel.whereListStr))
@@ -137,10 +95,9 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<Result<FaQueryEntity>> GetSingleQuery(DtoKey inEnt)
+        public async Task<ResultObj<FaQueryEntity>> getSingleQuery(DtoKey inEnt)
         {
-            Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
+            ResultObj<FaQueryEntity> reObj = new ResultObj<FaQueryEntity>();
             try
             {
                 reObj.data = await _query.Single(i => i.code == inEnt.Key);
@@ -154,36 +111,7 @@ namespace ApiUser.Controllers
             }
             return reObj;
         }
-        /// <summary>
-        /// 获取执行的SQL
-        /// </summary>
-        /// <param name="code"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [AllowAnonymous]
-        public Result<string> GetDubug(string code)
-        {
-            Result<string> reObj = new Result<string>();
-            try
-            {
-                var reStr = "";
-                try
-                {
-                    // reStr = Session[string.Format("SQL_{0}", code)].ToString();
-                    reStr = reStr.Replace("%0a", "\r\n");
-                    reStr = reStr.Replace("%0d", " ");
-                }
-                catch { }
-                reObj.data = reStr;
-            }
-            catch (Exception ex)
-            {
-                LogHelper.WriteErrorLog(typeof(QueryController), ex.ToString());
-                reObj.msg = ex.Message;
-                reObj.success = false;
-            }
-            return reObj;
-        }
+        
         /// <summary>
         /// 导出Excel数据
         /// </summary>
@@ -191,7 +119,7 @@ namespace ApiUser.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> DownFile(QuerySearchModel querySearchModel)
+        public async Task<IActionResult> downFile(QuerySearchDto querySearchModel)
         {
             querySearchModel.page = 1;
             querySearchModel.rows = 1000000000;
@@ -208,10 +136,10 @@ namespace ApiUser.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> DownFile(string code)
+        public async Task<IActionResult> downFile(DtoKey code)
         {
-            var tmepObj = await _query.QueryExecuteCsv(new QuerySearchModel{
-                code=code,
+            var tmepObj = await _query.QueryExecuteCsv(new QuerySearchDto{
+                code=code.Key,
                 page=1,
                 rows=10000
             });
@@ -224,9 +152,9 @@ namespace ApiUser.Controllers
         /// <param name="code"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<QueryCfg>> MakeQueryCfg(string code)
+        public async Task<ResultObj<QueryCfg>> makeQueryCfg(string code)
         {
-            Result<QueryCfg> reObj = new Result<QueryCfg>();
+            ResultObj<QueryCfg> reObj = new ResultObj<QueryCfg>();
             try
             {
                 reObj = await _query.MakeQueryCfg(code);
@@ -240,30 +168,7 @@ namespace ApiUser.Controllers
             return reObj;
         }
 
-        /// <summary>
-        /// 获取所有查询列表
-        /// </summary>
-        /// <param name="inEnt"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<Result<FaQueryEntity>> List(DtoSearch inEnt)
-        {
-            Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
-            inEnt.OrderType = "id asc";
-            inEnt.IgnoreFieldList=new List<string>{
-                "QUERY_CONF",
-                "QUERY_CFG_JSON",
-                "IN_PARA_JSON",
-                "JS_STR",
-                "ROWS_BTN",
-                "HEARD_BTN",
-                "CHARTS_CFG",
-                "REPORT_SCRIPT",
-                };
-            reObj = await _query.FindAllPage(inEnt);
-            reObj.success = true;
-            return reObj;
-        }
+        
 
         /// <summary>
         /// 保存Query
@@ -271,9 +176,9 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<int>> Save(DtoSave<FaQueryEntity> inEnt)
+        public async Task<ResultObj<int>> save(DtoSave<FaQueryEntity> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             try
             {
                 if (inEnt.Data.id == 0)
@@ -301,9 +206,9 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaQueryEntity>> Single(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaQueryEntity>> singleByKey(DtoDo<int> inEnt)
         {
-            Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
+            ResultObj<FaQueryEntity> reObj = new ResultObj<FaQueryEntity>();
             try
             {
                 reObj.data = await _query.Single(x=>x.id==inEnt.Key);
@@ -323,9 +228,9 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<int>> Delete(DtoDo<int> inEnt)
+        public async Task<ResultObj<int>> delete(DtoDo<int> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             try
             {
                 reObj.data = await _query.Delete(x=>x.id==inEnt.Key);
@@ -339,5 +244,7 @@ namespace ApiUser.Controllers
             }
             return reObj;
         }
+
+ 
     }
 }

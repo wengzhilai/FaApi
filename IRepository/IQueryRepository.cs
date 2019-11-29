@@ -16,14 +16,14 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<DataGridDataJson>> QueryExecute(QuerySearchModel inEnt);
+        Task<ResultObj<Dictionary<string, object>>> QueryExecute(QuerySearchDto inEnt);
         /// <summary>
         /// 获取Csv数据,支持大数据下载
         /// </summary>
         /// <param name="inEnt"></param>
         /// <param name="sqlStr"></param>
         /// <returns></returns>
-        Task<Result<List<byte>>> QueryExecuteCsv(QuerySearchModel inEnt);
+        Task<ResultObj<List<byte>>> QueryExecuteCsv(QuerySearchDto inEnt);
 
 
         /// <summary>
@@ -32,14 +32,14 @@ namespace IRepository
         /// <param name="inEnt"></param>
         /// <param name="sqlStr"></param>
         /// <returns></returns>
-        Task<Result<DataGridDataJson>> QueryPageExecute(QuerySearchModel inEnt);
+        Task<ResultObj<Dictionary<string, object>>> QueryPageExecute(QuerySearchDto inEnt);
         /// <summary>
         /// 生成配置数据
         /// </summary>
         /// <param name="code"></param>
         /// <param name="sqlStr"></param>
         /// <returns></returns>
-        Task<Result<QueryCfg>> MakeQueryCfg(string code);
+        Task<ResultObj<QueryCfg>> MakeQueryCfg(string code);
 
         /// <summary>
         /// 生成分页的SQL
@@ -60,14 +60,14 @@ namespace IRepository
         /// <param name="query"></param>
         /// <param name="whereStr"></param>
         /// <returns></returns>
-        string MakeSql(QuerySearchModel inEnt, string query, ref string whereStr);
+        string MakeSql(QuerySearchDto inEnt, string query, ref string whereStr);
 
 
 
         Task<int> Save(DtoSave<FaQueryEntity> inEnt);
 
         Task<List<FaQueryEntity>> FindAll(DtoSearch inSearch);
-        Task<Result<FaQueryEntity>> FindAllPage(DtoSearch inSearch);
+        Task<ResultObj<FaQueryEntity>> FindAllPage(DtoSearch inSearch);
         Task<int> Update(DtoSave<FaQueryEntity> inEnt);
         Task<FaQueryEntity> Single(Expression<Func<FaQueryEntity, bool>> where);
 

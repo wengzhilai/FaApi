@@ -27,7 +27,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<int>> LoginReg(LogingDto inEnt);
+        Task<ResultObj<int>> LoginReg(LogingDto inEnt);
         /// <summary>
         /// 注销用户登录状态
         /// <para>清除用户的缓存状态</para>
@@ -43,7 +43,7 @@ namespace IRepository
         /// <param name="inEnt"></param>
         /// <returns></returns>
         
-        Task<Result<FaUserEntity>>  UserLogin(LogingDto inEnt);
+        Task<ResultObj<FaUserEntity>>  UserLogin(LogingDto inEnt);
         /// <summary>
         /// 重置用户密码
         /// <para>VerifyCode:短信验证码</para>
@@ -60,6 +60,6 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<bool>> UserEditPwd(EditPwdDto inEnt);
+        Task<ResultObj<bool>> UserEditPwd(EditPwdDto inEnt);
     }
 }

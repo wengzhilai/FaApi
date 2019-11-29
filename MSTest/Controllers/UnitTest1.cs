@@ -35,8 +35,8 @@ namespace ApiUser.Controllers.Tests
             PathConfig cfg = new PathConfig();
             //        cfg.entityPath="D:\\IdeaProjects\\study_new\\study-dependencies\\src\\main\\java\\com\\wzl\\commons\\model\\entity\\";
             cfg.entityPath = "F:\\Study\\FaApi\\MSTest\\";
-            cfg.tableName = "fa_login";
-            cfg.tableNameRmark = "账号";
+            cfg.tableName = "fa_role";
+            cfg.tableNameRmark = "角色";
             //        cfg.clumStr="" +
             //                "ID\tID\tint\t\t\tTRUE\tFALSE\tTRUE\n" +
             //                "口径任务ID\tSCRIPT_TASK_ID\tint\t\t\tFALSE\tTRUE\tTRUE\n" +

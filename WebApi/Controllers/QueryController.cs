@@ -52,9 +52,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<DataGridDataJson>> GetBindListData(QuerySearchModel querySearchModel)
+        public async Task<ResultObj<Dictionary<string, object>>> GetBindListData(QuerySearchDto querySearchModel)
         {
-            Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
+            ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
             try
             {
                 reObj =await GeListData(querySearchModel);
@@ -74,9 +74,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<DataGridDataJson>> GetOnlyListData(QuerySearchModel querySearchModel)
+        public async Task<ResultObj<Dictionary<string, object>>> GetOnlyListData(QuerySearchDto querySearchModel)
         {
-            Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
+            ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
             try
             {
                 reObj =await GeListData(querySearchModel);
@@ -97,9 +97,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<DataGridDataJson>> GeListData(QuerySearchModel querySearchModel)
+        public async Task<ResultObj<Dictionary<string, object>>> GeListData(QuerySearchDto querySearchModel)
         {
-            Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
+            ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
             try
             {
                 if (querySearchModel.whereList == null && !string.IsNullOrWhiteSpace(querySearchModel.whereListStr))
@@ -142,9 +142,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaQueryEntity>> GetSingleQuery(DtoKey inEnt)
+        public async Task<ResultObj<FaQueryEntity>> GetSingleQuery(DtoKey inEnt)
         {
-            Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
+            ResultObj<FaQueryEntity> reObj = new ResultObj<FaQueryEntity>();
             try
             {
                 reObj.data = await _query.Single(i => i.code == inEnt.Key);
@@ -165,9 +165,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public Result<string> GetDubug(string code)
+        public ResultObj<string> GetDubug(string code)
         {
-            Result<string> reObj = new Result<string>();
+            ResultObj<string> reObj = new ResultObj<string>();
             try
             {
                 var reStr = "";
@@ -195,7 +195,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> DownFile(QuerySearchModel querySearchModel)
+        public async Task<IActionResult> DownFile(QuerySearchDto querySearchModel)
         {
             querySearchModel.page = 1;
             querySearchModel.rows = 1000000000;
@@ -214,7 +214,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> DownFile(string code)
         {
-            var tmepObj = await _query.QueryExecuteCsv(new QuerySearchModel{
+            var tmepObj = await _query.QueryExecuteCsv(new QuerySearchDto{
                 code=code,
                 page=1,
                 rows=10000
@@ -228,9 +228,9 @@ namespace WebApi.Controllers
         /// <param name="code"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<QueryCfg>> MakeQueryCfg(string code)
+        public async Task<ResultObj<QueryCfg>> MakeQueryCfg(string code)
         {
-            Result<QueryCfg> reObj = new Result<QueryCfg>();
+            ResultObj<QueryCfg> reObj = new ResultObj<QueryCfg>();
             try
             {
                 reObj = await _query.MakeQueryCfg(code);
@@ -250,9 +250,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaQueryEntity>> List(DtoSearch inEnt)
+        public async Task<ResultObj<FaQueryEntity>> List(DtoSearch inEnt)
         {
-            Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
+            ResultObj<FaQueryEntity> reObj = new ResultObj<FaQueryEntity>();
             inEnt.OrderType = "id asc";
             inEnt.IgnoreFieldList=new List<string>{
                 "QUERY_CONF",
@@ -275,9 +275,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<int>> Save(DtoSave<FaQueryEntity> inEnt)
+        public async Task<ResultObj<int>> Save(DtoSave<FaQueryEntity> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             try
             {
                 if (inEnt.Data.id == 0)
@@ -305,9 +305,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaQueryEntity>> Single(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaQueryEntity>> Single(DtoDo<int> inEnt)
         {
-            Result<FaQueryEntity> reObj = new Result<FaQueryEntity>();
+            ResultObj<FaQueryEntity> reObj = new ResultObj<FaQueryEntity>();
             try
             {
                 reObj.data = await _query.Single(x=>x.id==inEnt.Key);
@@ -327,9 +327,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<int>> Delete(DtoDo<int> inEnt)
+        public async Task<ResultObj<int>> Delete(DtoDo<int> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             try
             {
                 reObj.data = await _query.Delete(x=>x.id==inEnt.Key);

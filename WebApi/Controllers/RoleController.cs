@@ -56,9 +56,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaRoleEntity>> Single(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaRoleEntity>> Single(DtoDo<int> inEnt)
         {
-            Result<FaRoleEntity> reObj = new Result<FaRoleEntity>();
+            ResultObj<FaRoleEntity> reObj = new ResultObj<FaRoleEntity>();
             try
             {
                 var ent = await _role.SingleByKey(inEnt.Key);
@@ -83,7 +83,7 @@ namespace WebApi.Controllers
         [HttpPost]
         async public Task<Result> Save(DtoSave<FaRoleEntity> inEnt)
         {
-            var reObj = new Result<int>();
+            var reObj = new ResultObj<int>();
             try
             {
                 reObj = await this._role.Save(inEnt);

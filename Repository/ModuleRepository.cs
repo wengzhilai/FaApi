@@ -32,9 +32,9 @@ namespace Repository
         /// </summary>
         /// <param name="inParm"></param>
         /// <returns></returns>
-        public async Task<Result<FaModuleEntity>> GetMenu(Expression<Func<FaModuleEntity, bool>> where)
+        public async Task<ResultObj<FaModuleEntity>> GetMenu(Expression<Func<FaModuleEntity, bool>> where)
         {
-            Result<FaModuleEntity> reObj = new Result<FaModuleEntity>();
+            ResultObj<FaModuleEntity> reObj = new ResultObj<FaModuleEntity>();
             var allModel = await dbHelper.FindAll(where);
             reObj.dataList = GetChildItems(allModel, 0);
             return reObj;
@@ -42,30 +42,30 @@ namespace Repository
 
         private List<FaModuleEntity> GetChildItems(IEnumerable<FaModuleEntity> inList, int parentId)
         {
-            var childList = inList.Where(i => i.PARENT_ID == parentId).ToList();
+            var childList = inList.Where(i => i.parentId == parentId).ToList();
             List<FaModuleEntity> reObj = new List<FaModuleEntity>();
             foreach (var item in childList)
             {
-                item.Children = GetChildItems(inList, item.ID);
+                item.children = GetChildItems(inList, item.id);
                 reObj.Add(item);
             }
             return reObj;
         }
 
-        public async Task<Result<int>> Delete(int key)
+        public async Task<ResultObj<int>> Delete(int key)
         {
-            Result<int> reObj = new Result<int>();
-            reObj.data = await dbHelper.Delete(i => i.ID == key);
+            ResultObj<int> reObj = new ResultObj<int>();
+            reObj.data = await dbHelper.Delete(i => i.id == key);
             reObj.success = reObj.data > 0;
             return reObj;
         }
 
-        public async Task<Result<int>> Save(DtoSave<FaModuleEntity> inEnt)
+        public async Task<ResultObj<int>> Save(DtoSave<FaModuleEntity> inEnt)
         {
-            Result<int> reObj = new Result<int>();
-            if (inEnt.Data.ID == 0)
+            ResultObj<int> reObj = new ResultObj<int>();
+            if (inEnt.Data.id == 0)
             {
-                inEnt.Data.ID = await new SequenceRepository().GetNextID<FaModuleEntity>();
+                inEnt.Data.id = await new SequenceRepository().GetNextID<FaModuleEntity>();
                 reObj.data = await dbHelper.Save(inEnt);
             }
             else
@@ -77,9 +77,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<FaModuleEntity>> GetMenuByRoleId(List<int> roleIdList)
+        public async Task<ResultObj<FaModuleEntity>> GetMenuByRoleId(List<int> roleIdList)
         {
-            Result<FaModuleEntity> reObj = new Result<FaModuleEntity>();
+            ResultObj<FaModuleEntity> reObj = new ResultObj<FaModuleEntity>();
             if (!roleIdList.Contains(1))
             {
                 DapperHelper<FaRoleModuleEntityView> roleModule = new DapperHelper<FaRoleModuleEntityView>();
@@ -88,12 +88,12 @@ namespace Repository
             }
             else
             {
-                reObj.dataList = GetChildItems(await new DapperHelper<FaModuleEntity>().FindAll(i=>i.IS_HIDE==0), 0);
+                reObj.dataList = GetChildItems(await new DapperHelper<FaModuleEntity>().FindAll(i=>i.isHide==0), 0);
             }
             return reObj;
         }
 
-        public async Task<Result<FaModuleEntity>> GetMGetMenuByUserId(int userId)
+        public async Task<ResultObj<FaModuleEntity>> GetMGetMenuByUserId(int userId)
         {
 
             DapperHelper<FaUserRoleEntityView> userRole = new DapperHelper<FaUserRoleEntityView>();

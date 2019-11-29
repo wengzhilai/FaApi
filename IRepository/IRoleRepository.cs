@@ -23,14 +23,14 @@ namespace IRepository
         /// </summary>
         /// <param name="scriptId">主键 ID</param>
         /// <returns></returns>
-        Task<Result<int>> Delete(int scriptId);
+        Task<ResultObj<int>> Delete(int scriptId);
 
         /// <summary>
         /// 保存基本信息
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<int>> Save(DtoSave<FaRoleEntity> inEnt);
+        Task<ResultObj<int>> Save(DtoSave<FaRoleEntity> inEnt);
 
 
         /// <summary>

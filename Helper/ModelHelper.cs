@@ -137,6 +137,12 @@ namespace Helper
                         {
                             throw new Exception("主键没设置值");
                         }
+
+                        if (objV == null)
+                        {
+                            objV = "";
+                        }
+
                         reField.Add(proInfo.Name, objV);
                         continue;
                     }
@@ -344,7 +350,8 @@ namespace Helper
                     ignoreFieldList.Add(GetKeyField().Key);
                 }
             }
-            sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x=>x.Value)) + ") VALUES(" + string.Join(",", GetTableFields(saveFieldList, ignoreFieldList).Select(x => "@" + x.Value)) + ")";
+            var saveDict = GetTableFields(saveFieldList, ignoreFieldList);
+            sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", saveDict.Select(x=>x.Value)) + ") VALUES(" + string.Join(",", saveDict.Select(x => "@" + x.Key)) + ")";
             if (GetKeyIsAuto())
             {
                 sql += "\r\n select @@IDENTITY ";

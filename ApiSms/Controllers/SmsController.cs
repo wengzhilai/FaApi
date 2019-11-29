@@ -23,9 +23,9 @@ namespace ApiSms.Controllers
         /// <param name="code"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<bool>> SendValidSms(SendValidSmsDto inObj)
+        public async Task<ResultObj<bool>> SendValidSms(SendValidSmsDto inObj)
         {
-            var reObj = new Result<bool>();
+            var reObj = new ResultObj<bool>();
 
             JSMSClient jp = new JSMSClient(AppSettingsManager.self.JpushCfg.AppKey, AppSettingsManager.self.JpushCfg.MasterSecret);
             var senEnt = new TemplateMessage();

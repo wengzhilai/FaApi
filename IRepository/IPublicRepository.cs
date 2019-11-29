@@ -27,7 +27,7 @@ namespace IRepository
         /// <param name="mobile">手机号码</param>
         /// <param name="code">验证码</param>
         /// <returns></returns>
-        Task<Result<bool>> SmsSendCode(string mobile, string code);
+        Task<ResultObj<bool>> SmsSendCode(string mobile, string code);
 
         /// <summary>
         /// 获取阴历 key为时间字符串

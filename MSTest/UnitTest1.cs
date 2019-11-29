@@ -2,6 +2,8 @@ using Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace MSTest
@@ -168,7 +170,8 @@ namespace MSTest
     }
 ]";
 
-            var obj = JsonDocument.Parse(str);
+            
+            var obj = TypeChange.JsonToObject<List<Dictionary<string,string>>>(str);
             str = TypeChange.ObjectToStr(obj);
             Console.WriteLine(str);
         }

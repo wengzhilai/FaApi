@@ -72,9 +72,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<Relative>> Relative(DtoDo<int> inObj)
+        public async Task<ResultObj<Relative>> Relative(DtoDo<int> inObj)
         {
-            Result<Relative> reObj = new Result<Relative>();
+            ResultObj<Relative> reObj = new ResultObj<Relative>();
             try
             {
                 reObj = await family.Relative(inObj);
@@ -94,9 +94,9 @@ namespace WebApi.Controllers
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaElderEntity>> GetUserBooks(DtoDo<int> inObj)
+        public async Task<ResultObj<FaElderEntity>> GetUserBooks(DtoDo<int> inObj)
         {
-            Result<FaElderEntity> reObj = new Result<FaElderEntity>();
+            ResultObj<FaElderEntity> reObj = new ResultObj<FaElderEntity>();
             try
             {
                 reObj = await family.GetUserBooksAsync(inObj.Key);

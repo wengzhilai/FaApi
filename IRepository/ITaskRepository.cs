@@ -17,7 +17,7 @@ namespace IRepository
         /// <param name="fromNodeId">开始节点1表示开始</param>
         /// <param name="toNodeId"></param>
         /// <returns></returns>
-        Task<Result<TaskNode>> GetNextNode(int flowId, int fromNodeId = 1, int? toNodeId = null);
+        Task<ResultObj<TaskNode>> GetNextNode(int flowId, int fromNodeId = 1, int? toNodeId = null);
 
         /// <summary>
         /// 检测是用户是否允许操作下一步

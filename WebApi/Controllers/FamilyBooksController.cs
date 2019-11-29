@@ -56,9 +56,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaFamilyBooksEntity>> Single(DtoDo<int> inEnt)
+        public async Task<ResultObj<FaFamilyBooksEntity>> Single(DtoDo<int> inEnt)
         {
-            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            ResultObj<FaFamilyBooksEntity> reObj = new ResultObj<FaFamilyBooksEntity>();
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
@@ -83,7 +83,7 @@ namespace WebApi.Controllers
         [HttpPost]
         async public Task<Result> Save(DtoSave<FaFamilyBooksEntity> inEnt)
         {
-            var reObj = new Result<int>();
+            var reObj = new ResultObj<int>();
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
@@ -132,9 +132,9 @@ namespace WebApi.Controllers
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaFamilyBooksEntity>> GetSingleNext(DtoDo<int> inObj)
+        public async Task<ResultObj<FaFamilyBooksEntity>> GetSingleNext(DtoDo<int> inObj)
         {
-            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            ResultObj<FaFamilyBooksEntity> reObj = new ResultObj<FaFamilyBooksEntity>();
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
@@ -156,9 +156,9 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<Result<FaFamilyBooksEntity>> GetAllBooks()
+        public async Task<ResultObj<FaFamilyBooksEntity>> GetAllBooks()
         {
-            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            ResultObj<FaFamilyBooksEntity> reObj = new ResultObj<FaFamilyBooksEntity>();
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
@@ -181,9 +181,9 @@ namespace WebApi.Controllers
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaFamilyBooksEntity>> GetSinglePrev(DtoDo<int> inObj)
+        public async Task<ResultObj<FaFamilyBooksEntity>> GetSinglePrev(DtoDo<int> inObj)
         {
-            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            ResultObj<FaFamilyBooksEntity> reObj = new ResultObj<FaFamilyBooksEntity>();
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
@@ -205,9 +205,9 @@ namespace WebApi.Controllers
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<Result<FaFamilyBooksEntity>> GetSingleBySort(DtoDo<int> inObj)
+        public async Task<ResultObj<FaFamilyBooksEntity>> GetSingleBySort(DtoDo<int> inObj)
         {
-            Result<FaFamilyBooksEntity> reObj = new Result<FaFamilyBooksEntity>();
+            ResultObj<FaFamilyBooksEntity> reObj = new ResultObj<FaFamilyBooksEntity>();
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();

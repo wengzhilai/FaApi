@@ -617,7 +617,7 @@ namespace Helper.generate
                 if (filed.isKey)
                 {
                     sb.Append("        [Key]\n");
-                    sb.Append("        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]\n");
+                    sb.Append("        [DatabaseGenerated(DatabaseGeneratedOption.None)]\n");
                     sb.Append("        [Required]\n");
                 }
                 else if (filed.required)

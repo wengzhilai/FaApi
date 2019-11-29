@@ -82,25 +82,25 @@ namespace Repository
             return true;
         }
 
-        public async Task<Result<int>> Delete(int key)
+        public async Task<ResultObj<int>> Delete(int key)
         {
-            Result<int> reObj = new Result<int>();
-            reObj.data = await dbHelper.Delete(i => i.ID == key);
+            ResultObj<int> reObj = new ResultObj<int>();
+            reObj.data = await dbHelper.Delete(i => i.id == key);
             reObj.success = reObj.data > 0;
             return reObj;
         }
 
-        public async Task<Result<int>> Save(DtoSave<FaRoleEntity> inEnt)
+        public async Task<ResultObj<int>> Save(DtoSave<FaRoleEntity> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             try
             {
                 dbHelper.TranscationBegin();
                 DapperHelper<FaModuleEntity> moduleDapper = new DapperHelper<FaModuleEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
 
-                if (inEnt.Data.ID == 0)
+                if (inEnt.Data.id == 0)
                 {
-                    inEnt.Data.ID = await new SequenceRepository().GetNextID<FaRoleEntity>();
+                    inEnt.Data.id = await new SequenceRepository().GetNextID<FaRoleEntity>();
                     reObj.data = await dbHelper.Save(inEnt);
                 }
                 else
@@ -116,13 +116,13 @@ namespace Repository
                 else
                 {
                     var allModule = await moduleDapper.FindAll(string.Format("ID in ({0})", string.Join(",", inEnt.Data.moduleIdStr)));
-                    var moduleIdList = allModule.Select(i => i.ID).ToList();
-                    var parent = allModule.GroupBy(i => i.PARENT_ID).Select(x => x.Key).Where(x => x != null).Select(x => x.Value).ToList();
+                    var moduleIdList = allModule.Select(i => i.id).ToList();
+                    var parent = allModule.GroupBy(i => i.parentId).Select(x => x.Key).Where(x => x != 0).Select(x => x).ToList();
                     moduleIdList = moduleIdList.Concat(parent).ToList();
                     moduleIdList=moduleIdList.GroupBy(i=>i).Select(i=>i.Key).ToList();
                     DapperHelper.Init(dbHelper.GetConnection(), dbHelper.GetTransaction());
-                    await DapperHelper.Exec("delete from fa_role_module where ROLE_ID = " + inEnt.Data.ID);
-                    var opNum = await DapperHelper.Exec(string.Format("insert into fa_role_module(ROLE_ID,MODULE_ID) select {0} ROLE_ID,ID MODULE_ID from fa_module where ID IN ({1}) ", inEnt.Data.ID, string.Join(",", moduleIdList)));
+                    await DapperHelper.Exec("delete from fa_role_module where ROLE_ID = " + inEnt.Data.id);
+                    var opNum = await DapperHelper.Exec(string.Format("insert into fa_role_module(ROLE_ID,MODULE_ID) select {0} ROLE_ID,ID MODULE_ID from fa_module where ID IN ({1}) ", inEnt.Data.id, string.Join(",", moduleIdList)));
                     if (opNum != moduleIdList.Count())
                     {
                         reObj.success = false;

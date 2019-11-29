@@ -21,17 +21,17 @@ namespace Repository
         {
             return dbHelper.SingleByKey(key);
         }
-        public async Task<Result<int>> Delete(int key)
+        public async Task<ResultObj<int>> Delete(int key)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             reObj.data = await dbHelper.Delete(i => i.ID == key);
             reObj.success = reObj.data > 0;
             return reObj;
         }
 
-        public async Task<Result<KTV>> GetTree(int? parentId)
+        public async Task<ResultObj<KTV>> GetTree(int? parentId)
         {
-            var reObj = new Result<KTV>();
+            var reObj = new ResultObj<KTV>();
             var entList = await dbHelper.FindAll(i => i.PARENT_ID == parentId);
             reObj.dataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
             foreach (var item in reObj.dataList)
@@ -41,9 +41,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<int>> Save(DtoSave<FaEquipmentEntity> inEnt)
+        public async Task<ResultObj<int>> Save(DtoSave<FaEquipmentEntity> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             if (inEnt.Data.ID == 0)
             {
                 inEnt.Data.ID = await new SequenceRepository().GetNextID<FaEquipmentEntity>();
@@ -60,9 +60,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<DataTable>> SingleEquiment(DtoEquipment inEnt)
+        public async Task<ResultObj<DataTable>> SingleEquiment(DtoEquipment inEnt)
         {
-            var reObj = new Result<DataTable>();
+            var reObj = new ResultObj<DataTable>();
 
 
             var tableType = await new TableRepository().SingleByKey(inEnt.TypeId);
@@ -205,9 +205,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<DataGridDataJson>> GetData(QuerySearchModel inEnt)
+        public async Task<ResultObj<Dictionary<string, object>>> GetData(QuerySearchDto inEnt)
         {
-            var reObj = new Result<DataGridDataJson>();
+            var reObj = new ResultObj<Dictionary<string, object>>();
             if (!inEnt.code.IsInt32())
             {
                 reObj.success = false;
@@ -228,8 +228,6 @@ namespace Repository
                 reObj.msg = "表不存在";
                 return reObj;
             }
-            var bindEnt = new DataGridDataJson();
-
 
             string sql = string.Format("select * from {0}", tableType.TABLE_NAME);
 
@@ -242,16 +240,15 @@ namespace Repository
                 var sqlList = sql.Split(';');
                 if (sqlList.Count() > 0)
                 {
-                    bindEnt.rows = DapperHelper.GetDataTable(sqlList[0]);
+                    reObj.dataList = DapperHelper.Query(sqlList[0]);
                 }
 
                 if (sqlList.Count() > 1)
                 {
                     int allNum = 0;
                     int.TryParse(await DapperHelper.ExecuteScalarAsync(sqlList[1]), out allNum);
-                    bindEnt.total = allNum;
+                    reObj.total = allNum;
                 }
-                reObj.data = bindEnt;
             }
             catch (Exception e)
             {
@@ -261,9 +258,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<SmartTableSetting>> GetConfig(DtoDo<int> inEnt)
+        public async Task<ResultObj<SmartTableSetting>> GetConfig(DtoDo<int> inEnt)
         {
-            var reObj = new Result<SmartTableSetting>();
+            var reObj = new ResultObj<SmartTableSetting>();
 
             var equType = await new EquipmentRepository().SingleByKey(inEnt.Key);
             if (equType == null)

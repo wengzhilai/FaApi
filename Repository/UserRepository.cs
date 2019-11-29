@@ -45,9 +45,9 @@ namespace Repository
             return dbHelper.Update(inObj);
         }
 
-        public async Task<Result<FaUserEntity>> UserLogin(string username, string password)
+        public async Task<ResultObj<FaUserEntity>> UserLogin(string username, string password)
         {
-            Result<FaUserEntity> reObj = new Result<FaUserEntity>();
+            ResultObj<FaUserEntity> reObj = new ResultObj<FaUserEntity>();
             DapperHelper<FaLoginEntity> dapper=new DapperHelper<FaLoginEntity>();
             var login=await dapper.Single(x=>x.loginName==username);
             if (login != null)
@@ -68,9 +68,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<int>> Save(DtoSave<FaUserEntity> inEnt)
+        public async Task<ResultObj<int>> Save(DtoSave<FaUserEntity> inEnt)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             try
             {
                 dbHelper.TranscationBegin();
@@ -120,9 +120,9 @@ namespace Repository
             return reObj;
         }
 
-        public async Task<Result<int>> Delete(int keyId)
+        public async Task<ResultObj<int>> Delete(int keyId)
         {
-            Result<int> reObj = new Result<int>();
+            ResultObj<int> reObj = new ResultObj<int>();
             reObj.data = await dbHelper.Delete(i => i.id == keyId);
             reObj.success = reObj.data > 0;
             return reObj;

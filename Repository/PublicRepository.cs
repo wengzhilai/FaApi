@@ -114,9 +114,9 @@ namespace Repository
             return reEnt;
         }
 
-        public async Task<Result<bool>> SmsSendCode(string mobile, string code)
+        public async Task<ResultObj<bool>> SmsSendCode(string mobile, string code)
         {
-            Result<bool> reObj = new Result<bool>();
+            ResultObj<bool> reObj = new ResultObj<bool>();
 
             var t = await JiguangHelper.SendValidSms(mobile, code);
             // {\"error\":{\"code\":50051,\"message\":\"signatures not exist\"}}

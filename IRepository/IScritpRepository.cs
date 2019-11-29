@@ -30,7 +30,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt);
+        Task<ResultObj<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt);
 
         /// <summary>
         /// 删除脚本
@@ -58,7 +58,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<int>> ScriptTaskSave(DtoSave<FaScriptTaskEntity> inEnt);
+        Task<ResultObj<int>> ScriptTaskSave(DtoSave<FaScriptTaskEntity> inEnt);
 
         /// <summary>
         /// 取消任务
@@ -87,7 +87,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<bool>> ScriptTaskLogSave(DtoSave<FaScriptTaskLogEntity> inEnt);
+        Task<ResultObj<bool>> ScriptTaskLogSave(DtoSave<FaScriptTaskLogEntity> inEnt);
 
     }
 }

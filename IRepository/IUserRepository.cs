@@ -30,21 +30,21 @@ namespace IRepository
         /// <param name="username">用户名</param>
         /// <param name="password">密码</param>
         /// <returns></returns>
-        Task<Result<FaUserEntity>> UserLogin(string username,string password);
+        Task<ResultObj<FaUserEntity>> UserLogin(string username,string password);
 
         /// <summary>
         /// 保存基本信息
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<int>> Save(DtoSave<FaUserEntity> inEnt);
+        Task<ResultObj<int>> Save(DtoSave<FaUserEntity> inEnt);
 
         /// <summary>
         /// 删除
         /// </summary>
         /// <param name="scriptId">主键 ID</param>
         /// <returns></returns>
-        Task<Result<int>> Delete(int keyId);
+        Task<ResultObj<int>> Delete(int keyId);
 
     }
 }

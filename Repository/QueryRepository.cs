@@ -30,10 +30,10 @@ namespace Repository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        public async Task<Result<DataGridDataJson>> QueryExecute(QuerySearchModel inEnt)
+        public async Task<ResultObj<Dictionary<string, object>>> QueryExecute(QuerySearchDto inEnt)
         {
-            Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
-            DataGridDataJson reEnt = new DataGridDataJson();
+            ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
+            Dictionary<string, object> reEnt = new Dictionary<string, object>();
 
             FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
             if (query == null)
@@ -48,11 +48,8 @@ namespace Repository
             if (string.IsNullOrEmpty(inEnt.orderStr)) inEnt.orderStr = "(SELECT 0)";
             try
             {
-                DataTable dt = DapperHelper.GetDataTable(AllSql);
-                reEnt.rows = dt;
-                reEnt.rows.TableName = "tables1";
-                reEnt.total = reEnt.rows.Rows.Count;
-                reObj.data = reEnt;
+                reObj.dataList = DapperHelper.Query(AllSql);
+                reObj.total = reObj.dataList.Count();
 
             }
             catch
@@ -67,9 +64,9 @@ namespace Repository
         /// <param name="inEnt"></param>
         /// <param name="sqlStr"></param>
         /// <returns></returns>
-        public async Task<Result<List<byte>>> QueryExecuteCsv(QuerySearchModel inEnt)
+        public async Task<ResultObj<List<byte>>> QueryExecuteCsv(QuerySearchDto inEnt)
         {
-            Result<List<byte>> reObj = new Result<List<byte>>();
+            ResultObj<List<byte>> reObj = new ResultObj<List<byte>>();
             List<byte> reEnt = new List<byte>();
 
             FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
@@ -114,10 +111,10 @@ namespace Repository
         /// <param name="inEnt"></param>
         /// <param name="sqlStr"></param>
         /// <returns></returns>
-        public async Task<Result<DataGridDataJson>> QueryPageExecute(QuerySearchModel inEnt)
+        public async Task<ResultObj<Dictionary<string, object>>> QueryPageExecute(QuerySearchDto inEnt)
         {
-            Result<DataGridDataJson> reObj = new Result<DataGridDataJson>();
-            DataGridDataJson reEnt = new DataGridDataJson();
+            ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
+            Dictionary<string, object> reEnt = new Dictionary<string, object>();
             FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
             if (query == null)
             {
@@ -133,16 +130,15 @@ namespace Repository
                 var sqlList = reObj.msg.Split(';');
                 if (sqlList.Count() > 0)
                 {
-                    reEnt.rows = DapperHelper.GetDataTable(sqlList[0]);
+                    reObj.dataList = DapperHelper.Query(sqlList[0]);
                 }
 
                 if (sqlList.Count() > 1)
                 {
                     int allNum = 0;
                     int.TryParse(await DapperHelper.ExecuteScalarAsync(sqlList[1]), out allNum);
-                    reEnt.total = allNum;
+                    reObj.total = allNum;
                 }
-                reObj.data = reEnt;
             }
             catch(Exception e)
             {
@@ -158,10 +154,10 @@ namespace Repository
         /// <param name="code"></param>
         /// <param name="sqlStr"></param>
         /// <returns></returns>
-        public async Task<Result<QueryCfg>> MakeQueryCfg(string code)
+        public async Task<ResultObj<QueryCfg>> MakeQueryCfg(string code)
         {
-            Result<QueryCfg> reObj = new Result<QueryCfg>();
-            QuerySearchModel inEnt = new QuerySearchModel() { code = code };
+            ResultObj<QueryCfg> reObj = new ResultObj<QueryCfg>();
+            QuerySearchDto inEnt = new QuerySearchDto() { code = code };
             List<QueryCfg> reEnt = new List<QueryCfg>();
             FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
 
@@ -307,7 +303,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
         /// <param name="querySql"></param>
         /// <param name="whereStr"></param>
         /// <returns></returns>
-        public string MakeSql(QuerySearchModel inEnt, string querySql, ref string whereStr)
+        public string MakeSql(QuerySearchDto inEnt, string querySql, ref string whereStr)
         {
 
             if (inEnt.paraList == null) inEnt.paraList = new List<QueryPara>();
@@ -426,9 +422,9 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
             return reList.ToList();
         }
 
-        public async Task<Result<FaQueryEntity>> FindAllPage(DtoSearch inSearch)
+        public async Task<ResultObj<FaQueryEntity>> FindAllPage(DtoSearch inSearch)
         {
-            var reObj=new Result<FaQueryEntity>();
+            var reObj=new ResultObj<FaQueryEntity>();
             var reList = await dal.FindAllS<FaQueryEntity,KV>(inSearch);
             reObj.dataList=reList.Item1.ToList();
             if(reList.Item2!=null && reList.Item2.Count()>0){

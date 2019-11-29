@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Helper;
 using IdentityModel.Client;
+using IRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -16,13 +18,16 @@ namespace ApiUser.Controllers
     [Route("[controller]/[action]")]
     [EnableCors]
     [ApiController]
-    public class LoginController : ControllerBase
+    [Authorize]
+    public class LoginController : ControllerBase, ILoginController
     {
         private readonly IHttpClientFactory clientFactory;
+        ILoginRepository _login;
 
-        public LoginController(IHttpClientFactory clientFactory)
+        public LoginController(IHttpClientFactory clientFactory, ILoginRepository login)
         {
             this.clientFactory = clientFactory;
+            _login = login;
         }
 
         /// <summary>
@@ -31,16 +36,16 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [HttpOptions]
-        public async Task<Result<String>> userLogin(UserLoginDto inEnt)
+        [AllowAnonymous]
+        public async Task<ResultObj<String>> userLogin(UserLoginDto inEnt)
         {
-            Result<String> reobj = new Result<String>();
+            ResultObj<String> reobj = new ResultObj<String>();
 
             var client = new HttpClient();
 
             var disco = await client.GetDiscoveryDocumentAsync(AppSettingsManager.self.Idsvr4Url);
             if (disco.IsError)
-                return new Result<String>(false, disco.Error);
+                return new ResultObj<String>(false, disco.Error);
             var token = await client.RequestPasswordTokenAsync(new PasswordTokenRequest()
             {
                 //获取Token的地址
@@ -73,15 +78,16 @@ namespace ApiUser.Controllers
         }
 
         [HttpPost]
-        public async Task<Result<String>> UserCodeLogin(UserCodeLoginDto inEnt)
+        [AllowAnonymous]
+        public async Task<ResultObj<String>> UserCodeLogin(UserCodeLoginDto inEnt)
         {
-            Result<String> reobj = new Result<String>();
+            ResultObj<String> reobj = new ResultObj<String>();
 
             var client = new HttpClient();
 
             var disco = await client.GetDiscoveryDocumentAsync("http://localhost:9001/");
             if (disco.IsError)
-                return new Result<String>(false, disco.Error);
+                return new ResultObj<String>(false, disco.Error);
             Dictionary<string, string> par=new Dictionary<string, string>();
             par.Add("phoneNumber",inEnt.LoginName);
             par.Add("smsCode",inEnt.Code);
@@ -111,30 +117,75 @@ namespace ApiUser.Controllers
             return reobj;
         }
 
+        public async Task<ResultObj<int>> loginReg(LogingDto inEnt)
+        {
+            var reObj = new ResultObj<int>();
+            try
+            {
+                return await _login.LoginReg(inEnt);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
 
+        public async Task<Result> resetPassword(ResetPasswordDto inEnt)
+        {
+            var reObj = new Result();
+            try
+            {
+                reObj = await this._login.ResetPassword(inEnt);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
+
+        public Task<Result> deleteUser(DtoKey userName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ResultObj<bool>> userEditPwd(EditPwdDto inEnt)
+        {
+            var reObj = new ResultObj<bool>();
+            try
+            {
+                inEnt.LoginName = User.Identity.Name;
+                reObj = await this._login.UserEditPwd(inEnt);
+            }
+            catch (ExceptionExtend e)
+            {
+                reObj.success = false;
+                reObj.code = e.RealCode;
+                reObj.msg = e.RealMsg;
+            }
+            catch (Exception e)
+            {
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
     }
 
-    public class UserLoginDto
-    {
-        /// <summary>
-        /// 登录名
-        /// </summary>
-        public string LoginName { get; set; }
-        /// <summary>
-        /// 密码
-        /// </summary>
-        public string Password { get; set; }
-    }
-
-    public class UserCodeLoginDto
-    {
-        /// <summary>
-        /// 登录名
-        /// </summary>
-        public string LoginName { get; set; }
-        /// <summary>
-        /// 验证码
-        /// </summary>
-        public string Code { get; set; }
-    }
+    
 }

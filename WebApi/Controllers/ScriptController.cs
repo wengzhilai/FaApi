@@ -54,9 +54,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         [HttpPost]
         [Authorize]
-        public async Task<Result<FaScriptEntity>> ScriptList(DtoSearch inEnt)
+        public async Task<ResultObj<FaScriptEntity>> ScriptList(DtoSearch inEnt)
         {
-            var reObj = new Result<FaScriptEntity>();
+            var reObj = new ResultObj<FaScriptEntity>();
             try
             {
                 DtoSearch<FaScriptEntity> postEnt=new DtoSearch<FaScriptEntity>();
@@ -84,9 +84,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         [HttpPost]
         [Authorize]
-        public async Task<Result<FaScriptTaskEntity>> ScriptTaskList(DtoSearch inEnt)
+        public async Task<ResultObj<FaScriptTaskEntity>> ScriptTaskList(DtoSearch inEnt)
         {
-            var reObj = new Result<FaScriptTaskEntity>();
+            var reObj = new ResultObj<FaScriptTaskEntity>();
             try
             {
                 var SCRIPT_ID=Convert.ToInt32( inEnt.FilterList.SingleOrDefault(x=>x.Key=="SCRIPT_ID"));
@@ -116,9 +116,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         [HttpPost]
         [Authorize]
-        public async Task<Result<FaScriptTaskLogEntity>> ScriptTaskLogList(DtoSearch inEnt)
+        public async Task<ResultObj<FaScriptTaskLogEntity>> ScriptTaskLogList(DtoSearch inEnt)
         {
-            var reObj = new Result<FaScriptTaskLogEntity>();
+            var reObj = new ResultObj<FaScriptTaskLogEntity>();
             try
             {
                 var SCRIPT_TASK_ID=Convert.ToInt32(inEnt.FilterList.SingleOrDefault(x=>x.Key=="SCRIPT_TASK_ID"));
@@ -148,9 +148,9 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         [HttpPost]
         [Authorize]
-        public async Task<Result<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt)
+        public async Task<ResultObj<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt)
         {
-            var reObj = new Result<bool>();
+            var reObj = new ResultObj<bool>();
             try
             {
                 reObj = await _script.ScriptSave(inEnt);

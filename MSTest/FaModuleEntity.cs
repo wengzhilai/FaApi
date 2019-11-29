@@ -6,17 +6,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Entity
 {
+
     /// <summary>
-    /// 登录历史
+    /// 账号
     /// </summary>
     [Table("fa_module")]
-    public class FaModuleEntity : BaseModel
-    {
+    public class FaModuleEntity {
+
+    
         /// <summary>
         /// id
         /// </summary>
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [Required]
         [Display(Name = "id")]
         [Column("ID")]
@@ -107,10 +109,93 @@ namespace Models.Entity
         public int h { get; set; }
 
 
-        /// <summary>
-        /// 所有子项
-        /// </summary>
-        /// <value></value>
-        public List<FaModuleEntity> children { get; set; }
     }
+
 }
+/*
+select 
+  ID id,
+  PARENT_ID parentId,
+  NAME name,
+  LOCATION location,
+  CODE code,
+  IS_DEBUG isDebug,
+  IS_HIDE isHide,
+  SHOW_ORDER showOrder,
+  DESCRIPTION description,
+  IMAGE_URL imageUrl,
+  DESKTOP_ROLE desktopRole,
+  W w,
+  H h 
+from fa_module
+
+
+{
+  "id": {
+    "title": "id",
+    "type": "int(11)",
+    "editable": true
+  },
+  "parentId": {
+    "title": "父ID",
+    "type": "int(11)",
+    "editable": true
+  },
+  "name": {
+    "title": "模块名称",
+    "type": "varchar(60)",
+    "editable": true
+  },
+  "location": {
+    "title": "连接地址",
+    "type": "varchar(2000)",
+    "editable": true
+  },
+  "code": {
+    "title": "代码",
+    "type": "varchar(20)",
+    "editable": true
+  },
+  "isDebug": {
+    "title": "调试",
+    "type": "decimal(1,0)",
+    "editable": true
+  },
+  "isHide": {
+    "title": "隐藏",
+    "type": "decimal(1,0)",
+    "editable": true
+  },
+  "showOrder": {
+    "title": "排序",
+    "type": "decimal(2,0)",
+    "editable": true
+  },
+  "description": {
+    "title": "描述",
+    "type": "varchar(2000)",
+    "editable": true
+  },
+  "imageUrl": {
+    "title": "图片地址",
+    "type": "varchar(2000)",
+    "editable": true
+  },
+  "desktopRole": {
+    "title": "桌面",
+    "type": "varchar(200)",
+    "editable": true
+  },
+  "w": {
+    "title": "宽",
+    "type": "int(11)",
+    "editable": true
+  },
+  "h": {
+    "title": "高",
+    "type": "int(11)",
+    "editable": true
+  }
+}
+*/
+

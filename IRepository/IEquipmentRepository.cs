@@ -24,7 +24,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<int>> Save(DtoSave<FaEquipmentEntity> inEnt);
+        Task<ResultObj<int>> Save(DtoSave<FaEquipmentEntity> inEnt);
 
 
 
@@ -33,19 +33,19 @@ namespace IRepository
         /// </summary>
         /// <param name="Id">主键 ID</param>
         /// <returns></returns>
-        Task<Result<int>> Delete(int Id);
+        Task<ResultObj<int>> Delete(int Id);
 
         /// <summary>
         ///  获取所有自定义表的列表
         /// </summary>
         /// <returns></returns>
-        Task<Result<KTV>> GetTree(int? parentId);
+        Task<ResultObj<KTV>> GetTree(int? parentId);
         /// <summary>
         /// 获取单条记录
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<DataTable>> SingleEquiment(DtoEquipment inEnt);
+        Task<ResultObj<DataTable>> SingleEquiment(DtoEquipment inEnt);
         /// <summary>
         /// 保存设备
         /// </summary>
@@ -73,13 +73,13 @@ namespace IRepository
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<DataGridDataJson>> GetData(QuerySearchModel inEnt);
+        Task<ResultObj<Dictionary<string, object>>> GetData(QuerySearchDto inEnt);
 
         /// <summary>
         /// 获取配置文件
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<Result<SmartTableSetting>> GetConfig(DtoDo<int> inEnt);
+        Task<ResultObj<SmartTableSetting>> GetConfig(DtoDo<int> inEnt);
     }
 }

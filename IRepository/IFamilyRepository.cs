@@ -26,7 +26,7 @@ namespace IRepository
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
-        Task<Result<Relative>> Relative(DtoDo<int> inObj);
+        Task<ResultObj<Relative>> Relative(DtoDo<int> inObj);
 
         /// <summary>
         /// 获取用户的家谱成员
@@ -34,7 +34,7 @@ namespace IRepository
         /// <param name="userId"></param>
         /// <param name="targerElderId">查找辈字用户，如果为0表示取当前用户</param>
         /// <returns></returns>
-        Task<Result<FaElderEntity>> GetUserBooksAsync(int userId,int targerId=24);
+        Task<ResultObj<FaElderEntity>> GetUserBooksAsync(int userId,int targerId=24);
 
         /// <summary>
         /// 获取用户的父节点
