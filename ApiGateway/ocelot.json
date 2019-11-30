@@ -2,6 +2,7 @@
 {
   "ReRoutes": [
     {
+      "UpstreamPathTemplate": "/user/{url}",
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -9,21 +10,21 @@
           "Host": "127.0.0.1",
           "Port": 9100
         }
-      ],
-      "UpstreamPathTemplate": "/user/{url}"
+      ]
     },
     {
+      "UpstreamPathTemplate": "/quartz/{url}",
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "127.0.0.1",
-          "Port": 9001
+          "Port": 9101
         }
-      ],
-      "UpstreamPathTemplate": "/token/{url}"
+      ]
     },
     {
+      "UpstreamPathTemplate": "/sms/{url}",
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -31,10 +32,10 @@
           "Host": "127.0.0.1",
           "Port": 9002
         }
-      ],
-      "UpstreamPathTemplate": "/sms/{url}"
+      ]
     },
     {
+      "UpstreamPathTemplate": "/file/{url}",
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -42,8 +43,7 @@
           "Host": "127.0.0.1",
           "Port": 9003
         }
-      ],
-      "UpstreamPathTemplate": "/file/{url}"
+      ]
     }
   ],
   "GlobalConfiguration": {

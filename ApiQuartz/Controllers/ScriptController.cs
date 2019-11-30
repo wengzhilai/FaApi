@@ -1,31 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApi.Comon;
 
 using IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Models.Entity;
-
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using Helper;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using AutoMapper;
 using Microsoft.AspNetCore.Cors;
-using Models.EntityView;
 
-namespace WebApi.Controllers
+namespace ApiQuartz.Controllers
 {
     /// <summary>
     /// 授权管理

@@ -11,9 +11,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Helper\Helper.csproj" />
-    <ProjectReference Include="..\IRepository\IRepository.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
-    <ProjectReference Include="..\Repository\Repository.csproj" />
   </ItemGroup>
   
   <ItemGroup>

@@ -176,14 +176,32 @@ namespace Helper
             return md;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        public static Dictionary<string, string> ObjectToDic<T>(T inEnt)
+        {
+            var reObj = new Dictionary<string, string>();
+
+            Type type = typeof(T);
+            PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
+            foreach (PropertyInfo proInfo in PropertyList)
+            {
+                var v = proInfo.GetValue(inEnt, null);
+                reObj.Add(proInfo.Name, v == null ? "" : v.ToString());
+            }
+            return reObj;
+        }
+
 
         public static string ObjectToStr<T>(T entity)
         {
-            if (entity == null) return null;
             try
             {
-                if (entity == null) return null;
-                if ((entity.GetType() == typeof(String) || entity.GetType() == typeof(string)))
+                if (entity is String )
                 {
                     return entity.ToString();
                 }

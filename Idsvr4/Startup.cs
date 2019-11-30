@@ -24,17 +24,6 @@ namespace Idsvr4
             WebHostEnvironment = webHostEnvironment;
         }
 
-
-        /// <summary>
-        /// ≈‰÷√autofac
-        /// </summary>
-        /// <param name="builder"></param>
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
-            Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
-            builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
-        }
         public void ConfigureServices(IServiceCollection services)
         {
 

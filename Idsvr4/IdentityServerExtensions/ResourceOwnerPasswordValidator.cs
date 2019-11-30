@@ -1,8 +1,9 @@
-﻿using IdentityModel;
+﻿using Helper;
+using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
-using IRepository;
 using Microsoft.Extensions.Configuration;
+using Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,36 +18,32 @@ namespace Idsvr4.IdentityServerExtensions
     public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {
         private readonly IConfiguration config;
-        private readonly ILoginRepository login;
 
         public ResourceOwnerPasswordValidator(IConfiguration config
-            , ILoginRepository login
             )
         {
             this.config = config;
-            this.login = login;
         }
 
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            string verificationCode = context.Request.Raw.Get("VerificationCode");
+            string userObjJson = context.Request.Raw.Get("userObjJson");
 
             //根据context.UserName和context.Password与数据库的数据做校验，判断是否合法
             try
             {
 
+                FaUserEntity userObj = TypeChange.JsonToObject<FaUserEntity>(userObjJson);
 
-                var opObj = await login.UserLogin(new Models.LogingDto { loginName = context.UserName, password = context.Password });
-
-                if (opObj.success && opObj.data != null)
+                if (userObj != null)
                 {
 
                     List<Claim> claimList = new List<Claim>();
 
-                    claimList.Add(new Claim(JwtClaimTypes.Id, opObj.data.id.ToString()));
-                    if (opObj.data.roleIdList != null) claimList.Add(new Claim(JwtClaimTypes.Role, string.Join(",", opObj.data.roleIdList)));
-                    claimList.Add(new Claim(JwtClaimTypes.Name, opObj.data.name));
-                    claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, opObj.data.loginName));
+                    claimList.Add(new Claim(JwtClaimTypes.Id, userObj.id.ToString()));
+                    if (userObj.roleIdList != null) claimList.Add(new Claim(JwtClaimTypes.Role, string.Join(",", userObj.roleIdList)));
+                    claimList.Add(new Claim(JwtClaimTypes.Name, userObj.name));
+                    claimList.Add(new Claim(JwtClaimTypes.PhoneNumber, userObj.loginName));
                     claimList.Add(new Claim(JwtClaimTypes.Role, "superadmin"));
 
                     context.Result = new GrantValidationResult(
@@ -60,7 +57,7 @@ namespace Idsvr4.IdentityServerExtensions
                     //验证失败
                     context.Result = new GrantValidationResult(
                         TokenRequestErrors.InvalidGrant,
-                        opObj.msg
+                        "loginError"
                         );
                 }
             }

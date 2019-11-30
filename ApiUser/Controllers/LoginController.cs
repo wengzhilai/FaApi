@@ -37,42 +37,54 @@ namespace ApiUser.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<ResultObj<String>> userLogin(UserLoginDto inEnt)
+        public async Task<ResultObj<String>> userLogin(LogingDto inEnt)
         {
             ResultObj<String> reobj = new ResultObj<String>();
 
-            var client = new HttpClient();
-
-            var disco = await client.GetDiscoveryDocumentAsync(AppSettingsManager.self.Idsvr4Url);
-            if (disco.IsError)
-                return new ResultObj<String>(false, disco.Error);
-            var token = await client.RequestPasswordTokenAsync(new PasswordTokenRequest()
+            var loginResult = await _login.UserLogin(inEnt);
+            if (loginResult.success)
             {
-                //获取Token的地址
-                Address = disco.TokenEndpoint,
-                //客户端Id
-                ClientId = "pwd",
-                //客户端密码
-                ClientSecret = "clientsecret",
-                GrantType= "password",
-                UserName= inEnt.LoginName,
-                Password= inEnt.Password,
-            });
+                var client = new HttpClient();
 
-            if (token.IsError)
-            {
-                reobj.success = false;
-                reobj.msg = token.ErrorDescription;
+                var disco = await client.GetDiscoveryDocumentAsync(AppSettingsManager.self.Idsvr4Url);
+                if (disco.IsError)
+                    return new ResultObj<String>(false, disco.Error);
+                var paras = new Dictionary<string, string>();
+                paras.Add("userObjJson", TypeChange.ObjectToStr(loginResult.data));
+                var token = await client.RequestPasswordTokenAsync(new PasswordTokenRequest()
+                {
+                    //获取Token的地址
+                    Address = disco.TokenEndpoint,
+                    //客户端Id
+                    ClientId = "pwd",
+                    //客户端密码
+                    ClientSecret = "clientsecret",
+                    GrantType = "password",
+                    UserName = inEnt.loginName,
+                    Password = inEnt.password,
+                    Parameters= paras
+                });
+
+                if (token.IsError)
+                {
+                    reobj.success = false;
+                    reobj.msg = token.ErrorDescription;
+                }
+                else
+                {
+                    reobj.success = true;
+
+                    reobj.code = token.AccessToken;
+
+                    var t = new JwtSecurityTokenHandler().ReadJwtToken(token.AccessToken);
+
+                    reobj.data = TypeChange.ObjectToStr(t.Payload);
+                }
             }
             else
             {
-                reobj.success = true;
-                
-                reobj.code = token.AccessToken;
-
-                var t = new JwtSecurityTokenHandler().ReadJwtToken(token.AccessToken);
-                
-                reobj.data = TypeChange.ObjectToStr(t.Payload);
+                reobj.success=false;
+                reobj.msg=loginResult.msg;
             }
             return reobj;
         }
@@ -88,9 +100,9 @@ namespace ApiUser.Controllers
             var disco = await client.GetDiscoveryDocumentAsync("http://localhost:9001/");
             if (disco.IsError)
                 return new ResultObj<String>(false, disco.Error);
-            Dictionary<string, string> par=new Dictionary<string, string>();
-            par.Add("phoneNumber",inEnt.LoginName);
-            par.Add("smsCode",inEnt.Code);
+            Dictionary<string, string> par = new Dictionary<string, string>();
+            par.Add("phoneNumber", inEnt.LoginName);
+            par.Add("smsCode", inEnt.Code);
             var token = await client.RequestTokenAsync(new TokenRequest()
             {
                 //获取Token的地址
@@ -100,7 +112,7 @@ namespace ApiUser.Controllers
                 //客户端密码
                 ClientSecret = "123456",
                 GrantType = "SMSGrantType",
-                Parameters=par
+                Parameters = par
             });
 
             if (token.IsError)
@@ -187,5 +199,5 @@ namespace ApiUser.Controllers
         }
     }
 
-    
+
 }

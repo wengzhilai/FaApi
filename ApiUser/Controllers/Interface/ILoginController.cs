@@ -12,7 +12,7 @@ namespace ApiUser.Controllers
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<ResultObj<string>> userLogin(UserLoginDto inEnt);
+        Task<ResultObj<string>> userLogin(LogingDto inEnt);
 
         /// <summary>
         /// 验证码登录
@@ -31,17 +31,6 @@ namespace ApiUser.Controllers
 
     }
 
-    public class UserLoginDto
-    {
-        /// <summary>
-        /// 登录名
-        /// </summary>
-        public string LoginName { get; set; }
-        /// <summary>
-        /// 密码
-        /// </summary>
-        public string Password { get; set; }
-    }
 
     public class UserCodeLoginDto
     {
