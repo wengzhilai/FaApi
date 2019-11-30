@@ -20,7 +20,19 @@ namespace ApiQuartz
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                    {
+                        config
+                            .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+                            .AddJsonFile("appsettings.json", true, true)
+                            .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
+                            .AddJsonFile("hosts.json", false, false)
+                            .AddEnvironmentVariables();
+                    });
+
                     webBuilder.UseStartup<Startup>();
-                });
+                })
+                //添加Autofac
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory());
     }
 }
