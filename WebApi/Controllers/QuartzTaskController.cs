@@ -85,7 +85,7 @@ namespace WebApi.Controllers
 
             var AllTask = await _scritp.ScriptList(new DtoSearch<FaScriptEntity>()
             {
-                FilterList = x => x.STATUS == "正常",
+                FilterList = x => x.status == "正常",
                 PageIndex = 1,
                 PageSize = 1000
             });
@@ -94,17 +94,17 @@ namespace WebApi.Controllers
             {
                 GroupMatcher<TriggerKey> matcherTrigger = GroupMatcher<TriggerKey>.GroupEquals("ScriptGroup");
                 var triggerList = await _scheduler.GetTriggerKeys(matcherTrigger);
-                var triggerKey = triggerList.SingleOrDefault(x => x.Name == "triggerScript" + item.ID.ToString());
-                if (string.IsNullOrEmpty(item.RUN_WHEN)) continue;
+                var triggerKey = triggerList.SingleOrDefault(x => x.Name == "triggerScript" + item.id.ToString());
+                if (string.IsNullOrEmpty(item.runWhen)) continue;
                 //表示任务存在
                 if (triggerKey != null)
                 {
                     ICronTrigger trigger = (ICronTrigger)_scheduler.GetTrigger(triggerKey);
                     IJobDetail job = await _scheduler.GetJobDetail(trigger.JobKey);
-                    if (trigger.CronExpressionString != item.RUN_WHEN)
+                    if (trigger.CronExpressionString != item.runWhen)
                     {
                         // logger.InfoFormat("脚本服务 修改触发器【{0}】的时间表达式【{1}】为【{2}】", trigger.Key.Name, trigger.CronExpressionString, t.RUN_WHEN);
-                        trigger.CronExpressionString = item.RUN_WHEN;
+                        trigger.CronExpressionString = item.runWhen;
                         await _scheduler.DeleteJob(trigger.JobKey);
                         await _scheduler.ScheduleJob(job, trigger);
                     }
@@ -114,13 +114,13 @@ namespace WebApi.Controllers
                     //3、创建一个触发器
                     var trigger = TriggerBuilder.Create()
                                     .WithSimpleSchedule(x => x.WithIntervalInSeconds(2).RepeatForever())//每两秒执行一次
-                                    .WithCronSchedule(item.RUN_WHEN)
-                                    .UsingJobData("scriptId", item.ID)  //通过在Trigger中添加参数值
-                                    .WithIdentity("triggerScript" + item.ID.ToString(), "ScriptGroup")
+                                    .WithCronSchedule(item.runWhen)
+                                    .UsingJobData("scriptId", item.id)  //通过在Trigger中添加参数值
+                                    .WithIdentity("triggerScript" + item.id.ToString(), "ScriptGroup")
                                     .Build();
                     //4、创建任务
                     var jobDetail = JobBuilder.Create<QuartzJobRunScriptTask>()
-                                    .WithIdentity("jobScript" + item.ID.ToString(), "JobGroup")
+                                    .WithIdentity("jobScript" + item.id.ToString(), "JobGroup")
                                     .Build();
                     //5、将触发器和任务器绑定到调度器中
                     await _scheduler.ScheduleJob(jobDetail, trigger);

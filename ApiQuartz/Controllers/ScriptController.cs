@@ -9,6 +9,7 @@ using Models.Entity;
 using Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using ApiQuartz.Controllers.Interface;
 
 namespace ApiQuartz.Controllers
 {
@@ -16,12 +17,12 @@ namespace ApiQuartz.Controllers
     /// 授权管理
     /// </summary>
     [EnableCors("AllowSameDomain")]
-    [Route("api/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class ScriptController : ControllerBase
+    public class ScriptController : ControllerBase, IScriptController
     {
-        private IScritpRepository _script;
+        private IScritpRepository _respoitory;
 
         /// <summary>
         /// 脚本管理
@@ -31,152 +32,72 @@ namespace ApiQuartz.Controllers
             IScritpRepository script
             )
         {
-            this._script = script;
+            this._respoitory = script;
         }
         /// <summary>
-        /// 获取脚本列表
+        /// 保存Query
         /// </summary>
         /// <param name="inEnt"></param>
+        /// <returns></returns>
         [HttpPost]
-        [Authorize]
-        public async Task<ResultObj<FaScriptEntity>> ScriptList(DtoSearch inEnt)
+        public async Task<ResultObj<int>> save(DtoSave<FaScriptEntity> inEnt)
         {
-            var reObj = new ResultObj<FaScriptEntity>();
+            ResultObj<int> reObj = new ResultObj<int>();
             try
             {
-                DtoSearch<FaScriptEntity> postEnt=new DtoSearch<FaScriptEntity>();
-                postEnt.PageIndex=inEnt.PageIndex;
-                postEnt.PageSize=inEnt.PageSize;
-                reObj.dataList = (await _script.ScriptList(postEnt)).ToList();
+                reObj = await _respoitory.Save(inEnt);
+
             }
-            catch (ExceptionExtend e)
+            catch (Exception ex)
             {
+                LogHelper.WriteErrorLog(this.GetType(), ex.ToString());
+                reObj.msg = ex.Message;
                 reObj.success = false;
-                reObj.code = e.RealCode;
-                reObj.msg = e.RealMsg;
-            }
-            catch (Exception e)
-            {
-                reObj.success = false;
-                reObj.msg = e.Message;
             }
             return reObj;
         }
 
         /// <summary>
-        /// 获取任务列表
+        /// 查找单条
         /// </summary>
         /// <param name="inEnt"></param>
+        /// <returns></returns>
         [HttpPost]
-        [Authorize]
-        public async Task<ResultObj<FaScriptTaskEntity>> ScriptTaskList(DtoSearch inEnt)
+        public async Task<ResultObj<FaScriptEntity>> singleByKey(DtoDo<int> inEnt)
         {
-            var reObj = new ResultObj<FaScriptTaskEntity>();
+            ResultObj<FaScriptEntity> reObj = new ResultObj<FaScriptEntity>();
             try
             {
-                var SCRIPT_ID=Convert.ToInt32( inEnt.FilterList.SingleOrDefault(x=>x.Key=="SCRIPT_ID"));
-                DtoSearch<FaScriptTaskEntity> postEnt=new DtoSearch<FaScriptTaskEntity>();
-                postEnt.PageIndex=inEnt.PageIndex;
-                postEnt.PageSize=inEnt.PageSize;
-                postEnt.FilterList=x=>x.SCRIPT_ID==SCRIPT_ID;
-                reObj.dataList = (await _script.ScriptTaskList(postEnt)).ToList();
+                reObj.data = await _respoitory.SingleByKey(inEnt.Key);
             }
-            catch (ExceptionExtend e)
+            catch (Exception ex)
             {
+                LogHelper.WriteErrorLog(this.GetType(), ex.ToString());
+                reObj.msg = ex.Message;
                 reObj.success = false;
-                reObj.code = e.RealCode;
-                reObj.msg = e.RealMsg;
-            }
-            catch (Exception e)
-            {
-                reObj.success = false;
-                reObj.msg = e.Message;
             }
             return reObj;
         }
 
         /// <summary>
-        /// 获取任务列表
+        /// 删除单条
         /// </summary>
         /// <param name="inEnt"></param>
+        /// <returns></returns>
         [HttpPost]
-        [Authorize]
-        public async Task<ResultObj<FaScriptTaskLogEntity>> ScriptTaskLogList(DtoSearch inEnt)
+        public async Task<ResultObj<int>> delete(DtoDo<int> inEnt)
         {
-            var reObj = new ResultObj<FaScriptTaskLogEntity>();
+            ResultObj<int> reObj = new ResultObj<int>();
             try
             {
-                var SCRIPT_TASK_ID=Convert.ToInt32(inEnt.FilterList.SingleOrDefault(x=>x.Key=="SCRIPT_TASK_ID"));
-                var postEnt=new DtoSearch<FaScriptTaskLogEntity>();
-                postEnt.PageIndex=inEnt.PageIndex;
-                postEnt.PageSize=inEnt.PageSize;
-                postEnt.FilterList=x=>x.SCRIPT_TASK_ID==SCRIPT_TASK_ID;
-                reObj.dataList = (await _script.ScriptTaskLogList(postEnt)).ToList();
-            }
-            catch (ExceptionExtend e)
-            {
-                reObj.success = false;
-                reObj.code = e.RealCode;
-                reObj.msg = e.RealMsg;
-            }
-            catch (Exception e)
-            {
-                reObj.success = false;
-                reObj.msg = e.Message;
-            }
-            return reObj;
-        }
-    
-        /// <summary>
-        /// 添加脚本
-        /// </summary>
-        /// <param name="inEnt"></param>
-        [HttpPost]
-        [Authorize]
-        public async Task<ResultObj<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt)
-        {
-            var reObj = new ResultObj<bool>();
-            try
-            {
-                reObj = await _script.ScriptSave(inEnt);
-            }
-            catch (ExceptionExtend e)
-            {
-                reObj.success = false;
-                reObj.code = e.RealCode;
-                reObj.msg = e.RealMsg;
-            }
-            catch (Exception e)
-            {
-                reObj.success = false;
-                reObj.msg = e.Message;
-            }
-            return reObj;
-        }
+                reObj = await _respoitory.Delete(inEnt.Key);
 
-        /// <summary>
-        /// 删除脚本
-        /// </summary>
-        /// <param name="inEnt"></param>
-        [HttpPost]
-        [Authorize]
-        public async Task<Result> ScriptDelete(DtoDo<int> inEnt)
-        {
-            var reObj = new Result();
-            try
-            {
-                reObj = await _script.ScriptDelete(inEnt.Key);
             }
-            catch (ExceptionExtend e)
+            catch (Exception ex)
             {
+                LogHelper.WriteErrorLog(this.GetType(), ex.ToString());
+                reObj.msg = ex.Message;
                 reObj.success = false;
-                reObj.code = e.RealCode;
-                reObj.msg = e.RealMsg;
-            }
-            catch (Exception e)
-            {
-                reObj.success = false;
-                reObj.msg = e.Message;
             }
             return reObj;
         }

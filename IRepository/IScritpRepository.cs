@@ -11,10 +11,13 @@ namespace IRepository
 {
     public interface IScritpRepository
     {
+
+
+
         /// <summary>
         /// 获取所有脚本列表，需指定字段，因为有字段内容很多
         /// </summary>
-        /// <param name="inParm"></param>
+        /// <param name="inEnt"></param>
         /// <returns></returns>
         Task<IEnumerable<FaScriptEntity>> ScriptList(DtoSearch<FaScriptEntity> inEnt);
 
@@ -23,21 +26,21 @@ namespace IRepository
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        Task<FaScriptEntity> ScriptSingleByKey(int key);
+        Task<FaScriptEntity> SingleByKey(int key);
 
         /// <summary>
         /// 保存脚本基本信息
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<ResultObj<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt);
+        Task<ResultObj<int>> Save(DtoSave<FaScriptEntity> inEnt);
 
         /// <summary>
         /// 删除脚本
         /// </summary>
         /// <param name="scriptId">脚本 ID</param>
         /// <returns></returns>
-        Task<Result> ScriptDelete(int scriptId);
+        Task<ResultObj<int>> Delete(int scriptId);
 
         /// <summary>
         /// 查询脚本任务列表，需指定字段，因为有字段内容很多

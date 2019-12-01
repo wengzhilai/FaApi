@@ -15,6 +15,8 @@ namespace Repository
 {
     public class ScritpRepository : IScritpRepository
     {
+        DapperHelper<FaScriptEntity> dbHelper = new DapperHelper<FaScriptEntity>();
+
         /// <summary>
         /// 取消任务
         /// </summary>
@@ -41,9 +43,9 @@ namespace Repository
             return reObj;
         }
 
-        async public Task<Result> ScriptDelete(int scriptId)
+        async public Task<ResultObj<int>> Delete(int scriptId)
         {
-            Result reObj = new Result();
+            var reObj = new ResultObj<int>();
             DapperHelper<FaScriptEntity> dapper = new DapperHelper<FaScriptEntity>();
 
             dapper.TranscationBegin();
@@ -53,7 +55,8 @@ namespace Repository
                 DapperHelper<FaScriptTaskLogEntity> dapperTaskLog = new DapperHelper<FaScriptTaskLogEntity>(dapper.GetConnection(), dapper.GetTransaction());
                 var opNum = await dapperTaskLog.Delete(string.Format("SCRIPT_TASK_ID IN ( SELECT a.ID from fa_script_task a where a.SCRIPT_ID={0})", scriptId));
                 opNum = await dapperTask.Delete(i => i.SCRIPT_ID == scriptId);
-                opNum = await dapper.Delete(i => i.ID == scriptId);
+                opNum = await dapper.Delete(i => i.id == scriptId);
+                reObj.data = opNum;
                 reObj.success = opNum > 0;
                 dapper.TranscationCommit();
             }
@@ -75,30 +78,26 @@ namespace Repository
             return dapper.FindAll(inEnt);
         }
 
-        async public Task<ResultObj<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt)
+        async public Task<ResultObj<int>> Save(DtoSave<FaScriptEntity> inEnt)
         {
-            ResultObj<bool> reObj = new ResultObj<bool>();
-            DapperHelper<FaScriptEntity> dapper = new DapperHelper<FaScriptEntity>();
-            if (inEnt.Data.ID == 0)
+            ResultObj<int> reObj = new ResultObj<int>();
+            if (inEnt.Data.id == 0)
             {
-                inEnt.Data.ID = await new SequenceRepository().GetNextID<FaScriptEntity>();
-                var opNum = await dapper.Save(inEnt);
-                reObj.success = opNum > 0;
-                reObj.msg = "添加成功";
+                inEnt.Data.id = await new SequenceRepository().GetNextID<FaScriptEntity>();
+                reObj.data = await dbHelper.Save(inEnt);
             }
             else
             {
-                var opNum = await dapper.Update(inEnt);
-                reObj.success = opNum > 0;
-                reObj.msg = "修改成功";
+                reObj.data = await dbHelper.Update(inEnt);
             }
+
+            reObj.success = reObj.data > 0;
             return reObj;
         }
 
-        async public Task<FaScriptEntity> ScriptSingleByKey(int key)
+        async public Task<FaScriptEntity> SingleByKey(int key)
         {
-            DapperHelper<FaScriptEntity> dapper = new DapperHelper<FaScriptEntity>();
-            return await dapper.SingleByKey(key);
+            return await dbHelper.SingleByKey(key);
         }
 
         public Task<IEnumerable<FaScriptTaskEntity>> ScriptTaskList(DtoSearch<FaScriptTaskEntity> inEnt)
@@ -154,7 +153,7 @@ namespace Repository
             var opNum = await dapper.Save(inEnt);
             reObj.success = opNum > 0;
             reObj.msg = "添加成功";
-            reObj.data=inEnt.Data.ID;
+            reObj.data = inEnt.Data.ID;
             return reObj;
         }
 

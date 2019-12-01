@@ -18,53 +18,53 @@ namespace Models.Entity
         [Required]
         [Range(0, 2147483647)]
         [Display(Name = "ID")]
-        [Column]
-        public int ID { get; set; }
+        [Column("ID")]
+        public int id { get; set; }
         /// <summary>
         /// 代码
         /// </summary>
         [Required]
         [StringLength(20)]
         [Display(Name = "代码")]
-        [Column]
-        public string CODE { get; set; }
+        [Column("CODE")]
+        public string code { get; set; }
         /// <summary>
         /// 名称
         /// </summary>
         [Required]
         [StringLength(255)]
         [Display(Name = "名称")]
-        [Column]
-        public string NAME { get; set; }
+        [Column("NAME")]
+        public string name { get; set; }
         /// <summary>
         /// 任务脚本
         /// </summary>
         [Required]
         [Display(Name = "任务脚本")]
-        [Column]
-        public string BODY_TEXT { get; set; }
+        [Column("BODY_TEXT")]
+        public string bodyText { get; set; }
         /// <summary>
         /// 脚本哈希值
         /// </summary>
         [Required]
         [StringLength(255)]
         [Display(Name = "脚本哈希值")]
-        [Column]
-        public string BODY_HASH { get; set; }
+        [Column("BODY_HASH")]
+        public string bodyHash { get; set; }
         /// <summary>
         /// 时间表达式
         /// </summary>
         [StringLength(30)]
         [Display(Name = "时间表达式")]
-        [Column]
-        public string RUN_WHEN { get; set; }
+        [Column("RUN_WHEN")]
+        public string runWhen { get; set; }
         /// <summary>
         /// 脚本参数
         /// </summary>
         [StringLength(255)]
         [Display(Name = "脚本参数")]
-        [Column]
-        public string RUN_ARGS { get; set; }
+        [Column("RUN_ARGS")]
+        public string runArgs { get; set; }
 
         /// <summary>
         /// 运行时间
@@ -72,8 +72,8 @@ namespace Models.Entity
         [Required]
         [StringLength(20)]
         [Display(Name = "运行时间")]
-        [Column]
-        public string RUN_DATA { get; set; }
+        [Column("RUN_DATA")]
+        public string runData { get; set; }
 
         /// <summary>
         /// 状态（正常，停用）
@@ -81,22 +81,22 @@ namespace Models.Entity
         [Required]
         [StringLength(10)]
         [Display(Name = "状态")]
-        [Column]
-        public string STATUS { get; set; }
+        [Column("STATUS")]
+        public string status { get; set; }
         /// <summary>
         /// 禁用原因
         /// </summary>
         [StringLength(50)]
         [Display(Name = "禁用原因")]
-        [Column]
-        public string DISABLE_REASON { get; set; }
+        [Column("DISABLE_REASON")]
+        public string disableReason { get; set; }
         /// <summary>
         /// 服务标识
         /// </summary>
         [StringLength(50)]
         [Display(Name = "服务标识")]
-        [Column]
-        public string SERVICE_FLAG { get; set; }
+        [Column("SERVICE_FLAG")]
+        public string serviceFlag { get; set; }
 
         /// <summary>
         /// 归属组ID
@@ -104,17 +104,17 @@ namespace Models.Entity
         /// <value></value>
         [Range(0, 2147483647)]
         [Display(Name = "GROUP_ID")]
-        [Column]
-        public int? GROUP_ID { get; set; }
+        [Column("GROUP_ID")]
+        public int groupId { get; set; }
 
         /// <summary>
         /// 排序
         /// </summary>
         /// <value></value>
         [Range(0, 2147483647)]
-        [Display(Name = "ORDER_INDEX")]
-        [Column]
-        public int ORDER_INDEX { get; set; }
+        [Display(Name = "排序")]
+        [Column("ORDER_INDEX")]
+        public int orderIndex { get; set; }
 
     }
 }

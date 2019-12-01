@@ -30,16 +30,16 @@ namespace WebApi.Comon
                                                              // var data = context.MergedJobDataMap;//获取Job和Trigger中合并的参数
                 var scriptId = triggerData.GetInt("scriptId");
                 var dal = new ScritpRepository();
-                var script = await dal.ScriptSingleByKey(scriptId);
+                var script = await dal.SSiingleByKey(scriptId);
                 if (script != null)
                 {
                     var addEnt = new FaScriptTaskEntity();
-                    addEnt.BODY_HASH = script.BODY_TEXT.Md5();
-                    addEnt.BODY_TEXT = script.BODY_TEXT;
+                    addEnt.BODY_HASH = script.bodyText.Md5();
+                    addEnt.BODY_TEXT = script.bodyText;
                     addEnt.LOG_TYPE = 0;
                     addEnt.RETURN_CODE = "";
-                    addEnt.RUN_ARGS = script.RUN_ARGS;
-                    addEnt.RUN_DATA = script.RUN_DATA;
+                    addEnt.RUN_ARGS = script.runArgs;
+                    addEnt.RUN_DATA = script.runData;
                     addEnt.RUN_STATE = "等待";
                     addEnt.SCRIPT_ID = scriptId;
                     addEnt.START_TIME = DateTime.Now;
@@ -54,7 +54,7 @@ namespace WebApi.Comon
                         return;
                     }
 
-                    var sqlList = script.BODY_TEXT.Split(';');
+                    var sqlList = script.bodyText.Split(';');
                     DapperHelper.TranscationBegin();
 
                     foreach (var item in sqlList)

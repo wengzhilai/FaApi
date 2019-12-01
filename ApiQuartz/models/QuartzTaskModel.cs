@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ApiQuartz.models
+namespace ApiQuartz.Models
 {
     public class QuartzTaskModel
     {

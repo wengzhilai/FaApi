@@ -33,4 +33,9 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\Interface\" />
+    <Folder Include="Models\" />
+    <Folder Include="Jobs\" />
+  </ItemGroup>
 </Project>

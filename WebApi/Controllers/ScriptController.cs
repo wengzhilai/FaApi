@@ -59,9 +59,9 @@ namespace WebApi.Controllers
             var reObj = new ResultObj<FaScriptEntity>();
             try
             {
-                DtoSearch<FaScriptEntity> postEnt=new DtoSearch<FaScriptEntity>();
-                postEnt.PageIndex=inEnt.PageIndex;
-                postEnt.PageSize=inEnt.PageSize;
+                DtoSearch<FaScriptEntity> postEnt = new DtoSearch<FaScriptEntity>();
+                postEnt.PageIndex = inEnt.PageIndex;
+                postEnt.PageSize = inEnt.PageSize;
                 reObj.dataList = (await _script.ScriptList(postEnt)).ToList();
             }
             catch (ExceptionExtend e)
@@ -89,11 +89,11 @@ namespace WebApi.Controllers
             var reObj = new ResultObj<FaScriptTaskEntity>();
             try
             {
-                var SCRIPT_ID=Convert.ToInt32( inEnt.FilterList.SingleOrDefault(x=>x.Key=="SCRIPT_ID"));
-                DtoSearch<FaScriptTaskEntity> postEnt=new DtoSearch<FaScriptTaskEntity>();
-                postEnt.PageIndex=inEnt.PageIndex;
-                postEnt.PageSize=inEnt.PageSize;
-                postEnt.FilterList=x=>x.SCRIPT_ID==SCRIPT_ID;
+                var SCRIPT_ID = Convert.ToInt32(inEnt.FilterList.SingleOrDefault(x => x.Key == "SCRIPT_ID"));
+                DtoSearch<FaScriptTaskEntity> postEnt = new DtoSearch<FaScriptTaskEntity>();
+                postEnt.PageIndex = inEnt.PageIndex;
+                postEnt.PageSize = inEnt.PageSize;
+                postEnt.FilterList = x => x.SCRIPT_ID == SCRIPT_ID;
                 reObj.dataList = (await _script.ScriptTaskList(postEnt)).ToList();
             }
             catch (ExceptionExtend e)
@@ -121,11 +121,11 @@ namespace WebApi.Controllers
             var reObj = new ResultObj<FaScriptTaskLogEntity>();
             try
             {
-                var SCRIPT_TASK_ID=Convert.ToInt32(inEnt.FilterList.SingleOrDefault(x=>x.Key=="SCRIPT_TASK_ID"));
-                var postEnt=new DtoSearch<FaScriptTaskLogEntity>();
-                postEnt.PageIndex=inEnt.PageIndex;
-                postEnt.PageSize=inEnt.PageSize;
-                postEnt.FilterList=x=>x.SCRIPT_TASK_ID==SCRIPT_TASK_ID;
+                var SCRIPT_TASK_ID = Convert.ToInt32(inEnt.FilterList.SingleOrDefault(x => x.Key == "SCRIPT_TASK_ID"));
+                var postEnt = new DtoSearch<FaScriptTaskLogEntity>();
+                postEnt.PageIndex = inEnt.PageIndex;
+                postEnt.PageSize = inEnt.PageSize;
+                postEnt.FilterList = x => x.SCRIPT_TASK_ID == SCRIPT_TASK_ID;
                 reObj.dataList = (await _script.ScriptTaskLogList(postEnt)).ToList();
             }
             catch (ExceptionExtend e)
@@ -141,7 +141,7 @@ namespace WebApi.Controllers
             }
             return reObj;
         }
-    
+
         /// <summary>
         /// 添加脚本
         /// </summary>
@@ -153,7 +153,7 @@ namespace WebApi.Controllers
             var reObj = new ResultObj<bool>();
             try
             {
-                reObj = await _script.ScriptSave(inEnt);
+                reObj = await _script.SSaave(inEnt);
             }
             catch (ExceptionExtend e)
             {
@@ -180,7 +180,7 @@ namespace WebApi.Controllers
             var reObj = new Result();
             try
             {
-                reObj = await _script.ScriptDelete(inEnt.Key);
+                reObj = await _script.Delete(inEnt.Key);
             }
             catch (ExceptionExtend e)
             {
