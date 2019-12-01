@@ -12,6 +12,7 @@ using Quartz;
 using Microsoft.AspNetCore.Authorization;
 using Quartz.Impl.Matchers;
 using ApiQuartz.Controllers.Interface;
+using ApiQuartz.Jobs;
 
 namespace ApiQuartz.Controllers
 {
@@ -124,7 +125,7 @@ namespace ApiQuartz.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        async public Task<Result> Stop()
+        async public Task<Result> stop()
         {
             Result reObj = new Result();
             //1、通过调度工厂获得调度器
@@ -140,7 +141,7 @@ namespace ApiQuartz.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        async public Task<ResultObj<bool>> RemoveJob(DtoKey InEnt)
+        async public Task<Result> removeJob(DtoKey InEnt)
         {
             ResultObj<bool> reObj = new ResultObj<bool>();
             try
@@ -176,7 +177,7 @@ namespace ApiQuartz.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        async public Task<ResultObj<QuartzTaskModel>> List()
+        async public Task<ResultObj<QuartzTaskModel>> list()
         {
             ResultObj<QuartzTaskModel> reObj = new ResultObj<QuartzTaskModel>();
             //1、通过调度工厂获得调度器

@@ -148,12 +148,12 @@ namespace WebApi.Controllers
         /// <param name="inEnt"></param>
         [HttpPost]
         [Authorize]
-        public async Task<ResultObj<bool>> ScriptSave(DtoSave<FaScriptEntity> inEnt)
+        public async Task<ResultObj<int>> ScriptSave(DtoSave<FaScriptEntity> inEnt)
         {
-            var reObj = new ResultObj<bool>();
+            var reObj = new ResultObj<int>();
             try
             {
-                reObj = await _script.SSaave(inEnt);
+                reObj = await _script.Save(inEnt);
             }
             catch (ExceptionExtend e)
             {

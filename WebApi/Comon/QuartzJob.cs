@@ -30,7 +30,7 @@ namespace WebApi.Comon
                                                              // var data = context.MergedJobDataMap;//获取Job和Trigger中合并的参数
                 var scriptId = triggerData.GetInt("scriptId");
                 var dal = new ScritpRepository();
-                var script = await dal.SSiingleByKey(scriptId);
+                var script = await dal.SingleByKey(scriptId);
                 if (script != null)
                 {
                     var addEnt = new FaScriptTaskEntity();

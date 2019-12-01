@@ -162,5 +162,12 @@ namespace Repository
             DapperHelper<FaScriptTaskEntity> dapper = new DapperHelper<FaScriptTaskEntity>();
             return await dapper.SingleByKey(key);
         }
+
+        public async Task<List<FaScriptEntity>> getNormalScript()
+        {
+            var reObj =(await dbHelper.FindAll(x => x.status == "1")).ToList();
+            reObj = reObj.Where(x => !string.IsNullOrEmpty(x.runWhen)).ToList();
+            return reObj;
+        }
     }
 }

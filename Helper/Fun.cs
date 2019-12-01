@@ -372,6 +372,9 @@ namespace Helper
         #region 通过两个点的经纬度计算距离
 
         private const double EARTH_RADIUS = 6378.137; //地球半径
+
+        public static object LockRunScript { get; set; }
+
         private static double rad(double d)
         {
             return d * Math.PI / 180.0;

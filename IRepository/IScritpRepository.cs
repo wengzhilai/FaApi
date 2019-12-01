@@ -92,5 +92,6 @@ namespace IRepository
         /// <returns></returns>
         Task<ResultObj<bool>> ScriptTaskLogSave(DtoSave<FaScriptTaskLogEntity> inEnt);
 
+        Task<List<FaScriptEntity>> getNormalScript();
     }
 }
