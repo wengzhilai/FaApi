@@ -22,9 +22,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiSms", "ApiSms\ApiSms.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiUpFile", "ApiUpFile\ApiUpFile.csproj", "{3524B631-69BD-4718-8F51-ADBE6353479D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSTest", "MSTest\MSTest.csproj", "{10C7E7DA-0566-4CDA-A174-84BB8160C683}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSTest", "MSTest\MSTest.csproj", "{10C7E7DA-0566-4CDA-A174-84BB8160C683}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiQuartz", "ApiQuartz\ApiQuartz.csproj", "{33CB9E50-8F92-4865-843C-DCCB5F2DF9C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiQuartz", "ApiQuartz\ApiQuartz.csproj", "{33CB9E50-8F92-4865-843C-DCCB5F2DF9C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiEtc", "ApiEtc\ApiEtc.csproj", "{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,12 @@ Global
 		{33CB9E50-8F92-4865-843C-DCCB5F2DF9C6}.Default|Any CPU.Build.0 = Debug|Any CPU
 		{33CB9E50-8F92-4865-843C-DCCB5F2DF9C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33CB9E50-8F92-4865-843C-DCCB5F2DF9C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -198,7 +198,13 @@ namespace Models.Entity
                 _OrderStr = value;
             }
         }
+        /// <summary>
+        /// 简单筛选条件
+        /// </summary>
         public List<QueryPara> paraList { get; set; }
+        /// <summary>
+        /// 复杂筛选条件
+        /// </summary>
         public IList<QueryRowBtnShowCondition> whereList { get; set; }
         public string whereListStr { get; set; }
         public string paraListStr { get; set; }

@@ -14,10 +14,10 @@ namespace ApiUser.Controllers.Tests
         {
             AppSettingsManager.self.MysqlSettings = TypeChange.ToJsonObject<MysqlSettings>(@"{
     ""server"": ""localhost"",
-    ""userid"": ""fa"",
-    ""pwd"": ""fa"",
+    ""userid"": ""etc"",
+    ""pwd"": ""etc"",
     ""port"": ""3306"",
-    ""database"": ""study"",
+    ""database"": ""etc"",
     ""sslmode"": ""none""
   }");
 
@@ -35,9 +35,9 @@ namespace ApiUser.Controllers.Tests
             PathConfig cfg = new PathConfig();
             //        cfg.entityPath="D:\\IdeaProjects\\study_new\\study-dependencies\\src\\main\\java\\com\\wzl\\commons\\model\\entity\\";
             cfg.entityPath = "F:\\Study\\FaApi\\MSTest\\";
-            cfg.entityPath = "/Users/wengzhilai/Desktop/dotnet/FaApi/MSTest/FaModuleEntity.cs";
-            cfg.tableName = "fa_script";
-            cfg.tableNameRmark = "角色";
+            //cfg.entityPath = "/Users/wengzhilai/Desktop/dotnet/FaApi/MSTest/FaModuleEntity.cs";
+            cfg.tableName = "etc_wallet";
+            cfg.tableNameRmark = "钱包";
             //        cfg.clumStr="" +
             //                "ID\tID\tint\t\t\tTRUE\tFALSE\tTRUE\n" +
             //                "口径任务ID\tSCRIPT_TASK_ID\tint\t\t\tFALSE\tTRUE\tTRUE\n" +

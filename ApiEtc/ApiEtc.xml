@@ -1,0 +1,479 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiEtc</name>
+    </assembly>
+    <members>
+        <member name="T:ApiEtc.Controllers.ClientController">
+            <summary>
+            客户管理接口
+            </summary>
+        </member>
+        <member name="M:ApiEtc.Controllers.ClientController.clientReport(Models.DtoKey)">
+            <summary>
+            推广汇总
+            </summary>
+            <param name="inOby"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.ClientController.list(ApiEtc.Controllers.Interface.ClientListDto)">
+            <summary>
+            获取推广明细
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.ClientController.regClient(ApiEtc.Controllers.Interface.RegClientDto)">
+            <summary>
+            Etc申请
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.ClientController.save(Models.DtoSave{ApiEtc.Models.Entity.EtcClentEntity})">
+            <summary>
+            后台添加客户资料
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.ClientController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            查询客户
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IClientController.regClient(ApiEtc.Controllers.Interface.RegClientDto)">
+            <summary>
+            Etc申请
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IClientController.clientReport(Models.DtoKey)">
+            <summary>
+            推广汇总
+            </summary>
+            <param name="inOby"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IClientController.list(ApiEtc.Controllers.Interface.ClientListDto)">
+            <summary>
+            获取推广明细
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IClientController.save(Models.DtoSave{ApiEtc.Models.Entity.EtcClentEntity})">
+            <summary>
+            后台添加客户资料
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IClientController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            查询客户
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.ClientReportResult.allNum">
+            <summary>
+            推广成功总人数
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.ClientReportResult.paidNum">
+            <summary>
+            已结算数
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.ClientReportResult.noPaidNum">
+            <summary>
+            未结算数
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.ClientReportResult.allMoney">
+            <summary>
+            总收入
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.ClientReportResult.paidMoney">
+            <summary>
+            已提现
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.ClientReportResult.noPaidMoney">
+            <summary>
+            待结算
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.RegClientDto.name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.RegClientDto.phone">
+            <summary>
+            电话号码
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.ClientListDto.Key">
+            <summary>
+            openId
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.ClientListDto.payType">
+            <summary>
+            是否结算，0表示查看所有，1表示已经结算，2表示等结算
+            </summary>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IStaffController.checkIsBind(Models.DtoKey)">
+            <summary>
+            检测用户是否绑定，key为OpenId
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IStaffController.bindUser(ApiEtc.Controllers.Interface.BindUserDto)">
+            <summary>
+            绑定用户
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IStaffController.getStaff(Models.DtoKey)">
+            <summary>
+            获取员工的信息，包括二维码地址，Key为OpenId
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IStaffController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            查询员工
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.BindUserDto.name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.BindUserDto.phone">
+            <summary>
+            电话号码
+            </summary>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IWalletController.submitWallet(ApiEtc.Controllers.Interface.SubmitWalletDto)">
+            <summary>
+            提交申请提现
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.Interface.IWalletController.list(ApiEtc.Controllers.Interface.WalletListDto)">
+            <summary>
+            获取钱包列表
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.SubmitWalletDto.AllMoney">
+            <summary>
+            提现总金额
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.SubmitWalletDto.clientNum">
+            <summary>
+            提现客户数
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.SubmitWalletDto.walletAccountType">
+            <summary>
+            提现方式 :1WeiChat\2AliPay
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.SubmitWalletDto.walletaAcount">
+            <summary>
+            账号
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.SubmitWalletDto.walletAccountName">
+            <summary>
+            账号名
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Controllers.Interface.WalletListDto.Key">
+            <summary>
+            openId
+            </summary>
+        </member>
+        <member name="T:ApiEtc.Controllers.StaffController">
+            <summary>
+            员工接口
+            </summary>
+        </member>
+        <member name="M:ApiEtc.Controllers.StaffController.bindUser(ApiEtc.Controllers.Interface.BindUserDto)">
+            <summary>
+            绑定用户
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.StaffController.checkIsBind(Models.DtoKey)">
+            <summary>
+            检测用户
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.StaffController.getStaff(Models.DtoKey)">
+            <summary>
+            获取员工的信息，包括二维码地址，Key为OpenId
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.StaffController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            获取员工信息
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.TestController.TestUser(Models.DtoKey)">
+            <summary>
+            测试超级管理员用户
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.TestController.Test(Models.DtoKey)">
+            <summary>
+            接口测试
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.TestController.TestAuth(Models.DtoKey)">
+            <summary>
+            权限接口测试
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiEtc.Controllers.WalletController">
+            <summary>
+            提现要接口
+            </summary>
+        </member>
+        <member name="M:ApiEtc.Controllers.WalletController.list(ApiEtc.Controllers.Interface.WalletListDto)">
+            <summary>
+            获取钱包列表
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.WalletController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            查询钱包
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.WalletController.submitWallet(ApiEtc.Controllers.Interface.SubmitWalletDto)">
+            <summary>
+            申请提现
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiEtc.Models.Entity.EtcClentEntity">
+            <summary>
+            客户
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.staffId">
+            <summary>
+            员工ID
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.clientName">
+            <summary>
+            客户姓名
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.clientPhone">
+            <summary>
+            客户电话
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.bindTime">
+            <summary>
+            绑定时间
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.status">
+            <summary>
+            状态:已绑定已提交资料推广成功待结算已结算
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.money">
+            <summary>
+            结算金额
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.opuserName">
+            <summary>
+            操作人员姓名
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcClentEntity.walletId">
+            <summary>
+            结算Id
+            </summary>
+        </member>
+        <member name="T:ApiEtc.Models.Entity.EtcStaffEntity">
+            <summary>
+            员工
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.openid">
+            <summary>
+            微信OpenId
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.phone">
+            <summary>
+            手机号
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.qrCode">
+            <summary>
+            二维码地址
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.createTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.status">
+            <summary>
+            状态:正常冻结
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.accountWeichat">
+            <summary>
+            微信账号
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcStaffEntity.accountalipay">
+            <summary>
+            支付宝账号
+            </summary>
+        </member>
+        <member name="T:ApiEtc.Models.Entity.EtcWalletEntity">
+            <summary>
+            钱包
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.id">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.money">
+            <summary>
+            金额
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.createtime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.clientnum">
+            <summary>
+            客户数
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.walletaccounttype">
+            <summary>
+            账号类型:WeiChatAliPay
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.walletaccount">
+            <summary>
+            钱包账号
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.walletaccountname">
+            <summary>
+            钱包账号名
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.status">
+            <summary>
+            状态:未发发已发放
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.opusername">
+            <summary>
+            操作人员姓名
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Models.Entity.EtcWalletEntity.remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:ApiEtc.Startup.Configuration">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:ApiEtc.Startup.repository">
+            <summary>
+            加载日志资源
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:ApiEtc.Startup.WebHostEnvironment">
+            <summary>
+            环境
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:ApiEtc.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+            <param name="webHostEnvironment"></param>
+        </member>
+    </members>
+</doc>

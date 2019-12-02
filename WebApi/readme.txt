@@ -125,3 +125,6 @@ mysql.server start
 #scp  root@155.138.209.42:/root/fa0917.sql /Users/wengzhilai/Desktop/dotnet/FaApi/WebApi/fa0911.sql
 
 scp  root@155.138.209.42:/etc/nginx/nginx.conf /etc/nginx/nginx.conf
+
+	
+scp E:\ChromeDown\dr.zip root@47.108.82.101:/home/
