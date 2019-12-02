@@ -27,7 +27,6 @@ namespace ApiQuartz
                             .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                             .AddJsonFile("appsettings.json", true, true)
                             .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
-                            .AddJsonFile("hosts.json", false, false)
                             .AddEnvironmentVariables();
                     });
 

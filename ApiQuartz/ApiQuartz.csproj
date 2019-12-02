@@ -15,9 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="hosts.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Remove="hosts.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IRepository\IRepository.csproj">

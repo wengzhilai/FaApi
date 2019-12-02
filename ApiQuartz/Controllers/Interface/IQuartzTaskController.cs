@@ -6,7 +6,7 @@ namespace ApiQuartz.Controllers.Interface
 {
     public interface IQuartzTaskController
     {
-        ResultObj<Boolean> isStarted();
+        Task<ResultObj<bool>> isStarted();
         Task<Result> start();
         Task<Result> stop();
         Task<Result> removeJob(DtoKey inEnt);

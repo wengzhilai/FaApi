@@ -47,12 +47,14 @@ namespace ApiQuartz.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public ResultObj<bool> isStarted()
+        public async Task<ResultObj<bool>> isStarted()
         {
             ResultObj<bool> reObj = new ResultObj<bool>();
+            _scheduler = await _schedulerFactory.GetScheduler();
             GroupMatcher<TriggerKey> matcherTrigger = GroupMatcher<TriggerKey>.AnyGroup();
-            var allTrigger = _scheduler.GetTriggerKeys(matcherTrigger);
-            reObj.data = allTrigger.Status == TaskStatus.Running;
+            var allTrigger = await _scheduler.GetTriggerKeys(matcherTrigger);
+            reObj.data = allTrigger.Count>0;
+            reObj.success = reObj.data;
             return reObj;
         }
 
@@ -148,8 +150,10 @@ namespace ApiQuartz.Controllers
             {
                 //1、通过调度工厂获得调度器
                 _scheduler = await _schedulerFactory.GetScheduler();
-                GroupMatcher<TriggerKey> matcherTrigger = GroupMatcher<TriggerKey>.GroupEquals(InEnt.Key);
+
+                GroupMatcher<TriggerKey> matcherTrigger = GroupMatcher<TriggerKey>.GroupEquals("ScriptGroup");
                 var triggerList = await _scheduler.GetTriggerKeys(matcherTrigger);
+                triggerList = triggerList.Where(x => x.Name.Equals(InEnt.Key)).ToList();
                 foreach (var triggerKey in triggerList)
                 {
                     await _scheduler.PauseTrigger(triggerKey);// 停止触发器
@@ -190,19 +194,19 @@ namespace ApiQuartz.Controllers
                 var task = new QuartzTaskModel();
                 var jobTrigger = await _scheduler.GetTrigger(triggerKey);
                 var jobDetail = await _scheduler.GetJobDetail(jobTrigger.JobKey);
-                task.KeyName = jobTrigger.Key.Name;
-                task.KeyGroup = jobTrigger.Key.Group;
-                task.JobDataListStr = TypeChange.ObjectToStr(jobTrigger.JobDataMap);
-                task.CalendarName = jobTrigger.CalendarName;
-                task.Description = jobTrigger.Description;
-                if (jobTrigger.EndTimeUtc != null) task.EndTime = jobTrigger.EndTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
-                if (jobTrigger.FinalFireTimeUtc != null) task.FinalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                task.keyName = jobTrigger.Key.Name;
+                task.keyGroup = jobTrigger.Key.Group;
+                task.jobDataListStr = TypeChange.ObjectToStr(jobTrigger.JobDataMap);
+                task.calendarName = jobTrigger.CalendarName;
+                task.description = jobTrigger.Description;
+                if (jobTrigger.EndTimeUtc != null) task.endTime = jobTrigger.EndTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.FinalFireTimeUtc != null) task.finalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
                 //返回下一次计划触发Quartz.ITrigger的时间
-                if (jobTrigger.GetNextFireTimeUtc() != null) task.NextFireTime = jobTrigger.GetNextFireTimeUtc().Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.GetNextFireTimeUtc() != null) task.nextFireTime = jobTrigger.GetNextFireTimeUtc().Value.ToString("yyyy-MM-dd HH-mm-ss");
                 //优先级
-                task.Priority = jobTrigger.Priority;
+                task.priority = jobTrigger.Priority;
                 //触发器调度应该开始的时间
-                task.StartTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
+                task.startTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
                 reObj.dataList.Add(task);
             }
             return reObj;

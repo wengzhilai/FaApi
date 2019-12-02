@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Quartz;
+using Quartz.Impl;
 
 namespace ApiQuartz
 {
@@ -48,8 +50,10 @@ namespace ApiQuartz
             }
             );
 
+            #region 格式化返回值
+
             services.AddControllers().AddNewtonsoftJson(options =>
-            {
+                    {
                 // 忽略循环引用
                 // 不使用驼峰
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
@@ -57,23 +61,33 @@ namespace ApiQuartz
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 // 如字段为null值，该字段不会返回到前端
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            });
+                    });
+            #endregion
+
             //添加HTTP请求
             services.AddHttpClient();
 
-            //
+            #region 添加Quartz任务监控
+
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();//注册ISchedulerFactory的实例。
+
+            #endregion
+
+            #region Cors
+
             services.AddCors(options =>
-            {
-                options.AddPolicy("AllowSameDomain",
-                    builder =>
                     {
-                        builder
-                            //.WithOrigins("http://localhost:8100")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowAnyOrigin();
+                        options.AddPolicy("AllowSameDomain",
+                            builder =>
+                            {
+                                builder
+                                    //.WithOrigins("http://localhost:8100")
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod()
+                                    .AllowAnyOrigin();
+                            });
                     });
-            });
+            #endregion
 
 
         }

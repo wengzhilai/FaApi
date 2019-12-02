@@ -9,52 +9,52 @@ namespace Models
         /// 名称
         /// </summary>
         /// <value></value>
-        public string KeyName { get; set; }
+        public string keyName { get; set; }
         /// <summary>
         /// 组名称
         /// </summary>
         /// <value></value>
-        public string KeyGroup { get; set; }
+        public string keyGroup { get; set; }
         /// <summary>
         /// 传入的参数
         /// </summary>
         /// <value></value>
-        public string JobDataListStr { get; set; }
+        public string jobDataListStr { get; set; }
         /// <summary>
         /// 日历名称
         /// </summary>
         /// <value></value>
-        public string CalendarName { get; set; }
+        public string calendarName { get; set; }
         /// <summary>
         /// 描述
         /// </summary>
         /// <value></value>
-        public string Description { get; set; }
+        public string description { get; set; }
         /// <summary>
         /// 结束时间
         /// </summary>
         /// <value></value>
-        public string EndTime { get; set; }
+        public string endTime { get; set; }
 
         /// <summary>
         /// 最后一次执行时间
         /// </summary>
         /// <value></value>
-        public string FinalFireTimeUtc { get; set; }
+        public string finalFireTimeUtc { get; set; }
         /// <summary>
         /// 下次执行时间
         /// </summary>
         /// <value></value>
-        public string NextFireTime { get; set; }
+        public string nextFireTime { get; set; }
         /// <summary>
         /// 执行级别
         /// </summary>
         /// <value></value>
-        public int Priority { get; set; }
+        public int priority { get; set; }
         /// <summary>
         /// 开始执行时间
         /// </summary>
         /// <value></value>
-        public string StartTimeUtc { get; set; }
+        public string startTimeUtc { get; set; }
     }
 }

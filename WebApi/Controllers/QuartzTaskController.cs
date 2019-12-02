@@ -200,19 +200,19 @@ namespace WebApi.Controllers
                 var task = new QuartzTaskModel();
                 var jobTrigger = await _scheduler.GetTrigger(triggerKey);
                 var jobDetail = await _scheduler.GetJobDetail(jobTrigger.JobKey);
-                task.KeyName = jobTrigger.Key.Name;
-                task.KeyGroup = jobTrigger.Key.Group;
-                task.JobDataListStr = TypeChange.ObjectToStr(jobTrigger.JobDataMap);
-                task.CalendarName = jobTrigger.CalendarName;
-                task.Description = jobTrigger.Description;
-                if (jobTrigger.EndTimeUtc != null) task.EndTime = jobTrigger.EndTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
-                if (jobTrigger.FinalFireTimeUtc != null) task.FinalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                task.keyName = jobTrigger.Key.Name;
+                task.keyGroup = jobTrigger.Key.Group;
+                task.jobDataListStr = TypeChange.ObjectToStr(jobTrigger.JobDataMap);
+                task.calendarName = jobTrigger.CalendarName;
+                task.description = jobTrigger.Description;
+                if (jobTrigger.EndTimeUtc != null) task.endTime = jobTrigger.EndTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.FinalFireTimeUtc != null) task.finalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
                 //返回下一次计划触发Quartz.ITrigger的时间
-                if (jobTrigger.GetNextFireTimeUtc() != null) task.NextFireTime = jobTrigger.GetNextFireTimeUtc().Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.GetNextFireTimeUtc() != null) task.nextFireTime = jobTrigger.GetNextFireTimeUtc().Value.ToString("yyyy-MM-dd HH-mm-ss");
                 //优先级
-                task.Priority = jobTrigger.Priority;
+                task.priority = jobTrigger.Priority;
                 //触发器调度应该开始的时间
-                task.StartTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
+                task.startTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
                 reObj.dataList.Add(task);
             }
             return reObj;
