@@ -74,9 +74,9 @@ namespace Repository
             try
             {
                 dbHelper.TranscationBegin();
-                if (inEnt.Data.id == 0)
+                if (inEnt.data.id == 0)
                 {
-                    inEnt.Data.id = await new SequenceRepository().GetNextID<FaUserEntity>();
+                    inEnt.data.id = await new SequenceRepository().GetNextID<FaUserEntity>();
                     reObj.data = await dbHelper.Save(inEnt);
                 }
                 else
@@ -93,13 +93,13 @@ namespace Repository
                 else
                 {
 
-                    DapperHelper.Init(dbHelper.GetConnection(), dbHelper.GetTransaction());
-                    await DapperHelper.Exec("delete from fa_user_role where USER_ID = " + inEnt.Data.id);
+                    new DapperHelper().Init(dbHelper.GetConnection(), dbHelper.GetTransaction());
+                    await new DapperHelper().Exec("delete from fa_user_role where USER_ID = " + inEnt.data.id);
 
 
-                    foreach (var item in inEnt.Data.roleIdList)
+                    foreach (var item in inEnt.data.roleIdList)
                     {
-                        var opNum = await DapperHelper.Exec(string.Format("insert into fa_user_role(ROLE_ID,USER_ID) values({0},{1}) ", item, inEnt.Data.id));
+                        var opNum = await new DapperHelper().Exec(string.Format("insert into fa_user_role(ROLE_ID,USER_ID) values({0},{1}) ", item, inEnt.data.id));
                         if (opNum != 1)
                         {
                             reObj.success = false;

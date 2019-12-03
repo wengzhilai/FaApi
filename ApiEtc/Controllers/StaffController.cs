@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,8 +19,15 @@ namespace ApiEtc.Controllers
     [Route("[controller]/[action]")]
     [EnableCors("AllowSameDomain")]
     [ApiController]
-    public class StaffController : ControllerBase, IStaffController
+    public class StaffController : ControllerBase
     {
+        IStaff dal;
+
+        public StaffController(IStaff dal)
+        {
+            this.dal = dal;
+        }
+
         /// <summary>
         /// 绑定用户
         /// </summary>
@@ -27,18 +36,18 @@ namespace ApiEtc.Controllers
         [HttpPost]
         public Task<Result> bindUser(BindUserDto inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.bindUser(inObj);
         }
 
         /// <summary>
-        /// 检测用户
+        /// 检测用户,data为true表示，存在
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<Result> checkIsBind(DtoKey inObj)
+        public Task<ResultObj<bool>> checkIsBind(DtoKey inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.checkIsBind(inObj);
         }
 
         /// <summary>
@@ -49,7 +58,7 @@ namespace ApiEtc.Controllers
         [HttpPost]
         public Task<ResultObj<EtcStaffEntity>> getStaff(DtoKey inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.getStaff(inObj);
         }
 
         /// <summary>
@@ -58,9 +67,9 @@ namespace ApiEtc.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ResultObj<EtcStaffEntity>> singleByKey(DtoDo<int> inEnt)
+        public Task<ResultObj<EtcStaffEntity>> singleByKey(DtoDo<int> inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.singleByKey(inObj);
         }
     }
 }

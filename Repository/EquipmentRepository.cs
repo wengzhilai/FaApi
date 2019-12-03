@@ -44,9 +44,9 @@ namespace Repository
         public async Task<ResultObj<int>> Save(DtoSave<FaEquipmentEntity> inEnt)
         {
             ResultObj<int> reObj = new ResultObj<int>();
-            if (inEnt.Data.ID == 0)
+            if (inEnt.data.ID == 0)
             {
-                inEnt.Data.ID = await new SequenceRepository().GetNextID<FaEquipmentEntity>();
+                inEnt.data.ID = await new SequenceRepository().GetNextID<FaEquipmentEntity>();
                 var opNum = await dbHelper.Save(inEnt);
                 reObj.success = opNum > 0;
                 reObj.msg = "添加成功";
@@ -78,7 +78,7 @@ namespace Repository
 
             try
             {
-                reObj.data = DapperHelper.GetDataTable(sql);
+                reObj.data = new DapperHelper().GetDataTable(sql);
             }
             catch (Exception e)
             {
@@ -117,7 +117,7 @@ namespace Repository
             {
                 tmp.Add(item.Key, item.Value.ToString());
             }
-            var opNum = await DapperHelper.Exec(sql, tmp);
+            var opNum = await new DapperHelper().Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.success = false;
@@ -152,7 +152,7 @@ namespace Repository
             );
             DynamicParameters tmp = new DynamicParameters();
             tmp.Add("Id", inEnt.Id);
-            var opNum = await DapperHelper.Exec(sql, tmp);
+            var opNum = await new DapperHelper().Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.success = false;
@@ -193,7 +193,7 @@ namespace Repository
             {
                 tmp.Add(item.Key, item.Value.ToString());
             }
-            var opNum = await DapperHelper.Exec(sql, tmp);
+            var opNum = await new DapperHelper().Exec(sql, tmp);
             if (opNum != 1)
             {
                 reObj.success = false;
@@ -240,13 +240,13 @@ namespace Repository
                 var sqlList = sql.Split(';');
                 if (sqlList.Count() > 0)
                 {
-                    reObj.dataList = DapperHelper.Query(sqlList[0]);
+                    reObj.dataList = new DapperHelper().Query(sqlList[0]);
                 }
 
                 if (sqlList.Count() > 1)
                 {
                     int allNum = 0;
-                    int.TryParse(await DapperHelper.ExecuteScalarAsync(sqlList[1]), out allNum);
+                    int.TryParse(await new DapperHelper().ExecuteScalarAsync(sqlList[1]), out allNum);
                     reObj.total = allNum;
                 }
             }

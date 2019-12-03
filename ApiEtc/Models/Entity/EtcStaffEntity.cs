@@ -16,7 +16,7 @@ namespace ApiEtc.Models.Entity
         /// ID
         /// </summary>
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
         [Display(Name = "ID")]
         [Column("Id")]

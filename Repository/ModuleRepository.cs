@@ -63,9 +63,9 @@ namespace Repository
         public async Task<ResultObj<int>> Save(DtoSave<FaModuleEntity> inEnt)
         {
             ResultObj<int> reObj = new ResultObj<int>();
-            if (inEnt.Data.id == 0)
+            if (inEnt.data.id == 0)
             {
-                inEnt.Data.id = await new SequenceRepository().GetNextID<FaModuleEntity>();
+                inEnt.data.id = await new SequenceRepository().GetNextID<FaModuleEntity>();
                 reObj.data = await dbHelper.Save(inEnt);
             }
             else

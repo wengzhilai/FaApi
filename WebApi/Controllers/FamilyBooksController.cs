@@ -87,9 +87,9 @@ namespace WebApi.Controllers
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
-                if (inEnt.Data.ID == 0)
+                if (inEnt.data.ID == 0)
                 {
-                    inEnt.Data.ID = await new SequenceRepository().GetNextID<FaFamilyBooksEntity>();
+                    inEnt.data.ID = await new SequenceRepository().GetNextID<FaFamilyBooksEntity>();
                 }
                 reObj.success = await dapp.Save(inEnt) > 0;
             }

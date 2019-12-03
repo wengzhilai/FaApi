@@ -742,7 +742,7 @@ namespace Models.Entity
 
             String sql = "select column_name name, column_comment remark,COLUMN_TYPE type,case IS_NULLABLE WHEN 'No' then 0 ELSE 1 END required,COLUMN_KEY='PRI' isKey  from information_schema.columns where table_name = '{0}' ;";
             sql = String.Format(sql, tableName);
-            allFiled = DapperHelper.Query<Filed>(sql);
+            allFiled =new DapperHelper().Query<Filed>(sql);
 
             return allFiled;
         }

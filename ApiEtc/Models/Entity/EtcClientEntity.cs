@@ -7,16 +7,15 @@ namespace ApiEtc.Models.Entity
     /// <summary>
     /// 客户
     /// </summary>
-    [Table("etc_clent")]
-    public class EtcClentEntity
+    [Table("etc_client")]
+    public class EtcClientEntity
     {
-
 
         /// <summary>
         /// ID
         /// </summary>
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
         [Display(Name = "ID")]
         [Column("Id")]
@@ -51,9 +50,9 @@ namespace ApiEtc.Models.Entity
         public DateTime bindTime { get; set; }
 
         /// <summary>
-        /// 状态:已绑定已提交资料推广成功待结算已结算
+        /// 状态:状态:已绑定/已提交资料/已安装激活/已结算
         /// </summary>
-        [Display(Name = "状态:已绑定已提交资料推广成功待结算已结算")]
+        [Display(Name = "状态:状态:已绑定/已提交资料/已安装激活/已结算")]
         [Column("Status")]
         public String status { get; set; }
 
@@ -85,6 +84,29 @@ namespace ApiEtc.Models.Entity
         [Column("WalletId")]
         public int walletId { get; set; }
 
+        /// <summary>
+        /// 车牌号
+        /// </summary>
+        [Required]
+        [Display(Name = "车牌号")]
+        [Column("CarNum")]
+        public String carNum { get; set; }
+
+        /// <summary>
+        /// 车型
+        /// </summary>
+        [Required]
+        [Display(Name = "车型")]
+        [Column("CarType")]
+        public String carType { get; set; }
+
+        /// <summary>
+        /// 提交时间
+        /// </summary>
+        [Required]
+        [Display(Name = "提交时间")]
+        [Column("SubmitTime")]
+        public DateTime submitTime { get; set; }
 
     }
 }

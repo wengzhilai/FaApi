@@ -4,6 +4,10 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiEtc.Config;
+using ApiEtc.Controllers.Interface;
+using ApiEtc.Repository;
+using Helper;
 using log4net;
 using log4net.Config;
 using log4net.Repository;
@@ -13,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
@@ -54,12 +59,25 @@ namespace ApiEtc
             //log4net
             repository = LogManager.CreateRepository("NETCoreRepository");
             XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
+
+            Configuration.Bind(AppSettingsManager.self);
+            Configuration.Bind("WebConfig", AppConfig.WebConfig);
+            System.Console.WriteLine(AppConfig.WebConfig.ClientPrice);
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+
+            #region 注入
+            services.TryAddSingleton<IStaff, StaffRepository>();
+            services.TryAddSingleton<IClient, ClientRepository>();
+            services.TryAddSingleton<IWallet, WalletRepository>();
+            #endregion
             #region  添加SwaggerUI
             services.AddSwaggerGen(options =>
             {
@@ -105,11 +123,9 @@ namespace ApiEtc
                 // 设置时间格式
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 // 如字段为null值，该字段不会返回到前端
-                // options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

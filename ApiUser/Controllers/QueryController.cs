@@ -1,26 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Models.Entity;
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using Helper;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using AutoMapper;
 using Microsoft.AspNetCore.Cors;
-using Models.EntityView;
 
 namespace ApiUser.Controllers
 {
@@ -181,7 +168,7 @@ namespace ApiUser.Controllers
             ResultObj<int> reObj = new ResultObj<int>();
             try
             {
-                if (inEnt.Data.id == 0)
+                if (inEnt.data.id == 0)
                 {
                     reObj.data = await _query.Save(inEnt);
                 }

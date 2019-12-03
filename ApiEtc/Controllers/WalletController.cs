@@ -17,8 +17,18 @@ namespace ApiEtc.Controllers
     [Route("[controller]/[action]")]
     [EnableCors("AllowSameDomain")]
     [ApiController]
-    public class WalletController : ControllerBase, IWalletController
+    public class WalletController : ControllerBase, IWallet
     {
+        IWallet dal;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dal"></param>
+        public WalletController(IWallet dal)
+        {
+            this.dal = dal;
+        }
+
         /// <summary>
         /// 获取钱包列表
         /// </summary>
@@ -27,18 +37,18 @@ namespace ApiEtc.Controllers
         [HttpPost]
         public Task<ResultObj<EtcWalletEntity>> list(WalletListDto inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.list(inObj);
         }
 
         /// <summary>
         /// 查询钱包
         /// </summary>
-        /// <param name="inEnt"></param>
+        /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ResultObj<EtcWalletEntity>> singleByKey(DtoDo<int> inEnt)
+        public Task<ResultObj<EtcWalletEntity>> singleByKey(DtoDo<int> inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.singleByKey(inObj);
         }
 
         /// <summary>
@@ -49,7 +59,7 @@ namespace ApiEtc.Controllers
         [HttpPost]
         public Task<Result> submitWallet(SubmitWalletDto inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.submitWallet(inObj);
         }
     }
 }

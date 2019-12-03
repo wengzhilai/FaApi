@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ApiEtc.Controllers.Interface
 {
-    public interface IWalletController
+    public interface IWallet
     {
         /// <summary>
         /// 提交申请提现
@@ -20,6 +20,11 @@ namespace ApiEtc.Controllers.Interface
         /// <returns></returns>
         Task<ResultObj<EtcWalletEntity>> list(WalletListDto inObj);
 
+        /// <summary>
+        /// 查询钱包
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
         Task<ResultObj<EtcWalletEntity>> singleByKey(DtoDo<int> inEnt);
 
     }
@@ -27,9 +32,14 @@ namespace ApiEtc.Controllers.Interface
     public class SubmitWalletDto: DtoKey
     {
         /// <summary>
+        /// 备注
+        /// </summary>
+        public string remark { get; set; }
+
+        /// <summary>
         /// 提现总金额
         /// </summary>
-        public decimal AllMoney { get; set; }
+        public decimal allMoney { get; set; }
         /// <summary>
         /// 提现客户数
         /// </summary>

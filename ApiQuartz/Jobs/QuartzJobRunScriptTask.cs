@@ -44,7 +44,7 @@ namespace ApiQuartz.Jobs
                     addEnt.START_TIME = DateTime.Now;
                     var taskId = await dal.ScriptTaskSave(new DtoSave<FaScriptTaskEntity>
                     {
-                        Data = addEnt
+                        data = addEnt
                     });
                     if (!taskId.success)
                     {
@@ -54,7 +54,8 @@ namespace ApiQuartz.Jobs
                     }
 
                     var sqlList = script.bodyText.Split(';');
-                    DapperHelper.TranscationBegin();
+                    var dapper = new DapperHelper();
+                    dapper.TranscationBegin();
 
                     foreach (var item in sqlList)
                     {
@@ -68,22 +69,22 @@ namespace ApiQuartz.Jobs
                         };
                         try
                         {
-                            opNum = await DapperHelper.Exec(item);
+                            opNum = await dapper.Exec(item);
                             log.LOG_TYPE = 1;
                             log.MESSAGE = opNum.ToString();
                         }
                         catch (Exception e)
                         {
                             LogHelper.WriteErrorLog(this.GetType(), string.Format("执行{0}任务出错：{1}", item, e.ToString()));
-                            DapperHelper.TranscationRollback();
+                            dapper.TranscationRollback();
                             log.LOG_TYPE = 2;
                             log.MESSAGE = e.Message;
                         }
                         var op = await dal.ScriptTaskLogSave(new DtoSave<FaScriptTaskLogEntity>
                         {
-                            Data = log
+                            data = log
                         });
-                        DapperHelper.TranscationCommit();
+                        dapper.TranscationCommit();
                     }
                 }
             }

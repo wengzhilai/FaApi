@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace ApiEtc.Controllers.Interface
 {
-    public interface IClientController
+    public interface IClient
     {
         /// <summary>
         /// Etc申请
@@ -26,21 +26,21 @@ namespace ApiEtc.Controllers.Interface
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
-        Task<ResultObj<EtcClentEntity>> list(ClientListDto inObj);
+        Task<ResultObj<EtcClientEntity>> list(ClientListDto inObj);
 
         /// <summary>
         /// 后台添加客户资料
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
-        Task<ResultObj<int>> save(DtoSave<EtcClentEntity> inEnt);
+        Task<ResultObj<int>> save(DtoSave<EtcClientEntity> inEnt);
         /// <summary>
         /// 查询客户
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
 
-        Task<ResultObj<EtcClentEntity>> singleByKey(DtoDo<int> inEnt);
+        Task<ResultObj<EtcClientEntity>> singleByKey(DtoDo<int> inEnt);
     }
 
     public class ClientReportResult

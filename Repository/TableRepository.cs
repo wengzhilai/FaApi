@@ -29,57 +29,59 @@ namespace Repository
         public async Task<ResultObj<int>> Save(DtoSave<FaTableTypeEntity> inEnt)
         {
             ResultObj<int> reObj = new ResultObj<int>();
-            if (inEnt.Data.AllColumns == null || inEnt.Data.AllColumns.Count() == 0)
+            if (inEnt.data.AllColumns == null || inEnt.data.AllColumns.Count() == 0)
             {
                 reObj.success = false;
                 reObj.msg = "配置列不能为空";
                 return reObj;
             }
-            DapperHelper.TranscationBegin();
-            DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>(DapperHelper.GetConnection(), DapperHelper.GetTransaction());
+            var dapper = new DapperHelper();
+            dapper.TranscationBegin();
+
+            DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>(dapper.GetConnection(), dapper.GetTransaction());
 
             FaTableTypeEntity oldEnt = new FaTableTypeEntity();
             try
             {
                 bool isAdd = false;
-                if (inEnt.Data.ID == 0)
+                if (inEnt.data.ID == 0)
                 {
                     isAdd = true;
-                    inEnt.Data.ID = await new SequenceRepository().GetNextID<FaTableTypeEntity>();
-                    inEnt.Data.ADD_TIME = DateTime.Now;
+                    inEnt.data.ID = await new SequenceRepository().GetNextID<FaTableTypeEntity>();
+                    inEnt.data.ADD_TIME = DateTime.Now;
                     var opNum = await dbHelper.Save(inEnt);
                     reObj.success = opNum > 0;
                     reObj.msg = "添加成功";
                 }
                 else
                 {
-                    oldEnt = await this.SingleByKey(inEnt.Data.ID);
+                    oldEnt = await this.SingleByKey(inEnt.data.ID);
                     var opNum = await dbHelper.Update(inEnt);
                     reObj.success = opNum > 0;
                     reObj.msg = "修改成功";
 
-                    if (!oldEnt.TABLE_NAME.Equals(inEnt.Data.TABLE_NAME))
+                    if (!oldEnt.TABLE_NAME.Equals(inEnt.data.TABLE_NAME))
                     {
-                        var t = DapperHelper.Exec(MakeSqlChangeTableName(oldEnt.TABLE_NAME, inEnt.Data.TABLE_NAME));
+                        var t = dapper.Exec(MakeSqlChangeTableName(oldEnt.TABLE_NAME, inEnt.data.TABLE_NAME));
                     }
                 }
                 DapperHelper<FaTableColumnEntity> dapperCol = new DapperHelper<FaTableColumnEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
 
 
-                foreach (var item in inEnt.Data.AllColumns)
+                foreach (var item in inEnt.data.AllColumns)
                 {
                     if (isAdd || item.ID == 0) //如果是新增加，或列ID为空
                     {
-                        item.TABLE_TYPE_ID = inEnt.Data.ID;
+                        item.TABLE_TYPE_ID = inEnt.data.ID;
                         item.ID = await new SequenceRepository().GetNextID<FaTableColumnEntity>();
                         var opNum = await dapperCol.Save(new DtoSave<FaTableColumnEntity>
                         {
-                            Data = item
+                            data = item
                         });
                         if (opNum < 1)
                         {
                             LogHelper.WriteErrorLog(this.GetType(), "保存字段失败");
-                            DapperHelper.TranscationRollback();
+                            dapper.TranscationRollback();
                             reObj.success = false;
                             reObj.msg = "保存字段失败";
                             return reObj;
@@ -88,7 +90,7 @@ namespace Repository
                         if (!isAdd)
                         {
                             //添加字段,线程添加
-                            var t = DapperHelper.Exec(MakeSqlAlterAddColumn(inEnt.Data.TABLE_NAME, item));
+                            var t = dapper.Exec(MakeSqlAlterAddColumn(inEnt.data.TABLE_NAME, item));
                         }
                     }
                     else
@@ -110,26 +112,26 @@ namespace Repository
                             item.ID = await new SequenceRepository().GetNextID<FaTableColumnEntity>();
                             opNum = await dapperCol.Save(new DtoSave<FaTableColumnEntity>
                             {
-                                Data = item
+                                data = item
                             });
                             //添加字段
-                            var t = DapperHelper.Exec(MakeSqlAlterAddColumn(inEnt.Data.TABLE_NAME, item));
+                            var t = dapper.Exec(MakeSqlAlterAddColumn(inEnt.data.TABLE_NAME, item));
                         }
                         else
                         {
                             opNum = await dapperCol.Update(new DtoSave<FaTableColumnEntity>
                             {
-                                Data = item,
-                                SaveFieldList = dapperCol.modelHelper.GetDirct().Select(x => x.Key).ToList(),
-                                IgnoreFieldList = null
+                                data = item,
+                                saveFieldList = dapperCol.modelHelper.GetDirct().Select(x => x.Key).ToList(),
+                                ignoreFieldList = null
                             });
                             if (oldCol.COLUMN_NAME == item.COLUMN_NAME)
                             {
-                                var t = DapperHelper.Exec(MakeSqlAlterTable(inEnt.Data.TABLE_NAME, item));
+                                var t = dapper.Exec(MakeSqlAlterTable(inEnt.data.TABLE_NAME, item));
                             }
                             else
                             {
-                                var t = DapperHelper.Exec(MakeSqlAlterChangeColumn(inEnt.Data.TABLE_NAME, oldCol.COLUMN_NAME, item));
+                                var t = dapper.Exec(MakeSqlAlterChangeColumn(inEnt.data.TABLE_NAME, oldCol.COLUMN_NAME, item));
                             }
                         }
 
@@ -146,8 +148,8 @@ namespace Repository
 
                 if (isAdd)
                 {
-                    string createSql = MakeSqlCreateTable(inEnt.Data);
-                    int opNum = await DapperHelper.Exec(createSql);
+                    string createSql = MakeSqlCreateTable(inEnt.data);
+                    int opNum = await dapper.Exec(createSql);
 
                 }
 

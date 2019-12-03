@@ -15,10 +15,10 @@ using Models.Entity;
 namespace Helper
 {
 
-    static public class DapperHelper
+    public class DapperHelper
     {
-        static IDbConnection _connection;
-        static IDbConnection connection
+        IDbConnection _connection;
+        IDbConnection connection
         {
             get
             {
@@ -31,12 +31,12 @@ namespace Helper
                 return _connection;
             }
         }
-        static IDbTransaction transaction = null;
+        IDbTransaction transaction = null;
 
         /// <summary>
         /// 开始事务
         /// </summary>
-        public static void TranscationBegin()
+        public void TranscationBegin()
         {
             connection.Open();
             transaction = connection.BeginTransaction();
@@ -45,12 +45,12 @@ namespace Helper
         /// 获取连接
         /// </summary>
         /// <returns></returns>
-        public static IDbConnection GetConnection()
+        public IDbConnection GetConnection()
         {
             return connection;
         }
 
-        public static IDbTransaction GetTransaction()
+        public IDbTransaction GetTransaction()
         {
             return transaction;
         }
@@ -58,7 +58,7 @@ namespace Helper
         /// <summary>
         /// 回滚事务
         /// </summary>
-        public static void TranscationRollback()
+        public void TranscationRollback()
         {
             transaction.Rollback();
             connection.Close();
@@ -66,19 +66,19 @@ namespace Helper
         /// <summary>
         /// 提交事务
         /// </summary>
-        public static void TranscationCommit()
+        public void TranscationCommit()
         {
             transaction.Commit();
             connection.Close();
         }
 
-        async public static Task<int> Exec(string sql, object param = null)
+        async public Task<int> Exec(string sql, object param = null)
         {
             var result = await connection.ExecuteAsync(sql, param, transaction);
             return result;
         }
 
-        public static List<byte> ExecuteBytesAsync(string sql, object param = null)
+        public List<byte> ExecuteBytesAsync(string sql, object param = null)
         {
             List<byte> reEnt = new List<byte>();
 
@@ -121,7 +121,7 @@ namespace Helper
             return null;
         }
 
-        async public static Task<string> ExecuteScalarAsync(string sql, object param = null)
+        async public Task<string> ExecuteScalarAsync(string sql, object param = null)
         {
             var result = await connection.ExecuteScalarAsync(sql, param, transaction);
             if (result != null)
@@ -130,12 +130,12 @@ namespace Helper
                 return "";
         }
 
-        public static IEnumerable<T> Query<T>(string sql, object param = null)
+        public IEnumerable<T> Query<T>(string sql, object param = null)
         {
             return connection.Query<T>(sql, param, transaction);
         }
 
-        public static List<Dictionary<string, object>> Query(string sql, object param = null)
+        public List<Dictionary<string, object>> Query(string sql, object param = null)
         {
             var rows = new List<Dictionary<string, object>>();
             using (var reader = connection.ExecuteReader(sql, param, transaction))
@@ -160,7 +160,7 @@ namespace Helper
         /// <param name="sql"></param>
         /// <param name="param"></param>
         /// <returns></returns>
-        public static DataTable GetDataTable(string sql, object param = null)
+        public DataTable GetDataTable(string sql, object param = null)
         {
             DataTable table = new DataTable("MyTable");
             connection.Open();
@@ -185,13 +185,13 @@ namespace Helper
             return table;
         }
 
-        public static void Init(IDbConnection dbConnection, IDbTransaction dbTransaction)
+        public void Init(IDbConnection dbConnection, IDbTransaction dbTransaction)
         {
              _connection=dbConnection;
              transaction=dbTransaction;
         }
     }
-    public class DapperHelper<T> where T : class, new()
+    public class DapperHelper<T> : DapperHelper where T : class, new()
     {
         public ModelHelper<T> modelHelper;
         IDbConnection connection;
@@ -212,57 +212,16 @@ namespace Helper
             connection = _connection;
         }
 
-        /// <summary>
-        /// 获取连接
-        /// </summary>
-        /// <returns></returns>
-        public IDbConnection GetConnection()
-        {
-            return connection;
-        }
 
-        /// <summary>
-        /// 获取事务
-        /// </summary>
-        /// <returns></returns>
-        public IDbTransaction GetTransaction()
-        {
-            return transaction;
-        }
 
-        /// <summary>
-        /// 开始事务
-        /// </summary>
-        public void TranscationBegin()
-        {
-            connection.Open();
-            transaction = connection.BeginTransaction();
-        }
-
-        /// <summary>
-        /// 回滚事务
-        /// </summary>
-        public void TranscationRollback()
-        {
-            transaction.Rollback();
-            connection.Close();
-        }
-        /// <summary>
-        /// 提交事务
-        /// </summary>
-        public void TranscationCommit()
-        {
-            transaction.Commit();
-            connection.Close();
-        }
 
 
 
 
         public Task<int> Save(DtoSave<T> inEnt)
         {
-            var mh = new ModelHelper<T>(inEnt.Data);
-            string sql = mh.GetSaveSql(null, inEnt.IgnoreFieldList);
+            var mh = new ModelHelper<T>(inEnt.data);
+            string sql = mh.GetSaveSql(null, inEnt.ignoreFieldList);
             var result = connection.ExecuteAsync(sql, mh.GetDynamicParameters(), transaction);
             return result;
         }
@@ -270,8 +229,8 @@ namespace Helper
         public Task<int> Saves(DtoSave<List<T>> inEnt)
         {
             var mh = new ModelHelper<T>();
-            string sql = mh.GetSaveSql(inEnt.SaveFieldList, inEnt.IgnoreFieldList);
-            var result = connection.ExecuteAsync(sql, inEnt.Data, transaction);
+            string sql = mh.GetSaveSql(inEnt.saveFieldList, inEnt.ignoreFieldList);
+            var result = connection.ExecuteAsync(sql, inEnt.data, transaction);
             return result;
         }
 
@@ -405,9 +364,9 @@ namespace Helper
         /// <returns></returns>
         public Task<int> Update(DtoSave<T> inObj)
         {
-            var mh = new ModelHelper<T>(inObj.Data);
-            string sql = mh.GetUpdateSql(inObj.SaveFieldList, inObj.IgnoreFieldList, inObj.WhereList);
-            var result = connection.ExecuteAsync(sql, mh.GetDynamicParameters(inObj.SaveFieldList, inObj.IgnoreFieldList), transaction);
+            var mh = new ModelHelper<T>(inObj.data);
+            string sql = mh.GetUpdateSql(inObj.saveFieldList, inObj.ignoreFieldList, inObj.whereList);
+            var result = connection.ExecuteAsync(sql, mh.GetDynamicParameters(inObj.saveFieldList, inObj.whereList), transaction);
             return result;
         }
 

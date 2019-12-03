@@ -139,7 +139,7 @@ namespace Repository
                     inLogin.failCount = 0;
                     reObj.success = await dbHelper.Save(new DtoSave<FaLoginEntity>()
                     {
-                        Data = inLogin
+                        data = inLogin
                     }) > 0 ? true : false;
                     if (!reObj.success)
                     {
@@ -162,8 +162,8 @@ namespace Repository
                 inUser.isLocked = 0;
                 reObj.success = await new DapperHelper<FaUserEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction()).Save(new DtoSave<FaUserEntity>
                 {
-                    Data = inUser,
-                    IgnoreFieldList = new List<string>()
+                    data = inUser,
+                    ignoreFieldList = new List<string>()
                 }) > 0 ? true : false;
                 if (!reObj.success)
                 {
@@ -202,20 +202,20 @@ namespace Repository
             //正常退出，修改退出日志
             reObj.success = await userDal.Update(new DtoSave<FaUserEntity>
             {
-                Data = new FaUserEntity { id = inEnt.Data.USER_ID.Value, lastActiveTime = DateTime.Now, lastLogoutTime = DateTime.Now },
-                SaveFieldList = new List<string> { "LAST_ACTIVE_TIME", "LAST_LOGOUT_TIME" }
+                data = new FaUserEntity { id = inEnt.data.USER_ID.Value, lastActiveTime = DateTime.Now, lastLogoutTime = DateTime.Now },
+                saveFieldList = new List<string> { "LAST_ACTIVE_TIME", "LAST_LOGOUT_TIME" }
             }) > 0;
             if (!reObj.success)
             {
                 return reObj;
             }
-            if (inEnt.Data.ID == 0) inEnt.Data.ID = await new SequenceRepository().GetNextID<FaLoginHistoryEntity>();
+            if (inEnt.data.ID == 0) inEnt.data.ID = await new SequenceRepository().GetNextID<FaLoginHistoryEntity>();
             //记录登录日志
             await new FaLoginHistoryRepository().Save(inEnt);
 
             #endregion
 
-            reObj.success = RedisRepository.UserTokenDelete(inEnt.Data.USER_ID.Value);
+            reObj.success = RedisRepository.UserTokenDelete(inEnt.data.USER_ID.Value);
             return reObj;
         }
         /// <summary>
@@ -275,8 +275,8 @@ namespace Repository
                         Login.failCount = 0;
                         await dapperLogin.Update(new DtoSave<FaLoginEntity>
                         {
-                            Data = Login,
-                            SaveFieldList = new List<string> { "IS_LOCKED", "LOCKED_REASON", "FAIL_COUNT" }
+                            data = Login,
+                            saveFieldList = new List<string> { "IS_LOCKED", "LOCKED_REASON", "FAIL_COUNT" }
                         });
                     }
                     else
@@ -284,8 +284,8 @@ namespace Repository
                         Login.failCount++;
                         await dapperLogin.Update(new DtoSave<FaLoginEntity>
                         {
-                            Data = Login,
-                            SaveFieldList = new List<string> { "FAIL_COUNT" }
+                            data = Login,
+                            saveFieldList = new List<string> { "FAIL_COUNT" }
                         });
                     }
                     return reObj;
@@ -298,8 +298,8 @@ namespace Repository
                     Login.failCount = 0;
                     reObj.success = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
-                        Data = Login,
-                        SaveFieldList = new List<string> { "failCount" }
+                        data = Login,
+                        saveFieldList = new List<string> { "failCount" }
                     }) > 0;
 
                     DapperHelper<FaUserRoleEntityView> dapperUserRole = new DapperHelper<FaUserRoleEntityView>();
@@ -355,8 +355,8 @@ namespace Repository
             login.password = inEnt.NewPwd.Md5();
             await dapper.Update(new DtoSave<FaLoginEntity>()
             {
-                Data = login,
-                SaveFieldList = new List<string> { "PASSWORD" }
+                data = login,
+                saveFieldList = new List<string> { "PASSWORD" }
             });
             return reObj;
         }
@@ -402,9 +402,9 @@ namespace Repository
             single.password = inEnt.NewPwd.Md5();
             var upRows = await dapper.Update(new DtoSave<FaLoginEntity>
             {
-                Data = single,
-                SaveFieldList = new List<string> { "PASSWORD" },
-                WhereList = null
+                data = single,
+                saveFieldList = new List<string> { "PASSWORD" },
+                whereList = null
             });
             if (upRows < 1)
             {
@@ -490,9 +490,9 @@ namespace Repository
 
             reObj.success = await userDapper.Update(new DtoSave<FaUserEntity>()
             {
-                Data = user,
-                SaveFieldList = new List<string> { "NAME", "LOGIN_NAME", "ICON_FILES_ID" },
-                WhereList = new List<string> { "ID" }
+                data = user,
+                saveFieldList = new List<string> { "NAME", "LOGIN_NAME", "ICON_FILES_ID" },
+                whereList = new List<string> { "ID" }
             }) > 0 ? true : false;
 
             if (!reObj.success)
@@ -517,7 +517,7 @@ namespace Repository
                 inLogin.failCount = 0;
                 reObj.success = await loginDapper.Save(new DtoSave<FaLoginEntity>()
                 {
-                    Data = inLogin
+                    data = inLogin
                 }) > 0 ? true : false;
             }
             else
@@ -526,9 +526,9 @@ namespace Repository
                 login.password = string.IsNullOrEmpty(pwd) ? NewLoginName.Md5() : pwd.Md5();
                 reObj.success = await loginDapper.Update(new DtoSave<FaLoginEntity>
                 {
-                    Data = login,
-                    SaveFieldList = new List<string> { "LOGIN_NAME", "PASSWORD" },
-                    WhereList = null
+                    data = login,
+                    saveFieldList = new List<string> { "LOGIN_NAME", "PASSWORD" },
+                    whereList = null
                 }) > 0 ? true : false;
             }
 

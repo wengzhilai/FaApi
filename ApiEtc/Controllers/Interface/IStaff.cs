@@ -4,14 +4,14 @@ using System.Threading.Tasks;
 
 namespace ApiEtc.Controllers.Interface
 {
-    public interface IStaffController
+    public interface IStaff
     {
         /// <summary>
         /// 检测用户是否绑定，key为OpenId
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
-        Task<Result> checkIsBind(DtoKey inObj);
+        Task<ResultObj<bool>> checkIsBind(DtoKey inObj);
 
         /// <summary>
         /// 绑定用户

@@ -50,9 +50,9 @@ namespace Repository
                     login.verifyTime = DateTime.Now;
                     reEnt.success = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
-                        Data = login,
-                        SaveFieldList = new List<string> { "VERIFY_CODE", "VERIFY_TIME" },
-                        IgnoreFieldList = null
+                        data = login,
+                        saveFieldList = new List<string> { "VERIFY_CODE", "VERIFY_TIME" },
+                        ignoreFieldList = null
                     }) > 0;
                     if (!reEnt.success)
                     {
@@ -88,7 +88,7 @@ namespace Repository
 
                 reEnt.success = await new DapperHelper<FaSmsSendEntity>().Save(new DtoSave<FaSmsSendEntity>
                 {
-                    Data = ent
+                    data = ent
                 }) > 0;
                 if (!reEnt.success)
                 {

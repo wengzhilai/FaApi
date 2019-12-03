@@ -1,121 +1,24 @@
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using Helper;
-using IRepository;
-using Models;
 using System.Linq;
-using Models.Entity;
-using MySql.Data.MySqlClient;
-using Dapper;
-using System.Data;
-using System.Linq.Expressions;
-using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
+using Models;
+using Models.Entity;
 
-namespace Repository
+namespace Helper.Query
 {
-    public class QueryRepository:IQueryRepository
+    public class QueryRepository : IQuery
     {
-        public QueryRepository()
-        {
-            //ExceptionlessClient.Default.Startup("ZevZKuGg0jZOohtFYKma1kcDiCWvUhBTROnzR1pN");
-        }
-        private DapperHelper<FaQueryEntity> dal = new DapperHelper<FaQueryEntity>();
+        private DapperHelper<QueryEntity> dal = new DapperHelper<QueryEntity>();
 
-        /// <summary>
-        /// 获取所有数据
-        /// msg为SQL语句
-        /// </summary>
-        /// <param name="inEnt"></param>
-        /// <returns></returns>
-        public async Task<ResultObj<Dictionary<string, object>>> QueryExecute(QuerySearchDto inEnt)
+
+
+        public async Task<ResultObj<Dictionary<string, object>>> getListData(QuerySearchDto inEnt)
         {
             ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
             Dictionary<string, object> reEnt = new Dictionary<string, object>();
-
-            FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
-            if (query == null)
-            {
-                return reObj;
-            }
-            IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.queryCfgJson);
-
-            string whereStr = "";
-            string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
-            reObj.msg = AllSql;
-            if (string.IsNullOrEmpty(inEnt.orderStr)) inEnt.orderStr = "(SELECT 0)";
-            try
-            {
-                reObj.dataList = new DapperHelper().Query(AllSql);
-                reObj.total = reObj.dataList.Count();
-
-            }
-            catch
-            {
-                return reObj;
-            }
-            return reObj;
-        }
-        /// <summary>
-        /// 获取Csv数据,支持大数据下载
-        /// </summary>
-        /// <param name="inEnt"></param>
-        /// <param name="sqlStr"></param>
-        /// <returns></returns>
-        public async Task<ResultObj<List<byte>>> QueryExecuteCsv(QuerySearchDto inEnt)
-        {
-            ResultObj<List<byte>> reObj = new ResultObj<List<byte>>();
-            List<byte> reEnt = new List<byte>();
-
-            FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
-            if (query == null)
-            {
-
-                return reObj;
-            }
-            IList<QueryCfg> cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.queryCfgJson);
-
-            string whereStr = "";
-            string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
-            //如果条件为空
-            if (!string.IsNullOrEmpty(whereStr))
-            {
-                if (!whereStr.Trim().ToLower().StartsWith("where")) whereStr = "where " + whereStr;
-
-                AllSql = string.Format(@"
-                    SELECT T.* FROM 
-                    ( 
-	                    {0}
-                    ) T {1}
-                    ", AllSql, whereStr);
-
-            }
-            try
-            {
-                reObj.msg = AllSql;
-                reObj.data = new DapperHelper().ExecuteBytesAsync(AllSql);
-            }
-            catch
-            {
-                return reObj;
-            }
-            return reObj;
-        }
-
-
-        /// <summary>
-        /// 执行分页数据
-        /// </summary>
-        /// <param name="inEnt"></param>
-        /// <param name="sqlStr"></param>
-        /// <returns></returns>
-        public async Task<ResultObj<Dictionary<string, object>>> QueryPageExecute(QuerySearchDto inEnt)
-        {
-            ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
-            Dictionary<string, object> reEnt = new Dictionary<string, object>();
-            FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
+            QueryEntity query = await dal.Single(i => i.code == inEnt.code);
             if (query == null)
             {
                 return reObj;
@@ -130,36 +33,32 @@ namespace Repository
                 var sqlList = reObj.msg.Split(';');
                 if (sqlList.Count() > 0)
                 {
-                    reObj.dataList = new DapperHelper().Query(sqlList[0]);
+                    reObj.dataList = dal.Query(sqlList[0]);
                 }
 
                 if (sqlList.Count() > 1)
                 {
                     int allNum = 0;
-                    int.TryParse(await new DapperHelper().ExecuteScalarAsync(sqlList[1]), out allNum);
+                    int.TryParse(await dal.ExecuteScalarAsync(sqlList[1]), out allNum);
                     reObj.total = allNum;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                LogHelper.WriteErrorLog(this.GetType(),"执行分页数据失败",e);
+                LogHelper.WriteErrorLog(this.GetType(), "执行分页数据失败", e);
                 return reObj;
             }
             return reObj;
         }
 
-        /// <summary>
-        /// 生成配置数据
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="sqlStr"></param>
-        /// <returns></returns>
-        public async Task<ResultObj<QueryCfg>> MakeQueryCfg(string code)
+
+
+        public async Task<ResultObj<QueryCfg>> makeQueryCfg(DtoKey inObj)
         {
             ResultObj<QueryCfg> reObj = new ResultObj<QueryCfg>();
-            QuerySearchDto inEnt = new QuerySearchDto() { code = code };
+            QuerySearchDto inEnt = new QuerySearchDto() { code = inObj.Key };
             List<QueryCfg> reEnt = new List<QueryCfg>();
-            FaQueryEntity query = await dal.Single(i => i.code == inEnt.code);
+            QueryEntity query = await dal.Single(i => i.code == inEnt.code);
 
             if (query == null)
             {
@@ -177,7 +76,7 @@ namespace Repository
             try
             {
 
-                DataTable dt = new DapperHelper().GetDataTable(reObj.msg);
+                System.Data.DataTable dt = new DapperHelper().GetDataTable(reObj.msg);
                 for (int i = 0; i < dt.Columns.Count; i++)
                 {
                     var t = dt.Columns[i];
@@ -242,6 +141,79 @@ namespace Repository
                 return reObj;
             }
         }
+
+        public async Task<ResultObj<int>> save(DtoSave<QueryEntity> inObj)
+        {
+            var resultObj = new ResultObj<int>();
+
+            try
+            {
+                int opNum = 0;
+                if (inObj.data.id == 0)
+                {
+                    opNum = await dal.Save(inObj);
+                }
+                else
+                {
+                    opNum = await dal.Update(inObj);
+                }
+            }
+            catch (Exception e)
+            {
+                resultObj.success = false;
+                resultObj.msg = e.Message;
+            }
+            return resultObj;
+        }
+
+        public async Task<ResultObj<QueryEntity>> getSingleQuery(DtoKey inObj)
+        {
+            var resultObj = new ResultObj<QueryEntity>();
+            try
+            {
+                resultObj.data = await dal.Single(x=>x.code==inObj.Key);
+                resultObj.success = true;
+            }
+            catch (Exception e)
+            {
+                resultObj.success = false;
+                resultObj.msg = e.Message;
+            }
+            return resultObj;
+        }
+
+        public async Task<ResultObj<QueryEntity>> singleByKey(DtoDo<int> inObj)
+        {
+            var resultObj = new ResultObj<QueryEntity>();
+            try
+            {
+                resultObj.data = await dal.SingleByKey(inObj.Key);
+                resultObj.success = true;
+            }
+            catch (Exception e)
+            {
+                resultObj.success = false;
+                resultObj.msg = e.Message;
+            }
+            return resultObj;
+        }
+
+        public async Task<ResultObj<int>> delete(DtoDo<int> inObj)
+        {
+            var resultObj = new ResultObj<int>();
+            try
+            {
+                resultObj.data = await dal.Delete(x => x.id == inObj.Key);
+                resultObj.success = resultObj.data > 0;
+            }
+            catch (Exception e)
+            {
+                resultObj.success = false;
+                resultObj.msg = e.Message;
+            }
+            return resultObj;
+        }
+
 
         /// <summary>
         /// 生成分页的SQL
@@ -405,54 +377,5 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
             whereStr = whereSb.ToString();
             return querySql;
         }
-
-
-
-        public async Task<int> Save(DtoSave<FaQueryEntity> inEnt)
-        {
-            if(inEnt.data.id==0){
-                inEnt.data.id=await new SequenceRepository().GetNextID<FaQueryEntity>();
-            }
-            return await dal.Save(inEnt);
-        }
-
-        public async Task<List<FaQueryEntity>> FindAll(DtoSearch inSearch)
-        {
-            var reList = await dal.FindAll(inSearch);
-            return reList.ToList();
-        }
-
-        public async Task<ResultObj<FaQueryEntity>> FindAllPage(DtoSearch inSearch)
-        {
-            var reObj=new ResultObj<FaQueryEntity>();
-            var reList = await dal.FindAllS<FaQueryEntity,KV>(inSearch);
-            reObj.dataList=reList.Item1.ToList();
-            if(reList.Item2!=null && reList.Item2.Count()>0){
-                reObj.msg=reList.Item2.ToList()[0].V;
-            }
-            return reObj;
-        }
-
-        public async Task<int> Update(DtoSave<FaQueryEntity> inEnt)
-        {
-            return await dal.Update(inEnt);
-        }
-
-        public async Task<FaQueryEntity> Single(Expression<Func<FaQueryEntity, bool>> where)
-        {
-            var reEnt = await dal.Single(where);
-            reEnt._DictStr = TypeChange.ObjectToStr(new ModelHelper<FaQueryEntity>(reEnt).GetDisplayDirct());
-            reEnt._dictQueryCfgStr = TypeChange.ObjectToStr(new ModelHelper<QueryCfg>(new QueryCfg()).GetDisplayDirct());
-            return reEnt;
-
-        }
-
-        public async Task<int> Delete(Expression<Func<FaQueryEntity, bool>> where)
-        {
-            return await dal.Delete(where);
-
-        }
-
     }
-
 }

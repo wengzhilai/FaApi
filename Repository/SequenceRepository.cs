@@ -38,14 +38,14 @@ namespace Repository
                 single.current_val=1;
                 single.increment_val=1;
                 await dbHelper.Save(new DtoSave<SequenceEntity>{
-                    Data=single,
-                    IgnoreFieldList=new List<string>()
+                    data=single,
+                    ignoreFieldList=new List<string>()
                 });
             }else{
                 single.current_val+=single.increment_val;
                 await dbHelper.Update(new DtoSave<SequenceEntity>{
-                    Data=single,
-                    SaveFieldList=new List<string>{"current_val"}
+                    data=single,
+                    saveFieldList=new List<string>{"current_val"}
                 });
             }
             return single.current_val;

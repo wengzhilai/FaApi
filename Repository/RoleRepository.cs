@@ -98,9 +98,9 @@ namespace Repository
                 dbHelper.TranscationBegin();
                 DapperHelper<FaModuleEntity> moduleDapper = new DapperHelper<FaModuleEntity>(dbHelper.GetConnection(), dbHelper.GetTransaction());
 
-                if (inEnt.Data.id == 0)
+                if (inEnt.data.id == 0)
                 {
-                    inEnt.Data.id = await new SequenceRepository().GetNextID<FaRoleEntity>();
+                    inEnt.data.id = await new SequenceRepository().GetNextID<FaRoleEntity>();
                     reObj.data = await dbHelper.Save(inEnt);
                 }
                 else
@@ -115,14 +115,14 @@ namespace Repository
                 }
                 else
                 {
-                    var allModule = await moduleDapper.FindAll(string.Format("ID in ({0})", string.Join(",", inEnt.Data.moduleIdStr)));
+                    var allModule = await moduleDapper.FindAll(string.Format("ID in ({0})", string.Join(",", inEnt.data.moduleIdStr)));
                     var moduleIdList = allModule.Select(i => i.id).ToList();
                     var parent = allModule.GroupBy(i => i.parentId).Select(x => x.Key).Where(x => x != 0).Select(x => x).ToList();
                     moduleIdList = moduleIdList.Concat(parent).ToList();
                     moduleIdList=moduleIdList.GroupBy(i=>i).Select(i=>i.Key).ToList();
-                    DapperHelper.Init(dbHelper.GetConnection(), dbHelper.GetTransaction());
-                    await DapperHelper.Exec("delete from fa_role_module where ROLE_ID = " + inEnt.Data.id);
-                    var opNum = await DapperHelper.Exec(string.Format("insert into fa_role_module(ROLE_ID,MODULE_ID) select {0} ROLE_ID,ID MODULE_ID from fa_module where ID IN ({1}) ", inEnt.Data.id, string.Join(",", moduleIdList)));
+                    new DapperHelper().Init(dbHelper.GetConnection(), dbHelper.GetTransaction());
+                    await new DapperHelper().Exec("delete from fa_role_module where ROLE_ID = " + inEnt.data.id);
+                    var opNum = await new DapperHelper().Exec(string.Format("insert into fa_role_module(ROLE_ID,MODULE_ID) select {0} ROLE_ID,ID MODULE_ID from fa_module where ID IN ({1}) ", inEnt.data.id, string.Join(",", moduleIdList)));
                     if (opNum != moduleIdList.Count())
                     {
                         reObj.success = false;

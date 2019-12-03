@@ -280,7 +280,7 @@ namespace WebApi.Controllers
             ResultObj<int> reObj = new ResultObj<int>();
             try
             {
-                if (inEnt.Data.id == 0)
+                if (inEnt.data.id == 0)
                 {
                     reObj.data = await _query.Save(inEnt);
                 }

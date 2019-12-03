@@ -17,17 +17,28 @@ namespace ApiEtc.Controllers
     [Route("[controller]/[action]")]
     [EnableCors("AllowSameDomain")]
     [ApiController]
-    public class ClientController : ControllerBase, IClientController
+    public class ClientController : ControllerBase
     {
+        IClient dal;
+        /// <summary>
+        /// 构造
+        /// </summary>
+        /// <param name="dal"></param>
+        public ClientController(IClient dal)
+        {
+            this.dal = dal;
+        }
+
+
         /// <summary>
         /// 推广汇总
         /// </summary>
-        /// <param name="inOby"></param>
+        /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ResultObj<ClientReportResult>> clientReport(DtoKey inOby)
+        public Task<ResultObj<ClientReportResult>> clientReport(DtoKey inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.clientReport(inObj);
         }
 
         /// <summary>
@@ -36,9 +47,9 @@ namespace ApiEtc.Controllers
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ResultObj<EtcClentEntity>> list(ClientListDto inObj)
+        public Task<ResultObj<EtcClientEntity>> list(ClientListDto inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.list(inObj);
         }
 
         /// <summary>
@@ -49,29 +60,29 @@ namespace ApiEtc.Controllers
         [HttpPost]
         public Task<Result> regClient(RegClientDto inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.regClient(inObj);
         }
 
         /// <summary>
         /// 后台添加客户资料
         /// </summary>
-        /// <param name="inEnt"></param>
+        /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ResultObj<int>> save(DtoSave<EtcClentEntity> inEnt)
+        public Task<ResultObj<int>> save(DtoSave<EtcClientEntity> inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.save(inObj);
         }
 
         /// <summary>
         /// 查询客户
         /// </summary>
-        /// <param name="inEnt"></param>
+        /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ResultObj<EtcClentEntity>> singleByKey(DtoDo<int> inEnt)
+        public Task<ResultObj<EtcClientEntity>> singleByKey(DtoDo<int> inObj)
         {
-            throw new System.NotImplementedException();
+            return dal.singleByKey(inObj);
         }
     }
 }

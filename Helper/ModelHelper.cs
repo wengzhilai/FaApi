@@ -111,18 +111,39 @@ namespace Helper
         /// <param name="saveFieldList"></param>
         /// <param name="ignoreFieldList"></param>
         /// <returns></returns>
-        public DynamicParameters GetDynamicParameters(List<string> saveFieldList = null, List<string> ignoreFieldList = null)
+        public DynamicParameters GetDynamicParameters(List<string> saveFieldList = null, List<string> whereFieldList = null)
         {
             DynamicParameters reField = new DynamicParameters();
             Type type = typeof(T);
+
+            var allFiled = new List<string>();
+
+            #region 合并数据
             if (saveFieldList != null)
             {
-                saveFieldList.Add(GetKeyField().Key);
+                foreach (var item in saveFieldList)
+                {
+                    allFiled.Add(item);
+                }
             }
+            if (whereFieldList != null)
+            {
+                foreach (var item in whereFieldList)
+                {
+                    allFiled.Add(item);
+                }
+            }
+
+            if (allFiled != null && allFiled.Count != 0)
+            {
+                allFiled.Add(GetKeyField().Key);
+            }
+            #endregion
+
             PropertyInfo[] PropertyList = type.GetProperties();//得到该类的所有公共属性
             foreach (PropertyInfo proInfo in PropertyList)
             {
-                if (saveFieldList != null && saveFieldList.Count != 0 && !saveFieldList.Contains(proInfo.Name))
+                if (allFiled != null && allFiled.Count != 0 && !allFiled.Contains(proInfo.Name))
                 {
                     continue;
                 }
@@ -277,10 +298,36 @@ namespace Helper
                     {
                         reObj = new KeyValuePair<string, string> (proInfo.Name, proInfo.Name );
                     }
+                    
+                    break;
+                }
+            }
+            return reObj;
+        }
+
+
+
+        /// <summary>
+        /// 获取Key是否是自动生成的
+        /// </summary>
+        /// <returns></returns>
+        public bool GetKeyIsAuto()
+        {
+
+            //默认是自动生成
+            bool _IsAuto = true;
+            Type type = typeof(T);
+            PropertyInfo[] proInfoArr = type.GetProperties();//得到该类的所有公共属性
+            for (int a = 0; a < proInfoArr.Length; a++)
+            {
+                PropertyInfo proInfo = proInfoArr[a];
+                object[] attrsPro = proInfo.GetCustomAttributes(typeof(KeyAttribute), true);
+                if (attrsPro.Length > 0)
+                {
                     object[] attrsGenerated = proInfo.GetCustomAttributes(typeof(DatabaseGeneratedAttribute), true);
                     if (attrsGenerated.Length > 0)
                     {
-                        _IsAuto = ((DatabaseGeneratedAttribute)attrsGenerated[0]).DatabaseGeneratedOption == DatabaseGeneratedOption.None;
+                        _IsAuto = ((DatabaseGeneratedAttribute)attrsGenerated[0]).DatabaseGeneratedOption != DatabaseGeneratedOption.None;
                     }
                     else
                     {
@@ -289,44 +336,7 @@ namespace Helper
                     break;
                 }
             }
-            return reObj;
-        }
-
-        
-
-        bool? _IsAuto;
-        /// <summary>
-        /// 获取Key是否是自动生成的
-        /// </summary>
-        /// <returns></returns>
-        public bool GetKeyIsAuto()
-        {
-            if (_IsAuto == null)
-            {
-                //默认是自动生成
-                _IsAuto = true;
-                Type type = typeof(T);
-                PropertyInfo[] proInfoArr = type.GetProperties();//得到该类的所有公共属性
-                for (int a = 0; a < proInfoArr.Length; a++)
-                {
-                    PropertyInfo proInfo = proInfoArr[a];
-                    object[] attrsPro = proInfo.GetCustomAttributes(typeof(KeyAttribute), true);
-                    if (attrsPro.Length > 0)
-                    {
-                        object[] attrsGenerated = proInfo.GetCustomAttributes(typeof(DatabaseGeneratedAttribute), true);
-                        if (attrsGenerated.Length > 0)
-                        {
-                            _IsAuto = ((DatabaseGeneratedAttribute)attrsGenerated[0]).DatabaseGeneratedOption != DatabaseGeneratedOption.None;
-                        }
-                        else
-                        {
-                            _IsAuto = true;
-                        }
-                        break;
-                    }
-                }
-            }
-            return _IsAuto.Value;
+            return _IsAuto;
         }
 
         /// <summary>
@@ -351,10 +361,12 @@ namespace Helper
                 }
             }
             var saveDict = GetTableFields(saveFieldList, ignoreFieldList);
-            sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", saveDict.Select(x=>x.Value)) + ") VALUES(" + string.Join(",", saveDict.Select(x => "@" + x.Key)) + ")";
+            sql = "INSERT INTO  " + GetTableName() + "(" + string.Join(",", saveDict.Select(x=>x.Value)) + ") VALUES(" + string.Join(",", saveDict.Select(x => "@" + x.Key)) + ");";
             if (GetKeyIsAuto())
             {
-                sql += "\r\n select @@IDENTITY ";
+                //sql += "\r\n select @@IDENTITY ";
+                sql += "\r\n SELECT LAST_INSERT_ID(); ";
+                
             }
             return sql;
         }

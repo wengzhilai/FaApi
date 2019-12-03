@@ -81,9 +81,9 @@ namespace Repository
         async public Task<ResultObj<int>> Save(DtoSave<FaScriptEntity> inEnt)
         {
             ResultObj<int> reObj = new ResultObj<int>();
-            if (inEnt.Data.id == 0)
+            if (inEnt.data.id == 0)
             {
-                inEnt.Data.id = await new SequenceRepository().GetNextID<FaScriptEntity>();
+                inEnt.data.id = await new SequenceRepository().GetNextID<FaScriptEntity>();
                 reObj.data = await dbHelper.Save(inEnt);
             }
             else
@@ -126,9 +126,9 @@ namespace Repository
         {
             ResultObj<bool> reObj = new ResultObj<bool>();
             DapperHelper<FaScriptTaskLogEntity> dapper = new DapperHelper<FaScriptTaskLogEntity>();
-            if (inEnt.Data.ID == 0)
+            if (inEnt.data.ID == 0)
             {
-                inEnt.Data.ID = await new SequenceRepository().GetNextID<FaScriptTaskLogEntity>();
+                inEnt.data.ID = await new SequenceRepository().GetNextID<FaScriptTaskLogEntity>();
                 var opNum = await dapper.Save(inEnt);
                 reObj.success = opNum > 0;
                 reObj.msg = "添加成功";
@@ -146,14 +146,14 @@ namespace Repository
         {
             ResultObj<int> reObj = new ResultObj<int>();
             DapperHelper<FaScriptTaskEntity> dapper = new DapperHelper<FaScriptTaskEntity>();
-            if (inEnt.Data.ID == 0)
+            if (inEnt.data.ID == 0)
             {
-                inEnt.Data.ID = await new SequenceRepository().GetNextID<FaScriptTaskEntity>();
+                inEnt.data.ID = await new SequenceRepository().GetNextID<FaScriptTaskEntity>();
             }
             var opNum = await dapper.Save(inEnt);
             reObj.success = opNum > 0;
             reObj.msg = "添加成功";
-            reObj.data = inEnt.Data.ID;
+            reObj.data = inEnt.data.ID;
             return reObj;
         }
 

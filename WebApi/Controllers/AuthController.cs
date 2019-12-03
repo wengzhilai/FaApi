@@ -144,15 +144,15 @@ namespace WebApi.Controllers
             try
             {
                 var outEnt = new DtoSave<FaLoginHistoryEntity>();
-                outEnt.Data = new FaLoginHistoryEntity();
-                outEnt.Data.LOGIN_HISTORY_TYPE = 2;
-                outEnt.Data.LOGIN_HOST = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-                outEnt.Data.LOGOUT_TIME = DateTime.Now;
-                outEnt.Data.MESSAGE = "正常退出";
+                outEnt.data = new FaLoginHistoryEntity();
+                outEnt.data.LOGIN_HISTORY_TYPE = 2;
+                outEnt.data.LOGIN_HOST = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                outEnt.data.LOGOUT_TIME = DateTime.Now;
+                outEnt.data.MESSAGE = "正常退出";
                 var userEntList = await _user.FindAll(x => x.loginName == User.Identity.Name);
                 if (userEntList.Count() > 0)
                 {
-                    outEnt.Data.USER_ID = userEntList.ToList()[0].id;
+                    outEnt.data.USER_ID = userEntList.ToList()[0].id;
                 }
                 reObj = await _login.LoginOut(outEnt);
             }
