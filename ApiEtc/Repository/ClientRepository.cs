@@ -2,6 +2,7 @@
 using ApiEtc.Controllers.Interface;
 using ApiEtc.Models.Entity;
 using Helper;
+using Helper.Query;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,15 @@ namespace ApiEtc.Repository
         DapperHelper<EtcClientEntity> dapper = new DapperHelper<EtcClientEntity>();
 
         IStaff staffDal;
+        IQuery queryDal;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dal"></param>
-        public ClientRepository(IStaff dal)
+        public ClientRepository(IStaff dal, IQuery queryDal)
         {
             this.staffDal = dal;
+            this.queryDal = queryDal;
         }
 
 
@@ -62,20 +65,10 @@ from etc_staff a where OpenId='{0}'
             return reObj;
         }
 
-        public async Task<ResultObj<EtcClientEntity>> list(ClientListDto inObj)
+        public Task<ResultObj<Dictionary<String, Object>>> list(ClientListDto inObj)
         {
-            var reObj = new ResultObj<EtcClientEntity>();
-            try
-            {
-
-            }
-            catch (Exception e)
-            {
-                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
-                reObj.success = false;
-                reObj.msg = e.Message;
-            }
-            return reObj;
+            inObj.code = "client";
+            return queryDal.getListData(inObj);
         }
 
         /// <summary>

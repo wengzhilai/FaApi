@@ -9,6 +9,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Scripts\jquery-easyui-1.9.0\plugins\**" />
+    <Compile Remove="wwwroot\Scripts\jquery-easyui-1.9.0\src\**" />
+    <Compile Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material-teal\**" />
+    <Compile Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material\**" />
+    <Content Remove="wwwroot\Scripts\jquery-easyui-1.9.0\plugins\**" />
+    <Content Remove="wwwroot\Scripts\jquery-easyui-1.9.0\src\**" />
+    <Content Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material-teal\**" />
+    <Content Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material\**" />
+    <EmbeddedResource Remove="wwwroot\Scripts\jquery-easyui-1.9.0\plugins\**" />
+    <EmbeddedResource Remove="wwwroot\Scripts\jquery-easyui-1.9.0\src\**" />
+    <EmbeddedResource Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material-teal\**" />
+    <EmbeddedResource Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material\**" />
+    <None Remove="wwwroot\Scripts\jquery-easyui-1.9.0\plugins\**" />
+    <None Remove="wwwroot\Scripts\jquery-easyui-1.9.0\src\**" />
+    <None Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material-teal\**" />
+    <None Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ApiEtc.xml" />
   </ItemGroup>
 
@@ -27,6 +46,18 @@
   <ItemGroup>
     <ProjectReference Include="..\Helper\Helper.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Scripts\daterangepicker\daterangepicker.js" />
+    <None Include="wwwroot\Scripts\daterangepicker\moment.min.js" />
+    <None Include="wwwroot\Scripts\jquery-easyui-1.9.0\easyloader.js" />
+    <None Include="wwwroot\Scripts\jquery-easyui-1.9.0\jquery.easyui.min.js" />
+    <None Include="wwwroot\Scripts\jquery-easyui-1.9.0\jquery.easyui.mobile.js" />
+    <None Include="wwwroot\Scripts\jquery-easyui-1.9.0\jquery.min.js" />
+    <None Include="wwwroot\Scripts\jquery-easyui-1.9.0\locale\easyui-lang-en.js" />
+    <None Include="wwwroot\Scripts\jquery-easyui-1.9.0\locale\easyui-lang-zh_CN.js" />
+    <None Include="wwwroot\Scripts\jquery-easyui-1.9.0\locale\easyui-lang-zh_TW.js" />
   </ItemGroup>
 
 </Project>

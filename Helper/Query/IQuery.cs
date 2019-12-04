@@ -1,5 +1,5 @@
-﻿using Models;
-using Models.Entity;
+﻿using Helper.Query.Dto;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,14 +15,14 @@ namespace Helper.Query
         /// </summary>
         /// <param name="querySearchModel"></param>
         /// <returns></returns>
-        Task<ResultObj<Dictionary<String, Object>>> getListData(QuerySearchDto querySearchModel);
+        Task<ResultObj<Dictionary<String, Object>>> getListData(SearchDto inObj);
 
         /// <summary>
         /// 生成Query配置
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
-        Task<ResultObj<QueryCfg>> makeQueryCfg(DtoKey inObj);
+        Task<ResultObj<Dictionary<string, Dictionary<string, object>>>> makeQueryCfg(DtoKey inObj);
 
         /// <summary>
         /// 查询单个Query

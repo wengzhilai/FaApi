@@ -5,11 +5,11 @@ namespace Models
         /// <summary>
         /// 主键
         /// </summary>
-        public string K { get; set; }
+        public string k { get; set; }
 
         /// <summary>
         /// 值
         /// </summary>
-        public string V { get; set; }
+        public string v { get; set; }
     }
 }

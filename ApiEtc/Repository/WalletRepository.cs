@@ -1,6 +1,7 @@
 ﻿using ApiEtc.Controllers.Interface;
 using ApiEtc.Models.Entity;
 using Helper;
+using Helper.Query;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -17,31 +18,24 @@ namespace ApiEtc.Repository
 
         IStaff staffDal;
         IClient clientDal;
+        IQuery queryDal;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dal"></param>
         /// <param name="clientDal"></param>
-        public WalletRepository(IStaff dal, IClient clientDal)
+        public WalletRepository(IStaff dal, IClient clientDal, IQuery queryDal)
         {
             this.staffDal = dal;
             this.clientDal = clientDal;
+            this.queryDal = queryDal;
         }
 
-        public async Task<ResultObj<EtcWalletEntity>> list(WalletListDto inObj)
+        public Task<ResultObj<Dictionary<String, Object>>> list(WalletListDto inObj)
         {
-            var reObj = new ResultObj<EtcWalletEntity>();
-            try
-            {
+            inObj.code = "client";
 
-            }
-            catch (Exception e)
-            {
-                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
-                reObj.success = false;
-                reObj.msg = e.Message;
-            }
-            return reObj;
+            return queryDal.getListData(inObj);
         }
 
         public async Task<ResultObj<EtcWalletEntity>> singleByKey(DtoDo<int> inEnt)

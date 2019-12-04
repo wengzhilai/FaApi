@@ -14,7 +14,7 @@ namespace Models
         /// <summary>
         /// 类型
         /// </summary>
-        public string T { get; set; }
+        public string t { get; set; }
         public KV TClass { get; set; }
         public IList<KTV> child;
 

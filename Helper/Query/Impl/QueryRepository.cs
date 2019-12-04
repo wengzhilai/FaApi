@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Helper.Query.Dto;
 using Models;
-using Models.Entity;
 
 namespace Helper.Query
 {
@@ -14,10 +14,12 @@ namespace Helper.Query
 
 
 
-        public async Task<ResultObj<Dictionary<string, object>>> getListData(QuerySearchDto inEnt)
+        public async Task<ResultObj<Dictionary<string, object>>> getListData(SearchDto inEnt)
         {
+
             ResultObj<Dictionary<string, object>> reObj = new ResultObj<Dictionary<string, object>>();
-            Dictionary<string, object> reEnt = new Dictionary<string, object>();
+            if (string.IsNullOrEmpty(inEnt.code)) return reObj;
+            inEnt.code = inEnt.code.Trim().Replace("#", "");
             QueryEntity query = await dal.Single(i => i.code == inEnt.code);
             if (query == null)
             {
@@ -26,8 +28,9 @@ namespace Helper.Query
 
             string whereStr = "";
             string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
-            if (string.IsNullOrWhiteSpace(inEnt.orderStr)) inEnt.orderStr = "(SELECT 0)";
-            reObj.msg = MakePageSql(AllSql, inEnt.page, inEnt.rows, inEnt.orderStr, whereStr);
+            string orderStr = string.Format("{0} {1}", inEnt.sort, inEnt.order);
+            if (string.IsNullOrWhiteSpace(orderStr)) orderStr = "(SELECT 0)";
+            reObj.msg = MakePageSql(AllSql, inEnt.page, inEnt.rows, orderStr, whereStr);
             try
             {
                 var sqlList = reObj.msg.Split(';');
@@ -53,26 +56,21 @@ namespace Helper.Query
 
 
 
-        public async Task<ResultObj<QueryCfg>> makeQueryCfg(DtoKey inObj)
+        public async Task<ResultObj<Dictionary<string, Dictionary<string, object>>>> makeQueryCfg(DtoKey inObj)
         {
-            ResultObj<QueryCfg> reObj = new ResultObj<QueryCfg>();
-            QuerySearchDto inEnt = new QuerySearchDto() { code = inObj.Key };
-            List<QueryCfg> reEnt = new List<QueryCfg>();
+            var reObj = new ResultObj<Dictionary<string, Dictionary<string, object>>>();
+            reObj.data = new Dictionary<string, Dictionary<string, object>>();
+            SearchDto inEnt = new SearchDto() { code = inObj.Key };
             QueryEntity query = await dal.Single(i => i.code == inEnt.code);
 
             if (query == null)
             {
                 return reObj;
             }
-            IList<QueryCfg> cfg = new List<QueryCfg>();
-            if (!string.IsNullOrEmpty(query.queryCfgJson))
-            {
-                cfg = TypeChange.ToJsonObject<List<QueryCfg>>(query.queryCfgJson);
-            }
 
             string whereStr = "";
             string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
-            reObj.msg = MakePageSql(AllSql);
+            reObj.msg = AllSql;
             try
             {
 
@@ -103,43 +101,39 @@ namespace Helper.Query
                             break;
                     }
 
-                    reEnt.Add(new QueryCfg()
-                    {
-                        fieldName = t.ColumnName,
-                        show = true,
-                        fieldType = t.DataType.FullName,
-                        width = "120",
-                        canSearch = true,
-                        searchType = searchType,
-                        searchScript = searchScript,
-                        sortable = true,
-                        alias = t.Caption,
-                        isVariable = "false"
-                    });
+                    var item = new Dictionary<string, object>();
+                    item.Add("title", t.Caption);
+                    item.Add("type", searchType);
+
+                    reObj.data.Add(t.ColumnName, item);
+
                 }
-                #region 获取当前状态
+                #region 获取当前配置
+
+                Dictionary<string, Dictionary<string, object>> cfg = new Dictionary<string, Dictionary<string, object>>();
+                if (!string.IsNullOrEmpty(query.queryCfgJson))
                 {
-                    if (query != null)
+                    cfg = TypeChange.ToJsonObject<Dictionary<string, Dictionary<string, object>>>(query.queryCfgJson);
+                }
+
+                if (cfg != null)
+                {
+                    foreach (var item in reObj.data)
                     {
-                        IList<QueryCfg> old = TypeChange.ToJsonObject<List<QueryCfg>>(query.queryCfgJson);
-                        if (old != null)
+                        if (cfg[item.Key] != null)
                         {
-                            for (int i = 0; i < reEnt.Count; i++)
-                            {
-                                var t0 = old.SingleOrDefault(x => x.fieldName == reEnt[i].fieldName);
-                                if (t0 != null) reEnt[i] = t0;
-                            }
+                            reObj.data[item.Key] = cfg[item.Key];
                         }
                     }
                 }
                 #endregion
-                reObj.dataList = reEnt;
-                return reObj;
             }
-            catch
+            catch (Exception e)
             {
-                return reObj;
+                reObj.success = false;
+                reObj.msg = e.Message;
             }
+            return reObj;
         }
 
         public async Task<ResultObj<int>> save(DtoSave<QueryEntity> inObj)
@@ -275,50 +269,26 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
         /// <param name="querySql"></param>
         /// <param name="whereStr"></param>
         /// <returns></returns>
-        public string MakeSql(QuerySearchDto inEnt, string querySql, ref string whereStr)
+        public string MakeSql(SearchDto inEnt, string querySql, ref string whereStr)
         {
 
-            if (inEnt.paraList == null) inEnt.paraList = new List<QueryPara>();
             if (inEnt.whereList == null)
             {
                 if (string.IsNullOrEmpty(inEnt.whereListStr))
                 {
-                    inEnt.whereList = new List<QueryRowBtnShowCondition>();
+                    inEnt.whereList = new List<SearchWhereDto>();
                 }
                 else
                 {
-                    inEnt.whereList = TypeChange.ToJsonObject<List<QueryRowBtnShowCondition>>(inEnt.whereListStr);
-                }
-            }
-
-            if (inEnt.paraList == null)
-            {
-                if (string.IsNullOrEmpty(inEnt.paraListStr))
-                {
-                    inEnt.paraList = new List<QueryPara>();
-                }
-                else
-                {
-                    inEnt.paraList = TypeChange.ToJsonObject<List<QueryPara>>(inEnt.paraListStr);
+                    inEnt.whereList = TypeChange.ToJsonObject<List<SearchWhereDto>>(inEnt.whereListStr);
                 }
             }
 
 
-            //替换地址参数
-            foreach (var tmp in inEnt.paraList)
-            {
-                if (tmp.value == "@(NOWDATA)")
-                {
-                    tmp.value = DateTime.Today.ToString("yyyy-MM-dd");
-                }
-                querySql = querySql.Replace("@(" + tmp.paraName + ")", tmp.value);
-            }
 
             //替换搜索的参数
             foreach (var tmp in inEnt.whereList)
             {
-                if (string.IsNullOrEmpty(tmp.objFiled)) tmp.objFiled = tmp.fieldName;
-                if (string.IsNullOrEmpty(tmp.fieldName)) tmp.fieldName = tmp.objFiled;
                 querySql = querySql.Replace("@(" + tmp.objFiled + ")", tmp.value);
             }
 
@@ -348,6 +318,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
                         }
                         break;
                     case "date":
+                    case "datetimebox":
                     case "datetime":
                         switch (tmp.opType)
                         {

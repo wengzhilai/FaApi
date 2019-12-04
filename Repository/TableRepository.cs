@@ -22,7 +22,7 @@ namespace Repository
             DapperHelper<FaTableTypeEntity> dbHelper = new DapperHelper<FaTableTypeEntity>();
             var reObj = new ResultObj<KTV>();
             var entList = await dbHelper.FindAll(x => x.STAUTS == "启用");
-            reObj.dataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
+            reObj.dataList = entList.Select(i => new KTV() { k = i.ID.ToString(), v = i.NAME }).ToList();
             return reObj;
         }
 

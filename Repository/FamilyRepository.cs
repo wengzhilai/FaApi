@@ -64,7 +64,7 @@ namespace Repository
 
             reEnt.ItemList = await GetRelativeItems(userInfo);
 
-            reEnt.RelativeList = reEnt.ItemList.Select(x => new KV { K = x.Id.ToString(), V = x.FatherId.ToString() }).ToList();
+            reEnt.RelativeList = reEnt.ItemList.Select(x => new KV { k = x.Id.ToString(), v = x.FatherId.ToString() }).ToList();
             reEnt.RelativeList.RemoveAt(reEnt.RelativeList.Count() - 1);
             reobj.data = reEnt;
             return reobj;
@@ -270,12 +270,12 @@ namespace Repository
             DapperHelper<FaUserInfoEntityView> dapperUserInfo = new DapperHelper<FaUserInfoEntityView>();
             var user = await dapperUserInfo.Single(i => i.ID == userId);
             if (user == null) return reObj;
-            reObj.Add(new KV { K = user.ID.ToString(), V = user.NAME });
+            reObj.Add(new KV { k = user.ID.ToString(), v = user.NAME });
             for (int i = 0; i < parentNum; i++)
             {
                 user = await dapperUserInfo.Single(a => a.ID == user.FATHER_ID);
                 if (user == null) return reObj;
-                reObj.Add(new KV { K = user.ID.ToString(), V = user.NAME });
+                reObj.Add(new KV { k = user.ID.ToString(), v = user.NAME });
             }
             return reObj;
         }
