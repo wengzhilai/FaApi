@@ -140,7 +140,7 @@ namespace WebApi.Controllers
                 var doc1 = word1.MakeXWPFDocument(allPath);
                 //标题
                 var cellTitle = doc.Tables[0].Rows[0].GetCell(0).Tables[0].Rows[0].GetCell(0);
-                word.AddNavigation(cellTitle, string.Join("----", parentList.Select(x => x.V.Substring(1))));
+                word.AddNavigation(cellTitle, string.Join("----", parentList.Select(x => x.v.Substring(1))));
 
                 #region 设置页码
                 {

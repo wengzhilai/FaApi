@@ -33,10 +33,10 @@ namespace Repository
         {
             var reObj = new ResultObj<KTV>();
             var entList = await dbHelper.FindAll(i => i.PARENT_ID == parentId);
-            reObj.dataList = entList.Select(i => new KTV() { K = i.ID.ToString(), V = i.NAME }).ToList();
+            reObj.dataList = entList.Select(i => new KTV() { k = i.ID.ToString(), v = i.NAME }).ToList();
             foreach (var item in reObj.dataList)
             {
-                item.child = (await GetTree(Convert.ToInt32(item.K))).dataList;
+                item.child = (await GetTree(Convert.ToInt32(item.k))).dataList;
             }
             return reObj;
         }

@@ -55,12 +55,12 @@ namespace Repository
 
 
             //表示新增加用户
-            if (string.IsNullOrEmpty(inEnt.ParentArr[0].K))
+            if (string.IsNullOrEmpty(inEnt.ParentArr[0].k))
             {
                 #region 添加新用户
 
                 int fatherId = 0;
-                int.TryParse(inEnt.ParentArr[1].K, out fatherId);
+                int.TryParse(inEnt.ParentArr[1].k, out fatherId);
                 if (fatherId == 0)
                 {
                     reObj.success = false;
@@ -81,7 +81,7 @@ namespace Repository
                     //注册账号，返回UserId
                     var rustle = await new LoginRepository().LoginReg(new LogingDto
                     {
-                        userName = inEnt.ParentArr?[0].V,
+                        userName = inEnt.ParentArr?[0].v,
                         loginName = inEnt.LoginName,
                         password = inEnt.Password,
                         code = inEnt.Code
@@ -104,8 +104,8 @@ namespace Repository
                                     FATHER_ID = fatherId,
                                     ELDER_ID = fatherEnt.ELDER_ID + 1,
                                     BIRTHDAY_TIME = brithDay,
-                                    CREATE_USER_NAME = inEnt.ParentArr[0].V,
-                                    UPDATE_USER_NAME = inEnt.ParentArr[0].V,
+                                    CREATE_USER_NAME = inEnt.ParentArr[0].v,
+                                    UPDATE_USER_NAME = inEnt.ParentArr[0].v,
                                     BIRTHDAY_PLACE = inEnt.BirthdayPlace,
                                     SEX = inEnt.Sex,
                                     YEARS_TYPE = inEnt.YearsType,
@@ -147,7 +147,7 @@ namespace Repository
             else  //修改用户
             {
                 #region 修改用户信息
-                var userId = Convert.ToInt32(inEnt.ParentArr[0].K);
+                var userId = Convert.ToInt32(inEnt.ParentArr[0].k);
                 var user = await new DapperHelper<FaUserEntity>().Single(x => x.id == userId);
 
                 #region 保存头像
@@ -173,7 +173,7 @@ namespace Repository
 
 
                 //更新用户信息
-                var upUser = await new LoginRepository().UserEditLoginName(user.loginName, inEnt.LoginName, inEnt.ParentArr[0].V, Convert.ToInt32(inEnt.ParentArr[0].K), inEnt.Password, inEnt.ICON_FILES_ID);
+                var upUser = await new LoginRepository().UserEditLoginName(user.loginName, inEnt.LoginName, inEnt.ParentArr[0].v, Convert.ToInt32(inEnt.ParentArr[0].k), inEnt.Password, inEnt.ICON_FILES_ID);
                 //更新失败则返回
                 if (!upUser.success)
                 {

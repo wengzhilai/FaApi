@@ -428,7 +428,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
             var reList = await dal.FindAllS<FaQueryEntity,KV>(inSearch);
             reObj.dataList=reList.Item1.ToList();
             if(reList.Item2!=null && reList.Item2.Count()>0){
-                reObj.msg=reList.Item2.ToList()[0].V;
+                reObj.msg=reList.Item2.ToList()[0].v;
             }
             return reObj;
         }

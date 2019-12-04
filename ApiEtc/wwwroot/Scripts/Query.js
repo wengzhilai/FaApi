@@ -757,19 +757,16 @@ function ShowRowBtn(value, row, index) {
     for (var i = 0; i < jsonObj.length; i++) {
 
         var btn = jsonObj[i];
-        var allAuthStr = "," + $("#NoAuthority").val() + ",";
-        if (allAuthStr.indexOf("," + btn.Name + ",") > -1) {
-            continue;
+
+        if (btn.url == null || btn.url == "" || btn.url == 'null') {
+            btn.url="Edit.html"
         }
 
-        if (jsonObj[i].Url == null || jsonObj[i].Url == "" || jsonObj[i].Url == 'null') {
-            continue;
-        }
-
-        var s = jsonObj[i].Url.indexOf('@@(');
+        //格式化地址
+        var s = btn.url.indexOf('@@(');
         while (s > -1) {
-            e = jsonObj[i].Url.indexOf(')');
-            var t = jsonObj[i].Url.substr(s + 2, e - s - 2);
+            e = btn.url.indexOf(')');
+            var t = btn.url.substr(s + 2, e - s - 2);
             var evelV = null;
             try {
                 evelV = eval(t);
@@ -777,87 +774,92 @@ function ShowRowBtn(value, row, index) {
             catch (e) {
             }
             if (evelV == null) {
-                jsonObj[i].Url = jsonObj[i].Url.replace("@@(" + t + ")", eval("row." + t));
+                btn.url = btn.url.replace("@@(" + t + ")", eval("row." + t));
             }
             else {
-                jsonObj[i].Url = jsonObj[i].Url.replace("@@(" + t + ")", evelV);
+                btn.url = btn.url.replace("@@(" + t + ")", evelV);
             }
-            s = jsonObj[i].Url.indexOf('@@(');
+            s = btn.url.indexOf('@@(');
         }
-        if (jsonObj[i].Url == null || jsonObj[i].Url == "" || jsonObj[i].Url == 'null') {
+        if (btn.url == null || btn.url == "" || btn.url == 'null') {
             continue;
         }
-        jsonObj[i].Url = jsonObj[i].Url.replace("~/", '');
+        btn.url = btn.url.replace("~/", '');
 
-
+        //判断显示
         var isShow = false;
-        if (jsonObj[i].ShowCondition == null || jsonObj[i].ShowCondition.length == 0) isShow = true;
-        for (var x = 0; x < jsonObj[i].ShowCondition.length; x++) {
-            var v = jsonObj[i].ShowCondition[x].Value;
-            str = "row." + jsonObj[i].ShowCondition[x].ObjFiled + jsonObj[i].ShowCondition[x].OpType + v;
+        if (btn.showCondition == null || btn.showCondition.length == 0) isShow = true;
+        for (var x = 0; x < btn.showCondition.length; x++) {
+            var v = btn.showCondition[x].v;
+            str = "row." + btn.showCondition[x].k + btn.showCondition[x].t + v;
             try {
                 isShow = eval(str);
             } catch (e) { }
             if (isShow) break;
         }
         if (!isShow) continue;
+
+
         var paraStr = "?";
-        if (jsonObj[i].Url.indexOf('?') > 0) {
+        if (btn.url.indexOf('?') > 0) {
             paraStr = "&";
         }
-        if (jsonObj[i].Parameter != null) {
-            for (var x = 0; x < jsonObj[i].Parameter.length; x++) {
-                var v = jsonObj[i].Parameter[x].ObjValue;
+
+        //url地址需要的参数
+        if (btn.parameter != null) {
+            for (var x = 0; x < btn.parameter.length; x++) {
+                let para = btn.parameter[x];
+                var v = para.v;
                 if (v == null) continue;
                 if (v == "{input}") {
-                    filedV = "{input:" + jsonObj[i].Parameter[x].Para + "}";
+                    filedV = "{input:" + para.k + "}";
                 }
                 else {
                     var t_str = "";
-                    if (jsonObj[i].Parameter[x].ObjValue.indexOf("@@(") == 0) {
-                        var t = jsonObj[i].Parameter[x].ObjValue.replace("@@(", "").replace(")", "")
+                    if (para.v.indexOf("@@(") == 0) {
+                        var t = para.v.replace("@@(", "").replace(")", "")
                         if (eval(t) != null) {
                             t_str = t;
                         }
                     }
                     else {
-                        t_str = "row." + jsonObj[i].Parameter[x].ObjValue;
+                        t_str = "row." + para.v;
                     }
                     var filedV = eval(t_str);
                 }
-                paraStr += jsonObj[i].Parameter[x].Para + "=" + filedV + "&"
+                paraStr += para.k + "=" + filedV + "&"
             }
         }
 
 
         var tmp = '[<a  href="#" ';
-        if (jsonObj[i].DialogWidth == '') jsonObj[i].DialogWidth = '0';
-        if (jsonObj[i].DialogHeigth == '') jsonObj[i].DialogHeigth = '0';
-        switch (jsonObj[i].DialogMode) {
+        if (btn.width == '') btn.width = '0';
+        if (btn.heigth == '') btn.heigth = '0';
+        switch (btn.dialogMode) {
             case "PromptAjax":
-                tmp += ' onclick="PromptAjaxUrl(\'' + jsonObj[i].Name + '\',\'' + jsonObj[i].Url + paraStr + '\')">';
+                tmp += ' onclick="PromptAjaxUrl(\'' + btn.Name + '\',\'' + btn.url + paraStr + '\')">';
                 break;
             case "Ajax":
-                tmp += ' onclick="DelAjaxUrl(\'' + jsonObj[i].Name + '\',\'' + jsonObj[i].Url + paraStr + '\')">';
+                tmp += ' onclick="DelAjaxUrl(\'' + btn.Name + '\',\'' + btn.url + paraStr + '\')">';
                 break;
             case "Div":
-                tmp += ' onclick="DivEditDialog(\'' + jsonObj[i].Url + paraStr + '\',\'' + jsonObj[i].Name + '\',' + jsonObj[i].DialogWidth + ',' + jsonObj[i].DialogHeigth + ')"> '
+                tmp += ' onclick="DivEditDialog(\'' + btn.url + paraStr + '\',\'' + btn.Name + '\',' + btn.width + ',' + btn.heigth + ')"> '
                 break;
             case "WinOpen":
-                tmp += ' onclick="WindowOpen(\'' + jsonObj[i].Url + paraStr + '\',\'' + jsonObj[i].Name + '\',' + jsonObj[i].DialogWidth + ',' + jsonObj[i].DialogHeigth + ')"> '
+                tmp += ' onclick="WindowOpen(\'' + btn.url + paraStr + '\',\'' + btn.Name + '\',' + btn.width + ',' + btn.heigth + ')"> '
                 break;
             case "DivDialog":
-                tmp += ' onclick="DivDialog(\'' + jsonObj[i].Url + paraStr + '\',\'' + jsonObj[i].Name + '\',' + jsonObj[i].DialogWidth + ',' + jsonObj[i].DialogHeigth + ')"> '
+                tmp += ' onclick="DivDialog(\'' + btn.url + paraStr + '\',\'' + btn.Name + '\',' + btn.width + ',' + btn.heigth + ')"> '
                 break;
             case "TopDiv":
-                tmp += ' onclick="parent.DivOpen(\'' + jsonObj[i].Url + paraStr + '\',\'' + jsonObj[i].Name + '\',' + jsonObj[i].DialogWidth + ',' + jsonObj[i].DialogHeigth + ')"> '
+                tmp += ' onclick="parent.DivOpen(\'' + btn.url + paraStr + '\',\'' + btn.Name + '\',' + btn.width + ',' + btn.heigth + ')"> '
                 break;
             case "JsFun":
-                tmp += ' onclick="' + jsonObj[i].Url + '"> '
+                tmp += ' onclick="' + btn.url + '"> '
                 break;
         }
-        butnTxtLeng += jsonObj[i].Name.length;
-        tmp += '<span class="btn-deal">' + jsonObj[i].Name + '</span></a>]  '
+        butnTxtLeng += btn.name.length;
+        tmp += '<span class="btn-deal">' + btn.name + '</span></a>]  '
         btnStr += tmp;
     }
     btnStr += '</div>'
