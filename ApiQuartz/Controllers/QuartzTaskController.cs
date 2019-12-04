@@ -74,7 +74,8 @@ namespace ApiQuartz.Controllers
             {
                 //3、创建一个触发器
                 var trigger = TriggerBuilder.Create()
-                                .WithCronSchedule("1/5 * * * * ?")
+                                .WithSimpleSchedule(x => x.WithIntervalInSeconds(5).RepeatForever())//每两秒执行一次
+                                //.WithCronSchedule("5 * * * * ?")
                                 .WithIdentity("triggerJob", "triggerJobGroup")
                                 .Build();
 

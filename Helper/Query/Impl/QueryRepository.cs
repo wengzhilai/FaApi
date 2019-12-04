@@ -85,15 +85,12 @@ namespace Helper.Query
                         tmp = "int";
                     }
                     string searchType = "";
-                    string searchScript = null;
                     switch (tmp)
                     {
                         case "int":
-                            searchScript = "";
                             searchType = "numberbox";
                             break;
                         case "datetime":
-                            searchScript = "";
                             searchType = "datetimebox";
                             break;
                         default:

@@ -6,6 +6,7 @@ using Models.Entity;
 using Quartz;
 using Quartz.Impl.Matchers;
 using System.Linq;
+using Helper;
 
 namespace ApiQuartz.Jobs
 {
@@ -14,16 +15,13 @@ namespace ApiQuartz.Jobs
     /// </summary>
     public class LoadTaskJob : IJob
     {
-        private readonly IScritpRepository repository;
+        private  IScritpRepository repository;
 
-        public LoadTaskJob(IScritpRepository repository)
-        {
-            this.repository = repository;
-        }
 
         public async Task Execute(IJobExecutionContext context)
         {
             System.Console.WriteLine("扫描数据库任务");
+            repository= (IScritpRepository)ServiceLocator.GetClass<IScritpRepository>();
             IScheduler scheduler = context.Scheduler;
             List<FaScriptEntity> allTask = await repository.getNormalScript();
             foreach (var item in allTask)
@@ -40,7 +38,7 @@ namespace ApiQuartz.Jobs
                     //表示式有变化则重新加载表达式
                     if (!trigger.CronExpressionString.Equals(item.runWhen))
                     {
-                        System.Console.WriteLine("修改脚本ID:"+item.id);
+                        System.Console.WriteLine("修改脚本ID:" + item.id);
                         // logger.InfoFormat("脚本服务 修改触发器【{0}】的时间表达式【{1}】为【{2}】", trigger.Key.Name, trigger.CronExpressionString, t.RUN_WHEN);
                         trigger.CronExpressionString = item.runWhen;
                         await scheduler.DeleteJob(trigger.JobKey);
@@ -51,7 +49,7 @@ namespace ApiQuartz.Jobs
                 else
                 {
 
-                    System.Console.WriteLine("添加脚本ID:"+item.id);
+                    System.Console.WriteLine("添加脚本ID:" + item.id);
 
                     //3、创建一个触发器
                     var trigger = TriggerBuilder.Create()

@@ -4,32 +4,7 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>F:\Study\FaApi\ApiEtc\ApiEtc.xml</DocumentationFile>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="wwwroot\Scripts\jquery-easyui-1.9.0\plugins\**" />
-    <Compile Remove="wwwroot\Scripts\jquery-easyui-1.9.0\src\**" />
-    <Compile Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material-teal\**" />
-    <Compile Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material\**" />
-    <Content Remove="wwwroot\Scripts\jquery-easyui-1.9.0\plugins\**" />
-    <Content Remove="wwwroot\Scripts\jquery-easyui-1.9.0\src\**" />
-    <Content Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material-teal\**" />
-    <Content Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material\**" />
-    <EmbeddedResource Remove="wwwroot\Scripts\jquery-easyui-1.9.0\plugins\**" />
-    <EmbeddedResource Remove="wwwroot\Scripts\jquery-easyui-1.9.0\src\**" />
-    <EmbeddedResource Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material-teal\**" />
-    <EmbeddedResource Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material\**" />
-    <None Remove="wwwroot\Scripts\jquery-easyui-1.9.0\plugins\**" />
-    <None Remove="wwwroot\Scripts\jquery-easyui-1.9.0\src\**" />
-    <None Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material-teal\**" />
-    <None Remove="wwwroot\Scripts\jquery-easyui-1.9.0\themes\material\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="ApiEtc.xml" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="ApiEtc.xml">

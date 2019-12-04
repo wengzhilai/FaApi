@@ -23,7 +23,6 @@ namespace ApiQuartz
         {
             Configuration = configuration;
             WebHostEnvironment = webHostEnvironment;
-
             Configuration.Bind(AppSettingsManager.self);
 
         }
@@ -94,6 +93,8 @@ namespace ApiQuartz
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //用于手动获取Di
+            ServiceLocator.Instance = app.ApplicationServices;
 
             if (env.IsDevelopment())
             {
