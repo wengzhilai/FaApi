@@ -31,6 +31,14 @@ namespace ApiEtc.Repository
                     reObj.msg = "openid不能为空";
                     return reObj;
                 }
+
+                if(string.IsNullOrEmpty(inObj.name) || string.IsNullOrEmpty(inObj.phone))
+                {
+                    reObj.success = false;
+                    reObj.msg = "绑定的用户不能为空";
+                    return reObj;
+                }
+
                 var staff = await dapper.Single(x => x.openid == inObj.Key);
                 int opNum = 0;
                 if (staff == null)
@@ -91,6 +99,12 @@ namespace ApiEtc.Repository
             var reObj = new ResultObj<bool>();
             try
             {
+                if (string.IsNullOrEmpty(inObj.Key))
+                {
+                    reObj.success = false;
+                    reObj.msg = "openId不能为空";
+                    return reObj;
+                }
                 var staff = await dapper.Single(x => x.openid == inObj.Key);
                 int opNum = 0;
                 if (staff == null)
@@ -99,7 +113,8 @@ namespace ApiEtc.Repository
                     {
                         data = new EtcStaffEntity
                         {
-                            openid = inObj.Key
+                            openid = inObj.Key,
+                            createTime=DateTime.Now
                         }
                     });
                     reObj.success = opNum > 0;
@@ -130,10 +145,17 @@ namespace ApiEtc.Repository
             var reObj = new ResultObj<EtcStaffEntity>();
             try
             {
+                if (string.IsNullOrEmpty(inObj.Key))
+                {
+                    reObj.success = false;
+                    reObj.msg = "openId不能为空";
+                    return reObj;
+                }
+
                 var staff = await dapper.Single(x => x.openid == inObj.Key);
                 if(staff == null)
                 {
-                    staff = new EtcStaffEntity { openid = inObj.Key };
+                    staff = new EtcStaffEntity { openid = inObj.Key,createTime=DateTime.Now };
                     staff.id=await dapper.Save(new DtoSave<EtcStaffEntity>
                     {
                         data = staff,

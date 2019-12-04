@@ -248,6 +248,59 @@
             openId
             </summary>
         </member>
+        <member name="T:ApiEtc.Controllers.QueryController">
+            <summary>
+            员工接口
+            </summary>
+        </member>
+        <member name="M:ApiEtc.Controllers.QueryController.#ctor(Helper.Query.IQuery)">
+            <summary>
+            
+            </summary>
+            <param name="dal"></param>
+        </member>
+        <member name="M:ApiEtc.Controllers.QueryController.delete(Models.DtoDo{System.Int32})">
+            <summary>
+            删除查询
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.QueryController.getListData(Helper.Query.Dto.SearchDto)">
+            <summary>
+            获取数据列表
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.QueryController.getSingleQuery(Models.DtoKey)">
+            <summary>
+            获取单个Query
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.QueryController.makeQueryCfg(Models.DtoKey)">
+            <summary>
+            获取配置
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.QueryController.save(Models.DtoSave{Helper.Query.QueryEntity})">
+            <summary>
+            保存查询
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiEtc.Controllers.QueryController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            根据ID查询
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
         <member name="T:ApiEtc.Controllers.StaffController">
             <summary>
             员工接口
@@ -519,7 +572,7 @@
             客户
             </summary>
         </member>
-        <member name="M:ApiEtc.Repository.ClientRepository.#ctor(ApiEtc.Controllers.Interface.IStaff)">
+        <member name="M:ApiEtc.Repository.ClientRepository.#ctor(ApiEtc.Controllers.Interface.IStaff,Helper.Query.IQuery)">
             <summary>
             
             </summary>
@@ -572,7 +625,7 @@
             <param name="inEnt"></param>
             <returns></returns>
         </member>
-        <member name="M:ApiEtc.Repository.WalletRepository.#ctor(ApiEtc.Controllers.Interface.IStaff,ApiEtc.Controllers.Interface.IClient)">
+        <member name="M:ApiEtc.Repository.WalletRepository.#ctor(ApiEtc.Controllers.Interface.IStaff,ApiEtc.Controllers.Interface.IClient,Helper.Query.IQuery)">
             <summary>
             
             </summary>

@@ -1,6 +1,8 @@
 ﻿using ApiEtc.Models.Entity;
+using Helper.Query.Dto;
 using Models;
-using Models.Entity;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApiEtc.Controllers.Interface
@@ -26,7 +28,7 @@ namespace ApiEtc.Controllers.Interface
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
-        Task<ResultObj<EtcClientEntity>> list(ClientListDto inObj);
+        Task<ResultObj<Dictionary<String, Object>>> list(ClientListDto inObj);
 
         /// <summary>
         /// 后台添加客户资料
@@ -88,7 +90,7 @@ namespace ApiEtc.Controllers.Interface
         public string phone { get; set; }
     }
 
-    public class ClientListDto : QuerySearchDto
+    public class ClientListDto : SearchDto
     {
         /// <summary>
         /// openId

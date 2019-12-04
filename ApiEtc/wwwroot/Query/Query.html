@@ -1,0 +1,65 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>共享计划</title>
+    <link href="../Scripts/jquery-easyui-1.9.0/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <link href="../Scripts/jquery-easyui-1.9.0/themes/icon.css" rel="stylesheet" />
+
+    <script src="../Scripts/jquery.min.js"></script>
+    <script src="../Scripts/jquery-easyui-1.9.0/jquery.easyui.min.js"></script>
+    <script src="../Scripts/jquery-easyui-1.9.0/locale/easyui-lang-zh_CN.js"></script>
+    <!--<script src="../Scripts/jquery-easyui-1.9.0/datagrid-detailview.js"></script>-->
+    <script src="../Scripts/Base.js"></script>
+    <script src="../scripts/daterangepicker/moment.min.js"></script>
+    <script src="../scripts/daterangepicker/daterangepicker.js"></script>
+
+    <script src="../scripts/query.js"></script>
+
+    <link href="../scripts/daterangepicker/daterangepicker.css" rel="stylesheet" />
+</head>
+<body>
+    <div title="筛选" style="display:none" id="div_filte">
+        <table style="width:100%">
+            <tr>
+                <td id="filterItem">
+                    <div style="float:left;margin:5px;">
+                        <input id="s_{fieldName}_value" labelposition="top" style="width:220px" label="<a name='{fieldName}' menu='#mm_{fieldName}'>{title}&nbsp;<span id='type_{fieldName}_lable'></span></a>" />
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: center; width: 100%">
+            <div class="btn-group" role="group" style="margin: 0 auto; margin: 3px" aria-label="按钮组">
+                <a href="#" class="easyui-linkbutton" iconcls="icon-search" onclick="Search()">查询</a>
+                <a href="#" class="easyui-linkbutton" iconcls="icon-remove" onclick="ClearFilter()">清除</a>
+            </div>
+        </div>
+    </div>
+    <div id="grid" style="width:100%"></div>
+    
+    <script language="javascript">
+        /* Query代码 */
+        var code = 'staff';
+        var singleApi = '../Query/getSingleQuery'
+        var bindListApi = '../Query/getListData'
+        var dataGrid = $('#grid');
+        //默认排序设置
+        var defaultSortName = "";
+        var defaultSortOrder = "desc";
+
+
+
+        $(function () {
+            LoadConfig();
+
+        });
+
+
+
+    </script>
+</body>
+</html>
+

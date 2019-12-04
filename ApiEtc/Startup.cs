@@ -77,6 +77,7 @@ namespace ApiEtc
             services.TryAddSingleton<IStaff, StaffRepository>();
             services.TryAddSingleton<IClient, ClientRepository>();
             services.TryAddSingleton<IWallet, WalletRepository>();
+            services.TryAddSingleton<Helper.Query.IQuery, Helper.Query.QueryRepository>();
             #endregion
             #region  添加SwaggerUI
             services.AddSwaggerGen(options =>
@@ -132,6 +133,9 @@ namespace ApiEtc
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //添加静态文件
+            app.UseStaticFiles();
 
             #region 使用SwaggerUI
 

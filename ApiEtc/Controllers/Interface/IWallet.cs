@@ -1,6 +1,8 @@
 ﻿using ApiEtc.Models.Entity;
+using Helper.Query.Dto;
 using Models;
-using Models.Entity;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ApiEtc.Controllers.Interface
@@ -18,7 +20,7 @@ namespace ApiEtc.Controllers.Interface
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
-        Task<ResultObj<EtcWalletEntity>> list(WalletListDto inObj);
+        Task<ResultObj<Dictionary<string, object>>> list(WalletListDto inObj);
 
         /// <summary>
         /// 查询钱包
@@ -62,7 +64,7 @@ namespace ApiEtc.Controllers.Interface
     }
 
 
-    public class WalletListDto: QuerySearchDto
+    public class WalletListDto: SearchDto
     {
         /// <summary>
         /// openId

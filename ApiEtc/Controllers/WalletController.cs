@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,7 +36,7 @@ namespace ApiEtc.Controllers
         /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public Task<ResultObj<EtcWalletEntity>> list(WalletListDto inObj)
+        public Task<ResultObj<Dictionary<string, object>>> list(WalletListDto inObj)
         {
             return dal.list(inObj);
         }
