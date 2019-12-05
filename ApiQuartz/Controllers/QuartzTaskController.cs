@@ -169,14 +169,14 @@ namespace ApiQuartz.Controllers
                 task.jobDataListStr = TypeChange.ObjectToStr(jobTrigger.JobDataMap);
                 task.calendarName = jobTrigger.CalendarName;
                 task.description = jobTrigger.Description;
-                if (jobTrigger.EndTimeUtc != null) task.endTime = jobTrigger.EndTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
-                if (jobTrigger.FinalFireTimeUtc != null) task.finalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.EndTimeUtc != null) task.endTime = jobTrigger.EndTimeUtc.Value.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss");
+                if (jobTrigger.FinalFireTimeUtc != null) task.finalFireTimeUtc = jobTrigger.FinalFireTimeUtc.Value.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss");
                 //返回下一次计划触发Quartz.ITrigger的时间
-                if (jobTrigger.GetNextFireTimeUtc() != null) task.nextFireTime = jobTrigger.GetNextFireTimeUtc().Value.ToString("yyyy-MM-dd HH-mm-ss");
+                if (jobTrigger.GetNextFireTimeUtc() != null) task.nextFireTime = jobTrigger.GetNextFireTimeUtc().Value.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss");
                 //优先级
                 task.priority = jobTrigger.Priority;
                 //触发器调度应该开始的时间
-                task.startTimeUtc = jobTrigger.StartTimeUtc.ToString("yyyy-MM-dd HH-mm-ss");
+                task.startTimeUtc = jobTrigger.StartTimeUtc.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss");
                 reObj.dataList.Add(task);
             }
             return reObj;

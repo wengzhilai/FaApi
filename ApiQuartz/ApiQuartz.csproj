@@ -35,5 +35,6 @@
     <Folder Include="Controllers\Interface\" />
     <Folder Include="Models\" />
     <Folder Include="Jobs\" />
+    <Folder Include="config\" />
   </ItemGroup>
 </Project>

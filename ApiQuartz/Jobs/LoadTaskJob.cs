@@ -20,6 +20,8 @@ namespace ApiQuartz.Jobs
 
         public async Task Execute(IJobExecutionContext context)
         {
+            if (config.RunStatus.isRun("LoadTaskJob")) return;
+            config.RunStatus.setRun("LoadTaskJob");
             System.Console.WriteLine("扫描数据库任务");
             repository= (IScritpRepository)ServiceLocator.GetClass<IScritpRepository>();
             IScheduler scheduler = context.Scheduler;
@@ -66,7 +68,7 @@ namespace ApiQuartz.Jobs
                 }
             }
             System.Console.WriteLine("结束扫描");
-
+            config.RunStatus.remove("LoadTaskJob");
         }
     }
 }
