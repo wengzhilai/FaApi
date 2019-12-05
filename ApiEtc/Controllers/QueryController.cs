@@ -98,5 +98,17 @@ namespace ApiEtc.Controllers
         {
             return dal.singleByKey(inObj);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> exportCsv(string code)
+        {
+            var tmepObj = await dal.exportCsv(new SearchDto
+            {
+                code = code,
+                page = 1,
+                rows = 10000
+            });
+            return File(tmepObj.data.ToArray(), "application/octet-stream", string.Format("{0}.csv", code));
+        }
     }
 }

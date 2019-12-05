@@ -53,5 +53,12 @@ namespace Helper.Query
         /// <returns></returns>
         Task<ResultObj<int>> delete(DtoDo<int> inObj);
 
+        /// <summary>
+        /// 导出数据
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<ResultObj<List<byte>>> exportCsv(SearchDto inEnt);
+
     }
 }

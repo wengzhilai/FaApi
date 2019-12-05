@@ -60,6 +60,7 @@ namespace Helper.Query
         {
             var reObj = new ResultObj<Dictionary<string, Dictionary<string, object>>>();
             reObj.data = new Dictionary<string, Dictionary<string, object>>();
+            inObj.Key = inObj.Key.Trim().Replace("#", "");
             SearchDto inEnt = new SearchDto() { code = inObj.Key };
             QueryEntity query = await dal.Single(i => i.code == inEnt.code);
 
@@ -162,7 +163,8 @@ namespace Helper.Query
             var resultObj = new ResultObj<QueryEntity>();
             try
             {
-                resultObj.data = await dal.Single(x=>x.code==inObj.Key);
+                inObj.Key = inObj.Key.Trim().Replace("#", "");
+                resultObj.data = await dal.Single(x => x.code == inObj.Key);
                 resultObj.success = true;
             }
             catch (Exception e)
@@ -344,6 +346,51 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
                 whereSb = whereSb.Remove(whereSb.Length - 4, 4);
             whereStr = whereSb.ToString();
             return querySql;
+        }
+
+
+        /// <summary>
+        /// 获取Csv数据,支持大数据下载
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <param name="sqlStr"></param>
+        /// <returns></returns>
+        public async Task<ResultObj<List<byte>>> exportCsv(SearchDto inEnt)
+        {
+            ResultObj<List<byte>> reObj = new ResultObj<List<byte>>();
+            List<byte> reEnt = new List<byte>();
+            inEnt.code = inEnt.code.Replace("#", "");
+            var query = await dal.Single(i => i.code == inEnt.code);
+            if (query == null)
+            {
+                return reObj;
+            }
+
+            string whereStr = "";
+            string AllSql = MakeSql(inEnt, query.queryConf, ref whereStr);
+            //如果条件为空
+            if (!string.IsNullOrEmpty(whereStr))
+            {
+                if (!whereStr.Trim().ToLower().StartsWith("where")) whereStr = "where " + whereStr;
+
+                AllSql = string.Format(@"
+                    SELECT T.* FROM 
+                    ( 
+	                    {0}
+                    ) T {1}
+                    ", AllSql, whereStr);
+
+            }
+            try
+            {
+                reObj.msg = AllSql;
+                reObj.data = new DapperHelper().ExecuteBytesAsync(AllSql);
+            }
+            catch
+            {
+                return reObj;
+            }
+            return reObj;
         }
     }
 }

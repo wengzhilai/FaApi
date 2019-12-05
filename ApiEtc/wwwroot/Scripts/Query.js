@@ -73,6 +73,11 @@ function LoadConfig() {
             /* 添加筛选字段 */
             MakeFilterItem(cfgJson)
 
+            /* 添加编辑字段 */
+            MakeEditItem(cfgJson)
+
+            /* 添加查看详情字段 */
+            MakeLookItem(cfgJson)
             /* 配置显示的列 */
             if (queryEnt.showCheckbox) {
                 allcolumns.push({ field: 'ck', checkbox: true })
@@ -83,7 +88,8 @@ function LoadConfig() {
             rowsBtn = eval(queryEnt.rowsBtn)
             var nameLength = 0;
             for (var i = 0; i < rowsBtn.length; i++) {
-                nameLength += rowsBtn[i].Name.length;
+                if (rowsBtn[i].title == null) rowsBtn[i].title = "无";
+                nameLength += rowsBtn[i].title.length;
             }
             if (nameLength > 0) {
                 allcolumns.push({ title: '操作', field: 'action', formatter: ShowRowBtn, width: nameLength * 20 })
@@ -91,7 +97,7 @@ function LoadConfig() {
 
             for (var item in cfgJson) {
 
-                if (cfgJson[item].editable == null || cfgJson[item].editable == true || cfgJson[item].editable == 'true') {
+                if (cfgJson[item].hide == null || cfgJson[item].hide != true) {
                     var cfg = { field: item, title: cfgJson[item].title, sortable: true };
                     if (cfgJson[item].onComponentInitFunction) {
                         var f = function () { }
@@ -251,7 +257,7 @@ function LoadConfig() {
                 //        return 'background-color:#eaf2aa;';
                 //    }
                 //},
-                height: ($(window).height() - 90),
+                height: $(window).height()-20,
                 nowrap: true,
                 autoRowHeight: false,
                 striped: true,
@@ -443,6 +449,238 @@ function MakeFilterItem(cfgJson) {
     }
 }
 
+
+
+/* 生成过滤字段,并初始化allFilterArr */
+function MakeEditItem(cfgJson) {
+    for (var item in cfgJson) {
+
+        if (cfgJson[item].editable == null || cfgJson[item].editable != false || cfgJson[item].editor != null) {
+            var strHtml = $("#editItem").html();
+            strHtml = strHtml.replace(new RegExp('{title}', "g"), cfgJson[item].title);
+            strHtml = strHtml.replace(new RegExp('{fieldName}', "g"), item);
+            $("#editItem").before(strHtml);
+            $("#editItem").hide();
+
+            $(".textbox-label-top").removeAttr("for");
+
+            if (cfgJson[item].editor == null) {
+                typeStr = cfgJson[item].type
+                cfgJson[item].editor = {
+                    "type": typeStr
+                }
+            }
+            if (cfgJson[item].editor["type"] == null) cfgJson[item].editor["type"] = "text";
+
+            var editorCfg = cfgJson[item].editor;
+
+            switch (editorCfg.type) {
+                
+                case "checkbox":
+                case "number":
+                case "numberbox":
+                    $('#edit_' + item + '_value').numberbox();
+                    break;
+                case "combobox":
+                case "list":
+                    var thisCfg = editorCfg.config
+                    if (thisCfg == null) thisCfg = {}
+                    if (editorCfg.list != null) thisCfg['data'] = editorCfg.list
+                    $('#edit_' + item + '_value').combobox(thisCfg)
+                    
+                    if (editorCfg.editable != null && editorCfg.editable == false) $('#edit_' + item + '_value').combobox("disable")
+                    break;
+                case "datetime":     
+                case "datetimebox":     
+                    $('#edit_' + item + '_value').datetimebox()
+                    break;
+                case "textarea":
+                    $('#edit_' + item + '_value').textbox({ "multiline": true, "height":80 })
+                    break;
+                default:
+                    $('#edit_' + item + '_value').textbox();
+                    if (editorCfg.editable != null && editorCfg.editable == false) $('#edit_' + item + '_value').textbox("disable")
+                    break
+            }
+        }
+    }
+
+}
+
+function MakeLookItem(cfgJson) {
+    for (var item in cfgJson) {
+
+        var strHtml = $("#LookItem").html();
+        strHtml = strHtml.replace(new RegExp('{title}', "g"), cfgJson[item].title);
+        strHtml = strHtml.replace(new RegExp('{fieldName}', "g"), item);
+
+        $("#LookItem").before("<tr>"+strHtml+"</tr>");
+        $("#LookItem").hide();
+
+
+    }
+}
+
+function OpenLook(btnIndex, dataIndex) {
+    var jsonObj = eval(queryEnt.rowsBtn);
+    var btn = jsonObj[btnIndex];
+    var rowdata = dataGrid.datagrid("getData").rows[dataIndex]
+
+    for (var item in rowdata) {
+        $('#lab_' + item + '_value').html(rowdata[item]);
+    }
+
+    $('#dlgLook').dialog({ "width":300 })
+    $('#dlgLook').dialog('open')
+}
+    /**
+ * 点击默认行按钮
+ * @param {any} btnIndex 按钮排行
+ * @param {any} dataIndex 数据排行
+ */
+function OpenEdit(btnIndex, dataIndex) {
+
+    var jsonObj = eval(queryEnt.rowsBtn);
+    var btn = jsonObj[btnIndex];
+    var rowdata = dataGrid.datagrid("getData").rows[dataIndex]
+
+    var option = {
+        buttons: [{
+            text: '保存',
+            iconCls: 'icon-edit',
+            handler: function () {
+                var iputData = GetEditValue();
+
+                //默认把第一列数据提交
+                for (var i in rowdata) {
+                    iputData[i] = rowdata[i];
+                    break;
+                }
+                
+                console.log(iputData)
+
+                console.log(btn.saveUrl)
+
+                if (btn.saveUrl != null) {
+
+                    var postJson = {
+                        SaveFieldList: [],
+                        IgnoreFieldList: [],
+                        Data: iputData
+                    }
+                    console.log(postJson)
+
+                    $.ajax({
+                        url: btn.saveUrl,
+                        type: 'post',
+                        dataType: 'json',
+                        data: JSON.stringify(postJson),
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            if (data.success) {
+                                $.messager.alert("提示", '操作成功', 'info', function () {
+                                    $('#dlgEdit').dialog('close');
+                                    dataGrid.datagrid("reload");
+                                })
+                            }
+                            else {
+                                $.messager.alert("提示", data.msg, 'error', function () {
+
+                                })
+                            }
+                            
+                        }
+                    })
+                }
+            }
+        },
+        {
+            text: '取消',
+            iconCls: 'icon-cancel',
+            handler: function () {
+                $('#dlgEdit').dialog('close')
+            }
+        }]
+    };
+
+    $('#dlgEdit').dialog(option)
+    $('#dlgEdit').dialog('open')
+
+    if (btn.readUrl != null) {
+        SetEditValue(rowdata)
+    }
+    else {
+        SetEditValue(rowdata)
+    }
+}
+
+/**
+ * 设置编辑框内容
+ * @param {any} data json数据
+ */
+function SetEditValue(data) {
+    //循环所有筛选项，把选择的列，的类型付值
+    for (var item in data) {
+        var value = data[item];
+
+        if (cfgJson[item].editable == null || cfgJson[item].editable != false || cfgJson[item].editor != null) {
+
+            switch (cfgJson[item].editor.type) {
+                case "checkbox":
+                case "number":
+                case "numberbox":
+                    $('#edit_' + item + '_value').numberbox("setValue", value);
+                    break;
+                case "combobox":
+                case "list":
+                    $('#edit_' + item + '_value').combobox("setValue", value)
+                    break;
+                case "datetime":
+                case "datetimebox":
+                    $('#edit_' + item + '_value').datetimebox("setValue",value);
+                    break;
+                default:
+                    $('#edit_' + item + '_value').textbox("setValue", value)
+                    break;
+            }
+        }
+    }
+}
+
+/** 获取所有编辑框内容 */
+function GetEditValue() {
+    //循环所有筛选项，把选择的列，的类型付值
+    var reData = {};
+    for (var item in cfgJson) {
+
+        if (cfgJson[item].editable == null || cfgJson[item].editable != false || cfgJson[item].editor != null) {
+
+            var editorCfg = cfgJson[item].editor;
+
+            if (editorCfg != null && editorCfg.editable != null && editorCfg.editable == false) continue;
+
+            switch (cfgJson[item].editor.type) {
+                case "checkbox":
+                case "number":
+                case "numberbox":
+                    reData[item] = $('#edit_' + item + '_value').numberbox("getValue");
+                    break;
+                case "combobox":
+                case "list":
+                    reData[item] = $('#edit_' + item + '_value').combobox("getValue")
+                    break;
+                case "datetime":
+                case "datetimebox":
+                    reData[item] = $('#edit_' + item + '_value').datetimebox("getValue");
+                    break;
+                default:
+                    reData[item] = $('#edit_' + item + '_value').textbox("getValue")
+                    break;
+            }
+        }
+    }
+    return reData;
+}
 
 /* 选中的类型节点,如果为空则填写值 */
 function CheckType(fieldName, type, typeName) {
@@ -685,40 +923,24 @@ function onLoadSuccess(data) {
 
 /* 显示调试信息 */
 function ShowDebug() {
-    $.ajax({
-        url: "../Query/GetDubug?t=" + Math.random(),
-        contentType: "application/x-www-form-urlencoded; charset=utf-8",
-        data: {
-            code: code
-        },
-        success: function (data) {
-            $.messager.show({
-                title: "查询语句：" + code,
-                msg: "<textarea style='width: 100%;height:100%;border-width: 1;'>" + data + "</textarea>",
-                showType: 'slide',
-                width: 300,
-                height: 200
-            });
-        },
-        error: function (data) {
-            alert('失败:' + data.responseText);
-        }
+
+    var options = dataGrid.datagrid('options');
+
+
+    $.messager.show({
+        title: "查询语句：" + code,
+        msg: "<textarea style='width: 100%;height:100%;border-width: 1;'>" + options["msg"] + "</textarea>",
+        showType: 'slide',
+        width: 300,
+        height: 200
     });
 }
 
 /* 导出数据 */
 function DownData() {
-    $.messager.progress({
-        title: '下载提示',
-        msg: '正在下载..',
-        text: '努力中...',
-        interval: '1000'
-    });
-    setTimeout(function () {
-        $.messager.progress('close')
-    }, 10000)
+
     var urlParm = JsonToUrl(GetPostParmJson())
-    window.location = '../Query/DownFile?' + urlParm;
+    window.location = '../query/exportCsv?' + urlParm;
 }
 
 /** 清除所有输入 */
@@ -755,12 +977,12 @@ function ShowRowBtn(value, row, index) {
     var btnStr = '<div class="div-btn-deal">';
     var butnTxtLeng = 0;
     for (var i = 0; i < jsonObj.length; i++) {
-
         var btn = jsonObj[i];
 
         if (btn.url == null || btn.url == "" || btn.url == 'null') {
             btn.url="Edit.html"
         }
+        if (btn.dialogMode == null) btn.dialogMode = "Edit";
 
         //格式化地址
         var s = btn.url.indexOf('@@(');
@@ -787,15 +1009,16 @@ function ShowRowBtn(value, row, index) {
         btn.url = btn.url.replace("~/", '');
 
         //判断显示
-        var isShow = false;
-        if (btn.showCondition == null || btn.showCondition.length == 0) isShow = true;
-        for (var x = 0; x < btn.showCondition.length; x++) {
-            var v = btn.showCondition[x].v;
-            str = "row." + btn.showCondition[x].k + btn.showCondition[x].t + v;
-            try {
-                isShow = eval(str);
-            } catch (e) { }
-            if (isShow) break;
+        var isShow = true;
+        if (btn.showCondition != null && btn.showCondition.length >0) {
+            for (var x = 0; x < btn.showCondition.length; x++) {
+                var v = btn.showCondition[x].v;
+                str = "row." + btn.showCondition[x].k + btn.showCondition[x].t + v;
+                try {
+                    isShow = eval(str);
+                } catch (e) { }
+                if (isShow) break;
+            }
         }
         if (!isShow) continue;
 
@@ -836,6 +1059,12 @@ function ShowRowBtn(value, row, index) {
         if (btn.width == '') btn.width = '0';
         if (btn.heigth == '') btn.heigth = '0';
         switch (btn.dialogMode) {
+            case "Edit":
+                tmp += ' onclick="OpenEdit(' + i + ',' + index+')">';
+                break;
+            case "Look":
+                tmp += ' onclick="OpenLook(' + i + ',' + index + ')">';
+                break;
             case "PromptAjax":
                 tmp += ' onclick="PromptAjaxUrl(\'' + btn.Name + '\',\'' + btn.url + paraStr + '\')">';
                 break;
@@ -858,8 +1087,8 @@ function ShowRowBtn(value, row, index) {
                 tmp += ' onclick="' + btn.url + '"> '
                 break;
         }
-        butnTxtLeng += btn.name.length;
-        tmp += '<span class="btn-deal">' + btn.name + '</span></a>]  '
+        butnTxtLeng += btn.title.length;
+        tmp += '<span class="btn-deal">' + btn.title + '</span></a>]  '
         btnStr += tmp;
     }
     btnStr += '</div>'

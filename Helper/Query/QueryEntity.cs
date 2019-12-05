@@ -57,14 +57,22 @@ namespace Helper.Query
         /// </summary>
         [Display(Name = "复选框")]
         [Column("SHOW_CHECKBOX")]
-        public Decimal showCheckbox { get; set; }
+        public int showCheckbox { get; set; }
 
         /// <summary>
         /// 调试
         /// </summary>
         [Display(Name = "调试")]
         [Column("IS_DEBUG")]
-        public Decimal isDebug { get; set; }
+        public int isDebug { get; set; }
+
+        /// <summary>
+        /// 导出
+        /// </summary>
+        [Display(Name = "导出")]
+        [Column("ALLOW_EXPORT")]
+        public int allowExport { get; set; }
+
 
         /// <summary>
         /// 选择层级

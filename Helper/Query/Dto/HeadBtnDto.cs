@@ -39,6 +39,24 @@ namespace Helper.Query.Dto
         /// 对话框类型
         /// </summary>
         public DialogMode dialogMode { get; set; }
+
+        /// <summary>
+        /// 样式
+        /// </summary>
+        public string cssName { get; set; }
+        /// <summary>
+        /// 弹出模式
+        /// </summary>
+        public string openModal { get; set; }
+        /// <summary>
+        /// 读取Api
+        /// </summary>
+        public string readUrl { get; set; }
+        /// <summary>
+        /// 保存Api
+        /// </summary>
+        public string saveUrl { get; set; }
+
     }
 
     public enum DialogMode
