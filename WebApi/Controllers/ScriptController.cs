@@ -93,7 +93,7 @@ namespace WebApi.Controllers
                 DtoSearch<FaScriptTaskEntity> postEnt = new DtoSearch<FaScriptTaskEntity>();
                 postEnt.PageIndex = inEnt.PageIndex;
                 postEnt.PageSize = inEnt.PageSize;
-                postEnt.FilterList = x => x.SCRIPT_ID == SCRIPT_ID;
+                postEnt.FilterList = x => x.scriptId == SCRIPT_ID;
                 reObj.dataList = (await _script.ScriptTaskList(postEnt)).ToList();
             }
             catch (ExceptionExtend e)
@@ -125,7 +125,7 @@ namespace WebApi.Controllers
                 var postEnt = new DtoSearch<FaScriptTaskLogEntity>();
                 postEnt.PageIndex = inEnt.PageIndex;
                 postEnt.PageSize = inEnt.PageSize;
-                postEnt.FilterList = x => x.SCRIPT_TASK_ID == SCRIPT_TASK_ID;
+                postEnt.FilterList = x => x.scriptTaskId == SCRIPT_TASK_ID;
                 reObj.dataList = (await _script.ScriptTaskLogList(postEnt)).ToList();
             }
             catch (ExceptionExtend e)

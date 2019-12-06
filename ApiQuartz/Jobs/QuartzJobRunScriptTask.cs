@@ -36,15 +36,15 @@ namespace ApiQuartz.Jobs
                 if (script != null)
                 {
                     var addEnt = new FaScriptTaskEntity();
-                    addEnt.BODY_HASH = script.bodyText.Md5();
-                    addEnt.BODY_TEXT = script.bodyText;
-                    addEnt.LOG_TYPE = 0;
-                    addEnt.RETURN_CODE = "";
-                    addEnt.RUN_ARGS = script.runArgs;
-                    addEnt.RUN_DATA = script.runData;
-                    addEnt.RUN_STATE = "等待";
-                    addEnt.SCRIPT_ID = scriptId;
-                    addEnt.START_TIME = DateTime.Now;
+                    addEnt.bodyHash = script.bodyText.Md5();
+                    addEnt.bodyText = script.bodyText;
+                    addEnt.logType = 0;
+                    addEnt.returnCode = "";
+                    addEnt.runArgs = script.runArgs;
+                    addEnt.runData = script.runData;
+                    addEnt.runState = "等待";
+                    addEnt.scriptId = scriptId;
+                    addEnt.startTime = DateTime.Now;
                     var taskId = await dal.ScriptTaskSave(new DtoSave<FaScriptTaskEntity>
                     {
                         data = addEnt
@@ -65,23 +65,23 @@ namespace ApiQuartz.Jobs
                         int opNum = 0;
                         var log = new FaScriptTaskLogEntity()
                         {
-                            SCRIPT_TASK_ID = taskId.data,
-                            LOG_TIME = DateTime.Now,
-                            SQL_TEXT = item,
-                            MESSAGE = opNum.ToString()
+                            scriptTaskId = taskId.data,
+                            logTime = DateTime.Now,
+                            sqlText = item,
+                            message = opNum.ToString()
                         };
                         try
                         {
                             opNum = await dapper.Exec(item);
-                            log.LOG_TYPE = 1;
-                            log.MESSAGE = opNum.ToString();
+                            log.logType = 1;
+                            log.message = opNum.ToString();
                         }
                         catch (Exception e)
                         {
                             LogHelper.WriteErrorLog(this.GetType(), string.Format("执行{0}任务出错：{1}", item, e.ToString()));
                             dapper.TranscationRollback();
-                            log.LOG_TYPE = 2;
-                            log.MESSAGE = e.Message;
+                            log.logType = 2;
+                            log.message = e.Message;
                         }
                         var op = await dal.ScriptTaskLogSave(new DtoSave<FaScriptTaskLogEntity>
                         {
