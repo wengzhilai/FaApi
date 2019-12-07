@@ -81,7 +81,22 @@ namespace ApiEtc.Models.Entity
         [Column("AccountAliPay")]
         public String accountalipay { get; set; }
 
+        /// <summary>
+        /// 获取的二维码ticket
+        /// </summary>
+        [Required]
+        [Display(Name = "获取的二维码ticket")]
+        [Column("Ticket")]
+        public String ticket { get; set; }
 
+        /// <summary>
+        /// 上级Ticket
+        /// </summary>
+        [Required]
+        [Display(Name = "上级Ticket")]
+        [Column("ParentTicket")]
+        public String parentTicket { get; set; }
+        
     }
 
 }

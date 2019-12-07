@@ -277,5 +277,52 @@ namespace Helper
             return reList;
         }
         #endregion
+
+
+        /// <summary>
+        /// Url地址转对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static T UrlToEntities<T>(string request) where T : new()
+        {
+
+            T entity = Activator.CreateInstance<T>();
+            if (string.IsNullOrEmpty(request)) return entity;
+
+            request = request.Trim('?');
+            PropertyInfo[] attrs = entity.GetType().GetProperties();
+            foreach (PropertyInfo p in attrs)
+            {
+                foreach (string key in request.Split('&'))
+                {
+                    var _key = key.Split('=')[0];
+                    var _value = key.Split('=')[1];
+                    if (string.Compare(p.Name, _key, true) == 0)
+                    {
+                        try
+                        {
+                            Type type = p.PropertyType;
+                            //判断type类型是否为泛型，因为nullable是泛型类
+                            if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))//判断convertsionType是否为nullable泛型类  
+                            {
+                                //如果type为nullable类，声明一个NullableConverter类，该类提供从Nullable类到基础基元类型的转换  
+                                System.ComponentModel.NullableConverter nullableConverter = new System.ComponentModel.NullableConverter(type);
+                                //将type转换为nullable对的基础基元类型  
+                                type = nullableConverter.UnderlyingType;
+                            }
+
+                            p.SetValue(entity, Convert.ChangeType(_value, type), null);
+                        }
+                        catch (Exception e)
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+            return entity;
+        }
     }
 }

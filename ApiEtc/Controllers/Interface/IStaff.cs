@@ -6,6 +6,13 @@ namespace ApiEtc.Controllers.Interface
 {
     public interface IStaff
     {
+
+        /// <summary>
+        /// 注册新用户
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        Task<ResultObj<bool>> regStaff(RegStaffDto inObj);
         /// <summary>
         /// 检测用户是否绑定，key为OpenId
         /// </summary>
@@ -34,6 +41,20 @@ namespace ApiEtc.Controllers.Interface
         /// <returns></returns>
         Task<ResultObj<EtcStaffEntity>> singleByKey(DtoDo<int> inEnt);
 
+        /// <summary>
+        /// 获取所有用户
+        /// </summary>
+        /// <returns></returns>
+        Task<ResultObj<EtcStaffEntity>> getStaffList();
+
+
+        /// <summary>
+        /// 更新用户的ticket
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        Task<ResultObj<EtcStaffEntity>> updateTicket(EtcStaffEntity inObj);
+
     }
 
     public class BindUserDto: DtoKey
@@ -47,5 +68,20 @@ namespace ApiEtc.Controllers.Interface
         /// 电话号码
         /// </summary>
         public string phone { get; set; }
+    }
+
+    public class RegStaffDto : DtoKey
+    {
+
+        /// <summary>
+        /// 获取的二维码ticket
+        /// </summary>
+        public string ticket { get; set; }
+
+        /// <summary>
+        /// 上级Ticket
+        /// </summary>
+        public string parentTicket { get; set; }
+
     }
 }

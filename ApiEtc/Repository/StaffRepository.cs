@@ -15,6 +15,77 @@ namespace ApiEtc.Repository
     public class StaffRepository : IStaff
     {
         DapperHelper<EtcStaffEntity> dapper = new DapperHelper<EtcStaffEntity>();
+
+        public async Task<ResultObj<bool>> regStaff(RegStaffDto inObj)
+        {
+            var reObj = new ResultObj<bool>();
+            try
+            {
+                if (string.IsNullOrEmpty(inObj.Key))
+                {
+                    reObj.success = false;
+                    reObj.msg = "openid不能为空";
+                    return reObj;
+                }
+
+                if (string.IsNullOrEmpty(inObj.ticket) )
+                {
+                    reObj.success = false;
+                    reObj.msg = "ticket不能为空";
+                    return reObj;
+                }
+
+                var staff = await dapper.Single(x => x.openid == inObj.Key);
+
+                int opNum = 0;
+                if (staff == null)
+                {
+                    opNum = await dapper.Save(new DtoSave<EtcStaffEntity>
+                    {
+                        data = new EtcStaffEntity
+                        {
+                            ticket=inObj.ticket,
+                            parentTicket=inObj.parentTicket,
+                            openid = inObj.Key,
+                            createTime = DateTime.Now
+                        }
+                    });
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(staff.name) || !string.IsNullOrEmpty(staff.phone))
+                    {
+                        reObj.success = false;
+                        reObj.msg = "该用户已绑架";
+                        return reObj;
+                    }
+                    opNum = await dapper.Update(new DtoSave<EtcStaffEntity>
+                    {
+                        data = new EtcStaffEntity
+                        {
+                            ticket = inObj.ticket,
+                            parentTicket=inObj.parentTicket,
+                            openid = inObj.Key
+                        },
+                        saveFieldList = new List<string> { "ticket", "parentTicket" },
+                        whereList = new List<string> { "openid" }
+                    });
+                }
+                reObj.success = opNum > 0;
+                if (!reObj.success)
+                {
+                    reObj.msg = "保存失败";
+                }
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
+
         /// <summary>
         /// 绑定用户
         /// </summary>
@@ -43,16 +114,36 @@ namespace ApiEtc.Repository
                 int opNum = 0;
                 if (staff == null)
                 {
-                    opNum = await dapper.Save(new DtoSave<EtcStaffEntity>
+                    staff = await dapper.Single(x => x.phone == inObj.phone);
+                    if (staff == null)
                     {
-                        data = new EtcStaffEntity
+                        opNum = await dapper.Save(new DtoSave<EtcStaffEntity>
                         {
-                            name = inObj.name,
-                            phone = inObj.phone,
-                            openid = inObj.Key,
-                            createTime=DateTime.Now
-                        }
-                    });
+                            data = new EtcStaffEntity
+                            {
+                                name = inObj.name,
+                                phone = inObj.phone,
+                                openid = inObj.Key,
+                                createTime = DateTime.Now
+                            }
+                        });
+                    }
+                    else
+                    {
+                        opNum = await dapper.Update(new DtoSave<EtcStaffEntity>
+                        {
+                            data = new EtcStaffEntity
+                            {
+                                name = inObj.name,
+                                phone = inObj.phone,
+                                openid = inObj.Key
+                            },
+                            saveFieldList = new List<string> { "name", "openid" },
+                            whereList = new List<string> { "phone" }
+                        });
+                    }
+
+                    
                 }
                 else
                 {
@@ -162,6 +253,9 @@ namespace ApiEtc.Repository
                         ignoreFieldList=null
                     });
                 }
+
+                staff.qrCode = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + staff.ticket;
+
                 reObj.data = staff;
                 reObj.success = true;
             }
@@ -186,6 +280,46 @@ namespace ApiEtc.Repository
             {
                 var staff = await dapper.SingleByKey(inEnt.Key);
                 reObj.data = staff;
+                reObj.success = true;
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
+
+        public async Task<ResultObj<EtcStaffEntity>> getStaffList()
+        {
+            var reObj = new ResultObj<EtcStaffEntity>();
+            try
+            {
+                var staff = await dapper.FindAll(x=>x.id>10);
+                reObj.dataList = staff.ToList();
+                reObj.success = true;
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
+
+        public async Task<ResultObj<EtcStaffEntity>> updateTicket(EtcStaffEntity inObj)
+        {
+            var reObj = new ResultObj<EtcStaffEntity>();
+            try
+            {
+                var opNum = await dapper.Update(new DtoSave<EtcStaffEntity>
+                {
+                    data = inObj,
+                    saveFieldList = new List<string> { "ticket"},
+                    whereList = new List<string> { "id" }
+                });
                 reObj.success = true;
             }
             catch (Exception e)

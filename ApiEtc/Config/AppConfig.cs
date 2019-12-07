@@ -14,6 +14,7 @@ namespace ApiEtc.Config
         /// 配置
         /// </summary>
         public static ConfigWebConfig WebConfig { get; set; } = new ConfigWebConfig();
+        public static WeiXin WeiXin { get; set; } = new WeiXin();
     }
 
     /// <summary>
@@ -25,5 +26,13 @@ namespace ApiEtc.Config
         /// 推广一个客户的费用
         /// </summary>
         public int ClientPrice { get; set; }
+    }
+
+    public class WeiXin
+    {
+        public string Appid { get; set; }
+        public string Secret { get; set; }
+
+        public string Token { get; set; }
     }
 }

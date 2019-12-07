@@ -62,6 +62,7 @@ namespace ApiEtc
 
             Configuration.Bind(AppSettingsManager.self);
             Configuration.Bind("WebConfig", AppConfig.WebConfig);
+            Configuration.Bind("WeiXin", AppConfig.WeiXin);
             System.Console.WriteLine(AppConfig.WebConfig.ClientPrice);
         }
 
