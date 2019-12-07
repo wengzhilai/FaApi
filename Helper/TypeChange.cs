@@ -12,6 +12,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Helper
 {
@@ -323,6 +324,26 @@ namespace Helper
                 }
             }
             return entity;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xmlStr"></param>
+        /// <returns></returns>
+        public static Dictionary<string,string> XmlToDict(string xmlStr)
+        {
+            var reObj = new Dictionary<string, string>();
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xmlStr);
+            XmlNode root = xmlDoc.SelectSingleNode("xml");
+            XmlNodeList xnl = root.ChildNodes;
+
+            foreach (XmlNode xnf in xnl)
+            {
+                reObj.Add(xnf.Name, xnf.InnerText);
+            }
+            return reObj;
         }
     }
 }

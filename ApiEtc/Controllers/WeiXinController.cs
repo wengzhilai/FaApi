@@ -12,6 +12,7 @@ using ApiEtc.Config;
 using System.Collections.Generic;
 using ApiEtc.Controllers.Interface;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace ApiEtc.Controllers
 {
@@ -49,11 +50,24 @@ namespace ApiEtc.Controllers
             PostModel postModel = TypeChange.UrlToEntities<PostModel>(Request.QueryString.Value);
             if (!CheckSignature.Check(postModel.Signature, postModel.Timestamp, postModel.Nonce, AppConfig.WeiXin.Token))
             {
+
                 return "参数错误！";
             }
             else
             {
-                return "succss";
+                Request.EnableBuffering();
+
+                using (var reader = new StreamReader(Request.Body, encoding: Encoding.UTF8))
+                {
+                    var body =await reader.ReadToEndAsync();
+                    var xml = TypeChange.XmlToDict(body);
+
+                    // Do some processing with body…
+                    // Reset the request body stream position so the next middleware can read it
+                    Request.Body.Position = 0;
+                    return body;
+
+                }
 
             }
         }
