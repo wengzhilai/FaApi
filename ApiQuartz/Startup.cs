@@ -1,16 +1,17 @@
-using System.Reflection;
-using Autofac;
 using Helper;
+using IRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Quartz;
 using Quartz.Impl;
+using Repository;
 
 namespace ApiQuartz
 {
@@ -27,19 +28,14 @@ namespace ApiQuartz
 
         }
 
-        /// <summary>
-        /// 配置autofac
-        /// </summary>
-        /// <param name="builder"></param>
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
-            Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
-            builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
-        }
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+            #region 注入
+            services.TryAddSingleton<IScritpRepository, ScritpRepository>();
+            services.TryAddSingleton<Helper.Query.IQuery, Helper.Query.QueryRepository>();
+            #endregion
 
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {

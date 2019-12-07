@@ -126,19 +126,11 @@ namespace Repository
         {
             ResultObj<bool> reObj = new ResultObj<bool>();
             DapperHelper<FaScriptTaskLogEntity> dapper = new DapperHelper<FaScriptTaskLogEntity>();
-            if (inEnt.data.id == 0)
-            {
-                inEnt.data.id = await new SequenceRepository().GetNextID<FaScriptTaskLogEntity>();
-                var opNum = await dapper.Save(inEnt);
-                reObj.success = opNum > 0;
-                reObj.msg = "添加成功";
-            }
-            else
-            {
-                var opNum = await dapper.Update(inEnt);
-                reObj.success = opNum > 0;
-                reObj.msg = "修改成功";
-            }
+            inEnt.data.id = await new SequenceRepository().GetNextID<FaScriptTaskLogEntity>();
+            var opNum = await dapper.Save(inEnt);
+            reObj.success = opNum > 0;
+            reObj.msg = "添加成功";
+
             return reObj;
         }
 

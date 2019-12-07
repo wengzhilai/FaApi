@@ -19,13 +19,14 @@ namespace ApiQuartz.Jobs
 
         public async Task Execute(IJobExecutionContext context)
         {
+            // var jobData = context.JobDetail.JobDataMap;//获取Job中的参数
+            var triggerData = context.Trigger.JobDataMap;//获取Trigger中的参数
+                                                         // 当Job中的参数和Trigger中的参数名称一样时，用 context.MergedJobDataMap获取参数时，Trigger中的值会覆盖Job中的值。
+                                                         // var data = context.MergedJobDataMap;//获取Job和Trigger中合并的参数
+            var scriptId = triggerData.GetInt("scriptId");
+
             try
             {
-                // var jobData = context.JobDetail.JobDataMap;//获取Job中的参数
-                var triggerData = context.Trigger.JobDataMap;//获取Trigger中的参数
-                                                             // 当Job中的参数和Trigger中的参数名称一样时，用 context.MergedJobDataMap获取参数时，Trigger中的值会覆盖Job中的值。
-                                                             // var data = context.MergedJobDataMap;//获取Job和Trigger中合并的参数
-                var scriptId = triggerData.GetInt("scriptId");
 
                 if (config.RunStatus.isRun("QuartzJobRunScriptTask_"+ scriptId)) return;
                 config.RunStatus.setRun("QuartzJobRunScriptTask_" + scriptId);
@@ -96,6 +97,8 @@ namespace ApiQuartz.Jobs
             }
             catch (Exception e)
             {
+                config.RunStatus.remove("QuartzJobRunScriptTask_" + scriptId);
+
                 LogHelper.WriteErrorLog(this.GetType(), string.Format("执行任务出错：{0}", e.ToString()));
             }
             return;

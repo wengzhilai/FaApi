@@ -81,7 +81,7 @@ namespace Models.Entity
         [Range(0, 2147483647)]
         [Display(Name = "日志类型")]
         [Column("LOG_TYPE")]
-        public Nullable<Int16> logType { get; set; }
+        public Int16 logType { get; set; }
         /// <summary>
         /// 任务类型
         /// </summary>
@@ -101,19 +101,19 @@ namespace Models.Entity
         /// </summary>
         [Display(Name = "开始时间")]
         [Column("START_TIME")]
-        public Nullable<DateTime> startTime { get; set; }
+        public DateTime startTime { get; set; }
         /// <summary>
         /// 结束时间
         /// </summary>
         [Display(Name = "结束时间")]
         [Column("END_TIME")]
-        public Nullable<DateTime> endTime { get; set; }
+        public DateTime endTime { get; set; }
         /// <summary>
         /// 禁用时间
         /// </summary>
         [Display(Name = "禁用时间")]
         [Column("DISABLE_DATE")]
-        public Nullable<DateTime> disableDate { get; set; }
+        public DateTime disableDate { get; set; }
         /// <summary>
         /// 禁用原因
         /// </summary>
