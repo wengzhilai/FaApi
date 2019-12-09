@@ -35,4 +35,8 @@
     <None Include="wwwroot\Scripts\jquery-easyui-1.9.0\locale\easyui-lang-zh_TW.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\PromotePic\" />
+  </ItemGroup>
+
 </Project>

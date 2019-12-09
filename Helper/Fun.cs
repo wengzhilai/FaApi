@@ -14,6 +14,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Configuration;
 using System.Drawing;
+using System.Security.Cryptography;
 
 namespace Helper
 {
@@ -206,10 +207,10 @@ namespace Helper
         /// </summary>
         /// <param name="fileContent"></param>
         /// <returns></returns>
-        public static string FilesMakeMd5(byte[] fileContent)
+        public static string Md5Hash(byte[] fileContent)
         {
             if (fileContent == null) return null;
-            System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            MD5 md5 = new MD5CryptoServiceProvider();
             byte[] retVal = md5.ComputeHash(fileContent);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < retVal.Length; i++)
@@ -217,6 +218,15 @@ namespace Helper
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 32位MD5加密
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private static string Md5Hash(string input)
+        {
+            return Md5Hash(Encoding.Default.GetBytes(input));
+        }
 
 
 
@@ -945,6 +955,91 @@ namespace Helper
             if (hour >= 23) return "子";
             string nameList = "子丑寅卯辰巳午未申酉戌亥";
             return nameList[(hour + 1) / 2].ToString();
+        }
+
+
+
+
+        /// <summary>
+        /// 加密
+        /// </summary>
+        /// <param name="Text"></param>
+        /// <param name="sKey"></param>
+        /// <returns></returns>
+        public static string HashEncrypt(string Text, string sKey = "")
+        {
+
+            if (string.IsNullOrEmpty(sKey))
+            {
+                sKey = ";fg;(&*?>\":;dSnUoMO,3zy6";
+                //sKey = HashEncrypt(Text, "lfi8&%9lJYU6^%\"?>KR");
+            }
+            DESCryptoServiceProvider des = new DESCryptoServiceProvider();
+            byte[] inputByteArray;
+            inputByteArray = Encoding.Default.GetBytes(Text);
+            des.Key = ASCIIEncoding.ASCII.GetBytes(Fun.Md5Hash(sKey).ToUpper().Substring(0, 8));
+            des.IV = des.Key;
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            des.Mode = CipherMode.CBC;
+            des.Padding = PaddingMode.PKCS7;
+            CryptoStream cs = new CryptoStream(ms, des.CreateEncryptor(), CryptoStreamMode.Write);
+
+            cs.Write(inputByteArray, 0, inputByteArray.Length);
+            cs.FlushFinalBlock();
+            StringBuilder ret = new StringBuilder();
+            foreach (byte b in ms.ToArray())
+            {
+                ret.AppendFormat("{0:X2}", b);
+            }
+            return ret.ToString();
+        }
+
+        /// <summary> 
+        /// 解密数据 
+        /// </summary> 
+        /// <param name="Text"></param> 
+        /// <param name="sKey"></param> 
+        /// <returns></returns> 
+        public static string HashDecrypt(string Text, string sKey = "")
+        {
+            try
+            {
+                if (Text == null)
+                {
+                    return "";
+                }
+                if (string.IsNullOrEmpty(sKey))
+                {
+                    sKey = ";fg;(&*?>\":;dSnUoMO,3zy6";
+
+                    //sKey = HashDecrypt("C350FB38CF25BB01CAE1936AD3B6926938C85DE82DF42C936EE969DBD0BC2C27", "lfi8&%9lJYU6^%\"?>KR");
+                }
+                DESCryptoServiceProvider des = new DESCryptoServiceProvider();
+                int len;
+                len = Text.Length / 2;
+                byte[] inputByteArray = new byte[len];
+                int x, i;
+                for (x = 0; x < len; x++)
+                {
+                    i = Convert.ToInt32(Text.Substring(x * 2, 2), 16);
+                    inputByteArray[x] = (byte)i;
+                }
+                des.Key = ASCIIEncoding.ASCII.GetBytes(Fun.Md5Hash(sKey).ToUpper().Substring(0, 8));
+                des.IV = des.Key;
+                System.IO.MemoryStream ms = new System.IO.MemoryStream();
+                des.Mode = CipherMode.CBC;
+                des.Padding = PaddingMode.PKCS7;
+                CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(), CryptoStreamMode.Write);
+                cs.Write(inputByteArray, 0, inputByteArray.Length);
+                cs.FlushFinalBlock();
+                return Encoding.Default.GetString(ms.ToArray());
+            }
+            catch (Exception e)
+            {
+
+                return "";
+            }
+
         }
     }
 

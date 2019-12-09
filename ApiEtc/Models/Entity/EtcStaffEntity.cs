@@ -89,6 +89,15 @@ namespace ApiEtc.Models.Entity
         [Column("Ticket")]
         public String ticket { get; set; }
 
+
+        /// <summary>
+        /// EtcNo
+        /// </summary>
+        [Required]
+        [Display(Name = "EtcNo")]
+        [Column("EtcNo")]
+        public String etcNo { get; set; }
+
         /// <summary>
         /// 上级Ticket
         /// </summary>

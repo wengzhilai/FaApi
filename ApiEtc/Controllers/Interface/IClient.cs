@@ -88,6 +88,11 @@ namespace ApiEtc.Controllers.Interface
         /// 电话号码
         /// </summary>
         public string phone { get; set; }
+
+        /// <summary>
+        /// 推广人的票据
+        /// </summary>
+        public string ticket { get; set; }
     }
 
     public class ClientListDto : SearchDto

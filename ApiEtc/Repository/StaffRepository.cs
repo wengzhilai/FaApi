@@ -330,5 +330,42 @@ namespace ApiEtc.Repository
             }
             return reObj;
         }
+
+        public async Task<ResultObj<EtcStaffEntity>> getStaffByTicket(DtoKey inObj)
+        {
+            var reObj = new ResultObj<EtcStaffEntity>();
+            try
+            {
+                if (string.IsNullOrEmpty(inObj.Key))
+                {
+                    reObj.success = false;
+                    reObj.msg = "openId不能为空";
+                    return reObj;
+                }
+
+                var staff = await dapper.Single(x => x.ticket == inObj.Key);
+                if (staff == null)
+                {
+                    staff = new EtcStaffEntity { openid = inObj.Key, createTime = DateTime.Now };
+                    staff.id = await dapper.Save(new DtoSave<EtcStaffEntity>
+                    {
+                        data = staff,
+                        ignoreFieldList = null
+                    });
+                }
+
+                staff.qrCode = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + staff.ticket;
+
+                reObj.data = staff;
+                reObj.success = true;
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
     }
 }

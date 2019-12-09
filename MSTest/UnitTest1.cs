@@ -175,5 +175,20 @@ namespace MSTest
             str = TypeChange.ObjectToStr(obj);
             Console.WriteLine(str);
         }
+
+        [TestMethod]
+        public void TestPwd()
+        {
+            string txt = ";fg;(&*?>\":;dSnUoMO,3zy6";
+            
+            string pwd = "lfi8&%9lJYU6^%\"?>KR";
+
+            string pwdStr= Fun.HashEncrypt(txt, pwd);
+
+            string reOjb = Fun.HashDecrypt(pwdStr, pwd);
+            Console.WriteLine(reOjb);
+        }
+
+
     }
 }

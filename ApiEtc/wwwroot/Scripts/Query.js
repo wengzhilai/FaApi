@@ -563,10 +563,13 @@ function OpenEdit(btnIndex, dataIndex) {
 
                 if (btn.saveUrl != null) {
 
+                    var urlJson = UrlToJson();
+     
                     var postJson = {
-                        SaveFieldList: [],
-                        IgnoreFieldList: [],
-                        Data: iputData
+                        token: urlJson["token"],
+                        saveFieldList: [],
+                        ignoreFieldList: [],
+                        data: iputData
                     }
                     console.log(postJson)
 

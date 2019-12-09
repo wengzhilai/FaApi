@@ -3,6 +3,7 @@ using ApiEtc.Controllers.Interface;
 using ApiEtc.Models.Entity;
 using Helper;
 using Helper.Query;
+using Helper.Query.Dto;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -68,11 +69,19 @@ from etc_staff a where OpenId='{0}'
         public Task<ResultObj<Dictionary<String, Object>>> list(ClientListDto inObj)
         {
             inObj.code = "client";
+            if (inObj.whereList == null) inObj.whereList = new List<SearchWhereDto>();
+            inObj.whereList.Add(new Helper.Query.Dto.SearchWhereDto
+            {
+                fieldType = "string",
+                opType = "=",
+                value = inObj.Key,
+                objFiled = "StaffOpenId"
+            });
             return queryDal.getListData(inObj);
         }
 
         /// <summary>
-        /// Etc申请
+        /// Etc申请,用户绑定到推广员
         /// </summary>
         /// <param name="inObj"></param>
         /// <returns></returns>
@@ -81,14 +90,18 @@ from etc_staff a where OpenId='{0}'
             var reObj = new Result();
             try
             {
-                if(string.IsNullOrEmpty(inObj.name) || string.IsNullOrEmpty(inObj.phone) || string.IsNullOrEmpty(inObj.Key))
+                if(string.IsNullOrEmpty(inObj.name) || string.IsNullOrEmpty(inObj.phone) || (string.IsNullOrEmpty(inObj.Key) && string.IsNullOrEmpty(inObj.ticket)))
                 {
                     reObj.success = false;
                     reObj.msg = "输入有误";
                     return reObj;
                 }
                 var staff = (await staffDal.getStaff(inObj)).data;
-                if(staff==null || staff.id == 0)
+                if (staff == null || staff.id == 0)
+                {
+                    staff = (await staffDal.getStaffByTicket(new DtoKey { Key=inObj.ticket})).data;
+                }
+                if (staff==null || staff.id == 0)
                 {
                     reObj.success = false;
                     reObj.msg = "获取员工资料有误";
@@ -110,6 +123,7 @@ from etc_staff a where OpenId='{0}'
                         data = client,
                         ignoreFieldList = null
                     });
+                    reObj.code = staff.etcNo;
                 }
                 else if(client.staffId== staff.id && client.status == "已绑定")
                 {
@@ -162,9 +176,11 @@ from etc_staff a where OpenId='{0}'
                     return reObj;
                 }
 
-                inEnt.saveFieldList = new List<string> { "remark", "carNum", "carType", "submitTime", "status" };
+                inEnt.saveFieldList = new List<string> { "remark", "carNum", "carType", "submitTime", "status", "opuserName" };
                 inEnt.ignoreFieldList = null;
                 inEnt.whereList = new List<string> { "id" };
+                inEnt.token = inEnt.token.Replace("#", "");
+                //inEnt.data.opuserName = Fun.HashDecrypt(inEnt.token);
                 inEnt.data.opuserName = inEnt.token;
                 var opNum = await dapper.Update(inEnt);
             }

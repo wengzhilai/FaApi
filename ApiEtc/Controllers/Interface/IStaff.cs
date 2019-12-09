@@ -33,7 +33,14 @@ namespace ApiEtc.Controllers.Interface
         /// <param name="inObj"></param>
         /// <returns></returns>
         Task<ResultObj<EtcStaffEntity>> getStaff(DtoKey inObj);
-        
+
+        /// <summary>
+        /// 使用票据 获取员工的信息
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        Task<ResultObj<EtcStaffEntity>> getStaffByTicket(DtoKey inObj);
+
         /// <summary>
         /// 查询员工
         /// </summary>

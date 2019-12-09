@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>推广ETC</title>
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="js/public.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="introduce_3">
+                <div>
+                    <img src="./images/gou.png" alt="">
+                    <span>零投资</span>
+                </div>
+                <div>
+                    <img src="./images/gou.png" alt="">
+                    <span>高佣金</span>
+                </div>
+                <div>
+                    <img src="./images/gou.png" alt="">
+                    <span>按单结算</span>
+                </div>
+                <div>
+                    <img src="./images/gou.png" alt="">
+                    <span>免费培训</span>
+                </div>
+            </div>
+            <div id="fallInInfo">
+                <div class="fallInInfo">
+                    <p>您的姓名:</p>
+                    <input type="text" id="name" maxlength="20" placeholder="请输入姓名">
+                </div>
+                <div class="fallInInfo">
+                    <p>您的电话:</p>
+                    <input type="tel" id="phone" maxlength="11" placeholder="请输入电话">
+                </div>
+                <div class="fallInInfo btn">
+                    <p onclick="submitUserIfo()" id="btn">立即申请</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="myBtn">
+            <a href="paidPromote.html">
+                <p class="btn_1">推广赚钱</p>
+            </a>
+            <a href="myPromotion.html">
+                <p class="btn_2">我的推广</p>
+            </a>
+        </div>
+    </div>
+    <div class="background">
+       <div class="popup">
+            <div>
+                <div class="successIcon">
+                    <img src="./images/success.png" alt="">
+                </div>
+            </div>
+           <p>申请成功</p>
+           <p>10日内未推广成功一单推广资格将被取消</p>
+           <div>
+               <p onclick="successBtn()">我知道了</p>
+           </div>
+       </div>
+    </div>
+</body>
+</html>
