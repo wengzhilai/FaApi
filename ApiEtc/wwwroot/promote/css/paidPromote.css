@@ -1,0 +1,94 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html{
+    font-size: 62.5%;
+}
+body{
+    background-color: #FD5241;
+}
+.container{
+    width: 100vw;
+    min-height: 100vh;
+    background-image: url("../images/paid.png");
+    background-repeat: no-repeat;
+    background-size:100%;
+}
+.content{
+    position: absolute;
+    top: 19.5rem;
+    left: 0;
+    padding: 0 3.7vw;
+    width: 92.6vw;
+}
+.content_title{
+    width:10.5rem;
+    height:2.1rem;
+    font-size:1.5rem;
+    font-family:PingFang SC;
+    font-weight:500;
+    line-height:2.1rem;
+    color:#FFFFFF;
+    opacity:1;
+}
+.content_modules{
+     margin-top: 1.6rem;
+    background:#FFFFFF;
+    opacity:1;
+    border-radius:0.4rem;
+    padding:  1.5rem 1.4rem;
+}
+.content_modules>div:nth-child(1){
+    display: -webkit-flex;
+    -webkit-justify-content: space-between;
+    -webkit-align-items: center;
+}
+.content_modules>div:nth-child(1)>p{
+    font-size:1.5rem;
+    line-height: 3rem;
+    font-family:PingFang SC;
+    font-weight:bold;
+    color:#333333;
+}
+.content_modules>div:nth-child(1) span{
+    font-size: 2rem;
+    color: #FE4E41;
+}
+.content_modules>p{
+    font-size:1.4rem;
+    line-height: 2.5rem;
+    font-family:PingFang SC;
+    font-weight:500;
+    color:#333333;
+}
+.content_explain{
+    margin-top: 2.5rem;
+}
+.content_explain p{
+    font-size:1.1rem;
+    font-family:PingFang SC;
+    font-weight:400;
+    line-height:2rem;
+    color:#FFFFFF;
+}
+.content_goBtn{
+    margin: 2.5rem 0;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+}
+.content_goBtn a{
+    text-decoration: none;
+}
+.content_goBtn p{
+    font-size:1.5rem;
+    font-family:PingFang SC;
+    font-weight:500;
+    line-height:2.1rem;
+    color:#F93103;
+    padding: 0.6rem 7.25rem;
+    background-color: white;
+    border-radius: 1.65rem;
+}
+

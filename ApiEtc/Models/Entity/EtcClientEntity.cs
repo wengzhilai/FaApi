@@ -16,7 +16,6 @@ namespace ApiEtc.Models.Entity
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Required]
         [Display(Name = "ID")]
         [Column("Id")]
         public int id { get; set; }
@@ -87,7 +86,6 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// 车牌号
         /// </summary>
-        [Required]
         [Display(Name = "车牌号")]
         [Column("CarNum")]
         public String carNum { get; set; }
@@ -95,7 +93,6 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// 车型
         /// </summary>
-        [Required]
         [Display(Name = "车型")]
         [Column("CarType")]
         public String carType { get; set; }
@@ -103,7 +100,6 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// 提交时间
         /// </summary>
-        [Required]
         [Display(Name = "提交时间")]
         [Column("SubmitTime")]
         public DateTime submitTime { get; set; }
