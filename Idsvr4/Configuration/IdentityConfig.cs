@@ -24,7 +24,7 @@ namespace Idsvr4.Configuration
             resources.Add(new ApiResource("SmsService", "短信服务API", new List<string>() { JwtClaimTypes.Role }));
             
             resources.Add(new ApiResource("FileUpService", "文件上传服务API"));
-            resources.Add(new ApiResource("ProductService", "产品服务API"));
+            resources.Add(new ApiResource("QuartzService", "任务服务API"));
             return resources;
         }
 
@@ -66,6 +66,7 @@ namespace Idsvr4.Configuration
                         "UsersService",
                         "FileUpService",
                         "SmsService",
+                        "QuartzService",
                     }
                 },
                 new Client
@@ -77,6 +78,7 @@ namespace Idsvr4.Configuration
                         "UsersService",
                         "FileUpService",
                         "SmsService",
+                        "QuartzService",
                     }
                 },
                 

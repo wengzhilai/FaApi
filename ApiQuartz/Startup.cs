@@ -41,7 +41,7 @@ namespace ApiQuartz
             {
                 options.RequireHttpsMetadata = false;
                 options.Authority = AppSettingsManager.self.Idsvr4Url;
-                options.Audience = "UsersService";
+                options.Audience = "QuartzService";
             }
             );
 
