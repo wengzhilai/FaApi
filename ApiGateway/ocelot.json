@@ -24,6 +24,17 @@
       ]
     },
     {
+      "UpstreamPathTemplate": "/family/{url}",
+      "DownstreamPathTemplate": "/{url}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "127.0.0.1",
+          "Port": 9102
+        }
+      ]
+    },
+    {
       "UpstreamPathTemplate": "/sms/{url}",
       "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "http",

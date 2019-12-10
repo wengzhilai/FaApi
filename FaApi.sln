@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiQuartz", "ApiQuartz\ApiQ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiEtc", "ApiEtc\ApiEtc.csproj", "{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiFamily", "ApiFamily\ApiFamily.csproj", "{8306FBF7-15AB-4B52-BF86-30F1B08FF31A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,12 @@ Global
 		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Default|Any CPU.Build.0 = Debug|Any CPU
 		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF0015F3-2E0B-4E53-A25B-4926CE0E73A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8306FBF7-15AB-4B52-BF86-30F1B08FF31A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8306FBF7-15AB-4B52-BF86-30F1B08FF31A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8306FBF7-15AB-4B52-BF86-30F1B08FF31A}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{8306FBF7-15AB-4B52-BF86-30F1B08FF31A}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{8306FBF7-15AB-4B52-BF86-30F1B08FF31A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8306FBF7-15AB-4B52-BF86-30F1B08FF31A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
