@@ -38,6 +38,7 @@ namespace ApiEtc.Controllers
         [HttpPost]
         public Task<ResultObj<Dictionary<string, object>>> list(WalletListDto inObj)
         {
+
             return dal.list(inObj);
         }
 

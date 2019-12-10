@@ -126,6 +126,17 @@ public class MemoryCacheService : ICacheService
     }
 
 
+    public string Get(string key)
+    {
+        string reObj = "";
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+        _cache.TryGetValue(key,out reObj);
+        return reObj;
+    }
+
     /// <summary>
     /// 获取缓存集合
     /// </summary>

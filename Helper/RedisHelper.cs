@@ -10,8 +10,10 @@ namespace Helper
 
     public class RedisReadHelper
     {
-        private static MemoryCacheService cache = new MemoryCacheService();
 
+        //private static MemoryCacheService cache = new MemoryCacheService();
+        private static RedisCacheService cache = new RedisCacheService();
+        
         /// <summary>
         /// 根据名称获取对象
         /// </summary>
@@ -55,6 +57,10 @@ namespace Helper
         {
             return cache.Get<T>(key);
         }
+        public static string StringGet(string key)
+        {
+            return cache.Get(key);
+        }
 
 
 
@@ -70,7 +76,7 @@ namespace Helper
     }
     public class RedisWriteHelper
     {
-        private static MemoryCacheService cache = new MemoryCacheService();
+        private static RedisCacheService cache = new RedisCacheService();
 
         #region 操作hash数据类型
 
@@ -88,6 +94,11 @@ namespace Helper
             return cache.Add(name, inObj);
         }
 
+        public static bool SetString(string name, string inObj)
+        {
+            return cache.Add(name, inObj);
+        }
+
         /// <summary>
         /// 将key中存储的哈希中的字段设置为value。 如果key不存在，则创建一个包含哈希的新密钥。 如果哈希中已存在字段，则会覆盖该字段。
         /// </summary>
@@ -98,6 +109,8 @@ namespace Helper
         {  
             return cache.ReplaceHashSetKey<T>(hash, key, value);
         }
+
+
 
         #endregion
 

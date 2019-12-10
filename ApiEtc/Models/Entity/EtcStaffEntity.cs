@@ -17,7 +17,6 @@ namespace ApiEtc.Models.Entity
         /// </summary>
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Required]
         [Display(Name = "ID")]
         [Column("Id")]
         public int id { get; set; }
@@ -44,6 +43,13 @@ namespace ApiEtc.Models.Entity
         public String phone { get; set; }
 
         /// <summary>
+        /// 身份证号
+        /// </summary>
+        [Display(Name = "身份证号")]
+        [Column("IdNo")]
+        public String idNo { get; set; }
+
+        /// <summary>
         /// 二维码地址
         /// </summary>
         [Display(Name = "二维码地址")]
@@ -60,7 +66,6 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// 状态:正常冻结
         /// </summary>
-        [Required]
         [Display(Name = "状态:正常冻结")]
         [Column("Status")]
         public String status { get; set; }
@@ -68,7 +73,6 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// 微信账号
         /// </summary>
-        [Required]
         [Display(Name = "微信账号")]
         [Column("AccountWeichat")]
         public String accountWeichat { get; set; }
@@ -76,7 +80,6 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// 支付宝账号
         /// </summary>
-        [Required]
         [Display(Name = "支付宝账号")]
         [Column("AccountAliPay")]
         public String accountalipay { get; set; }
@@ -84,7 +87,6 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// 获取的二维码ticket
         /// </summary>
-        [Required]
         [Display(Name = "获取的二维码ticket")]
         [Column("Ticket")]
         public String ticket { get; set; }
@@ -93,7 +95,6 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// EtcNo
         /// </summary>
-        [Required]
         [Display(Name = "EtcNo")]
         [Column("EtcNo")]
         public String etcNo { get; set; }
@@ -101,11 +102,16 @@ namespace ApiEtc.Models.Entity
         /// <summary>
         /// 上级Ticket
         /// </summary>
-        [Required]
         [Display(Name = "上级Ticket")]
         [Column("ParentTicket")]
         public String parentTicket { get; set; }
-        
+
+        /// <summary>
+        /// 推广二维码
+        /// </summary>
+        [Display(Name = "推广图片")]
+        [Column("EtcNoPic")]
+        public string etcNoPic { get; set; }
     }
 
 }

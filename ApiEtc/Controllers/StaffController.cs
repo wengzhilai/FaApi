@@ -71,5 +71,15 @@ namespace ApiEtc.Controllers
         {
             return dal.singleByKey(inObj);
         }
+
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        public Task<ResultObj<int>> save(DtoSave<EtcStaffEntity> inEnt)
+        {
+            return dal.save(inEnt);
+        }
     }
 }

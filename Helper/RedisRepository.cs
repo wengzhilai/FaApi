@@ -5,7 +5,6 @@ namespace Helper
     public class RedisRepository
     {
         private static string _userTokenKey = "UserToken_{0}";
-        private static string _Data = "Data_{0}";
 
         /// <summary>
         /// 保存，用户登录

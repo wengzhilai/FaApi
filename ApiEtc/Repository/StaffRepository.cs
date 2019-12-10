@@ -367,5 +367,39 @@ namespace ApiEtc.Repository
             }
             return reObj;
         }
+
+        public async Task<ResultObj<int>> save(DtoSave<EtcStaffEntity> inEnt)
+        {
+            var reObj = new ResultObj<int>();
+            try
+            {
+                var client = await dapper.SingleByKey(inEnt.data.id);
+                if (client == null)
+                {
+                    reObj.success = false;
+                    reObj.msg = "Id有误";
+                    return reObj;
+                }
+
+                if (!string.IsNullOrEmpty(inEnt.data.etcNoPic) && inEnt.data.etcNoPic.IndexOf('.')>0)
+                {
+                    inEnt.data.etcNo = inEnt.data.etcNoPic.Substring(0, inEnt.data.etcNoPic.IndexOf('.'));
+                    if(inEnt.saveFieldList!=null) inEnt.saveFieldList.Add("etcNo");
+                }
+
+                //inEnt.saveFieldList = new List<string> { "remark", "carNum", "carType", "submitTime", "status", "opuserName" };
+                inEnt.ignoreFieldList = null;
+                inEnt.whereList = new List<string> { "id" };
+                inEnt.token = inEnt.token.Replace("#", "");
+                var opNum = await dapper.Update(inEnt);
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
     }
 }

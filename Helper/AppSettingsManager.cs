@@ -116,12 +116,12 @@ namespace Helper
         /// 写的连接地址
         /// </summary>
         /// <value></value>
-        public string writeRedisstr { get; set; }="45.32.134.176:6379,password=wengzhilai";
+        public string writeRedisstr { get; set; }
         /// <summary>
         /// 读取的连接地址
         /// </summary>
         /// <value></value>
-        public string  readRedisstr{ get; set; }="45.32.134.176:6379,password=wengzhilai";
+        public string  readRedisstr{ get; set; }
 
     }
 

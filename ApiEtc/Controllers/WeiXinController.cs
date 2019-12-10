@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using ApiEtc.Controllers.Interface;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace ApiEtc.Controllers
 {
@@ -112,15 +113,29 @@ namespace ApiEtc.Controllers
         {
             var reObj = new Result();
             var allUser = await staff.getStaffList();
-            string access_tokenJson = Fun.HttpGetJson(string.Format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}", AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret));
-            var dict = TypeChange.JsonToObject<Dictionary<string, string>>(access_tokenJson);
-            if (dict.ContainsKey("access_token"))
+
+            var token= RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN");
+            if (string.IsNullOrEmpty(token))
+            {
+                string access_tokenJson = Fun.HttpGetJson(string.Format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}", AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret));
+                var dict = TypeChange.JsonToObject<Dictionary<string, string>>(access_tokenJson);
+                if (dict.ContainsKey("access_token"))
+                {
+                    token = dict["access_token"];
+                    RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token);
+                }
+            }
+   
+
+
+            if (!string.IsNullOrEmpty(token))
             {
                 foreach (var item in allUser.dataList)
                 {
 
                     string reStr = "";
-                    Fun.HttpPostJson("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + dict["access_token"], "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_"+item.phone+"\"}}}", ref reStr);
+                    if (string.IsNullOrEmpty(item.etcNo)) item.etcNo = "87000075";
+                    Fun.HttpPostJson("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + token, "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + item.etcNo + "\"}}}", ref reStr);
                     var ticketDict = TypeChange.JsonToObject<Dictionary<string, string>>(reStr);
                     if (ticketDict.ContainsKey("ticket"))
                     {

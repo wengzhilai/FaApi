@@ -62,6 +62,13 @@ namespace ApiEtc.Controllers.Interface
         /// <returns></returns>
         Task<ResultObj<EtcStaffEntity>> updateTicket(EtcStaffEntity inObj);
 
+        /// <summary>
+        /// 后台修改用户资料
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<ResultObj<int>> save(DtoSave<EtcStaffEntity> inEnt);
+
     }
 
     public class BindUserDto: DtoKey

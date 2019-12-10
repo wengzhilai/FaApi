@@ -32,7 +32,8 @@ namespace ApiEtc.Config
     {
         public string Appid { get; set; }
         public string Secret { get; set; }
-
         public string Token { get; set; }
     }
+
+
 }
