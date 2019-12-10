@@ -61,8 +61,11 @@ namespace ApiEtc
             XmlConfigurator.Configure(repository, new FileInfo("Config/log4net.config"));
 
             Configuration.Bind(AppSettingsManager.self);
+            Configuration.Bind("RedisConfig", AppSettingsManager.self.RedisConfig);
+
             Configuration.Bind("WebConfig", AppConfig.WebConfig);
             Configuration.Bind("WeiXin", AppConfig.WeiXin);
+
             System.Console.WriteLine(AppConfig.WebConfig.ClientPrice);
         }
 

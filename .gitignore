@@ -39,7 +39,7 @@ testem.log
 /WebApi/UpFiles/201902
 /WebApi/UpFiles/Doc
 /ApiUpFile/UpFiles/
-
+/ApiEtc/wwwroot/PromotePic/
 *.out
 **/*.out
 

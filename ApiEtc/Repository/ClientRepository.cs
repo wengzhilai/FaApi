@@ -70,13 +70,25 @@ from etc_staff a where OpenId='{0}'
         {
             inObj.code = "client";
             if (inObj.whereList == null) inObj.whereList = new List<SearchWhereDto>();
-            inObj.whereList.Add(new Helper.Query.Dto.SearchWhereDto
+            inObj.whereList.Add(new SearchWhereDto
             {
                 fieldType = "string",
                 opType = "=",
                 value = inObj.Key,
                 objFiled = "StaffOpenId"
             });
+
+            if (inObj.payType != 0)
+            {
+                inObj.whereList.Add(new SearchWhereDto
+                {
+                    fieldType = "int",
+                    opType = "=",
+                    value = inObj.payType.ToString(),
+                    objFiled = "payType"
+                });
+            }
+
             return queryDal.getListData(inObj);
         }
 

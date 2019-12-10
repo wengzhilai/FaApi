@@ -2,6 +2,7 @@
 using ApiEtc.Models.Entity;
 using Helper;
 using Helper.Query;
+using Helper.Query.Dto;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,16 @@ namespace ApiEtc.Repository
 
         public Task<ResultObj<Dictionary<String, Object>>> list(WalletListDto inObj)
         {
-            inObj.code = "client";
+            inObj.code = "wallet";
+
+            if (inObj.whereList == null) inObj.whereList = new List<SearchWhereDto>();
+            inObj.whereList.Add(new SearchWhereDto
+            {
+                fieldType = "string",
+                opType = "=",
+                value = inObj.Key,
+                objFiled = "StaffOpenId"
+            });
 
             return queryDal.getListData(inObj);
         }

@@ -88,6 +88,18 @@ public class RedisCacheService : ICacheService
 
     }
 
+    public bool Add(string key, string inStr, TimeSpan? expiresSliding = null, TimeSpan? expiressAbsoulte = null)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+       
+        _cache_write.StringSet(key, inStr);
+        return _cache_write.KeyExpire(key, expiressAbsoulte);
+
+    }
+
     #endregion
 
     #region 删除缓存
@@ -162,12 +174,21 @@ public class RedisCacheService : ICacheService
             }
             catch
             {
-                //result.IsSucess = false;
-                //result.RetMsg = string.Format("对象[{0}]的性[{1}]值[{2}]转换无效:", reEnt.GetType().Name, item.Name, values[i], e.Message);
-                //LogHelper.WriteErrorLog(typeof(RedisReadHelper), result.RetMsg + e.ToString());
             }
         }
         return reEnt;
+    }
+
+
+    public string Get(string key)
+    {
+        if (key == null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+        var reStr= _cache_read.StringGet(key);
+
+        return reStr;
     }
 
     /// <summary>

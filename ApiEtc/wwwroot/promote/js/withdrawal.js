@@ -1,6 +1,7 @@
 
 var url = window.globalConfig.api;
 var notPayMoney; //未提现金额
+var noPaidNum;//未提现人数
 $(function () {
     getClientReport()
 })
@@ -14,7 +15,8 @@ getClientReport=()=>{
         datatype : 'json',
         contentType: "application/json; charset=utf-8",
         success:(res)=>{
-            notPayMoney = res.data.noPaidMoney
+            notPayMoney = res.data.noPaidMoney;
+            noPaidNum  = res.data.noPaidNum
            $('.getMoney').text(`${res.data.noPaidMoney}.00`)
         },
         error:(err)=>{
@@ -34,7 +36,8 @@ withdrawal = ()=>{
             walletAccountType: 1,
             walletaAcount: account,
             walletAccountName: name,
-            Key: sessionStorage.getItem('id')
+            Key: sessionStorage.getItem('id'),
+            clientNum:noPaidNum
         }
         if(name!=''&&account!=''&&flag==true){
             flag = false
@@ -45,10 +48,17 @@ withdrawal = ()=>{
                 datatype : 'json',
                 contentType: "application/json; charset=utf-8",
                 success:(res)=>{
-                    flag = true
-                    getClientReport()
-                    $('#account').val('')
-                    $('#name').val('')
+                    if (res.success==true){
+                        alert('提交成功')
+                        flag = true
+                        getClientReport()
+                        $('#account').val('')
+                        $('#name').val('')
+                    }
+                    else {
+                        alert(res.msg)
+                    }
+
                 },
                 error:(err)=>{
                     flag = true

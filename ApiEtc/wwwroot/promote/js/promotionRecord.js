@@ -72,10 +72,12 @@ $(function () {
 getClientList=()=>{
     var Data = {
         Key : sessionStorage.getItem('id'),
-        payType : saveTagType,
         page : page,
         rows : 10
     };
+    if (tagType!==0){
+        Data.payType = saveTagType
+    }
     $.ajax({
         type : "post",
         url : url+'/Client/list',

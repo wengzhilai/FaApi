@@ -494,6 +494,9 @@ function MakeEditItem(cfgJson) {
                 case "datetimebox":     
                     $('#edit_' + item + '_value').datetimebox()
                     break;
+                case "file":
+                    $('#edit_' + item + '_value').filebox({ "buttonText": "选择文件", "buttonAlign": "left", "multiple": false, "onChange": fileOnChange })
+                    break;
                 case "textarea":
                     $('#edit_' + item + '_value').textbox({ "multiline": true, "height":80 })
                     break;
@@ -504,7 +507,34 @@ function MakeEditItem(cfgJson) {
             }
         }
     }
+}
+function fileOnChange(newValue, oldValue) {
+    var thisId = this.id;
 
+    if (newValue == null || $("#" + thisId).filebox("files")[0] == null) return;
+
+    var formData = new FormData();
+    formData.append("photo", $("#" + thisId).filebox("files")[0]);
+    formData.append("service", 'App.Passion.UploadFile');
+    formData.append("token", "ddd");
+    
+    $.ajax({
+        type: 'post',
+        url: fileUpApi,
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.success) {
+                alert("上传成功");
+                $("#" + thisId).filebox("setText", data.data.url)
+            }
+            else {
+                alert(data.msg);
+            }
+        }
+    });
 }
 
 function MakeLookItem(cfgJson) {
@@ -549,28 +579,36 @@ function OpenEdit(btnIndex, dataIndex) {
             text: '保存',
             iconCls: 'icon-edit',
             handler: function () {
+
+                var postJson = {
+                    token: "",
+                    saveFieldList: [],
+                    ignoreFieldList: [],
+                    data: [],
+                    whereList: []
+                }
+
                 var iputData = GetEditValue();
+
+                for (var i in iputData) {
+                    postJson.saveFieldList.push(i);
+                }
 
                 //默认把第一列数据提交
                 for (var i in rowdata) {
                     iputData[i] = rowdata[i];
+                    postJson.whereList.push(i)
                     break;
                 }
                 
-                console.log(iputData)
-
-                console.log(btn.saveUrl)
-
                 if (btn.saveUrl != null) {
 
                     var urlJson = UrlToJson();
-     
-                    var postJson = {
-                        token: urlJson["token"],
-                        saveFieldList: [],
-                        ignoreFieldList: [],
-                        data: iputData
-                    }
+                    
+                    postJson.token = urlJson["token"];
+                    postJson.data = iputData;
+
+
                     console.log(postJson)
 
                     $.ajax({
@@ -603,7 +641,8 @@ function OpenEdit(btnIndex, dataIndex) {
             handler: function () {
                 $('#dlgEdit').dialog('close')
             }
-        }]
+            }],
+        width: 940,
     };
 
     $('#dlgEdit').dialog(option)
@@ -642,6 +681,9 @@ function SetEditValue(data) {
                 case "datetimebox":
                     $('#edit_' + item + '_value').datetimebox("setValue",value);
                     break;
+                case "file":
+                    $('#edit_' + item + '_value').filebox("setText",value);
+                    break;
                 default:
                     $('#edit_' + item + '_value').textbox("setValue", value)
                     break;
@@ -675,6 +717,9 @@ function GetEditValue() {
                 case "datetime":
                 case "datetimebox":
                     reData[item] = $('#edit_' + item + '_value').datetimebox("getValue");
+                    break;
+                case "file":
+                    reData[item] = $('#edit_' + item + '_value').filebox("getText");
                     break;
                 default:
                     reData[item] = $('#edit_' + item + '_value').textbox("getValue")
