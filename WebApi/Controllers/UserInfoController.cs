@@ -77,31 +77,31 @@ namespace WebApi.Controllers
             ResultObj<FaUserInfoEntityView> reObj = new ResultObj<FaUserInfoEntityView>();
             int key = Convert.ToInt32(inEnt.Key);
             FaUserInfoEntityView user = await _userInfo.SingleByKey(key);
-            if (user.BIRTHDAY_TIME != null)
+            if (user.birthdayTime != null)
             {
-                if (user.YEARS_TYPE==("阴历") || user.YEARS_TYPE==("国号"))
+                if (user.yearsType==("阴历") || user.yearsType==("国号"))
                 {
-                    user.BirthdaysolarDate = this._public.GetSolarDate(user.BIRTHDAY_TIME.Value).msg;
-                    user.BirthdaylunlarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                    user.birthdaysolarDate = this._public.GetSolarDate(user.birthdayTime.Value).msg;
+                    user.birthdaylunlarDate = user.birthdayTime.Value.ToString("yyyy-MM-dd HH:mm");
                     
                 }
                 else
                 {
-                    user.BirthdaylunlarDate = this._public.GetLunarDate(user.BIRTHDAY_TIME.Value).msg;
-                    user.BirthdaysolarDate = user.BIRTHDAY_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                    user.birthdaylunlarDate = this._public.GetLunarDate(user.birthdayTime.Value).msg;
+                    user.birthdaysolarDate = user.birthdayTime.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             }
-            if (user.DIED_TIME != null && user.IS_LIVE == 0)
+            if (user.diedTime != null && user.isLive == 0)
             {
-                if (user.YEARS_TYPE==("阴历") || user.YEARS_TYPE==("国号"))
+                if (user.yearsType==("阴历") || user.yearsType==("国号"))
                 {
-                    user.DiedsolarDate = this._public.GetSolarDate(user.DIED_TIME.Value).msg;
-                    user.DiedlunlarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                    user.diedsolarDate = this._public.GetSolarDate(user.diedTime.Value).msg;
+                    user.diedlunlarDate = user.diedTime.Value.ToString("yyyy-MM-dd HH:mm");
                 }
                 else
                 {
-                    user.DiedlunlarDate = this._public.GetLunarDate(user.DIED_TIME.Value).msg;
-                    user.DiedsolarDate = user.DIED_TIME.Value.ToString("yyyy-MM-dd HH:mm");
+                    user.diedlunlarDate = this._public.GetLunarDate(user.diedTime.Value).msg;
+                    user.diedsolarDate = user.diedTime.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             }
 
@@ -120,7 +120,7 @@ namespace WebApi.Controllers
         public async Task<ResultObj<FaUserInfoEntityView>> SingleByName(DtoKey inEnt)
         {
             ResultObj<FaUserInfoEntityView> reObj = new ResultObj<FaUserInfoEntityView>();
-            var user = await _userInfo.FindAll(x => x.NAME == inEnt.Key);
+            var user = await _userInfo.FindAll(x => x.name == inEnt.Key);
             reObj.dataList = user.ToList();
             reObj.success = true;
             return reObj;
@@ -136,7 +136,7 @@ namespace WebApi.Controllers
         public async Task<ResultObj<FaUserInfoEntityView>> List(DtoSearch<FaUserInfoEntityView> inEnt)
         {
             ResultObj<FaUserInfoEntityView> reObj = new ResultObj<FaUserInfoEntityView>();
-            inEnt.FilterList = x => x.LOGIN_NAME.Length == 11;
+            inEnt.FilterList = x => x.loginName.Length == 11;
             inEnt.OrderType = "id asc";
             var user = await _userInfo.List(inEnt);
             reObj.dataList = user.ToList();

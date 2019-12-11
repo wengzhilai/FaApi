@@ -67,7 +67,7 @@ namespace Repository
                     reObj.msg = "父级ID有误";
                     return reObj;
                 }
-                var fatherEnt = await dbHelper.Single(x => x.ID == fatherId);
+                var fatherEnt = await dbHelper.Single(x => x.id == fatherId);
                 if (fatherEnt == null)
                 {
                     reObj.success = false;
@@ -102,7 +102,7 @@ namespace Repository
                                     LEVEL_ID = inEnt.LevelId,
                                     FAMILY_ID = 1,
                                     FATHER_ID = fatherId,
-                                    ELDER_ID = fatherEnt.ELDER_ID + 1,
+                                    ELDER_ID = fatherEnt.elderId + 1,
                                     BIRTHDAY_TIME = brithDay,
                                     CREATE_USER_NAME = inEnt.ParentArr[0].v,
                                     UPDATE_USER_NAME = inEnt.ParentArr[0].v,
@@ -247,8 +247,8 @@ namespace Repository
 
             try
             {
-                var father = await dapperUserInfo.Single(x => x.ID == inEnt.data.FATHER_ID);
-                if (father == null && (inEnt.data.COUPLE_ID == null || inEnt.data.COUPLE_ID == 0))
+                var father = await dapperUserInfo.Single(x => x.ID == inEnt.data.fatherId);
+                if (father == null && (inEnt.data.coupleId == null || inEnt.data.coupleId == 0))
                 {
                     reObj.success = false;
                     reObj.msg = "ID有误";
@@ -257,16 +257,16 @@ namespace Repository
 
 
 
-                if (inEnt.data.ID == 0)
+                if (inEnt.data.id == 0)
                 {
                     #region 添加新用户
 
                     #region 保存配
 
                     var userId = await new SequenceRepository().GetNextID<FaUserEntity>();
-                    if (inEnt.data.COUPLE_ID != null)
+                    if (inEnt.data.coupleId != null)
                     {
-                        var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.data.COUPLE_ID);
+                        var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.data.coupleId);
                         if (coupleEnt == null)
                         {
                             reObj.success = false;
@@ -306,10 +306,10 @@ namespace Repository
                         data = new FaUserEntity
                         {
                             id = userId,
-                            name = inEnt.data.NAME,
-                            iconFiles = inEnt.data.ICON_FILES,
+                            name = inEnt.data.name,
+                            iconFiles = inEnt.data.iconFiles,
                             createTime = DateTime.Now,
-                            loginName = string.IsNullOrEmpty(inEnt.data.LOGIN_NAME) ? userId.ToString() : inEnt.data.LOGIN_NAME,
+                            loginName = string.IsNullOrEmpty(inEnt.data.loginName) ? userId.ToString() : inEnt.data.loginName,
                             districtId = 1
                         }
                     });
@@ -324,7 +324,7 @@ namespace Repository
 
 
                     #region 保存用户登录信息
-                    if (!string.IsNullOrEmpty(inEnt.data.LOGIN_NAME))
+                    if (!string.IsNullOrEmpty(inEnt.data.loginName))
                     {
                         //如果没有输入登录账号，账号默认为用户的ID
                         var addLoginId = await dapperLogin.Save(new DtoSave<FaLoginEntity>
@@ -332,8 +332,8 @@ namespace Repository
                             data = new FaLoginEntity
                             {
                                 id = await new SequenceRepository().GetNextID<FaLoginEntity>(),
-                                loginName = inEnt.data.LOGIN_NAME,
-                                password = inEnt.data.LOGIN_NAME.Md5()
+                                loginName = inEnt.data.loginName,
+                                password = inEnt.data.loginName.Md5()
                             }
                         });
                         if (addLoginId < 1)
@@ -355,21 +355,21 @@ namespace Repository
                         data = new FaUserInfoEntity
                         {
                             ID = userId,
-                            LEVEL_ID = inEnt.data.LEVEL_ID,
-                            COUPLE_ID = inEnt.data.COUPLE_ID,
-                            BIRTHDAY_TIME = inEnt.data.BIRTHDAY_TIME,
-                            BIRTHDAY_PLACE = inEnt.data.BIRTHDAY_PLACE,
-                            IS_LIVE = inEnt.data.IS_LIVE,
-                            DIED_TIME = inEnt.data.DIED_TIME,
-                            DIED_PLACE = inEnt.data.DIED_PLACE,
-                            SEX = inEnt.data.SEX,
-                            YEARS_TYPE = inEnt.data.YEARS_TYPE,
-                            ALIAS = inEnt.data.ALIAS,
-                            INDUSTRY = inEnt.data.INDUSTRY,
-                            EDUCATION = inEnt.data.EDUCATION,
-                            DIED_CHINA_YEAR = inEnt.data.DIED_CHINA_YEAR,
-                            BIRTHDAY_CHINA_YEAR = inEnt.data.BIRTHDAY_CHINA_YEAR,
-                            FATHER_ID = inEnt.data.FATHER_ID,
+                            LEVEL_ID = inEnt.data.levelId,
+                            COUPLE_ID = inEnt.data.coupleId,
+                            BIRTHDAY_TIME = inEnt.data.birthdayTime,
+                            BIRTHDAY_PLACE = inEnt.data.birthdayPlace,
+                            IS_LIVE = inEnt.data.isLive,
+                            DIED_TIME = inEnt.data.diedTime,
+                            DIED_PLACE = inEnt.data.diedPlace,
+                            SEX = inEnt.data.sex,
+                            YEARS_TYPE = inEnt.data.yearsType,
+                            ALIAS = inEnt.data.alias,
+                            INDUSTRY = inEnt.data.industry,
+                            EDUCATION = inEnt.data.education,
+                            DIED_CHINA_YEAR = inEnt.data.diedChinaYear,
+                            BIRTHDAY_CHINA_YEAR = inEnt.data.birthdayChinaYear,
+                            FATHER_ID = inEnt.data.fatherId,
                             CREATE_USER_NAME = opUserName,
                             CREATE_USER_ID = opUserId,
                             UPDATE_TIME = DateTime.Now,
@@ -393,7 +393,7 @@ namespace Repository
                 }
                 else
                 {
-                    var userId = inEnt.data.ID;
+                    var userId = inEnt.data.id;
                     var user = await dapperUser.Single((x) => x.id == userId);
                     var userInfo = await dapperUserInfo.Single((x) => x.ID == userId);
                     #region 检测数据是否正确权限
@@ -444,7 +444,7 @@ namespace Repository
 
                     #region 修改账号
                     //如果账号变动需修改登录账号
-                    if (inEnt.data.LOGIN_NAME != user.loginName)
+                    if (inEnt.data.loginName != user.loginName)
                     {
                         //原账号
                         var login = await dapperLogin.Single(i => i.loginName == user.loginName);
@@ -455,7 +455,7 @@ namespace Repository
 
                             #region 判断该用账号是否存在
                             // if (await dapperLogin.Count(i => i.ID != login.ID && i.LOGIN_NAME == inEnt.Data.LOGIN_NAME) > 0)
-                            if (await dapperLogin.Count(string.Format("ID<>{0} && LOGIN_NAME='{1}'", login.id, inEnt.data.LOGIN_NAME)) > 0)
+                            if (await dapperLogin.Count(string.Format("ID<>{0} && LOGIN_NAME='{1}'", login.id, inEnt.data.loginName)) > 0)
                             {
                                 dapperUser.TranscationRollback();
                                 reObj.success = false;
@@ -464,7 +464,7 @@ namespace Repository
                             }
                             #endregion
                             //如果账号为空则删除原有登录账号
-                            if (string.IsNullOrEmpty(inEnt.data.LOGIN_NAME))
+                            if (string.IsNullOrEmpty(inEnt.data.loginName))
                             {
                                 var delNum = await dapperLogin.Delete(i => i.id == login.id);
                                 if (delNum < 1)
@@ -477,7 +477,7 @@ namespace Repository
                             }
                             else
                             {
-                                login.loginName = inEnt.data.LOGIN_NAME;
+                                login.loginName = inEnt.data.loginName;
                                 var updateLoginNum = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                                 {
                                     data = login,
@@ -498,7 +498,7 @@ namespace Repository
                         else
                         {
                             #region 保存用户登录信息
-                            if (!string.IsNullOrEmpty(inEnt.data.LOGIN_NAME))
+                            if (!string.IsNullOrEmpty(inEnt.data.loginName))
                             {
                                 //如果没有输入登录账号，账号默认为用户的ID
                                 var addLoginId = await dapperLogin.Save(new DtoSave<FaLoginEntity>
@@ -506,8 +506,8 @@ namespace Repository
                                     data = new FaLoginEntity
                                     {
                                         id = await new SequenceRepository().GetNextID<FaLoginEntity>(),
-                                        loginName = inEnt.data.LOGIN_NAME,
-                                        password = inEnt.data.LOGIN_NAME.Md5()
+                                        loginName = inEnt.data.loginName,
+                                        password = inEnt.data.loginName.Md5()
                                     }
                                 });
                                 if (addLoginId < 1)
@@ -528,9 +528,9 @@ namespace Repository
                     #endregion
 
                     #region 修改用户
-                    user.name = inEnt.data.NAME;
-                    user.loginName = inEnt.data.LOGIN_NAME;
-                    user.iconFiles = inEnt.data.ICON_FILES;
+                    user.name = inEnt.data.name;
+                    user.loginName = inEnt.data.loginName;
+                    user.iconFiles = inEnt.data.iconFiles;
                     var addUserNum = await dapperUser.Update(new DtoSave<FaUserEntity>
                     {
                         data = user,
@@ -548,22 +548,22 @@ namespace Repository
 
                     #region 修改用户信息
 
-                    userInfo.LEVEL_ID = inEnt.data.LEVEL_ID;
-                    userInfo.COUPLE_ID = inEnt.data.COUPLE_ID;
-                    userInfo.BIRTHDAY_TIME = inEnt.data.BIRTHDAY_TIME;
-                    userInfo.BIRTHDAY_PLACE = inEnt.data.BIRTHDAY_PLACE;
-                    userInfo.IS_LIVE = inEnt.data.IS_LIVE;
-                    userInfo.DIED_TIME = inEnt.data.DIED_TIME;
-                    userInfo.DIED_PLACE = inEnt.data.DIED_PLACE;
-                    userInfo.SEX = inEnt.data.SEX;
-                    userInfo.YEARS_TYPE = inEnt.data.YEARS_TYPE;
-                    userInfo.DIED_CHINA_YEAR = inEnt.data.DIED_CHINA_YEAR;
-                    userInfo.BIRTHDAY_CHINA_YEAR = inEnt.data.BIRTHDAY_CHINA_YEAR;
-                    userInfo.ALIAS = inEnt.data.ALIAS;
-                    userInfo.REMARK = inEnt.data.REMARK;
-                    userInfo.INDUSTRY = inEnt.data.INDUSTRY;
-                    userInfo.EDUCATION = inEnt.data.EDUCATION;
-                    userInfo.AUTHORITY = inEnt.data.AUTHORITY;
+                    userInfo.LEVEL_ID = inEnt.data.levelId;
+                    userInfo.COUPLE_ID = inEnt.data.coupleId;
+                    userInfo.BIRTHDAY_TIME = inEnt.data.birthdayTime;
+                    userInfo.BIRTHDAY_PLACE = inEnt.data.birthdayPlace;
+                    userInfo.IS_LIVE = inEnt.data.isLive;
+                    userInfo.DIED_TIME = inEnt.data.diedTime;
+                    userInfo.DIED_PLACE = inEnt.data.diedPlace;
+                    userInfo.SEX = inEnt.data.sex;
+                    userInfo.YEARS_TYPE = inEnt.data.yearsType;
+                    userInfo.DIED_CHINA_YEAR = inEnt.data.diedChinaYear;
+                    userInfo.BIRTHDAY_CHINA_YEAR = inEnt.data.birthdayChinaYear;
+                    userInfo.ALIAS = inEnt.data.alias;
+                    userInfo.REMARK = inEnt.data.remark;
+                    userInfo.INDUSTRY = inEnt.data.industry;
+                    userInfo.EDUCATION = inEnt.data.education;
+                    userInfo.AUTHORITY = inEnt.data.authority;
                     userInfo.UPDATE_TIME = DateTime.Now;
                     userInfo.UPDATE_USER_NAME = opUserName;
                     userInfo.UPDATE_USER_ID = opUserId;

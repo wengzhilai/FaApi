@@ -1,15 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using Autofac;
+using AutoMapper;
+using Helper;
+using IRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Repository;
+using System.Reflection;
 
 namespace ApiFamily
 {
@@ -30,7 +34,11 @@ namespace ApiFamily
 
         public void ConfigureServices(IServiceCollection services)
         {
- 
+
+            #region 注入
+            services.TryAddSingleton<IFamilyRepository, FamilyRepository>();
+            #endregion
+
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
                 options.RequireHttpsMetadata = false;
@@ -49,7 +57,8 @@ namespace ApiFamily
                 // 如字段为null值，该字段不会返回到前端
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
-           
+            services.AddAutoMapper(typeof(Startup));
+
 
             services.AddCors(options =>
             {

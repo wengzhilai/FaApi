@@ -82,7 +82,7 @@ namespace Repository
             var tmpXY = await AddSonItem(riList, userInfo, 1, 10, new XYZ { X = 0, Y = 0, Z = 0 });
             var nowInfo = InfoToItem(userInfo, (tmpXY[0] + tmpXY[1]) / 2, 0);
             riList.Add(nowInfo);
-            await AddFatherItem(riList, userInfo, 1, 1, new XYZ { X = nowInfo.x, Y = nowInfo.y, Z = userInfo.ChildNum }, tmpXY[0], tmpXY[1]);
+            await AddFatherItem(riList, userInfo, 1, 1, new XYZ { X = nowInfo.x, Y = nowInfo.y, Z = userInfo.childNum }, tmpXY[0], tmpXY[1]);
             var minX = riList.Min(x => x.x);
             var minY = riList.Max(x => x.y);
             minY = -minY;
@@ -169,9 +169,9 @@ namespace Repository
 
             reObj.dataList = allElder.ToList();
 
-            reObj.msg = userInfo.NAME;
+            reObj.msg = userInfo.name;
             DapperHelper<FaFamilyBooksEntity> dapperFb = new DapperHelper<FaFamilyBooksEntity>();
-            var page = await dapperFb.Single(i => i.UserID == userInfo.ID && i.TYPE_ID == 2);
+            var page = await dapperFb.Single(i => i.UserID == userInfo.id && i.TYPE_ID == 2);
             reObj.code = (page == null) ? "10" : page.SORT.ToString();
             return reObj;
         }
@@ -183,7 +183,7 @@ namespace Repository
             ent.x = x;
             ent.y = y;
             ent.CompletionRatio = 0;
-            if (userInfo.BIRTHDAY_TIME != null)
+            if (userInfo.birthdayTime != null)
             {
                 ent.CompletionRatio = 60;
             }
@@ -194,8 +194,8 @@ namespace Repository
 
             if (levelId > maxLevelId) return new[] { xyz.X, xyz.X, xyz.X };
             DapperHelper<FaUserInfoEntityView> dal = new DapperHelper<FaUserInfoEntityView>();
-            var allSon = (await dal.FindAll(x => x.FATHER_ID == inFather.ID)).ToList();
-            allSon = allSon.OrderBy(x => x.LEVEL_ID).ToList();
+            var allSon = (await dal.FindAll(x => x.fatherId == inFather.id)).ToList();
+            allSon = allSon.OrderBy(x => x.levelId).ToList();
 
             if (allSon.Count() == 0) return new[] { xyz.X, xyz.X, xyz.X };
             var allSonItem = mapper.Map<IList<RelativeItem>>(allSon);
@@ -218,16 +218,16 @@ namespace Repository
         private async Task<bool> AddFatherItem(IList<RelativeItem> mainList, FaUserInfoEntityView inSon, int levelId, int maxLevelId, XYZ xyz, int toLeft, int toRigth)
         {
             if (levelId > maxLevelId) return true;
-            if (inSon.FATHER_ID == null) return true;
+            if (inSon.fatherId == null) return true;
 
-            List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.FATHER_ID == inSon.FATHER_ID && x.ID == inSon.ID)).OrderBy(x => x.LEVEL_ID).ToList();
+            List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.fatherId == inSon.fatherId && x.id == inSon.id)).OrderBy(x => x.levelId).ToList();
 
             var sonList = mapper.Map<IList<RelativeItem>>(allSon);
             #region 计算坐标，并添加兄弟项
             var myPlace = 0;
             for (var i = 0; i < sonList.Count; i++)
             {
-                if (sonList[i].Id == inSon.ID) myPlace = i;
+                if (sonList[i].Id == inSon.id) myPlace = i;
             }
             //表示开始的位置            
             sonList[myPlace].x = xyz.X;
@@ -254,11 +254,11 @@ namespace Repository
 
             var minX = sonList.Min(x => x.x);
             var maxX = sonList.Max(x => x.x);
-            if (inSon.FATHER_ID != null)
+            if (inSon.fatherId != null)
             {
-                var father = InfoToItem(await this.userInfo.SingleByKey(inSon.FATHER_ID.Value), (minX + maxX) / 2, xyz.Y + 1);
+                var father = InfoToItem(await this.userInfo.SingleByKey(inSon.fatherId.Value), (minX + maxX) / 2, xyz.Y + 1);
                 mainList.Add(father);
-                await AddFatherItem(mainList, await this.userInfo.SingleByKey(inSon.FATHER_ID.Value), levelId + 1, maxLevelId, new XYZ { X = father.x, Y = father.y }, minX, maxX);
+                await AddFatherItem(mainList, await this.userInfo.SingleByKey(inSon.fatherId.Value), levelId + 1, maxLevelId, new XYZ { X = father.x, Y = father.y }, minX, maxX);
             }
 
             return true;
@@ -268,14 +268,14 @@ namespace Repository
         {
             var reObj = new List<KV>();
             DapperHelper<FaUserInfoEntityView> dapperUserInfo = new DapperHelper<FaUserInfoEntityView>();
-            var user = await dapperUserInfo.Single(i => i.ID == userId);
+            var user = await dapperUserInfo.Single(i => i.id == userId);
             if (user == null) return reObj;
-            reObj.Add(new KV { k = user.ID.ToString(), v = user.NAME });
+            reObj.Add(new KV { k = user.id.ToString(), v = user.name });
             for (int i = 0; i < parentNum; i++)
             {
-                user = await dapperUserInfo.Single(a => a.ID == user.FATHER_ID);
+                user = await dapperUserInfo.Single(a => a.id == user.fatherId);
                 if (user == null) return reObj;
-                reObj.Add(new KV { k = user.ID.ToString(), v = user.NAME });
+                reObj.Add(new KV { k = user.id.ToString(), v = user.name });
             }
             return reObj;
         }

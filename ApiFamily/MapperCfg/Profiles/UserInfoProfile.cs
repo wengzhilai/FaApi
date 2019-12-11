@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApi.MapperCfg.Profiles
+namespace ApiFamily.MapperCfg.Profiles
 {
     /// <summary>
     /// 
