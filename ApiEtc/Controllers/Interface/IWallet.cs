@@ -29,6 +29,13 @@ namespace ApiEtc.Controllers.Interface
         /// <returns></returns>
         Task<ResultObj<EtcWalletEntity>> singleByKey(DtoDo<int> inEnt);
 
+        /// <summary>
+        /// 审核资料
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<ResultObj<int>> save(DtoSave<EtcWalletEntity> inEnt);
+
     }
 
     public class SubmitWalletDto: DtoKey

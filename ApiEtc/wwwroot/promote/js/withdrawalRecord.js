@@ -39,7 +39,7 @@ getWalletList=()=>{
                                 <p>${res.dataList[i].Money}</p>
                            </div>
                            <div>
-                                 <p>${res.dataList[i].SubmitTime}</p>
+                                 <p>${res.dataList[i].CreateTime}</p>
                            </div>
                         </div>
                     `
@@ -58,7 +58,6 @@ getWalletList=()=>{
             else {
                 console.log(httpsState)
                 if (httpsState==true){
-                    console.log(222)
                     var dom = `<div class="noList"><p>暂无提现记录</p></div>`
                     $('.content').append(dom)
                 }

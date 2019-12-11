@@ -67,6 +67,8 @@ body{
     margin: 0.8rem 0;
 }
 .fallInInfo p{
+    width: 8rem;
+    text-align: right;
     font-size: 1.5rem;
     color: #Ffffff;
 }

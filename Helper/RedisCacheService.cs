@@ -88,7 +88,7 @@ public class RedisCacheService : ICacheService
 
     }
 
-    public bool Add(string key, string inStr, TimeSpan? expiresSliding = null, TimeSpan? expiressAbsoulte = null)
+    public bool Add(string key, string inStr,TimeSpan? expiressAbsoulte = null)
     {
         if (key == null)
         {

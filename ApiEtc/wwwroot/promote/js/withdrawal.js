@@ -32,7 +32,6 @@ withdrawal = ()=>{
     var name = $('#name').val(),
         account = $('#account').val()
     var Data = {
-            AllMoney: notPayMoney,
             walletAccountType: 1,
             walletaAcount: account,
             walletAccountName: name,
@@ -50,7 +49,6 @@ withdrawal = ()=>{
                 success:(res)=>{
                     if (res.success==true){
                         alert('提交成功')
-                        flag = true
                         getClientReport()
                         $('#account').val('')
                         $('#name').val('')
@@ -58,7 +56,7 @@ withdrawal = ()=>{
                     else {
                         alert(res.msg)
                     }
-
+                    flag = true
                 },
                 error:(err)=>{
                     flag = true

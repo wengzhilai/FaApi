@@ -63,5 +63,16 @@ namespace ApiEtc.Controllers
         {
             return dal.submitWallet(inObj);
         }
+
+        /// <summary>
+        /// 后台修改客户资料
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Task<ResultObj<int>> save(DtoSave<EtcWalletEntity> inObj)
+        {
+            return dal.save(inObj);
+        }
     }
 }

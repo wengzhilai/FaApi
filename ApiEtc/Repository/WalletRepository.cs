@@ -93,7 +93,7 @@ namespace ApiEtc.Repository
                     return reObj;
                 }
 
-                string opuserName = "操作员";
+                string opuserName = "";
 
                 var waitList = await dapperClient.FindAll(x => x.staffId == staff.id && x.status == "已安装激活");
 
@@ -152,6 +152,43 @@ namespace ApiEtc.Repository
                     throw e;
                 }
 
+            }
+            catch (Exception e)
+            {
+                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+        }
+
+        public async Task<ResultObj<int>> save(DtoSave<EtcWalletEntity> inEnt)
+        {
+            var reObj = new ResultObj<int>();
+            try
+            {
+                var client = await dapper.SingleByKey(inEnt.data.id);
+                if (client == null)
+                {
+                    reObj.success = false;
+                    reObj.msg = "Id有误";
+                    return reObj;
+                }
+
+                if (client.status.Equals("已结算"))
+                {
+                    reObj.success = false;
+                    reObj.msg = "该用户已经结算，不可修改";
+                    return reObj;
+                }
+
+                inEnt.saveFieldList = new List<string> { "remark", "carNum", "carType", "submitTime", "status", "opuserName" };
+                inEnt.ignoreFieldList = null;
+                inEnt.whereList = new List<string> { "id" };
+                inEnt.token = inEnt.token.Replace("#", "");
+                //inEnt.data.opuserName = Fun.HashDecrypt(inEnt.token);
+                inEnt.data.opuserName = inEnt.token;
+                var opNum = await dapper.Update(inEnt);
             }
             catch (Exception e)
             {

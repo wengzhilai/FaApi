@@ -13,17 +13,25 @@ $(function () {
 var flag = true;
 submitUserIfo =()=>{
     var name = $('#name').val(),
-                phone = $('#phone').val();
-            if (name!=''&& phone!=''){
+        phone = $('#phone').val(),
+        idCard = $('#idCard').val()
+            if (name!=''&& phone!=''&&idCard!=''){
+
                 if (!(/^1[3456789]\d{9}$/.test(phone))) {
-                    alert('请输入正确的手机号')
+                   return  alert('请正确输入手机号')
                 }
-                else {
+
+                 if (!(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/.test(idCard))){
+                   return  alert('请正确输入身份证号码')
+                }
                     if (!flag) return false;
+
                     flag = false
+
                     var Data = {
                         name:name,
                         phone:phone,
+                        idNo:idCard,
                         key:sessionStorage.getItem('id')
                     }
                     $.ajax({
@@ -46,7 +54,7 @@ submitUserIfo =()=>{
                                 flag = true
                             }
             })
-        }
+
     }
     else {
         alert('请将信息填写完整')

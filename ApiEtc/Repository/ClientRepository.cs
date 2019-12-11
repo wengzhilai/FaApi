@@ -44,12 +44,12 @@ namespace ApiEtc.Repository
             {
                 var sql = @"
 select 
-	(select count(1) from etc_client where StaffId=a.Id AND Status!='已结算') allNum,
-	(select count(1) from etc_client where StaffId=a.Id AND Status='已安装激活') paidNum,
-	(select count(1) from etc_client where StaffId=a.Id AND Status!='已安装激活' AND Status!='已结算') noPaidNum,
-	(select SUM(Money) from etc_client where StaffId=a.Id and Status!='已结算') allMoney, 
-	(select SUM(Money) from etc_client where StaffId=a.Id AND Status='已安装激活') paidMoney,
-	(select SUM(Money) from etc_client where StaffId=a.Id AND Status!='已安装激活' AND Status!='已结算') noPaidMoney 
+	(select count(1) from etc_client where StaffId=a.Id AND Status='已安装激活') allNum,
+	(select count(1) from etc_client where StaffId=a.Id AND Status='已安装激活' AND Status='已结算') paidNum,
+	(select count(1) from etc_client where StaffId=a.Id AND Status='已安装激活' AND Status!='已结算') noPaidNum,
+	(select SUM(Money) from etc_client where StaffId=a.Id and Status='已安装激活' ) allMoney, 
+	(select SUM(Money) from etc_client where StaffId=a.Id AND Status='已安装激活' AND Status='已结算') paidMoney,
+	(select SUM(Money) from etc_client where StaffId=a.Id AND Status='已安装激活' AND Status!='已结算') noPaidMoney 
 from etc_staff a where OpenId='{0}'
 ";
                 sql = string.Format(sql, inObj.Key);

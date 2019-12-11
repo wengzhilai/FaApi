@@ -36,8 +36,8 @@ namespace ApiUser.Controllers.Tests
             //        cfg.entityPath="D:\\IdeaProjects\\study_new\\study-dependencies\\src\\main\\java\\com\\wzl\\commons\\model\\entity\\";
             cfg.entityPath = "F:\\Study\\FaApi\\MSTest\\";
             //cfg.entityPath = "/Users/wengzhilai/Desktop/dotnet/FaApi/MSTest/FaModuleEntity.cs";
-            cfg.tableName = "query";
-            cfg.tableNameRmark = "查询";
+            cfg.tableName = "etc_weixin";
+            cfg.tableNameRmark = "微信用户";
             //        cfg.clumStr="" +
             //                "ID\tID\tint\t\t\tTRUE\tFALSE\tTRUE\n" +
             //                "口径任务ID\tSCRIPT_TASK_ID\tint\t\t\tFALSE\tTRUE\tTRUE\n" +

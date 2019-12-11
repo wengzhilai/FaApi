@@ -257,7 +257,7 @@ SELECT COUNT(1) ALL_NUM FROM ({0}) T {4}
             if (pageIndex == 0) pageIndex = 1;
             if (pageSize == 0) pageSize = 10;
             int startNum = (pageIndex - 1) * pageSize;
-            sqlStr = string.Format(sqlStr, string.Format(sql, whereStr), orderStr, startNum, startNum + pageSize, whereStr, withStr, tFile, t1File);
+            sqlStr = string.Format(sqlStr, string.Format(sql, whereStr), orderStr, startNum, pageSize, whereStr, withStr, tFile, t1File);
             return sqlStr;
         }
 

@@ -1,7 +1,17 @@
 
 var url = window.globalConfig.api;
+
+
 $(function () {
     getQrCode()
+    $('.btn_1').click(function () {
+        $('#qrCode').show()
+        $('#qrCode_2').hide()
+    })
+    $('.btn_2').click(function () {
+        $('#qrCode').hide()
+        $('#qrCode_2').show()
+    })
 })
 
 //获取二维码
@@ -14,7 +24,8 @@ getQrCode = ()=>{
         contentType: "application/json; charset=utf-8",
         success:(res)=>{
             if (res.success == true){
-                $('#qrCode').attr('src',res.data.qrCode)
+                $('#qrCode').attr('src',res.data.qrCode);
+                $('#qrCode_2').attr('src',res.data.etcNoPic)
             }
         },
         error:(err)=>{

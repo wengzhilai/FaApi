@@ -603,44 +603,9 @@ namespace Helper
         }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Url"></param>
-        /// <param name="postDataStr"></param>
-        /// <param name="reStr"></param>
-        /// <returns></returns>
-        public static bool HttpPostEncoded(string Url, string postDataStr, ref string reStr)
+        public static string HttpPostJson(string Url, string postDataStr)
         {
-            byte[] dataArray = Encoding.UTF8.GetBytes(postDataStr);
-            // Console.Write(Encoding.UTF8.GetString(dataArray));
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = dataArray.Length;
-            //request.CookieContainer = cookie;
-
-            try
-            {
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(dataArray, 0, dataArray.Length);
-                dataStream.Close();
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-                reStr = reader.ReadToEnd();
-                reader.Close();
-                return true;
-            }
-            catch (Exception e)
-            {
-                LogHelper.WriteErrorLog<Fun>(e.ToString());
-                return false;
-            }
-        }
-
-        public static bool HttpPostJson(string Url, string postDataStr, ref string reStr)
-        {
+            string reStr = "";
             byte[] dataArray = Encoding.UTF8.GetBytes(postDataStr);
             // Console.Write(Encoding.UTF8.GetString(dataArray));
 
@@ -657,12 +622,12 @@ namespace Helper
                 StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 reStr = reader.ReadToEnd();
                 reader.Close();
-                return true;
+                return reStr;
             }
             catch (Exception e)
             {
                 LogHelper.WriteErrorLog<Fun>(e.ToString());
-                return false;
+                return reStr;
             }
         }
 

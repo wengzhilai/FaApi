@@ -94,9 +94,9 @@ namespace Helper
             return cache.Add(name, inObj);
         }
 
-        public static bool SetString(string name, string inObj)
+        public static bool SetString(string name, string inObj, TimeSpan? expiressAbsoulte = null)
         {
-            return cache.Add(name, inObj);
+            return cache.Add(name, inObj, expiressAbsoulte);
         }
 
         /// <summary>

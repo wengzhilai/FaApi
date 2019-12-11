@@ -14,6 +14,7 @@ using ApiEtc.Controllers.Interface;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System;
+using ApiEtc.Models.Entity;
 
 namespace ApiEtc.Controllers
 {
@@ -22,9 +23,11 @@ namespace ApiEtc.Controllers
     public class WeiXinController : ControllerBase
     {
         private IStaff staff;
-        public WeiXinController(IStaff dal)
+        private IWeixin weixin;
+        public WeiXinController(IStaff dal, IWeixin weixin)
         {
             this.staff = dal;
+            this.weixin = weixin;
         }
 
 
@@ -85,25 +88,14 @@ namespace ApiEtc.Controllers
             //表示是有推广人的订阅
             if (inObj.Event.Equals("subscribe") && !string.IsNullOrEmpty(inObj.Ticket) && !string.IsNullOrEmpty(inObj.FromUserName))
             {
-                string ticket = "";
-                #region 获取ticket
-                string access_tokenJson = Fun.HttpGetJson(string.Format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}", AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret));
-                var dict = TypeChange.JsonToObject<Dictionary<string, string>>(access_tokenJson);
-                if (dict.ContainsKey("access_token"))
+                var saveEnt= new EtcWeixinEntity()
                 {
-                    string reStr = "";
-                    Fun.HttpPostJson("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + dict["access_token"], "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc\"}}}", ref reStr);
-                    var ticketDict = TypeChange.JsonToObject<Dictionary<string, string>>(reStr);
-                    if (ticketDict.ContainsKey("ticket"))
-                    {
-                        ticket = ticketDict["ticket"];
-                    }
-                }
-                #endregion
-
-                var saveResult = await staff.regStaff(new RegStaffDto { Key = inObj.FromUserName, ticket = ticket,parentTicket= inObj.Ticket });
-                reObj.success = saveResult.success;
-                reObj.msg = saveResult.msg;
+                    openid = inObj.FromUserName,
+                    createTime = DateTime.Now,
+                    parentTicket = inObj.Ticket,
+                    eventKey = inObj.EventKey,
+                };
+                return await weixin.save(saveEnt);
             }
             return reObj;
         }
@@ -117,34 +109,26 @@ namespace ApiEtc.Controllers
             var token= RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN");
             if (string.IsNullOrEmpty(token))
             {
-                string access_tokenJson = Fun.HttpGetJson(string.Format("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}", AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret));
-                var dict = TypeChange.JsonToObject<Dictionary<string, string>>(access_tokenJson);
-                if (dict.ContainsKey("access_token"))
-                {
-                    token = dict["access_token"];
-                    RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token);
-                }
+                token = Helper.WeiChat.Utility.GetAccessToken(AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret);
+                RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token,new TimeSpan(2,0,0));
             }
-   
+
 
 
             if (!string.IsNullOrEmpty(token))
             {
                 foreach (var item in allUser.dataList)
                 {
-
-                    string reStr = "";
                     if (string.IsNullOrEmpty(item.etcNo)) item.etcNo = "87000075";
-                    Fun.HttpPostJson("https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=" + token, "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + item.etcNo + "\"}}}", ref reStr);
-                    var ticketDict = TypeChange.JsonToObject<Dictionary<string, string>>(reStr);
-                    if (ticketDict.ContainsKey("ticket"))
-                    {
-                        item.ticket = ticketDict["ticket"];
-                        var saveResult = await staff.updateTicket(item);
-                    }
+                    string postStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + item.etcNo + "|" + item.phone + "\"}}}";
+                    item.ticket = Helper.WeiChat.Utility.GetQrCodeTicket(token, postStr);
+
+                    await staff.updateTicket(item);
                 }
             }
             return reObj;
         }
+
+
     }
 }

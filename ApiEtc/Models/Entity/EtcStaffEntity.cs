@@ -100,6 +100,13 @@ namespace ApiEtc.Models.Entity
         public String etcNo { get; set; }
 
         /// <summary>
+        /// EtcNo1
+        /// </summary>
+        [Display(Name = "EtcNo1")]
+        [Column("EtcNo1")]
+        public String etcNo1 { get; set; }
+
+        /// <summary>
         /// 上级Ticket
         /// </summary>
         [Display(Name = "上级Ticket")]

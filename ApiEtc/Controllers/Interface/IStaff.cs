@@ -8,12 +8,6 @@ namespace ApiEtc.Controllers.Interface
     {
 
         /// <summary>
-        /// 注册新用户
-        /// </summary>
-        /// <param name="inObj"></param>
-        /// <returns></returns>
-        Task<ResultObj<bool>> regStaff(RegStaffDto inObj);
-        /// <summary>
         /// 检测用户是否绑定，key为OpenId
         /// </summary>
         /// <param name="inObj"></param>
@@ -82,6 +76,11 @@ namespace ApiEtc.Controllers.Interface
         /// 电话号码
         /// </summary>
         public string phone { get; set; }
+
+        /// <summary>
+        /// 身份证号
+        /// </summary>
+        public string idNo { get; set; }
     }
 
     public class RegStaffDto : DtoKey
