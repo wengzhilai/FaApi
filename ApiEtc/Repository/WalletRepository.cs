@@ -113,7 +113,7 @@ namespace ApiEtc.Repository
                     money = waitList.Sum(x => x.money),
                     createTime = DateTime.Now,
                     remark = inObj.remark,
-                    status = "未发发",
+                    status = "未发放",
                     walletAccount = inObj.walletaAcount,
                     walletAccountName = inObj.walletAccountName,
                     walletAccountType = inObj.walletAccountType,

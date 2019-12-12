@@ -7,66 +7,51 @@ var tagType = 0; //查询列表1全部，2已结算，3待结算
 var saveTagType = 0;
 $(function () {
     $('.promoteSuccess').click(function () {
-        $(this).css({borderBottom:'1px solid #FE4E41'});
-        $('.havePay').css({borderBottom: 'none'});
-        $('.notPay').css({borderBottom: 'none'});
-        $('.allRecordList').show()
-        $('.notPayList').hide()
-        $('.havePayList').hide()
         tagType = 0;
         page = 1;
         //如果当前页面数据和请求数据相同则不进行请求
-        if (saveTagType==tagType){
-            return false
-        }
-        else {
-            $('.recordModules').remove();
-            saveTagType = tagType;//赋值后请求
-            getClientList()
-        }
+        $(this).css({borderBottom:'1px solid #FE4E41'});
+        $('.havePay').css({borderBottom: 'none'});
+        $('.notPay').css({borderBottom: 'none'});
+        $('.bind').css({borderBottom: 'none'});
+
     });
     $('.havePay').click(function () {
+        tagType = 1;
+        page = 1;
         $(this).css({borderBottom:'1px solid #FE4E41'});
         $('.promoteSuccess').css({borderBottom: 'none'});
         $('.notPay').css({borderBottom: 'none'});
-        $('.allRecordList').hide()
-        $('.notPayList').hide()
-        $('.havePayList').show()
-        tagType = 1;
-        page = 1;
-        if (saveTagType==tagType){
-            return false
-        }
-        else {
-            $('.recordModules').remove();
-            saveTagType = tagType
-            getClientList()
-        }
+        $('.bind').css({borderBottom: 'none'});
+
     })
     $('.notPay').click(function () {
+        tagType = 2;
+        page = 1;
         $(this).css({borderBottom:'1px solid #FE4E41'});
         $('.havePay').css({borderBottom: 'none'});
         $('.promoteSuccess').css({borderBottom: 'none'});
-        $('.allRecordList').hide()
-        $('.notPayList').show()
-        $('.havePayList').hide()
-        tagType = 2;
+        $('.bind').css({borderBottom: 'none'});
+    });
+    $('.bind').click(function () {
+        tagType = 3;
         page = 1;
-        if (saveTagType==tagType){
-            return false
-        }
-        else {
-            $('.recordModules').remove();
-            saveTagType = tagType
-            getClientList()
-        }
+        $(this).css({borderBottom:'1px solid #FE4E41'});
+        $('.havePay').css({borderBottom: 'none'});
+        $('.promoteSuccess').css({borderBottom: 'none'});
+        $('.notPay').css({borderBottom: 'none'});
 
-    })
+    });
 
     //默认查询
-    getClientReport()
+    getClientReport();
     getClientList()
-})
+
+    document.querySelector('.promoteSuccess').addEventListener('click',de())
+    document.querySelector('.havePay').addEventListener('click',de())
+    document.querySelector('.notPay').addEventListener('click',de())
+    document.querySelector('.bind').addEventListener('click',de())
+});
 
 // 获取推广列表
 getClientList=()=>{
@@ -85,19 +70,19 @@ getClientList=()=>{
         datatype : 'json',
         contentType: "application/json; charset=utf-8",
         success:(res)=>{
-
-            //判断请求的数据length是否大于page。
-            if (res.dataList.length<10){
-                off_on = false; //设置上拉加载状态
-            }
-            else {
-                off_on = true; //设置上拉加载状态
-            }
-            for (var i=0;i<res.dataList.length;i++) {
-                var dom = `
+            if (res.success==true){
+                //判断请求的数据length是否大于page。
+                if (res.dataList.length<10){
+                    off_on = false; //设置上拉加载状态
+                }
+                else {
+                    off_on = true; //设置上拉加载状态
+                }
+                for (var i=0;i<res.dataList.length;i++) {
+                    var dom = `
                 <div class="recordModules">
                     <div class="recordModules_top">
-                    <div>
+                    <div class="carNum">
                         <p>车牌号</p>:<span>${res.dataList[i].CarNum}</span>
                     </div>
                     <div>
@@ -106,45 +91,55 @@ getClientList=()=>{
                     <div>
                         <p>电话</p>:<span>${res.dataList[i].ClientPhone}</span>
                     </div>    
-                    <div>
+                    <div class="createTime">
                         <p>申办时间</p>:<span>${res.dataList[i].SubmitTime}</span>
                     </div>   
                     </div>
                     <div class="recordModules_foot">
                         <p class="state">${res.dataList[i].Status}</p>
-                        <p>佣金金额:<span style="color: #FE4E41">${res.dataList[i].Money}</span></p>
+                        <p class="money">佣金金额:<span style="color: #FE4E41">${res.dataList[i].Money}</span></p>
                     </div>
                 </div>
-            `
-                if (tagType==0){
+            `;
+
                     $('.allRecordList').append(dom)
                 }
-                else if (tagType==1){
-                    $('.havePayList').append(dom)
-                }
-                else if (tagType==2){
-                    $('.notPayList').append(dom)
-                }
+                var stateList = $('.state')
+                //已结算未结算状态展示
+                for (var k = (page-1)*10;k<stateList.length;k++){
+                    if (tagType==3){
+                        stateList[k].style.color = '#FE4E41';
+                        $('.money').hide();  //绑定列表隐藏金额显示
+                        $('.recordModules_foot').css({webkitJustifyContent:'flex-start'});//调整flex布局方式
+                        if (res.dataList[k-(page-1)*10].Status=='已绑定') {
+                            $('.recordModules_top').css({height:'7rem'});//调整高度
+                            $('.carNum').hide();//隐藏车牌号
+                            $('.createTime').hide()//时间隐藏
+                        }
+                    }
+                    else if (tagType==2) {
+                        stateList[k].style.color = '#FE4E41';
+                    }
+                    else if (tagType==1){
+                        stateList[k].style.color = '#00C160';
+                    }
+                    else if (tagType==0){
+                        if (res.dataList[k-(page-1)*10].Status=='待结算') {
+                            stateList[k].style.color = '#FE4E41';
+                        }
+                        else  {
+                            stateList[k].style.color = '#00C160';
+                        }
+                    }
 
-
+                }
             }
-            var stateList = $('.state')
-
-            //已结算未结算状态展示
-            for (var k = (page-1)*10;k<stateList.length;k++){
-                if (res.dataList[(k/10)-page+1].Status=='已结算') {
-                    stateList[k].style.color = '#00C160'
-                }
-                else {
-                    stateList[k].style.color = '#FE4E41'
-                }
+            else {
+                alert(res.msg)
             }
-
-
-
         },
         error:(err)=>{
-
+            alert('请求服务器失败')
         }
     })
 };
@@ -158,12 +153,19 @@ getClientReport=()=>{
         datatype : 'json',
         contentType: "application/json; charset=utf-8",
         success:(res)=>{
-            $('#promoteSuccess').text(`(${res.data.allNum})`)
-            $('#havePay').text(`(${res.data.paidNum})`)
-            $('#notPay').text(`(${res.data.noPaidNum})`)
+            if (res.success==true){
+                $('#promoteSuccess').text(`(${res.data.allNum})`);
+                $('#havePay').text(`(${res.data.paidNum})`);
+                $('#notPay').text(`(${res.data.noPaidNum})`);
+                $('#bind').text(`(${res.data.bindNum})`)
+            }
+            else {
+                alert(res.msg)
+            }
+
         },
         error:(err)=>{
-            alert('网络繁忙')
+            alert('请求服务器失败')
         }
     })
 }
@@ -172,13 +174,28 @@ getClientReport=()=>{
 $(document).scroll(function() {
     if($(window).height()+$(document).scrollTop()>=$(document.body).height()){
         if (off_on) {
-            off_on=false
+            off_on=false;
             setTimeout(function(){
-                page++
+                page++;
                 getWalletList(); //上拉加载更多请求数据，不是第一次请求数据，不需要传参，采用默认参数
             },500)
         }
     }
-})
+});
+
+//防抖
+function de(){
+    let timer=null;
+    return function (){
+        clearTimeout(timer);
+        timer=setTimeout(function(){
+            if (saveTagType!=tagType){
+                $('.recordModules').remove();
+                saveTagType = tagType;//赋值后请求
+                getClientList()
+            }
+        },800);
+    }
+}
 
 

@@ -105,7 +105,6 @@ namespace ApiEtc.Controllers
         {
             var reObj = new Result();
             var allUser = await staff.getStaffList();
-
             var token= RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN");
             if (string.IsNullOrEmpty(token))
             {
@@ -117,9 +116,10 @@ namespace ApiEtc.Controllers
 
             if (!string.IsNullOrEmpty(token))
             {
+                allUser.dataList = allUser.dataList.Where(x => !string.IsNullOrEmpty(x.phone) && string.IsNullOrEmpty(x.ticket)).ToList();
                 foreach (var item in allUser.dataList)
                 {
-                    if (string.IsNullOrEmpty(item.etcNo)) item.etcNo = "87000075";
+                    if (string.IsNullOrEmpty(item.etcNo)) item.etcNo = "87000073";
                     string postStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + item.etcNo + "|" + item.phone + "\"}}}";
                     item.ticket = Helper.WeiChat.Utility.GetQrCodeTicket(token, postStr);
 
@@ -128,7 +128,6 @@ namespace ApiEtc.Controllers
             }
             return reObj;
         }
-
 
     }
 }

@@ -49,7 +49,7 @@ namespace ApiEtc.Repository
                     RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token, new TimeSpan(2, 0, 0));
                 }
 
-                string postTicketStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_87000075|" + inObj.phone + "\"}}}";
+                string postTicketStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_87000073|" + inObj.phone + "\"}}}";
 
                 var staff = await dapper.Single(x => x.openid == inObj.Key);
                 int opNum = 0;
@@ -65,7 +65,7 @@ namespace ApiEtc.Repository
                             name = inObj.name,
                             phone = inObj.phone,
                             idNo = inObj.idNo,
-                            etcNo= "87000075",
+                            etcNo = "87000073",
                             ticket = Helper.WeiChat.Utility.GetQrCodeTicket(token, postTicketStr),
                             openid = inObj.Key,
                             createTime = DateTime.Now
@@ -74,17 +74,17 @@ namespace ApiEtc.Repository
                         opNum = await dapper.Save(new DtoSave<EtcStaffEntity>
                         {
                             data = staff
-                        }) ;
+                        });
                     }
                     else
                     {
                         if (string.IsNullOrEmpty(staff.etcNo))
                         {
-                            staff.etcNo = "87000075";
+                            staff.etcNo = "87000073";
                         }
                         else
                         {
-                            postTicketStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_"+ staff.etcNo + "|" + inObj.phone + "\"}}}";
+                            postTicketStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + staff.etcNo + "|" + inObj.phone + "\"}}}";
                         }
                         staff.name = inObj.name;
                         staff.phone = inObj.phone;
@@ -115,10 +115,12 @@ namespace ApiEtc.Repository
                     staff.idNo = inObj.idNo;
                     staff.ticket = Helper.WeiChat.Utility.GetQrCodeTicket(token, postTicketStr);
                     staff.openid = inObj.Key;
+                    staff.etcNo = string.IsNullOrEmpty(staff.etcNo) ? "87000073" : staff.etcNo;
+
                     opNum = await dapper.Update(new DtoSave<EtcStaffEntity>
                     {
                         data = staff,
-                        saveFieldList = new List<string> { "name", "phone", "idNo" },
+                        saveFieldList = new List<string> { "name", "phone", "idNo", "ticket", "etcNo" },
                         whereList = new List<string> { "openid" }
                     });
                 }
@@ -158,16 +160,14 @@ namespace ApiEtc.Repository
                     return reObj;
                 }
                 var staff = await dapper.Single(x => x.openid == inObj.Key);
-                int opNum = 0;
+                reObj.success = true;
                 if (staff == null)
                 {
-                    reObj.success = opNum > 0;
                     reObj.data = false;
                 }
                 else
                 {
                     reObj.data = (!string.IsNullOrEmpty(staff.name) && !string.IsNullOrEmpty(staff.phone));
-                    reObj.success = true;
                 }
             }
             catch (Exception e)
@@ -249,7 +249,7 @@ namespace ApiEtc.Repository
             var reObj = new ResultObj<EtcStaffEntity>();
             try
             {
-                var staff = await dapper.FindAll(x=>x.id>10);
+                var staff = await dapper.FindAll(x=>x.id>0);
                 reObj.dataList = staff.ToList();
                 reObj.success = true;
             }

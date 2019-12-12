@@ -37,18 +37,19 @@ submitCustomerInfo=()=>{
                 datatype : 'json',
                 contentType: "application/json; charset=utf-8",
                 success:(res)=>{
+                    flag = true
                     if (res.success==true){
                         // $('#name').val('');
                         // $('#phone').val('');
                         window.location.href = `http://ssl.hltgz.com/web/qtk/etc/applyOpenCard/v3/main/selectPage?promoterNum=${res.code}&promoterChannelNum=fkn00001`
                     }
                     else {
-                        flag = true
                         alert(res.msg)
                     }
                 },
                 error:(err)=>{
                     flag = true
+                    alert('请求服务器失败')
                 }
             })
         }

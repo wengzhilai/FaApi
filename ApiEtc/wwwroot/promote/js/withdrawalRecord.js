@@ -47,16 +47,15 @@ getWalletList=()=>{
                 }
                 var stateList = $('.state')
                 for(var k=(page-1)*15;k<stateList.length;k++){
-                    if(res.dataList[(k/15)-page+1].Status=='已结算'){
-                        stateList[k].style.color = '#FE4E41'
+                    if(res.dataList[(k/15)-page+1].Status=='已发放'){
+                        stateList[k].style.color = '#00C160'
                     }
                     else {
-                        stateList[k].style.color = '#333333'
+                        stateList[k].style.color = '#FE4E41'
                     }
                 }
             }
             else {
-                console.log(httpsState)
                 if (httpsState==true){
                     var dom = `<div class="noList"><p>暂无提现记录</p></div>`
                     $('.content').append(dom)
@@ -64,7 +63,7 @@ getWalletList=()=>{
             }
         },
         error:(err)=>{
-
+            alert('请求服务器失败')
         }
     })
 };

@@ -3,6 +3,8 @@
 var url = window.globalConfig.api;
 
 $(function () {
+    $('.myBtn').hide()
+    $('#fallInInfo').hide()
     var open_id = getQueryVariable('openid');
     sessionStorage.setItem('id',open_id)
     getAccountInfo(open_id)
@@ -46,12 +48,13 @@ submitUserIfo =()=>{
                                 }
                                 else {
                                     flag = true
-                                    alert('网络繁忙，请重试')
+                                    alert(res.msg)
                                 }
 
                             },
                             error:(err)=>{
                                 flag = true
+                                alert('请求服务器失败')
                             }
             })
 
@@ -77,7 +80,6 @@ getAccountInfo = (id)=>{
         datatype : 'json',
         contentType: "application/json; charset=utf-8",
         success:(res)=>{
-            console.log(res.data)
             if (res.success == true) {
                 if (res.data==true){
                     $('#fallInInfo').hide();
@@ -87,10 +89,13 @@ getAccountInfo = (id)=>{
                     $('#fallInInfo').show()
                 }
             }
+            else {
+                alert(res.msg)
+            }
 
         },
         error:(err)=>{
-            console.log(err)
+            alert('请求服务器失败')
         }
     })
 }

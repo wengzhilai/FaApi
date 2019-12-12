@@ -560,7 +560,14 @@ function OpenLook(btnIndex, dataIndex) {
         $('#lab_' + item + '_value').html(rowdata[item]);
     }
 
-    $('#dlgLook').dialog({ "width":300 })
+    var openOption = {
+        "width": (btn["width"] == null) ? 300 : btn["width"],
+        "height": (btn["height"] == null) ? 400 : btn["height"]
+    }
+
+    console.log(openOption)
+
+    $('#dlgLook').dialog(openOption)
     $('#dlgLook').dialog('open')
 }
     /**

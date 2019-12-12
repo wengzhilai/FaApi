@@ -58,6 +58,11 @@ namespace ApiEtc.Controllers.Interface
         public int paidNum { get; set; }
 
         /// <summary>
+        /// 已绑定数
+        /// </summary>
+        public int bindNum { get; set; }
+
+        /// <summary>
         /// 未结算数
         /// </summary>
         public int noPaidNum { get; set; }
@@ -103,7 +108,7 @@ namespace ApiEtc.Controllers.Interface
         public string Key { get; set; }
 
         /// <summary>
-        /// 是否结算，0表示查看所有，1表示已经结算，2表示等结算
+        /// 是否结算，0表示查看所有，1表示已经结算，2表示等结算,3已绑定
         /// </summary>
         public int payType { get; set; } 
     }

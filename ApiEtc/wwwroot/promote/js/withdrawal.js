@@ -15,12 +15,18 @@ getClientReport=()=>{
         datatype : 'json',
         contentType: "application/json; charset=utf-8",
         success:(res)=>{
-            notPayMoney = res.data.noPaidMoney;
-            noPaidNum  = res.data.noPaidNum
-           $('.getMoney').text(`${res.data.noPaidMoney}.00`)
+            if (res.success==true){
+                notPayMoney = res.data.noPaidMoney;
+                noPaidNum  = res.data.noPaidNum
+                $('.getMoney').text(`${res.data.noPaidMoney}.00`)
+            }
+            else {
+                alert(res.msg)
+            }
+
         },
         error:(err)=>{
-            alert('网络繁忙')
+            alert('请求服务器失败')
         }
     })
 }
@@ -60,6 +66,7 @@ withdrawal = ()=>{
                 },
                 error:(err)=>{
                     flag = true
+                    alert('请求服务器失败')
                 }
             })
         }

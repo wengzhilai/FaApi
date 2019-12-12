@@ -29,7 +29,9 @@ namespace ApiEtc
                             .AddEnvironmentVariables();
                     });
 
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseUrls("http://*:19200")
+                    ;
                 });
     }
 }

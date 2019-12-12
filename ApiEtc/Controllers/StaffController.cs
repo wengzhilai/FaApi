@@ -77,6 +77,7 @@ namespace ApiEtc.Controllers
         /// </summary>
         /// <param name="inEnt"></param>
         /// <returns></returns>
+        [HttpPost]
         public Task<ResultObj<int>> save(DtoSave<EtcStaffEntity> inEnt)
         {
             return dal.save(inEnt);

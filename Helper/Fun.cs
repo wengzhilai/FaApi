@@ -584,14 +584,15 @@ namespace Helper
             string content = string.Empty;
             try
             {
+                Console.WriteLine("请求地址："+server_addr);
                 DateTime startTime = new DateTime(1970, 1, 1);
                 var cdt = (int)(DateTime.Now - startTime).TotalSeconds;
-
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server_addr);
                 request.Method = "get";
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                 StreamReader myStreamReader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 content = myStreamReader.ReadToEnd();
+                Console.WriteLine("返回内容：" + content);
                 myStreamReader.Close();
             }
             catch (Exception ex)
@@ -615,6 +616,9 @@ namespace Helper
 
             try
             {
+                Console.WriteLine("请求地址：" + Url);
+                Console.WriteLine("请求参数：" + postDataStr);
+
                 Stream dataStream = request.GetRequestStream();
                 dataStream.Write(dataArray, 0, dataArray.Length);
                 dataStream.Close();
@@ -622,6 +626,7 @@ namespace Helper
                 StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
                 reStr = reader.ReadToEnd();
                 reader.Close();
+                Console.WriteLine("返回：" + reStr);
                 return reStr;
             }
             catch (Exception e)

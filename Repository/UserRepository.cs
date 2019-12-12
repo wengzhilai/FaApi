@@ -26,6 +26,11 @@ namespace Repository
         {
             var ent=await dbHelper.SingleByKey(key);
             ent.roleIdList = (await new DapperHelper<FaUserRoleEntityView>().FindAll(i => i.userId == key)).Select(x => x.roleId).ToList();
+            DapperHelper<FaUserRoleEntityView> dapperUserRole = new DapperHelper<FaUserRoleEntityView>();
+            var role = await dapperUserRole.FindAll(i => i.userId == ent.id);
+            ent.isAdmin = role.Count(i => i.roleId == 1) > 0;
+            ent.isLeader = role.Count(i => i.roleId == 2) > 0;
+            ent.canEditIdList =await new UserInfoRepository().GetCanEditUserIdListAsync(key);
             return ent;
         }
         

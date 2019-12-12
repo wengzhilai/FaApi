@@ -44,12 +44,13 @@ namespace ApiEtc.Repository
             {
                 var sql = @"
 select 
-	(select count(1) from etc_client where StaffId=a.Id AND Status='已安装激活') allNum,
-	(select count(1) from etc_client where StaffId=a.Id AND Status='已安装激活' AND Status='已结算') paidNum,
-	(select count(1) from etc_client where StaffId=a.Id AND Status='已安装激活' AND Status!='已结算') noPaidNum,
-	(select SUM(Money) from etc_client where StaffId=a.Id and Status='已安装激活' ) allMoney, 
-	(select SUM(Money) from etc_client where StaffId=a.Id AND Status='已安装激活' AND Status='已结算') paidMoney,
-	(select SUM(Money) from etc_client where StaffId=a.Id AND Status='已安装激活' AND Status!='已结算') noPaidMoney 
+	(select count(1) from etc_client where StaffId=a.Id and  Status in ('已安装激活','已结算')) allNum,
+	(select count(1) from etc_client where StaffId=a.Id AND Status in ('已提交资料','已绑定')) bindNum,
+	(select count(1) from etc_client where StaffId=a.Id AND Status='已结算') paidNum,
+	(select count(1) from etc_client where StaffId=a.Id AND Status in ('已安装激活')) noPaidNum,
+	(select SUM(Money) from etc_client where StaffId=a.Id AND Status in ('已安装激活','已结算') ) allMoney, 
+	(select SUM(Money) from etc_client where StaffId=a.Id AND Status='已结算') paidMoney,
+	(select SUM(Money) from etc_client where StaffId=a.Id AND Status in ('已安装激活')) noPaidMoney 
 from etc_staff a where OpenId='{0}'
 ";
                 sql = string.Format(sql, inObj.Key);
@@ -78,16 +79,48 @@ from etc_staff a where OpenId='{0}'
                 objFiled = "StaffOpenId"
             });
 
-            if (inObj.payType != 0)
+            switch (inObj.payType)
             {
-                inObj.whereList.Add(new SearchWhereDto
-                {
-                    fieldType = "int",
-                    opType = "=",
-                    value = inObj.payType.ToString(),
-                    objFiled = "payType"
-                });
+                case 0: //待结算
+                    inObj.whereList.Add(new SearchWhereDto
+                    {
+                        fieldType = "string",
+                        opType = "in",
+                        value = "已安装激活,已结算",
+                        objFiled = "Status"
+                    });
+                    break;
+                case 1: //已结算
+                    inObj.whereList.Add(new SearchWhereDto
+                    {
+                        fieldType = "string",
+                        opType = "=",
+                        value = "已结算",
+                        objFiled = "Status"
+                    });
+                    break;
+                case 2: //待结算
+                    inObj.whereList.Add(new SearchWhereDto
+                    {
+                        fieldType = "string",
+                        opType = "in",
+                        value = "已安装激活",
+                        objFiled = "Status"
+                    });
+                    break;
+                case 3: //待结算
+                    inObj.whereList.Add(new SearchWhereDto
+                    {
+                        fieldType = "string",
+                        opType = "in",
+                        value = "已绑定,已提交资料",
+                        objFiled = "Status"
+                    });
+                    break;
+                default:
+                    break;
             }
+
 
             return queryDal.getListData(inObj);
         }

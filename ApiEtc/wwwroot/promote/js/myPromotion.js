@@ -20,13 +20,19 @@ getClientReport=()=>{
         datatype : 'json',
         contentType: "application/json; charset=utf-8",
         success:(res)=>{
-            $('#notPayMoney').text(`${res.data.noPaidMoney}.00`)
-            $('#allPerson').text(res.data.allNum)
-            $('#allMoney').text(`${res.data.allMoney}.00`)
-            $('#havePayMoney').text(`${res.data.paidMoney}.00`)
+            if (res.success==true){
+                $('#notPayMoney').text(`${res.data.noPaidMoney}.00`)
+                $('#allPerson').text(res.data.allNum)
+                $('#allMoney').text(`${res.data.allMoney}.00`)
+                $('#havePayMoney').text(`${res.data.paidMoney}.00`)
+            }
+            else {
+                alert(res.msg)
+            }
+
         },
         error:(err)=>{
-            alert('网络繁忙')
+            alert('请求服务器失败')
         }
     })
 }
@@ -43,9 +49,12 @@ getQrCode = ()=>{
             if (res.success == true){
                 $('#qrCode').attr('src',res.data.qrCode) //设置推广二维码
             }
+            else {
+                alert(res.msg)
+            }
         },
         error:(err)=>{
-            alert('网络繁忙')
+            alert('请求服务器失败')
         }
     })
 }
