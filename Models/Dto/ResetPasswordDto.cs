@@ -29,6 +29,11 @@ namespace Models
         /// </summary>
         /// <value></value>
         public string NewPwd { get; set; }
+
+        /// <summary>
+        /// 用于短信验证码
+        /// </summary>
+        public string msg_id { get; set; }
         
     }
 }

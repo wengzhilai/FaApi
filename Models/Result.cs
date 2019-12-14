@@ -7,6 +7,7 @@ namespace Models
 {
     public class Result
     {
+
         /// <summary>
         /// 是否成功
         /// </summary>

@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Reflection;
+using Swashbuckle.AspNetCore.Filters;
+using Microsoft.OpenApi.Models;
 
 namespace ApiUser
 {
@@ -62,6 +64,31 @@ namespace ApiUser
             //添加HTTP请求
             services.AddHttpClient();
 
+
+            #region  添加SwaggerUI
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "用户文档",
+                    Version = "v1",
+                    Description = "用于前端和后端调用",
+                    Contact = new OpenApiContact { Name = "翁志来", Email = "3188894@qq.com" }
+                });
+                options.IgnoreObsoleteActions();
+                options.DocInclusionPredicate((docName, description) => true);
+                options.IncludeXmlComments(WebHostEnvironment.ContentRootPath + "/ApiUser.xml");
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.AddSecurityDefinition("JWT授权", new OpenApiSecurityScheme
+                {
+                    Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）\"",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.ApiKey
+                });
+            });
+            #endregion
+
             //
             services.AddCors(options =>
             {
@@ -87,6 +114,15 @@ namespace ApiUser
                 app.UseDeveloperExceptionPage();
             }
 
+            #region 使用SwaggerUI
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
+            });
+
+            #endregion
 
             app.UseRouting();
             app.UseCors("AllowSameDomain");
@@ -96,7 +132,8 @@ namespace ApiUser
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    context.Response.Redirect("swagger/index.html");
+                    //await context.Response.WriteAsync("Hello World!");
                 });
                 endpoints.MapControllers();
             });

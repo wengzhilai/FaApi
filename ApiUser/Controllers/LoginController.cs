@@ -89,6 +89,25 @@ namespace ApiUser.Controllers
             return reobj;
         }
 
+        /// <summary>
+        /// 退出登录
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public  Result loginOut(LogingDto inEnt)
+        {
+            var reObj = new Result();
+            reObj.success = true;
+            return reObj;
+        }
+
+        /// <summary>
+        /// 验证码登录
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<ResultObj<String>> UserCodeLogin(UserCodeLoginDto inEnt)
@@ -129,6 +148,7 @@ namespace ApiUser.Controllers
             return reobj;
         }
 
+        [HttpPost]
         public async Task<ResultObj<int>> loginReg(LogingDto inEnt)
         {
             var reObj = new ResultObj<int>();
@@ -150,11 +170,21 @@ namespace ApiUser.Controllers
             return reObj;
         }
 
+        /// <summary>
+        /// 重设置密码
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
         public async Task<Result> resetPassword(ResetPasswordDto inEnt)
         {
             var reObj = new Result();
             try
             {
+
+                var sms= Fun.HttpPostJson(AppSettingsManager.self.Idsvr4Url, TypeChange.ObjectToStr(new { msgId=inEnt.msg_id, code= inEnt.VerifyCode }));
+                var result = TypeChange.JsonToObject<Result>(sms);
                 reObj = await this._login.ResetPassword(inEnt);
             }
             catch (ExceptionExtend e)
@@ -171,11 +201,13 @@ namespace ApiUser.Controllers
             return reObj;
         }
 
+        [HttpPost]
         public Task<Result> deleteUser(DtoKey userName)
         {
             throw new NotImplementedException();
         }
 
+        [HttpPost]
         public async Task<ResultObj<bool>> userEditPwd(EditPwdDto inEnt)
         {
             var reObj = new ResultObj<bool>();

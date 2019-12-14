@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace ApiSms
 {
@@ -39,6 +41,30 @@ namespace ApiSms
                 options.Audience = "SmsService";
             }
             );
+
+            #region  添加SwaggerUI
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "用户文档",
+                    Version = "v1",
+                    Description = "用于前端和后端调用",
+                    Contact = new OpenApiContact { Name = "翁志来", Email = "3188894@qq.com" }
+                });
+                options.IgnoreObsoleteActions();
+                options.DocInclusionPredicate((docName, description) => true);
+                options.IncludeXmlComments(WebHostEnvironment.ContentRootPath + "/ApiSms.xml");
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+                options.AddSecurityDefinition("JWT授权", new OpenApiSecurityScheme
+                {
+                    Description = "JWT授权(数据将在请求头中进行传输) 直接在下框中输入Bearer {token}（注意两者之间是一个空格）\"",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.ApiKey
+                });
+            });
+            #endregion
             services.AddControllers();
         }
 
@@ -49,7 +75,15 @@ namespace ApiSms
             {
                 app.UseDeveloperExceptionPage();
             }
+            #region 使用SwaggerUI
 
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
+            });
+
+            #endregion
             app.UseRouting();
 
             app.UseAuthentication();//认证
@@ -57,6 +91,11 @@ namespace ApiSms
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/", async context =>
+                {
+                    context.Response.Redirect("swagger/index.html");
+                    //await context.Response.WriteAsync("Hello World!");
+                });
                 endpoints.MapControllers();
             });
         }

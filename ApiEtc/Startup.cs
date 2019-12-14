@@ -84,6 +84,7 @@ namespace ApiEtc
             services.TryAddSingleton<IWallet, WalletRepository>();
             services.TryAddSingleton<Helper.Query.IQuery, Helper.Query.QueryRepository>();
             #endregion
+
             #region  Ìí¼ÓSwaggerUI
             services.AddSwaggerGen(options =>
             {

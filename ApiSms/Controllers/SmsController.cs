@@ -19,23 +19,24 @@ namespace ApiSms.Controllers
         /// <summary>
         /// 发送短信
         /// </summary>
-        /// <param name="mobile"></param>
-        /// <param name="code"></param>
+        /// <param name="inObj"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ResultObj<bool>> SendValidSms(SendValidSmsDto inObj)
+        public async Task<ResultObj<bool>> SendValidSms(DtoKey inObj)
         {
             var reObj = new ResultObj<bool>();
+            var code = PicFunHelper.ValidateMake(4);
 
             JSMSClient jp = new JSMSClient(AppSettingsManager.self.JpushCfg.AppKey, AppSettingsManager.self.JpushCfg.MasterSecret);
-            var senEnt = new TemplateMessage();
-            senEnt.Type = 1;
-            senEnt.Mobile = inObj.mobile;
-            senEnt.TemplateId = 1;
-            senEnt.ValidDuration = 60 * 10;
-            senEnt.TemplateParameters = new Dictionary<string, string>();
-            senEnt.TemplateParameters.Add("code", inObj.code);
-            var jpReObj = await jp.SendTemplateMessageAsync(senEnt);
+            //var senEnt = new TemplateMessage();
+            //senEnt.Type = 1;
+            //senEnt.Mobile = inObj.Key;
+            //senEnt.TemplateId = 1;
+            //senEnt.ValidDuration = 60 * 10;
+            //senEnt.TemplateParameters = new Dictionary<string, string>();
+            //senEnt.TemplateParameters.Add("code", code);
+            //var jpReObj = await jp.SendTemplateMessageAsync(senEnt);
+            var jpReObj = await jp.SendCodeAsync(inObj.Key,1,null);
             // jpReObj.Content=
             // {\"error\":{\"code\":50051,\"message\":\"signatures not exist\"}}
             Console.WriteLine(jpReObj);
@@ -50,21 +51,51 @@ namespace ApiSms.Controllers
             }else
             {
                 reObj.success = true;
+                reObj.code = msg_id;
+                reObj.msg = Fun.HashEncrypt(inObj.Key + "|" + code + "|" + TypeChange.DateToInt64(DateTime.Now));
             }
+            
             return reObj;
 
         }
 
-        public class SendValidSmsDto
+        /// <summary>
+        /// 验证短信
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<Result> ValidSms(ValidSmsDto inObj)
         {
-            /// <summary>
-            /// 电话号码
-            /// </summary>
-            public string mobile { get; set; }
-            /// <summary>
-            /// 验证码
-            /// </summary>
-            public string code { get; set; }
+            var reObj = new Result();
+
+            JSMSClient jp = new JSMSClient(AppSettingsManager.self.JpushCfg.AppKey, AppSettingsManager.self.JpushCfg.MasterSecret);
+            var jpReObj = await jp.IsCodeValidAsync(inObj.msgId, inObj.code);
+            JObject jb = TypeChange.JsonToObject(jpReObj.Content);
+            //{"is_valid":false,"error":{"code":50026,"message":"wrong msg_id"}}
+            var is_valid = jb.Value<bool>("is_valid");
+            reObj.success = is_valid;
+            if (!reObj.success)
+            {
+                reObj.msg = jb.Value<JObject>("error").Value<string>("message");
+            }
+            else
+            {
+                reObj.msg = jpReObj.Content;
+            }
+            return reObj;
         }
+
+    }
+    public class ValidSmsDto
+    {
+        /// <summary>
+        /// 短信ID
+        /// </summary>
+        public string msgId { get; set; } 
+        /// <summary>
+        /// 短信代码
+        /// </summary>
+        public string code { get; set; }
     }
 }

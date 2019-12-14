@@ -55,6 +55,7 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize]
         public async Task<ResultObj<FaUserEntity>> singleByKey(DtoDo<int> inEnt)
         {
             ResultObj<FaUserEntity> reObj = new ResultObj<FaUserEntity>();

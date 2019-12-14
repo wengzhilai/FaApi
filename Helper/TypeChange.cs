@@ -345,5 +345,15 @@ namespace Helper
             }
             return reObj;
         }
+
+        public static Int64 DateToInt64(DateTime dateTime)
+        {
+            return dateTime.Ticks - Convert.ToDateTime("1970-1-1").Ticks;
+        }
+
+        public static DateTime Int64ToDate(Int64 inInt)
+        {
+            return Convert.ToDateTime("1970-1-1").AddMilliseconds(inInt);
+        }
     }
 }

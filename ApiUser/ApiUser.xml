@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiUser</name>
+    </assembly>
+    <members>
+        <member name="M:ApiUser.Controllers.ILoginController.userLogin(Models.LogingDto)">
+            <summary>
+            密码登录
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.ILoginController.UserCodeLogin(ApiUser.Controllers.UserCodeLoginDto)">
+            <summary>
+            验证码登录
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="P:ApiUser.Controllers.UserCodeLoginDto.LoginName">
+            <summary>
+            登录名
+            </summary>
+        </member>
+        <member name="P:ApiUser.Controllers.UserCodeLoginDto.Code">
+            <summary>
+            验证码
+            </summary>
+        </member>
+        <member name="M:ApiUser.Controllers.IModuleController.singleByKey(Models.DtoDo{System.Int32})">
+            查询单个
+            @param inEnt
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IModuleController.save(Models.DtoSave{Models.Entity.FaModuleEntity})">
+            保存
+            @param inEnt
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IModuleController.delete(Models.DtoDo{System.Int32})">
+            删除
+            @param inEnt
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IModuleController.getUserMenu">
+            获取菜单
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IQueryController.getSingleQuery(Models.DtoKey)">
+            根据代码查询Query
+            @param inObj
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IQueryController.singleByKey(Models.DtoDo{System.Int32})">
+            查询单个Query
+            @param inEnt
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IQueryController.save(Models.DtoSave{Models.Entity.FaQueryEntity})">
+            保存Query
+            @param inEnt
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IQueryController.delete(Models.DtoDo{System.Int32})">
+            删除Query
+            @param inEnt
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IQueryController.downFile(Models.DtoKey)">
+            下载文件
+            @param postJson
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IRoleController.singleByKey(Models.DtoDo{System.Int32})">
+            查询单条
+            @param inObj
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IRoleController.delete(Models.DtoDo{System.Int32})">
+            删除
+            @param inObj
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IRoleController.save(Models.DtoSave{Models.Entity.FaRoleEntity})">
+            保存基本信息
+            @param inEnt
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IUserController.singleByKey(Models.DtoDo{System.Int32})">
+            查询单条
+            @param inObj
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IUserController.delete(Models.DtoDo{System.Int32})">
+            删除
+            @param inObj
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.IUserController.save(Models.DtoSave{Models.Entity.FaUserEntity})">
+            保存基本信息
+            @param inEnt
+            @return
+        </member>
+        <member name="M:ApiUser.Controllers.LoginController.userLogin(Models.LogingDto)">
+            <summary>
+            密码登录
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.LoginController.loginOut(Models.LogingDto)">
+            <summary>
+            退出登录
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.LoginController.UserCodeLogin(ApiUser.Controllers.UserCodeLoginDto)">
+            <summary>
+            验证码登录
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.LoginController.resetPassword(Models.ResetPasswordDto)">
+            <summary>
+            重设置密码
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.ModuleController.save(Models.DtoSave{Models.Entity.FaModuleEntity})">
+            <summary>
+            保存Query
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.ModuleController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            查找单条
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.ModuleController.delete(Models.DtoDo{System.Int32})">
+            <summary>
+            删除单条
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.#ctor(IRepository.IQueryRepository)">
+            <summary>
+            
+            </summary>
+            <param name="query"></param>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.getListData(Models.Entity.QuerySearchDto)">
+            <summary>
+            获取数据对象
+            </summary>
+            <param name="querySearchModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.getSingleQuery(Models.DtoKey)">
+            <summary>
+            获取Query对象
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.downFile(Models.Entity.QuerySearchDto)">
+            <summary>
+            导出Excel数据
+            </summary>
+            <param name="querySearchModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.downFile(Models.DtoKey)">
+            <summary>
+            
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.makeQueryCfg(System.String)">
+            <summary>
+            生成配置数据
+            </summary>
+            <param name="code"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.save(Models.DtoSave{Models.Entity.FaQueryEntity})">
+            <summary>
+            保存Query
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            查找单条
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.QueryController.delete(Models.DtoDo{System.Int32})">
+            <summary>
+            删除单条
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.RoleController.save(Models.DtoSave{Models.Entity.FaRoleEntity})">
+            <summary>
+            保存Query
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.RoleController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            查找单条
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.RoleController.delete(Models.DtoDo{System.Int32})">
+            <summary>
+            删除单条
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.TestController.TestUser(Models.DtoKey)">
+            <summary>
+            测试超级管理员用户
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.TestController.Test(Models.DtoKey)">
+            <summary>
+            接口测试
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.TestController.TestAuth(Models.DtoKey)">
+            <summary>
+            权限接口测试
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.UserController.save(Models.DtoSave{Models.Entity.FaUserEntity})">
+            <summary>
+            保存Query
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.UserController.singleByKey(Models.DtoDo{System.Int32})">
+            <summary>
+            查找单条
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.UserController.delete(Models.DtoDo{System.Int32})">
+            <summary>
+            删除单条
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Startup.ConfigureContainer(Autofac.ContainerBuilder)">
+            <summary>
+            配置autofac
+            </summary>
+            <param name="builder"></param>
+        </member>
+    </members>
+</doc>
