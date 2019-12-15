@@ -65,6 +65,21 @@ namespace ApiSms
                 });
             });
             #endregion
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSameDomain",
+                    builder =>
+                    {
+                        builder
+                            //.WithOrigins("http://localhost:8100")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                    });
+            });
+
+
             services.AddControllers();
         }
 
@@ -85,6 +100,7 @@ namespace ApiSms
 
             #endregion
             app.UseRouting();
+            app.UseCors("AllowSameDomain");
 
             app.UseAuthentication();//»œ÷§
             app.UseAuthorization();// ⁄»®

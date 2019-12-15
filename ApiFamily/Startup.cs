@@ -37,6 +37,8 @@ namespace ApiFamily
 
             #region 注入
             services.TryAddSingleton<IFamilyRepository, FamilyRepository>();
+            services.TryAddSingleton<IUserInfoRepository, UserInfoRepository>();
+            
             #endregion
 
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>

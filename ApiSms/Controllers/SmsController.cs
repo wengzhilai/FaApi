@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Helper;
 using Jiguang.JSMS;
 using Jiguang.JSMS.Model;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -14,6 +15,8 @@ namespace ApiSms.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
+    [EnableCors]
+
     public class SmsController : ControllerBase
     {
         /// <summary>

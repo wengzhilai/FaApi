@@ -48,6 +48,10 @@ namespace Helper
         /// 认证服务器地址
         /// </summary>
         public string Idsvr4Url { get; set; }
+        /// <summary>
+        /// 短信地址
+        /// </summary>
+        public string SmsUrl { get; set; }
     }
 
     /// <summary>

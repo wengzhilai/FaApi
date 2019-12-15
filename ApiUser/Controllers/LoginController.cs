@@ -183,8 +183,12 @@ namespace ApiUser.Controllers
             try
             {
 
-                var sms= Fun.HttpPostJson(AppSettingsManager.self.Idsvr4Url, TypeChange.ObjectToStr(new { msgId=inEnt.msg_id, code= inEnt.VerifyCode }));
-                var result = TypeChange.JsonToObject<Result>(sms);
+                var smsResult= HttpHelper.HttpPostJson<Result>(AppSettingsManager.self.SmsUrl+ "/Sms/ValidSms", new { msgId=inEnt.msg_id, code= inEnt.VerifyCode });
+                if (!smsResult.success)
+                {
+                    smsResult.msg += "短信验证码失败";
+                    return smsResult;
+                }
                 reObj = await this._login.ResetPassword(inEnt);
             }
             catch (ExceptionExtend e)

@@ -355,5 +355,51 @@ namespace Helper
         {
             return Convert.ToDateTime("1970-1-1").AddMilliseconds(inInt);
         }
+
+
+        /// <summary>
+        /// 获取阴历 key为时间字符串
+        /// </summary>
+        /// <param name="datetime">时间字符串</param>
+        /// <returns></returns>
+        public static DateTime DateToLunar(DateTime datetime)
+        {
+            if (datetime < new DateTime(1900, 1, 1))
+            {
+                return datetime;
+            }
+            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
+            int lyear = cc.GetYear(datetime);
+            int lmonth = cc.GetMonth(datetime);
+            int lday = cc.GetDayOfMonth(datetime);
+            var reObj = DateTime.Parse(string.Format("{0}-{1}-{2} {3}:{4}", lyear, lmonth, lday, datetime.Hour, datetime.Minute));
+            return reObj;
+        }
+
+        /// <summary>
+        /// 获取阳历 key为时间字符串
+        /// </summary>
+        /// <param name="datetime">时间字符串</param>
+        /// <returns></returns>
+        public static DateTime DateToSolar(DateTime datetime)
+        {
+            if (datetime < new DateTime(1900, 1, 1))
+            {
+                return datetime;
+            }
+            ChineseLunisolarCalendar cc = new ChineseLunisolarCalendar();
+            DateTime dt = new DateTime();
+            try
+            {
+                dt = cc.ToDateTime(datetime.Year, datetime.Month, datetime.Day, datetime.Hour, datetime.Minute, datetime.Second, 0);
+            }
+            catch { }
+            //判断到某个月份是否有润月
+            for (int i = 1; i <= datetime.Month; i++)
+                if (cc.IsLeapMonth(datetime.Year, i))
+                    dt = dt.AddMonths(1);
+
+            return dt;
+        }
     }
 }

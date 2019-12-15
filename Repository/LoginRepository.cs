@@ -98,19 +98,19 @@ namespace Repository
             #endregion
 
             #region 检测验证码
-            if (AppSettingsManager.self.BaseConfig.VerifyCode)
-            {
-                var nowDate = DateTime.Now.AddMinutes(-30);
+            //if (AppSettingsManager.self.BaseConfig.VerifyCode)
+            //{
+            //    var nowDate = DateTime.Now.AddMinutes(-30);
 
-                var codeNum = await new SmsSendRepository().Count(inEnt.loginName, inEnt.code);
-                if (codeNum == 0)
-                {
-                    reObj.success = false;
-                    reObj.code = "-3";
-                    reObj.msg = string.Format("验证码无效");
-                    return reObj;
-                }
-            }
+            //    var codeNum = await new SmsSendRepository().Count(inEnt.loginName, inEnt.code);
+            //    if (codeNum == 0)
+            //    {
+            //        reObj.success = false;
+            //        reObj.code = "-3";
+            //        reObj.msg = string.Format("验证码无效");
+            //        return reObj;
+            //    }
+            //}
             #endregion
 
             var userList = await new UserRepository().FindAll(x => x.loginName == inEnt.loginName);
@@ -339,12 +339,12 @@ namespace Repository
                 reObj.msg = "登录名不存在";
                 return reObj;
             }
-            if (login.verifyCode != inEnt.VerifyCode)
-            {
-                reObj.success = false;
-                reObj.msg = "验证码不正确";
-                return reObj;
-            }
+            //if (login.verifyCode != inEnt.VerifyCode)
+            //{
+            //    reObj.success = false;
+            //    reObj.msg = "验证码不正确";
+            //    return reObj;
+            //}
             //检测密码复杂度
             if (!Fun.CheckPassword(inEnt.NewPwd, AppSettingsManager.self.BaseConfig.PwdComplexity))
             {
@@ -356,7 +356,7 @@ namespace Repository
             await dapper.Update(new DtoSave<FaLoginEntity>()
             {
                 data = login,
-                saveFieldList = new List<string> { "PASSWORD" }
+                saveFieldList = new List<string> { "password" }
             });
             return reObj;
         }
