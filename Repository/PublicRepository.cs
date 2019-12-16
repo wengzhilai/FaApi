@@ -51,7 +51,7 @@ namespace Repository
                     reEnt.success = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
                         data = login,
-                        saveFieldList = new List<string> { "VERIFY_CODE", "VERIFY_TIME" },
+                        saveFieldListExp = x => new object[] { x.verifyCode, x.verifyTime },
                         ignoreFieldList = null
                     }) > 0;
                     if (!reEnt.success)

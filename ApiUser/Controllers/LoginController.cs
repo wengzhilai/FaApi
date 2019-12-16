@@ -233,6 +233,17 @@ namespace ApiUser.Controllers
             }
             return reObj;
         }
+
+        /// <summary>
+        /// 更新账号
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Task<Result> changeLoginName(ChangeLoginNameDto inEnt)
+        {
+            return _login.ChangeLoginName(inEnt);
+        }
     }
 
 

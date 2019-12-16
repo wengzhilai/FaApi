@@ -144,8 +144,7 @@ namespace ApiUser
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    context.Response.Redirect("swagger/index.html");
-                    //await context.Response.WriteAsync("Hello World!");
+                    await context.Response.WriteAsync("ApiUser");
                 });
                 endpoints.MapControllers();
             });

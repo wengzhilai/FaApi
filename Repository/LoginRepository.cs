@@ -203,7 +203,7 @@ namespace Repository
             reObj.success = await userDal.Update(new DtoSave<FaUserEntity>
             {
                 data = new FaUserEntity { id = inEnt.data.USER_ID.Value, lastActiveTime = DateTime.Now, lastLogoutTime = DateTime.Now },
-                saveFieldList = new List<string> { "LAST_ACTIVE_TIME", "LAST_LOGOUT_TIME" }
+                saveFieldListExp = x => new object[] { x.lastActiveTime, x.lastLogoutTime }
             }) > 0;
             if (!reObj.success)
             {
@@ -276,7 +276,8 @@ namespace Repository
                         await dapperLogin.Update(new DtoSave<FaLoginEntity>
                         {
                             data = Login,
-                            saveFieldList = new List<string> { "IS_LOCKED", "LOCKED_REASON", "FAIL_COUNT" }
+                            saveFieldListExp = x => new object[] { x.isLocked, x.lockedReason }
+
                         });
                     }
                     else
@@ -285,7 +286,8 @@ namespace Repository
                         await dapperLogin.Update(new DtoSave<FaLoginEntity>
                         {
                             data = Login,
-                            saveFieldList = new List<string> { "FAIL_COUNT" }
+                            saveFieldListExp = x => new object[] { x.failCount }
+
                         });
                     }
                     return reObj;
@@ -299,7 +301,8 @@ namespace Repository
                     reObj.success = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                     {
                         data = Login,
-                        saveFieldList = new List<string> { "failCount" }
+                        saveFieldListExp = x => new object[] { x.failCount }
+
                     }) > 0;
 
                     DapperHelper<FaUserRoleEntityView> dapperUserRole = new DapperHelper<FaUserRoleEntityView>();
@@ -356,7 +359,9 @@ namespace Repository
             await dapper.Update(new DtoSave<FaLoginEntity>()
             {
                 data = login,
-                saveFieldList = new List<string> { "password" }
+                saveFieldListExp = x => new object[] { x.password }
+
+
             });
             return reObj;
         }
@@ -403,7 +408,7 @@ namespace Repository
             var upRows = await dapper.Update(new DtoSave<FaLoginEntity>
             {
                 data = single,
-                saveFieldList = new List<string> { "PASSWORD" },
+                saveFieldListExp = x => new object[] { x.password },
                 whereList = null
             });
             if (upRows < 1)
@@ -491,8 +496,8 @@ namespace Repository
             reObj.success = await userDapper.Update(new DtoSave<FaUserEntity>()
             {
                 data = user,
-                saveFieldList = new List<string> { "name", "loginName", "iconFiles" },
-                whereList = new List<string> { "id" }
+                saveFieldListExp = x => new object[] { x.name,x.loginName,x.iconFiles },
+                whereListExp=x => new object[] { x.id },
             }) > 0 ? true : false;
 
             if (!reObj.success)
@@ -527,7 +532,7 @@ namespace Repository
                 reObj.success = await loginDapper.Update(new DtoSave<FaLoginEntity>
                 {
                     data = login,
-                    saveFieldList = new List<string> { "loginName", "password" },
+                    saveFieldListExp = x => new object[] { x.loginName, x.password },
                     whereList = null
                 }) > 0 ? true : false;
             }
@@ -546,5 +551,81 @@ namespace Repository
             return reObj;
         }
 
+        /// <summary>
+        /// 替换账号
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        public async Task<Result> ChangeLoginName(ChangeLoginNameDto inEnt)
+        {
+            Result reObj = new Result();
+            DapperHelper<FaUserEntity> userDapper = new DapperHelper<FaUserEntity>();
+            userDapper.TranscationBegin();
+            try
+            {
+                var loginDapper = new DapperHelper<FaLoginEntity>(userDapper.GetConnection(), userDapper.GetTransaction());
+                if((await loginDapper.Count(x=>x.loginName==inEnt.newLoginName))>0 || (await userDapper.Count(x => x.loginName == inEnt.newLoginName)) > 0)
+                {
+                    userDapper.TranscationRollback();
+                    reObj.success = false;
+                    reObj.msg =string.Format( "账号{0}已经存在",inEnt.newLoginName);
+                }
+                else
+                {
+                    var pwd = inEnt.password.Md5();
+                    var login = await loginDapper.Single(x => x.loginName == inEnt.oldLoginName && x.password == pwd);
+                    var user = await userDapper.Single(x => x.loginName == inEnt.oldLoginName);
+                    if(login==null || user == null)
+                    {
+                        userDapper.TranscationRollback();
+                        reObj.success = false;
+                        reObj.msg = string.Format("原账号有误");
+                        return reObj;
+                    }
+
+                    user.loginName = inEnt.newLoginName;
+                    login.loginName = inEnt.newLoginName;
+
+                    reObj.success = await loginDapper.Update(new DtoSave<FaLoginEntity>
+                    {
+                        data = login,
+                        saveFieldListExp = x => new object[] { x.loginName },
+                        whereList = null
+                    })>0;
+                    if (!reObj.success)
+                    {
+                        userDapper.TranscationRollback();
+                        reObj.success = false;
+                        reObj.msg = string.Format("更新账号失败");
+                        return reObj;
+                    }
+
+                    reObj.success = await userDapper.Update(new DtoSave<FaUserEntity>
+                    {
+                        data = user,
+                        saveFieldListExp = x => new object[] { x.loginName },
+                        whereList = null
+                    }) > 0;
+                    if (!reObj.success)
+                    {
+                        userDapper.TranscationRollback();
+                        reObj.success = false;
+                        reObj.msg = string.Format("更新用户失败");
+                        return reObj;
+                    }
+                    reObj.success = true;
+                    userDapper.TranscationCommit();
+                }
+
+            }
+            catch (Exception e)
+            {
+                userDapper.TranscationRollback();
+                reObj.success = false;
+                reObj.msg = e.Message;
+            }
+            return reObj;
+
+        }
     }
 }

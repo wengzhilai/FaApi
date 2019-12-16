@@ -64,7 +64,7 @@ namespace WebApi.Controllers
                         {
                             name = fileName,
                             path = allPath,
-                            url = filePath,
+                            url = filePath.Replace("\\","/"),
                             length = stream.Length,
                             uploadTime = DateTime.Now,
                             fileType = Path.GetExtension(formFile.FileName),

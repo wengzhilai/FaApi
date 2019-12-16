@@ -61,5 +61,29 @@ namespace IRepository
         /// <param name="inEnt"></param>
         /// <returns></returns>
         Task<ResultObj<bool>> UserEditPwd(EditPwdDto inEnt);
+
+        /// <summary>
+        /// 改变登录名
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
+        Task<Result> ChangeLoginName(ChangeLoginNameDto inEnt);
+
+    }
+
+    public class ChangeLoginNameDto
+    {
+        /// <summary>
+        /// 原登录名
+        /// </summary>
+        public string oldLoginName { get; set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string password { get; set; }
+        /// <summary>
+        /// 新的登录名
+        /// </summary>
+        public string newLoginName { get; set; }
     }
 }

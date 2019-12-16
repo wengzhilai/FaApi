@@ -43,9 +43,10 @@ namespace Repository
                 });
             }else{
                 single.current_val+=single.increment_val;
-                await dbHelper.Update(new DtoSave<SequenceEntity>{
-                    data=single,
-                    saveFieldList=new List<string>{"current_val"}
+                await dbHelper.Update(new DtoSave<SequenceEntity>
+                {
+                    data = single,
+                    saveFieldListExp = x => new object[] { x.current_val },
                 });
             }
             return single.current_val;

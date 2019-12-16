@@ -177,17 +177,17 @@ namespace Repository
                         createTime = DateTime.Now,
                         authority = 7
                     },
-                    saveFieldList = new List<string>{
-                        "LEVEL_ID",
-                        "FAMILY_ID",
-                        "BIRTHDAY_TIME",
-                        "BIRTHDAY_PLACE",
-                        "SEX",
-                        "YEARS_TYPE",
-                        "STATUS",
-                        "CREATE_TIME",
-                        "AUTHORITY"
-                        },
+                    saveFieldListExp = x => new object[] { 
+                        x.levelId,
+                        x.familyId,
+                        x.birthdayTime,
+                        x.birthdayPlace,
+                        x.sex,
+                        x.yearsType,
+                        x.status,
+                        x.createTime,
+                        x.authority
+                    },
                     whereList = null
                 }) > 0 ? true : false;
 
@@ -259,13 +259,11 @@ namespace Repository
 
                         coupleEnt.coupleId = userId;
 
-                        var saveList = new List<string>();
-                        saveList.Add("COUPLE_ID");
 
                         var addUserInfoNum = await dapperUserInfo.Update(new DtoSave<FaUserInfoEntity>
                         {
                             data = coupleEnt,
-                            saveFieldList = saveList,
+                            saveFieldListExp = x => new object[] { x.coupleId },
                             whereList = null
                         });
                         if (addUserInfoNum < 1)
@@ -462,7 +460,7 @@ namespace Repository
                                 var updateLoginNum = await dapperLogin.Update(new DtoSave<FaLoginEntity>
                                 {
                                     data = login,
-                                    saveFieldList = new List<string> { "LOGIN_NAME" },
+                                    saveFieldListExp = x => new object[] { x.loginName },
                                     whereList = null
                                 });
                                 if (updateLoginNum < 1)
@@ -515,7 +513,7 @@ namespace Repository
                     var addUserNum = await dapperUser.Update(new DtoSave<FaUserEntity>
                     {
                         data = user,
-                        saveFieldList = new List<string> { "name", "iconFilesId", "loginName" },
+                        saveFieldListExp = x => new object[] { x.name, x.iconFiles, x.loginName },
                         whereList = null
                     });
                     if (addUserNum < 1)
@@ -548,32 +546,33 @@ namespace Repository
                     userInfo.updateTime = DateTime.Now;
                     userInfo.updateUserName = opUserName;
                     userInfo.updateUserId = opUserId;
-                    var saveList = new List<string>();
-                    saveList.Add("LEVEL_ID");
-                    saveList.Add("COUPLE_ID");
-                    saveList.Add("BIRTHDAY_TIME");
-                    saveList.Add("BIRTHDAY_PLACE");
-                    saveList.Add("IS_LIVE");
-                    saveList.Add("DIED_TIME");
-                    saveList.Add("DIED_PLACE");
-                    saveList.Add("SEX");
-                    saveList.Add("YEARS_TYPE");
-                    saveList.Add("ALIAS");
-                    saveList.Add("REMARK");
-                    saveList.Add("INDUSTRY");
-                    saveList.Add("DIED_CHINA_YEAR");
-                    saveList.Add("BIRTHDAY_CHINA_YEAR");
-                    saveList.Add("EDUCATION");
-                    saveList.Add("UPDATE_TIME");
-                    saveList.Add("UPDATE_USER_NAME");
-                    saveList.Add("UPDATE_USER_ID");
-                    saveList.Add("AUTHORITY");
+
                     var addUserInfoNum = await dapperUserInfo.Update(new DtoSave<FaUserInfoEntity>
                     {
                         data = userInfo,
-                        saveFieldList = saveList,
+                        whereListExp = x => new object[] {
+                            x.levelId,
+                            x.coupleId,
+                            x.birthdayTime,
+                            x.birthdayPlace,
+                            x.isLive,
+                            x.diedTime,
+                            x.diedPlace,
+                            x.sex,
+                            x.yearsType,
+                            x.alias,
+                            x.remark,
+                            x.industry,
+                            x.diedChinaYear,
+                            x.birthdayChinaYear,
+                            x.education,
+                            x.updateTime,
+                            x.updateUserName,
+                            x.updateUserId,
+                            x.authority,
+                        },
                         whereList = null
-                    });
+                    }); ;
                     if (addUserInfoNum < 1)
                     {
                         dapperUser.TranscationRollback();

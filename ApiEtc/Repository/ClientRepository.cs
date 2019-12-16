@@ -186,8 +186,8 @@ from etc_staff a where OpenId='{0}'
                     await dapper.Update(new DtoSave<EtcClientEntity>
                     {
                         data = client,
-                        saveFieldList=new List<string> { "clientPhone", "clientName", "bindTime", "money" },
-                        whereList=new List<string> { "id" }
+                        saveFieldListExp= x => new object[] { x.clientPhone, x.clientName, x.bindTime,x.money },
+                        whereListExp = x => new object[] { x.id }
                     });
                     reObj.code = staff.etcNo;
                 }
