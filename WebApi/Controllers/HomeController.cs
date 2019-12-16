@@ -96,7 +96,7 @@ namespace WebApi.Controllers
         public string TestAutoMap()
         {
             var testEnt = new FaUserInfoEntity();
-            testEnt.ELDER_ID = 1;
+            testEnt.elderId = 1;
             var outEnt = _mapper.Map<RelativeItem>(testEnt);
             return outEnt.ElderName;
         }

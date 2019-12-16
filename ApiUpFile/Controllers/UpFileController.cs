@@ -41,9 +41,10 @@ namespace WebApi.Controllers
             ResultObj<FaFilesEntity> reEnt = new ResultObj<FaFilesEntity>();
 
             var files = Request.Form.Files;
+            var savePath = "wwwroot/UpFiles";
             var fileFolder = string.Format("{0}", DateTime.Now.ToString("yyyyMM"));
-            if (!Directory.Exists(Path.Combine("UpFiles", fileFolder)))
-                Directory.CreateDirectory(Path.Combine("UpFiles", fileFolder));
+            if (!Directory.Exists(Path.Combine(savePath, fileFolder)))
+                Directory.CreateDirectory(Path.Combine(savePath, fileFolder));
 
             foreach (var formFile in files)
             {
@@ -53,7 +54,7 @@ namespace WebApi.Controllers
                                    Path.GetExtension(formFile.FileName);
                     var filePath = Path.Combine(fileFolder, fileName);
                     
-                    var allPath = Path.Combine(_env.ContentRootPath, "UpFiles/" + filePath);
+                    var allPath = Path.Combine(_env.ContentRootPath, savePath , filePath);
                     using (var stream = new FileStream(allPath, FileMode.Create))
                     {
                         await formFile.CopyToAsync(stream);

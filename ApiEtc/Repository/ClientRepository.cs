@@ -152,6 +152,12 @@ from etc_staff a where OpenId='{0}'
                     reObj.msg = "获取员工资料有误";
                     return reObj;
                 }
+
+                if (string.IsNullOrEmpty(staff.etcNo))
+                {
+                    staff.etcNo = "87000073";
+                }
+
                 var client =await dapper.Single(x => x.clientPhone == inObj.phone);
                 if (client == null)
                 {
@@ -183,6 +189,7 @@ from etc_staff a where OpenId='{0}'
                         saveFieldList=new List<string> { "clientPhone", "clientName", "bindTime", "money" },
                         whereList=new List<string> { "id" }
                     });
+                    reObj.code = staff.etcNo;
                 }
                 else
                 {
@@ -198,6 +205,8 @@ from etc_staff a where OpenId='{0}'
                 reObj.success = false;
                 reObj.msg = e.Message;
             }
+
+
             return reObj;
         }
 

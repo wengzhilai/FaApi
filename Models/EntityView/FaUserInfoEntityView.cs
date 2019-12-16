@@ -60,28 +60,28 @@ namespace Models.EntityView
         /// </summary>
         [Display(Name = "LEVEL_ID")]
         [Column("a.LEVEL_ID")]
-        public Nullable<int> levelId { get; set; }
+        public int levelId { get; set; }
 
         /// <summary>
         /// ELDER_ID
         /// </summary>
         [Display(Name = "ELDER_ID")]
         [Column("a.ELDER_ID")]
-        public Nullable<int> elderId { get; set; }
+        public int elderId { get; set; }
 
         /// <summary>
         /// 父亲ID
         /// </summary>
         [Display(Name = "父亲ID")]
         [Column("a.FATHER_ID")]
-        public Nullable<int> fatherId { get; set; }
+        public int fatherId { get; set; }
 
         /// <summary>
         /// 配偶ID
         /// </summary>
         [Display(Name = "配偶ID")]
         [Column("a.COUPLE_ID")]
-        public Nullable<int> coupleId { get; set; }
+        public int coupleId { get; set; }
 
         /// <summary>
         /// 出生日期
@@ -102,7 +102,7 @@ namespace Models.EntityView
         [Range(0, 2147483647)]
         [Display(Name = "是否健在")]
         [Column("a.IS_LIVE")]
-        public Nullable<decimal> isLive { get; set; }
+        public decimal isLive { get; set; }
         /// <summary>
         /// 过逝日期
         /// </summary>
@@ -240,7 +240,7 @@ namespace Models.EntityView
         [Range(0, 2147483647)]
         [Display(Name = "锁定")]
         [Column("b.`IS_LOCKED`")]
-        public Nullable<decimal> isLocked { get; set; }
+        public decimal isLocked { get; set; }
         /// <summary>
         /// 创建时间
         /// </summary>

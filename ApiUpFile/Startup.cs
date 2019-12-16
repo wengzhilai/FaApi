@@ -37,6 +37,9 @@ namespace ApiUpFile
                 app.UseDeveloperExceptionPage();
             }
 
+            //Ìí¼Ó¾²Ì¬ÎÄ¼þ
+            app.UseStaticFiles();
+
             app.UseRouting();
             app.UseCors("AllowSameDomain");
             app.UseEndpoints(endpoints =>

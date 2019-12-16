@@ -426,7 +426,7 @@ namespace Repository
         /// <param name="name"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId, string pwd, int? iconFilesId)
+        async public Task<Result> UserEditLoginName(string oldLoginName, string NewLoginName, string name, int userId, string pwd, string iconFiles)
         {
             DapperHelper<FaUserEntity> userDapper = new DapperHelper<FaUserEntity>();
             Result reObj = new Result();
@@ -486,13 +486,13 @@ namespace Repository
 
             user.name = name;
             user.loginName = NewLoginName;
-            user.iconFiles = iconFilesId.ToString();
+            user.iconFiles = iconFiles;
 
             reObj.success = await userDapper.Update(new DtoSave<FaUserEntity>()
             {
                 data = user,
-                saveFieldList = new List<string> { "NAME", "LOGIN_NAME", "ICON_FILES_ID" },
-                whereList = new List<string> { "ID" }
+                saveFieldList = new List<string> { "name", "loginName", "iconFiles" },
+                whereList = new List<string> { "id" }
             }) > 0 ? true : false;
 
             if (!reObj.success)
@@ -527,7 +527,7 @@ namespace Repository
                 reObj.success = await loginDapper.Update(new DtoSave<FaLoginEntity>
                 {
                     data = login,
-                    saveFieldList = new List<string> { "LOGIN_NAME", "PASSWORD" },
+                    saveFieldList = new List<string> { "loginName", "password" },
                     whereList = null
                 }) > 0 ? true : false;
             }

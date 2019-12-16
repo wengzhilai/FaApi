@@ -1,26 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 using IRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Models.Entity;
-
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using Helper;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
-using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Models.EntityView;
 
@@ -29,7 +15,7 @@ namespace ApiFamily.Controllers
     /// <summary>
     /// 授权管理
     /// </summary>
-    [EnableCors("AllowSameDomain")]
+    [EnableCors]
     [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]
@@ -68,13 +54,13 @@ namespace ApiFamily.Controllers
             {
                 if (user.yearsType==("阴历") || user.yearsType==("国号"))
                 {
-                    //user.birthdaysolarDate = this._public.GetSolarDate(user.birthdayTime.Value).msg;
+                    user.birthdaysolarDate = TypeChange.DateToSolar(user.birthdayTime.Value).ToString("yyyy-MM-dd HH:mm");
                     user.birthdaylunlarDate = user.birthdayTime.Value.ToString("yyyy-MM-dd HH:mm");
                     
                 }
                 else
                 {
-                    //user.birthdaylunlarDate = this._public.GetLunarDate(user.birthdayTime.Value).msg;
+                    user.birthdaylunlarDate = TypeChange.DateToLunar(user.birthdayTime.Value).ToString("yyyy-MM-dd HH:mm");
                     user.birthdaysolarDate = user.birthdayTime.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             }
@@ -82,12 +68,12 @@ namespace ApiFamily.Controllers
             {
                 if (user.yearsType==("阴历") || user.yearsType==("国号"))
                 {
-                    //user.diedsolarDate = this._public.GetSolarDate(user.diedTime.Value).msg;
+                    user.diedlunlarDate = TypeChange.DateToSolar(user.diedTime.Value).ToString("yyyy-MM-dd HH:mm");
                     user.diedlunlarDate = user.diedTime.Value.ToString("yyyy-MM-dd HH:mm");
                 }
                 else
                 {
-                    //user.diedlunlarDate = this._public.GetLunarDate(user.diedTime.Value).msg;
+                    user.diedlunlarDate = TypeChange.DateToLunar(user.diedTime.Value).ToString("yyyy-MM-dd HH:mm");
                     user.diedsolarDate = user.diedTime.Value.ToString("yyyy-MM-dd HH:mm");
                 }
             }

@@ -739,12 +739,14 @@ function GetEditValue() {
 
 /* 选中的类型节点,如果为空则填写值 */
 function CheckType(fieldName, type, typeName) {
+    console.log(fieldName + type + typeName)
+
     //循环所有筛选项，把选择的列，的类型付值
     for (var i = 0; i < allFilterArr.length; i++) {
-        var item = allFilterArr[i];
+        var item = allFilterArr[i].objFiled;
         if (item == fieldName) {
             if (type == "is null" || type == "is not null") {
-                switch (item.SearchType) {
+                switch (item.fieldType) {
                     case "numberbox":
                         $('#s_' + item + '_value').numberbox("setValue", type);
                         break;

@@ -254,11 +254,11 @@ namespace Repository
 
             var minX = sonList.Min(x => x.x);
             var maxX = sonList.Max(x => x.x);
-            if (inSon.fatherId != null)
+            if (inSon.fatherId != 0)
             {
-                var father = InfoToItem(await this.userInfo.SingleByKey(inSon.fatherId.Value), (minX + maxX) / 2, xyz.Y + 1);
+                var father = InfoToItem(await this.userInfo.SingleByKey(inSon.fatherId), (minX + maxX) / 2, xyz.Y + 1);
                 mainList.Add(father);
-                await AddFatherItem(mainList, await this.userInfo.SingleByKey(inSon.fatherId.Value), levelId + 1, maxLevelId, new XYZ { X = father.x, Y = father.y }, minX, maxX);
+                await AddFatherItem(mainList, await this.userInfo.SingleByKey(inSon.fatherId), levelId + 1, maxLevelId, new XYZ { X = father.x, Y = father.y }, minX, maxX);
             }
 
             return true;

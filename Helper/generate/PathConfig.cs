@@ -740,8 +740,8 @@ namespace Models.Entity
         {
             IEnumerable<Filed> allFiled = new List<Filed>();
 
-            String sql = "select column_name name, column_comment remark,COLUMN_TYPE type,case IS_NULLABLE WHEN 'No' then 0 ELSE 1 END required,COLUMN_KEY='PRI' isKey  from information_schema.columns where table_name = '{0}' ;";
-            sql = String.Format(sql, tableName);
+            String sql = "select column_name name, column_comment remark,COLUMN_TYPE type,case IS_NULLABLE WHEN 'No' then 0 ELSE 1 END required,COLUMN_KEY='PRI' isKey  from information_schema.columns where table_name = '{0}' and TABLE_SCHEMA='{1}' ;";
+            sql = String.Format(sql, tableName, AppSettingsManager.self.MysqlSettings.database);
             allFiled =new DapperHelper().Query<Filed>(sql);
 
             return allFiled;

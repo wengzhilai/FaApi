@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiFamily</name>
+    </assembly>
+    <members>
+        <member name="T:ApiFamily.Controllers.FamilyBooksController">
+            <summary>
+            授权管理
+            </summary>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyBooksController.#ctor">
+            <summary>
+            
+            </summary>
+            <param name="module"></param>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyBooksController.Single(Models.DtoDo{System.Int32})">
+            <summary>
+            获取详情
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyBooksController.Save(Models.DtoSave{Models.FaFamilyBooksEntity})">
+            <summary>
+            修改角色信息
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyBooksController.Delete(Models.DtoDo{System.Int32})">
+            <summary>
+            删除角色
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyBooksController.GetSingleNext(Models.DtoDo{System.Int32})">
+            <summary>
+            获取下一个关系图
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyBooksController.GetAllBooks">
+            <summary>
+            获取所有家谱
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyBooksController.GetSinglePrev(Models.DtoDo{System.Int32})">
+            <summary>
+            获取上一个关系图
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyBooksController.GetSingleBySort(Models.DtoDo{System.Int32})">
+            <summary>
+            获取指定页码
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiFamily.Controllers.FamilyController">
+            <summary>
+            关系
+            </summary>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyController.#ctor(AutoMapper.IMapper,IRepository.IFamilyRepository,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            授权
+            </summary>
+            <param name="_mapper"></param>
+            <param name="_family"></param>
+            <param name="_env"></param>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyController.Relative(Models.DtoDo{System.Int32})">
+            <summary>
+            获取关系图
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyController.GetUserBooks(Models.DtoDo{System.Int32})">
+            <summary>
+            获取关系图
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.FamilyController.MakeUserBooks(Models.DtoDo{System.Int32})">
+            <summary>
+            生成DOC文档
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiFamily.Controllers.PublicController">
+            <summary>
+            授权管理
+            </summary>
+        </member>
+        <member name="M:ApiFamily.Controllers.PublicController.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiFamily.Controllers.PublicController.GetLunarDate(Models.DtoKey)">
+            <summary>
+            获取阴历 key为时间字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.PublicController.GetSolarDate(Models.DtoKey)">
+            <summary>
+            获取阳历 key为时间字符串
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ApiFamily.Controllers.UserInfoController">
+            <summary>
+            授权管理
+            </summary>
+        </member>
+        <member name="M:ApiFamily.Controllers.UserInfoController.#ctor(IRepository.IUserInfoRepository)">
+            <summary>
+            
+            </summary>
+            <param name="userInfo"></param>
+            <param name="_mapper"></param>
+            <param name="_login"></param>
+            <param name="_user"></param>
+            <param name="pub"></param>
+        </member>
+        <member name="M:ApiFamily.Controllers.UserInfoController.Single(Models.DtoKey)">
+            <summary>
+            获取用户详情
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.UserInfoController.SingleByName(Models.DtoKey)">
+            <summary>
+            根据姓名查用户
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.UserInfoController.List(Models.DtoSearch{Models.EntityView.FaUserInfoEntityView})">
+            <summary>
+            获取列表
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.UserInfoController.UserInfoReg(Models.RegUserInfo)">
+            <summary>
+            用户注册
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.UserInfoController.Save(Models.DtoSave{Models.EntityView.FaUserInfoEntityView})">
+            <summary>
+            修改用户信息
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Controllers.UserInfoController.Delete(Models.DtoDo{System.Int32})">
+            <summary>
+            删除用户
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Interface.IFamily.Relative(Models.DtoDo{System.Int32})">
+            <summary>
+            获取关系图
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Interface.IFamily.GetUserBooks(Models.DtoDo{System.Int32})">
+            <summary>
+            获取关系图
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiFamily.Interface.IFamily.MakeUserBooks(Models.DtoDo{System.Int32})">
+            <summary>
+            生成DOC文档
+            </summary>
+            <param name="inObj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiFamily.MapperCfg.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:ApiFamily.MapperCfg.Configuration.mapperConfiguration">
+            <summary>
+            
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:ApiFamily.MapperCfg.Profiles.UserInfoProfile">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiFamily.MapperCfg.Profiles.UserInfoProfile.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

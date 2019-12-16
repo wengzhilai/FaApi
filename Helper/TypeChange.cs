@@ -7,6 +7,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -400,6 +401,46 @@ namespace Helper
                     dt = dt.AddMonths(1);
 
             return dt;
+        }
+
+        /// <summary>
+        /// 将查询表达式。转成数据,用于获取保存字段使用
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static List<string> LamdbToList<T>(Expression<Func<T, object[]>> expression)
+        {
+            List<string> reList = new List<string>();
+
+            switch (expression.Body.NodeType)
+            {
+                case ExpressionType.NewArrayInit:
+                    NewArrayExpression bodyExp = (NewArrayExpression)expression.Body;
+
+                    foreach (var item in bodyExp.Expressions)
+                    {
+                        switch (item.NodeType)
+                        {
+                            case ExpressionType.MemberAccess:
+                                MemberExpression itemBody = (MemberExpression)item;
+                                reList.Add(itemBody.Member.Name);
+                                break;
+                            case ExpressionType.Convert:
+                                UnaryExpression itemBody1 = (UnaryExpression)item;
+                                if (itemBody1.Operand.NodeType == ExpressionType.MemberAccess)
+                                {
+                                    MemberExpression itemBody2 = (MemberExpression)itemBody1.Operand;
+                                    reList.Add(itemBody2.Member.Name);
+                                }
+                                break;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return reList;
         }
     }
 }

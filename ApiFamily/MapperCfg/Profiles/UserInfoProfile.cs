@@ -60,17 +60,17 @@ namespace ApiFamily.MapperCfg.Profiles
             ;
 
             CreateMap<FaUserInfoEntity, RelativeItem>()
-                .ForMember(d => d.ElderId, opt => { opt.MapFrom(m =>m.ELDER_ID); })
+                .ForMember(d => d.ElderId, opt => { opt.MapFrom(m =>m.elderId); })
                 .ForMember(d => d.ElderName, opt => { opt.MapFrom(m =>
-                elder.SingleByKey(m.ELDER_ID.Value).Result.NAME
+                elder.SingleByKey(m.elderId).Result.NAME
                 ); })
-                .ForMember(d => d.FatherId, opt => { opt.MapFrom(m =>m.FATHER_ID); })
+                .ForMember(d => d.FatherId, opt => { opt.MapFrom(m =>m.fatherId); })
                 .ForMember(d => d.IcoUrl, opt => { opt.MapFrom(m =>
-                user.SingleByKey(m.ID).Result.iconFiles
+                user.SingleByKey(m.id).Result.iconFiles
                 ); })
-                .ForMember(d => d.Id, opt => { opt.MapFrom(m =>m.ID); })
-                .ForMember(d => d.Name, opt => { opt.MapFrom(m => user.SingleByKey(m.ID).Result.name); })
-                .ForMember(d => d.Sex, opt => { opt.MapFrom(m =>m.SEX); })
+                .ForMember(d => d.Id, opt => { opt.MapFrom(m =>m.id); })
+                .ForMember(d => d.Name, opt => { opt.MapFrom(m => user.SingleByKey(m.id).Result.name); })
+                .ForMember(d => d.Sex, opt => { opt.MapFrom(m =>m.sex); })
                 ;
         }
     }

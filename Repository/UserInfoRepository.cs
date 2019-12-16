@@ -91,27 +91,27 @@ namespace Repository
                     {
                         DapperHelper<FaUserInfoEntity> dbUserInfo = new DapperHelper<FaUserInfoEntity>(dbHelperLogin.GetConnection(), dbHelperLogin.GetTransaction());
                         var userinfoId = rustle.data;
-                        var userInfo = await dbUserInfo.Single(x => x.ID == userinfoId);
+                        var userInfo = await dbUserInfo.Single(x => x.id == userinfoId);
                         if (userInfo == null)
                         {
                             reObj.success = await dbUserInfo.Save(new DtoSave<FaUserInfoEntity>
                             {
                                 data = new FaUserInfoEntity
                                 {
-                                    ID = rustle.data,
-                                    LEVEL_ID = inEnt.LevelId,
-                                    FAMILY_ID = 1,
-                                    FATHER_ID = fatherId,
-                                    ELDER_ID = fatherEnt.elderId + 1,
-                                    BIRTHDAY_TIME = brithDay,
-                                    CREATE_USER_NAME = inEnt.ParentArr[0].v,
-                                    UPDATE_USER_NAME = inEnt.ParentArr[0].v,
-                                    BIRTHDAY_PLACE = inEnt.BirthdayPlace,
-                                    SEX = inEnt.Sex,
-                                    YEARS_TYPE = inEnt.YearsType,
-                                    STATUS = "正常",
-                                    CREATE_TIME = DateTime.Now,
-                                    AUTHORITY = 7
+                                    id = rustle.data,
+                                    levelId = inEnt.LevelId,
+                                    familyId = 1,
+                                    fatherId = fatherId,
+                                    elderId = fatherEnt.elderId + 1,
+                                    birthdayTime = brithDay.Value,
+                                    createUserName = inEnt.ParentArr[0].v,
+                                    updateUserName = inEnt.ParentArr[0].v,
+                                    birthdayPlace = inEnt.BirthdayPlace,
+                                    sex = inEnt.Sex,
+                                    yearsType = inEnt.YearsType,
+                                    status = "正常",
+                                    createTime = DateTime.Now,
+                                    authority = 7
                                 }
                             }) > 0 ? true : false;
 
@@ -150,30 +150,11 @@ namespace Repository
                 var userId = Convert.ToInt32(inEnt.ParentArr[0].k);
                 var user = await new DapperHelper<FaUserEntity>().Single(x => x.id == userId);
 
-                #region 保存头像
-                //如果有新添加的头像，则保存像头地址到数据库
-                if (inEnt.ICON_FILES_ID != null && inEnt.IconFiles != null && !string.IsNullOrEmpty(inEnt.IconFiles.path))
-                {
-                    DapperHelper<FaFilesEntity> dapperFile = new DapperHelper<FaFilesEntity>();
-                    inEnt.ICON_FILES_ID = await new SequenceRepository().GetNextID<FaFilesEntity>();
-                    inEnt.IconFiles.id = inEnt.ICON_FILES_ID.Value;
-                    inEnt.IconFiles.uploadTime = DateTime.Now;
-                    var saveNum = await dapperFile.Save(new DtoSave<FaFilesEntity>
-                    {
-                        data = inEnt.IconFiles
-                    });
-                    if (saveNum < 1)
-                    {
-                        reObj.success = false;
-                        reObj.msg = "保存文件失败";
-                        return reObj;
-                    }
-                }
-                #endregion
+
 
 
                 //更新用户信息
-                var upUser = await new LoginRepository().UserEditLoginName(user.loginName, inEnt.LoginName, inEnt.ParentArr[0].v, Convert.ToInt32(inEnt.ParentArr[0].k), inEnt.Password, inEnt.ICON_FILES_ID);
+                var upUser = await new LoginRepository().UserEditLoginName(user.loginName, inEnt.LoginName, inEnt.ParentArr[0].v, Convert.ToInt32(inEnt.ParentArr[0].k), inEnt.Password, inEnt.iconFiles);
                 //更新失败则返回
                 if (!upUser.success)
                 {
@@ -185,16 +166,16 @@ namespace Repository
 
                     data = new FaUserInfoEntity
                     {
-                        ID = userId,
-                        LEVEL_ID = inEnt.LevelId,
-                        FAMILY_ID = 1,
-                        BIRTHDAY_TIME = brithDay,
-                        BIRTHDAY_PLACE = inEnt.BirthdayPlace,
-                        SEX = inEnt.Sex,
-                        YEARS_TYPE = inEnt.YearsType,
-                        STATUS = "正常",
-                        CREATE_TIME = DateTime.Now,
-                        AUTHORITY = 7
+                        id = userId,
+                        levelId = inEnt.LevelId,
+                        familyId = 1,
+                        birthdayTime = brithDay.Value,
+                        birthdayPlace = inEnt.BirthdayPlace,
+                        sex = inEnt.Sex,
+                        yearsType = inEnt.YearsType,
+                        status = "正常",
+                        createTime = DateTime.Now,
+                        authority = 7
                     },
                     saveFieldList = new List<string>{
                         "LEVEL_ID",
@@ -247,7 +228,7 @@ namespace Repository
 
             try
             {
-                var father = await dapperUserInfo.Single(x => x.ID == inEnt.data.fatherId);
+                var father = await dapperUserInfo.Single(x => x.id == inEnt.data.fatherId);
                 if (father == null && (inEnt.data.coupleId == null || inEnt.data.coupleId == 0))
                 {
                     reObj.success = false;
@@ -266,7 +247,7 @@ namespace Repository
                     var userId = await new SequenceRepository().GetNextID<FaUserEntity>();
                     if (inEnt.data.coupleId != null)
                     {
-                        var coupleEnt = await dapperUserInfo.Single(i => i.ID == inEnt.data.coupleId);
+                        var coupleEnt = await dapperUserInfo.Single(i => i.id == inEnt.data.coupleId);
                         if (coupleEnt == null)
                         {
                             reObj.success = false;
@@ -276,7 +257,7 @@ namespace Repository
 
                         #region 修改COUPLE用户信息
 
-                        coupleEnt.COUPLE_ID = userId;
+                        coupleEnt.coupleId = userId;
 
                         var saveList = new List<string>();
                         saveList.Add("COUPLE_ID");
@@ -354,31 +335,31 @@ namespace Repository
                     {
                         data = new FaUserInfoEntity
                         {
-                            ID = userId,
-                            LEVEL_ID = inEnt.data.levelId,
-                            COUPLE_ID = inEnt.data.coupleId,
-                            BIRTHDAY_TIME = inEnt.data.birthdayTime,
-                            BIRTHDAY_PLACE = inEnt.data.birthdayPlace,
-                            IS_LIVE = inEnt.data.isLive,
-                            DIED_TIME = inEnt.data.diedTime,
-                            DIED_PLACE = inEnt.data.diedPlace,
-                            SEX = inEnt.data.sex,
-                            YEARS_TYPE = inEnt.data.yearsType,
-                            ALIAS = inEnt.data.alias,
-                            INDUSTRY = inEnt.data.industry,
-                            EDUCATION = inEnt.data.education,
-                            DIED_CHINA_YEAR = inEnt.data.diedChinaYear,
-                            BIRTHDAY_CHINA_YEAR = inEnt.data.birthdayChinaYear,
-                            FATHER_ID = inEnt.data.fatherId,
-                            CREATE_USER_NAME = opUserName,
-                            CREATE_USER_ID = opUserId,
-                            UPDATE_TIME = DateTime.Now,
-                            UPDATE_USER_NAME = opUserName,
-                            UPDATE_USER_ID = opUserId,
-                            CREATE_TIME = DateTime.Now,
-                            AUTHORITY = 0,
-                            STATUS = "正常",
-                            ELDER_ID = (father == null) ? null : father.ELDER_ID + 1
+                            id = userId,
+                            levelId = inEnt.data.levelId,
+                            coupleId = inEnt.data.coupleId,
+                            birthdayTime = inEnt.data.birthdayTime.Value,
+                            birthdayPlace = inEnt.data.birthdayPlace,
+                            isLive = inEnt.data.isLive,
+                            diedTime = inEnt.data.diedTime.Value,
+                            diedPlace = inEnt.data.diedPlace,
+                            sex = inEnt.data.sex,
+                            yearsType = inEnt.data.yearsType,
+                            alias = inEnt.data.alias,
+                            industry = inEnt.data.industry,
+                            education = inEnt.data.education,
+                            diedChinaYear = inEnt.data.diedChinaYear,
+                            birthdayChinaYear = inEnt.data.birthdayChinaYear,
+                            fatherId = inEnt.data.fatherId,
+                            createUserName = opUserName,
+                            createUserId = opUserId,
+                            updateTime = DateTime.Now,
+                            updateUserName = opUserName,
+                            updateUserId = opUserId,
+                            createTime = DateTime.Now,
+                            authority = 0,
+                            status = "正常",
+                            elderId = father.elderId + 1
                         }
                     });
                     if (addUserInfoId < 1)
@@ -395,19 +376,19 @@ namespace Repository
                 {
                     var userId = inEnt.data.id;
                     var user = await dapperUser.Single((x) => x.id == userId);
-                    var userInfo = await dapperUserInfo.Single((x) => x.ID == userId);
+                    var userInfo = await dapperUserInfo.Single((x) => x.id == userId);
                     #region 检测数据是否正确权限
                     // 正常：所有人都可修改
                     // 锁定：只有创建人可以修改
                     // 存档：任何人都不可修改
-                    if (userInfo.STATUS == "存档")
+                    if (userInfo.status == "存档")
                     {
                         dapperUser.TranscationRollback();
                         reObj.success = false;
                         reObj.msg = "用户信息已经存档，不可修改，请联系管理员";
                         return reObj;
                     }
-                    if (userInfo.STATUS == "锁定" && userInfo.CREATE_USER_ID != opUserId)
+                    if (userInfo.status == "锁定" && userInfo.createUserId != opUserId)
                     {
                         dapperUser.TranscationRollback();
                         reObj.success = false;
@@ -415,14 +396,14 @@ namespace Repository
                         return reObj;
                     }
 
-                    if (userInfo.AUTHORITY > 0)
+                    if (userInfo.authority > 0)
                     {
                         var isPower = await new RoleRepository().CheckAuth(new CheckAuthDto
                         {
                             UserId = opUserId,
-                            Authority = userInfo.AUTHORITY.ToString(),
+                            Authority = userInfo.authority.ToString(),
                             PowerNum = 2,
-                            IsCreater = userInfo.CREATE_USER_ID == opUserId
+                            IsCreater = userInfo.createUserId == opUserId
                         });
                         if (!isPower)
                         {
@@ -548,25 +529,25 @@ namespace Repository
 
                     #region 修改用户信息
 
-                    userInfo.LEVEL_ID = inEnt.data.levelId;
-                    userInfo.COUPLE_ID = inEnt.data.coupleId;
-                    userInfo.BIRTHDAY_TIME = inEnt.data.birthdayTime;
-                    userInfo.BIRTHDAY_PLACE = inEnt.data.birthdayPlace;
-                    userInfo.IS_LIVE = inEnt.data.isLive;
-                    userInfo.DIED_TIME = inEnt.data.diedTime;
-                    userInfo.DIED_PLACE = inEnt.data.diedPlace;
-                    userInfo.SEX = inEnt.data.sex;
-                    userInfo.YEARS_TYPE = inEnt.data.yearsType;
-                    userInfo.DIED_CHINA_YEAR = inEnt.data.diedChinaYear;
-                    userInfo.BIRTHDAY_CHINA_YEAR = inEnt.data.birthdayChinaYear;
-                    userInfo.ALIAS = inEnt.data.alias;
-                    userInfo.REMARK = inEnt.data.remark;
-                    userInfo.INDUSTRY = inEnt.data.industry;
-                    userInfo.EDUCATION = inEnt.data.education;
-                    userInfo.AUTHORITY = inEnt.data.authority;
-                    userInfo.UPDATE_TIME = DateTime.Now;
-                    userInfo.UPDATE_USER_NAME = opUserName;
-                    userInfo.UPDATE_USER_ID = opUserId;
+                    userInfo.levelId = inEnt.data.levelId;
+                    userInfo.coupleId = inEnt.data.coupleId;
+                    userInfo.birthdayTime = inEnt.data.birthdayTime.Value;
+                    userInfo.birthdayPlace = inEnt.data.birthdayPlace;
+                    userInfo.isLive = inEnt.data.isLive;
+                    userInfo.diedTime = inEnt.data.diedTime.Value;
+                    userInfo.diedPlace = inEnt.data.diedPlace;
+                    userInfo.sex = inEnt.data.sex;
+                    userInfo.yearsType = inEnt.data.yearsType;
+                    userInfo.diedChinaYear = inEnt.data.diedChinaYear;
+                    userInfo.birthdayChinaYear = inEnt.data.birthdayChinaYear;
+                    userInfo.alias = inEnt.data.alias;
+                    userInfo.remark = inEnt.data.remark;
+                    userInfo.industry = inEnt.data.industry;
+                    userInfo.education = inEnt.data.education;
+                    userInfo.authority = inEnt.data.authority;
+                    userInfo.updateTime = DateTime.Now;
+                    userInfo.updateUserName = opUserName;
+                    userInfo.updateUserId = opUserId;
                     var saveList = new List<string>();
                     saveList.Add("LEVEL_ID");
                     saveList.Add("COUPLE_ID");
@@ -625,7 +606,7 @@ namespace Repository
             dapperUserInfo.TranscationBegin();
             try
             {
-                var children = await dapperUserInfo.Count(i => i.FAMILY_ID == userId);
+                var children = await dapperUserInfo.Count(i => i.familyId == userId);
                 if (children > 0)
                 {
                     reObj.success = false;
@@ -633,7 +614,7 @@ namespace Repository
                     return reObj;
 
                 }
-                var opNum = await dapperUserInfo.Delete(i => i.ID == userId);
+                var opNum = await dapperUserInfo.Delete(i => i.id == userId);
                 // reObj.IsSuccess = opNum > 0;
                 // if (!reObj.IsSuccess)
                 // {
@@ -666,7 +647,7 @@ namespace Repository
         {
             DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>();
             var allUser = await dapperUserInfo.FindAll(string.Format("FATHER_ID = {0} OR ID = (select FATHER_ID from {1} where ID = {0})", userId, dapperUserInfo.modelHelper.GetTableName()));
-            var reList = allUser.Select(i => i.ID).ToList();
+            var reList = allUser.Select(i => i.id).ToList();
             reList.Add(userId);
             return reList;
         }
@@ -674,17 +655,17 @@ namespace Repository
         public async Task<int> GetUserIdByElderAsync(int userId, int elderId)
         {
             DapperHelper<FaUserInfoEntity> dapperUserInfo = new DapperHelper<FaUserInfoEntity>();
-            var user = await dapperUserInfo.Single(i => i.ID == userId);
+            var user = await dapperUserInfo.Single(i => i.id == userId);
             // ELDER_ID 小表示高
-            if (user.ELDER_ID == null || user.ELDER_ID <= elderId) return userId;
-            int disElder = user.ELDER_ID.Value - elderId;
+            if (user.elderId == 0 || user.elderId <= elderId) return userId;
+            int disElder = user.elderId - elderId;
             for (int i = 0; i < disElder; i++)
             {
                 if (i == disElder - 1)
                 {
-                    return user.FATHER_ID.Value;
+                    return user.fatherId;
                 }
-                user = await dapperUserInfo.Single(a => a.ID == user.FATHER_ID);
+                user = await dapperUserInfo.Single(a => a.id == user.fatherId);
             }
             return userId;
         }

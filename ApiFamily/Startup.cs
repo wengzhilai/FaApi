@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Repository;
@@ -49,6 +50,51 @@ namespace ApiFamily
             }
             );
 
+            #region  添加SwaggerUI
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "用户文档",
+                    Version = "v1",
+                    Description = "用于前端和后端调用",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "翁志来",
+                        Email = "3188894@qq.com"
+                    }
+                });
+
+                options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+                {
+                    Description = "在下框中输入请求头中需要添加Jwt授权Token：Bearer Token",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
+
+                options.IncludeXmlComments(WebHostEnvironment.ContentRootPath + "/ApiFamily.xml");
+
+            });
+
+            #endregion
+
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 // 忽略循环引用
@@ -68,7 +114,6 @@ namespace ApiFamily
                     builder =>
                     {
                         builder
-                            //.WithOrigins("http://localhost:8100")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowAnyOrigin();
@@ -91,14 +136,26 @@ namespace ApiFamily
             app.UseCors("AllowSameDomain");
             app.UseAuthentication();//认证
             app.UseAuthorization();//授权
+   
+            #region 使用SwaggerUI
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
+                // 访问Swagger的路由后缀
+                options.RoutePrefix = "swagger";
+            });
+            #endregion
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    await context.Response.WriteAsync("ApiFamily");
                 });
                 endpoints.MapControllers();
             });
+
         }
     }
 }
