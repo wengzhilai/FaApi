@@ -15,23 +15,23 @@ using Models.Entity;
 namespace Helper
 {
 
-    public class DapperHelper
+    public class DapperHelper : IDisposable
     {
-        IDbConnection _connection;
-        IDbConnection connection
+
+        protected IDbConnection connection;
+        protected IDbTransaction transaction = null;
+
+        public DapperHelper()
         {
-            get
-            {
-                if (_connection == null)
-                {
-                    var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.self.MysqlSettings);
-                    var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
-                    _connection = new MySqlConnection(alldict + ";CharSet=utf8");
-                }
-                return _connection;
-            }
+            var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.self.MysqlSettings);
+            var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
+            connection = new MySqlConnection(alldict + ";CharSet=utf8");
         }
-        IDbTransaction transaction = null;
+        public DapperHelper(IDbConnection _connection, IDbTransaction _transaction)
+        {
+            transaction = _transaction;
+            connection = _connection;
+        }
 
         /// <summary>
         /// 开始事务
@@ -70,6 +70,18 @@ namespace Helper
         {
             transaction.Commit();
             connection.Close();
+        }
+
+        public void Dispose()
+        {
+            if (transaction != null)
+            {
+                transaction.Dispose();
+            }
+            if (connection != null)
+            {
+                connection.Dispose();
+            }
         }
 
         async public Task<int> Exec(string sql, object param = null)
@@ -135,6 +147,11 @@ namespace Helper
             return connection.Query<T>(sql, param, transaction);
         }
 
+        public Task<IEnumerable<T>> QueryAsync<T>(string sql, object param = null)
+        {
+            return connection.QueryAsync<T>(sql, param, transaction);
+        }
+
         public List<Dictionary<string, object>> Query(string sql, object param = null)
         {
             var rows = new List<Dictionary<string, object>>();
@@ -187,36 +204,25 @@ namespace Helper
 
         public void Init(IDbConnection dbConnection, IDbTransaction dbTransaction)
         {
-             _connection=dbConnection;
+             connection=dbConnection;
              transaction=dbTransaction;
         }
     }
     public class DapperHelper<T> : DapperHelper where T : class, new()
     {
         public ModelHelper<T> modelHelper;
-        IDbConnection connection;
-        IDbTransaction transaction = null;
+
 
         public DapperHelper()
+            : base()
         {
             modelHelper = new ModelHelper<T>();
-            var tt = TypeChange.DynamicToKeyValueList(AppSettingsManager.self.MysqlSettings);
-            var alldict = string.Join(";", tt.Select(x => string.Format("{0}={1}", x.Key, x.Value)));
-            connection = new MySqlConnection(alldict + ";CharSet=utf8");
         }
-
         public DapperHelper(IDbConnection _connection, IDbTransaction _transaction)
+            : base(_connection, _transaction)
         {
             modelHelper = new ModelHelper<T>();
-            transaction = _transaction;
-            connection = _connection;
         }
-
-
-
-
-
-
 
         public Task<int> Save(DtoSave<T> inEnt)
         {

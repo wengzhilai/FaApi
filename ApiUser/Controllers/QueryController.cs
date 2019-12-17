@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Cors;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]/[action]")]
     [ApiController]
     [EnableCors]

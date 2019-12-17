@@ -45,9 +45,11 @@ namespace Idsvr4.IdentityServerExtensions
 
             try
             {
-                var claims = context.Subject.Claims.ToList();
-
-                context.IssuedClaims = claims.ToList();
+                await Task.Run(() =>
+                {
+                    var claims = context.Subject.Claims.ToList();
+                    context.IssuedClaims = claims.ToList();
+                });
             }
             catch (Exception ex)
             {
@@ -76,7 +78,10 @@ namespace Idsvr4.IdentityServerExtensions
 
         public async Task IsActiveAsync(IsActiveContext context)
         {
-            context.IsActive = true;
+            await Task.Run(() =>
+            {
+                context.IsActive = true;
+            });
         }
     }
 }

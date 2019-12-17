@@ -50,8 +50,6 @@ namespace Models.EntityView
         /// ID
         /// </summary>
         [Key]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "ID")]
         [Column("a.ID")]
         public int id { get; set; }
@@ -92,14 +90,12 @@ namespace Models.EntityView
         /// <summary>
         /// 出生地点
         /// </summary>
-        [StringLength(500)]
         [Display(Name = "出生地点")]
         [Column("a.BIRTHDAY_PLACE")]
         public string birthdayPlace { get; set; }
         /// <summary>
         /// 是否健在
         /// </summary>
-        [Range(0, 2147483647)]
         [Display(Name = "是否健在")]
         [Column("a.IS_LIVE")]
         public decimal isLive { get; set; }
@@ -112,14 +108,12 @@ namespace Models.EntityView
         /// <summary>
         /// 过逝地点
         /// </summary>
-        [StringLength(500)]
         [Display(Name = "过逝地点")]
         [Column("a.DIED_PLACE")]
         public string diedPlace { get; set; }
         /// <summary>
         /// 日期类型
         /// </summary>
-        [StringLength(10)]
         [Display(Name = "日期类型")]
         [Column("a.YEARS_TYPE")]
         public string yearsType { get; set; }
@@ -128,7 +122,6 @@ namespace Models.EntityView
         /// <summary>
         /// 性别
         /// </summary>
-        [StringLength(2)]
         [Display(Name = "性别")]
         [Column("a.SEX")]
         public string sex { get; set; }
@@ -136,7 +129,6 @@ namespace Models.EntityView
         /// <summary>
         /// 状态
         /// </summary>
-        [StringLength(10)]
         [Display(Name = "状态")]
         [Column("a.STATUS")]
         public string status { get; set; }
@@ -158,7 +150,6 @@ namespace Models.EntityView
         /// <summary>
         /// 备注
         /// </summary>
-        [StringLength(500)]
         [Display(Name = "备注")]
         [Column("a.REMARK")]
         public string remark { get; set; }
@@ -167,7 +158,6 @@ namespace Models.EntityView
         /// 教育背影
         /// </summary>
         /// <value></value>
-        [StringLength(20)]
         [Display(Name = "教育背影")]
         [Column("a.EDUCATION")]
         public string education { get; set; }
@@ -176,7 +166,6 @@ namespace Models.EntityView
         /// 行业
         /// </summary>
         /// <value></value>
-        [StringLength(100)]
         [Display(Name = "行业")]
         [Column("a.INDUSTRY")]
         public string industry { get; set; }
@@ -186,7 +175,6 @@ namespace Models.EntityView
         /// 出生国号
         /// </summary>
         /// <value></value>
-        [StringLength(50)]
         [Display(Name = "出生国号")]
         [Column("a.BIRTHDAY_CHINA_YEAR")]
         public string birthdayChinaYear { get; set; }
@@ -195,7 +183,6 @@ namespace Models.EntityView
         /// 过逝国号
         /// </summary>
         /// <value></value>
-        [StringLength(50)]
         [Display(Name = "过逝国号")]
         [Column("a.DIED_CHINA_YEAR")]
         public string diedChinaYear { get; set; }
@@ -203,7 +190,6 @@ namespace Models.EntityView
         /// <summary>
         /// 创建用户ID
         /// </summary>
-        [Required]
         [Display(Name = "创建用户ID")]
         [Column("a.CREATE_USER_ID")]
         public int createUserId { get; set; }
@@ -211,14 +197,12 @@ namespace Models.EntityView
         /// <summary>
         /// 姓名
         /// </summary>
-        [StringLength(80)]
         [Display(Name = "姓名")]
         [Column("b.NAME")]
         public string name { get; set; }
         /// <summary>
         /// 登录名
         /// </summary>
-        [StringLength(20)]
         [Display(Name = "登录名")]
         [Column("b.`LOGIN_NAME`")]
         public string loginName { get; set; }
@@ -237,7 +221,6 @@ namespace Models.EntityView
         /// <summary>
         /// 锁定
         /// </summary>
-        [Range(0, 2147483647)]
         [Display(Name = "锁定")]
         [Column("b.`IS_LOCKED`")]
         public decimal isLocked { get; set; }

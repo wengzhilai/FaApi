@@ -38,7 +38,6 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="mapper"></param>
-        /// <param name="env"></param>
         public HomeController(IConfiguration configuration, IMapper mapper)
         {
             _mapper = mapper;

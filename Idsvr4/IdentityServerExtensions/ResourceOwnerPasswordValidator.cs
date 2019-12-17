@@ -25,10 +25,17 @@ namespace Idsvr4.IdentityServerExtensions
             this.config = config;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public async Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
             string userObjJson = context.Request.Raw.Get("userObjJson");
-
+            await Task.Run(()=> { 
+            
+            });
             //根据context.UserName和context.Password与数据库的数据做校验，判断是否合法
             try
             {

@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IModuleController
     {
 

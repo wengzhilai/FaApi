@@ -18,11 +18,24 @@ using System.Reflection;
 
 namespace ApiFamily
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public IConfiguration Configuration { get; }
+        /// <summary>
+        /// 
+        /// </summary>
         public IWebHostEnvironment WebHostEnvironment { get; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="webHostEnvironment"></param>
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
@@ -32,7 +45,10 @@ namespace ApiFamily
 
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -49,6 +65,20 @@ namespace ApiFamily
                 options.Audience = "FamilyService";
             }
             );
+
+            
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                // 忽略循环引用
+                // 不使用驼峰
+                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                // 设置时间格式
+                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                // 如字段为null值，该字段不会返回到前端
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
+            services.AddAutoMapper(typeof(Startup));
 
             #region  添加SwaggerUI
             services.AddSwaggerGen(options =>
@@ -95,19 +125,6 @@ namespace ApiFamily
 
             #endregion
 
-            services.AddControllers().AddNewtonsoftJson(options =>
-            {
-                // 忽略循环引用
-                // 不使用驼峰
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                // 设置时间格式
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-                // 如字段为null值，该字段不会返回到前端
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-            });
-            services.AddAutoMapper(typeof(Startup));
-
-
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSameDomain",
@@ -122,7 +139,11 @@ namespace ApiFamily
 
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
@@ -136,17 +157,6 @@ namespace ApiFamily
             app.UseCors("AllowSameDomain");
             app.UseAuthentication();//认证
             app.UseAuthorization();//授权
-   
-            #region 使用SwaggerUI
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
-                // 访问Swagger的路由后缀
-                options.RoutePrefix = "swagger";
-            });
-            #endregion
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
@@ -155,6 +165,15 @@ namespace ApiFamily
                 });
                 endpoints.MapControllers();
             });
+            #region 使用SwaggerUI
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
+                // 访问Swagger的路由后缀
+                options.RoutePrefix = "sw";
+            });
+            #endregion
 
         }
     }

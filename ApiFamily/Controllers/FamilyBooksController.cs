@@ -25,7 +25,6 @@ namespace ApiFamily.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="module"></param>
         public FamilyBooksController(
             )
         {
@@ -68,9 +67,9 @@ namespace ApiFamily.Controllers
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
-                if (inEnt.data.ID == 0)
+                if (inEnt.data.id == 0)
                 {
-                    inEnt.data.ID = await new SequenceRepository().GetNextID<FaFamilyBooksEntity>();
+                    inEnt.data.id = await new SequenceRepository().GetNextID<FaFamilyBooksEntity>();
                 }
                 reObj.success = await dapp.Save(inEnt) > 0;
             }
@@ -96,7 +95,7 @@ namespace ApiFamily.Controllers
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
-                reObj.success = await dapp.Delete(x => x.ID == inEnt.Key) > 0;
+                reObj.success = await dapp.Delete(x => x.id == inEnt.Key) > 0;
             }
             catch (Exception e)
             {
@@ -119,7 +118,7 @@ namespace ApiFamily.Controllers
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
-                var single =await dapp.Single(x=>x.SORT>inObj.Key,"order by SORT");
+                var single =await dapp.Single(x=>x.sort>inObj.Key,"order by SORT");
                 reObj.data = single;
             }
             catch (Exception e)
@@ -144,7 +143,7 @@ namespace ApiFamily.Controllers
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
                 var allUser =await dapp.FindAll("");
-                allUser=allUser.OrderBy(i=>i.SORT);
+                allUser=allUser.OrderBy(i=>i.sort);
                 reObj.dataList = allUser.ToList();
             }
             catch (Exception e)
@@ -168,7 +167,7 @@ namespace ApiFamily.Controllers
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
-                var single =await dapp.Single(x=>x.SORT<inObj.Key,"order by SORT desc");
+                var single =await dapp.Single(x=>x.sort<inObj.Key,"order by SORT desc");
                 reObj.data = single;
             }
             catch (Exception e)
@@ -192,7 +191,7 @@ namespace ApiFamily.Controllers
             try
             {
                 DapperHelper<FaFamilyBooksEntity> dapp = new DapperHelper<FaFamilyBooksEntity>();
-                var single =await dapp.Single(x=>x.SORT==inObj.Key);
+                var single =await dapp.Single(x=>x.sort==inObj.Key);
                 reObj.data = single;
             }
             catch (Exception e)

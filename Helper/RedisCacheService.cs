@@ -15,7 +15,6 @@ public class RedisCacheService : ICacheService
     private ConnectionMultiplexer _connection_read;
     private ConnectionMultiplexer _connection_write;
 
-    private readonly string _instance = "wjbjp";
 
     public RedisCacheService()
     {

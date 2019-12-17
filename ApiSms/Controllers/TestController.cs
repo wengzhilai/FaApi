@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ApiSms.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]

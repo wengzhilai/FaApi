@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace ApiFamily.Interface
 {
+ 
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IFamily
     {
         /// <summary>

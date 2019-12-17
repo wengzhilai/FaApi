@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]/[action]")]
     [ApiController]
     public class TestController : ControllerBase

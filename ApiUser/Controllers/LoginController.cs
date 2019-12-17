@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Helper;
+using IdentityModel;
 using IdentityModel.Client;
 using IRepository;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +17,9 @@ using Newtonsoft.Json.Linq;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]/[action]")]
     [EnableCors]
     [ApiController]
@@ -23,7 +28,11 @@ namespace ApiUser.Controllers
     {
         private readonly IHttpClientFactory clientFactory;
         ILoginRepository _login;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientFactory"></param>
+        /// <param name="login"></param>
         public LoginController(IHttpClientFactory clientFactory, ILoginRepository login)
         {
             this.clientFactory = clientFactory;
@@ -148,6 +157,11 @@ namespace ApiUser.Controllers
             return reobj;
         }
 
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ResultObj<int>> loginReg(LogingDto inEnt)
         {
@@ -205,19 +219,37 @@ namespace ApiUser.Controllers
             return reObj;
         }
 
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpPost]
         public Task<Result> deleteUser(DtoKey userName)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 修改用户 名
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ResultObj<bool>> userEditPwd(EditPwdDto inEnt)
         {
             var reObj = new ResultObj<bool>();
             try
             {
-                inEnt.LoginName = User.Identity.Name;
+                ClaimsIdentity claimsIden = (ClaimsIdentity)User.Identity;
+                var PhoneNumber = claimsIden.Claims.SingleOrDefault(x => x.Type == JwtClaimTypes.PhoneNumber);
+                if (PhoneNumber == null)
+                {
+                    reObj.success = false;
+                    reObj.msg = "账号有误";
+                    return reObj;
+                }
+                inEnt.LoginName = PhoneNumber.Value;
                 reObj = await this._login.UserEditPwd(inEnt);
             }
             catch (ExceptionExtend e)

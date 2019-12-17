@@ -16,120 +16,118 @@ namespace Models.EntityView
         /// <summary>
         /// 配偶姓名
         /// </summary>
-        [Column("Couple.`NAME` CoupleName")]
-        public string CoupleName { get; set; }
+        [Column("Couple.`NAME`")]
+        public string coupleName { get; set; }
 
         /// <summary>
         /// 配偶出生
         /// </summary>
         /// <value></value>
-        [Column("CoupleInfo.BIRTHDAY_TIME CoupleBirthday")]
-        public DateTime? CoupleBirthday { get; set; }
+        [Column("CoupleInfo.BIRTHDAY_TIME")]
+        public DateTime coupleBirthday { get; set; }
 
         /// <summary>
         /// 配偶
         /// </summary>
         /// <value></value>
-        [Column("CoupleInfo.`DIED_TIME` CoupleDiedTime")]
-        public DateTime? CoupleDiedTime { get; set; }
+        [Column("CoupleInfo.`DIED_TIME`")]
+        public DateTime coupleDiedTime { get; set; }
 
         /// <summary>
         /// 配偶
         /// </summary>
         /// <value></value>
-        [Column("CoupleInfo.`DIED_PLACE` CoupleDiedPlace")]
-        public string CoupleDiedPlace { get; set; }
+        [Column("CoupleInfo.`DIED_PLACE`")]
+        public string coupleDiedPlace { get; set; }
 
 
         /// <summary>
         /// 所有儿子
         /// </summary>
-        [Column("(SELECT GROUP_CONCAT(substring(b1.`NAME`,2)) modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='男' ORDER BY a1.LEVEL_ID) ChildSons")]
-        public string ChildSons { get; set; }
+        [Column("(SELECT GROUP_CONCAT(substring(b1.`NAME`,2)) modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='男' ORDER BY a1.LEVEL_ID)")]
+        public string childSons { get; set; }
 
         /// <summary>
         /// 所有女儿
         /// </summary>
-        [Column("(SELECT GROUP_CONCAT(substring(b1.`NAME`,2)) modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='女' ORDER BY a1.LEVEL_ID) ChildDaughters")]
-        public string ChildDaughters { get; set; }
+        [Column("(SELECT GROUP_CONCAT(substring(b1.`NAME`,2)) modelName from fa_user_info a1 LEFT JOIN fa_user b1 on a1.ID=b1.ID where a1.FATHER_ID=a.ID and a1.SEX='女' ORDER BY a1.LEVEL_ID)")]
+        public string childDaughters { get; set; }
 
         /// <summary>
         /// ID
         /// </summary>
         [Key]
-        [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "ID")]
         [Column("a.ID")]
-        public int ID { get; set; }
+        public int id { get; set; }
         /// <summary>
         /// LEVEL_ID
         /// </summary>
         [Display(Name = "LEVEL_ID")]
         [Column("a.LEVEL_ID")]
-        public Nullable<int> LEVEL_ID { get; set; }
+        public int levelId { get; set; }
 
         /// <summary>
         /// ELDER_ID
         /// </summary>
         [Display(Name = "ELDER_ID")]
         [Column("a.ELDER_ID")]
-        public Nullable<int> ELDER_ID { get; set; }
+        public int elderId { get; set; }
 
         /// <summary>
         /// 父亲ID
         /// </summary>
         [Display(Name = "父亲ID")]
         [Column("a.FATHER_ID")]
-        public Nullable<int> FATHER_ID { get; set; }
+        public int fatherId { get; set; }
 
         /// <summary>
         /// 配偶ID
         /// </summary>
         [Display(Name = "配偶ID")]
         [Column("a.COUPLE_ID")]
-        public Nullable<int> COUPLE_ID { get; set; }
+        public int coupleId { get; set; }
 
         /// <summary>
         /// 出生日期
         /// </summary>
         [Display(Name = "出生日期")]
         [Column("a.BIRTHDAY_TIME")]
-        public Nullable<DateTime> BIRTHDAY_TIME { get; set; }
+        public DateTime birthdayTime { get; set; }
         /// <summary>
         /// 出生地点
         /// </summary>
         [StringLength(500)]
         [Display(Name = "出生地点")]
         [Column("a.BIRTHDAY_PLACE")]
-        public string BIRTHDAY_PLACE { get; set; }
+        public string birthdayPlace { get; set; }
         /// <summary>
         /// 是否健在
         /// </summary>
         [Range(0, 2147483647)]
         [Display(Name = "是否健在")]
         [Column("a.IS_LIVE")]
-        public Nullable<decimal> IS_LIVE { get; set; }
+        public int isLive { get; set; }
         /// <summary>
         /// 过逝日期
         /// </summary>
         [Display(Name = "过逝日期")]
         [Column("a.DIED_TIME")]
-        public Nullable<DateTime> DIED_TIME { get; set; }
+        public DateTime diedTime { get; set; }
         /// <summary>
         /// 过逝地点
         /// </summary>
         [StringLength(500)]
         [Display(Name = "过逝地点")]
         [Column("a.DIED_PLACE")]
-        public string DIED_PLACE { get; set; }
+        public string diedPlace { get; set; }
         /// <summary>
         /// 日期类型
         /// </summary>
         [StringLength(10)]
         [Display(Name = "日期类型")]
         [Column("a.YEARS_TYPE")]
-        public string YEARS_TYPE { get; set; }
+        public string yearsType { get; set; }
 
 
         /// <summary>
@@ -138,7 +136,7 @@ namespace Models.EntityView
         [StringLength(2)]
         [Display(Name = "性别")]
         [Column("a.SEX")]
-        public string SEX { get; set; }
+        public string sex { get; set; }
 
         /// <summary>
         /// 状态
@@ -146,7 +144,7 @@ namespace Models.EntityView
         [StringLength(10)]
         [Display(Name = "状态")]
         [Column("a.STATUS")]
-        public string STATUS { get; set; }
+        public string status { get; set; }
 
         /// <summary>
         /// 别名
@@ -154,21 +152,21 @@ namespace Models.EntityView
         /// <value></value>
         [Display(Name = "别名")]
         [Column("a.ALIAS")]
-        public string ALIAS { get; set; }
+        public string alias { get; set; }
 
         /// <summary>
         /// 权限
         /// </summary>
         [Display(Name = "权限")]
         [Column("a.AUTHORITY")]
-        public int AUTHORITY { get; set; }
+        public int authority { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
         [StringLength(500)]
         [Display(Name = "备注")]
         [Column("a.REMARK")]
-        public string REMARK { get; set; }
+        public string remark { get; set; }
 
         /// <summary>
         /// 教育背影
@@ -177,7 +175,7 @@ namespace Models.EntityView
         [StringLength(20)]
         [Display(Name = "教育背影")]
         [Column("a.EDUCATION")]
-        public string EDUCATION { get; set; }
+        public string education { get; set; }
 
         /// <summary>
         /// 行业
@@ -186,7 +184,7 @@ namespace Models.EntityView
         [StringLength(100)]
         [Display(Name = "行业")]
         [Column("a.INDUSTRY")]
-        public string INDUSTRY { get; set; }
+        public string industry { get; set; }
 
 
         /// <summary>
@@ -196,7 +194,7 @@ namespace Models.EntityView
         [StringLength(50)]
         [Display(Name = "出生国号")]
         [Column("a.BIRTHDAY_CHINA_YEAR")]
-        public string BIRTHDAY_CHINA_YEAR { get; set; }
+        public string birthdayChinaYear { get; set; }
 
         /// <summary>
         /// 过逝国号
@@ -205,7 +203,7 @@ namespace Models.EntityView
         [StringLength(50)]
         [Display(Name = "过逝国号")]
         [Column("a.DIED_CHINA_YEAR")]
-        public string DIED_CHINA_YEAR { get; set; }
+        public string diedChinaYear { get; set; }
 
         /// <summary>
         /// 创建用户ID
@@ -213,7 +211,7 @@ namespace Models.EntityView
         [Required]
         [Display(Name = "创建用户ID")]
         [Column("a.CREATE_USER_ID")]
-        public int CREATE_USER_ID { get; set; }
+        public int createUserId { get; set; }
 
         /// <summary>
         /// 姓名
@@ -221,51 +219,51 @@ namespace Models.EntityView
         [StringLength(80)]
         [Display(Name = "姓名")]
         [Column("b.NAME")]
-        public string NAME { get; set; }
+        public string name { get; set; }
         /// <summary>
         /// 登录名
         /// </summary>
         [StringLength(20)]
         [Display(Name = "登录名")]
         [Column("b.`LOGIN_NAME`")]
-        public string LOGIN_NAME { get; set; }
+        public string loginName { get; set; }
         /// <summary>
         /// 头像图片
         /// </summary>
         [Display(Name = "头像图片")]
-        [Column("b.`ICON_FILES_ID`")]
-        public Nullable<int> ICON_FILES_ID { get; set; }
+        [Column("b.`ICON_FILES`")]
+        public int iconiFles { get; set; }
 
 
         /// <summary>
         /// 出生阴历
         /// </summary>
         /// <value></value>
-        public string BirthdaylunlarDate { get; set; }
+        public string birthdaylunlarDate { get; set; }
 
         /// <summary>
         /// 出生阳历
         /// </summary>
         /// <value></value>
-        public string BirthdaysolarDate { get; set; }
+        public string birthdaysolarDate { get; set; }
 
 
         /// <summary>
         /// 逝世阴历
         /// </summary>
         /// <value></value>
-        public string DiedlunlarDate { get; set; }
+        public string diedlunlarDate { get; set; }
 
         /// <summary>
         /// 逝世阳历
         /// </summary>
         /// <value></value>
-        public string DiedsolarDate { get; set; }
+        public string diedsolarDate { get; set; }
         /// <summary>
         /// 格式化后的文本
         /// </summary>
         /// <value></value>
-        public string MsgFormat { get; set; }
+        public string msgFormat { get; set; }
 
 
     }

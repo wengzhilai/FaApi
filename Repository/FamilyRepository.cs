@@ -119,50 +119,50 @@ namespace Repository
             DapperHelper<FaUserBookEntityView> dapperBooks = new DapperHelper<FaUserBookEntityView>();
             var allBooks = await dapperBooks.FindAll(string.Format("a.ID IN ({0})", string.Join(",", allUserIdList)));
 
-            var elderList = allBooks.GroupBy(x => x.ELDER_ID).Select(x => x.Key).Where(x => x != null).ToList();
+            var elderList = allBooks.GroupBy(x => x.elderId).Select(x => x.Key).Where(x => x != 0).ToList();
 
             DapperHelper<FaElderEntity> dappElder = new DapperHelper<FaElderEntity>();
             var allElder = await dappElder.FindAll(string.Format("ID IN ({0}) ORDER BY ID", string.Join(",", elderList)));
             foreach (var item in allElder)
             {
-                item.AllUser = allBooks.Where(x => x.ELDER_ID == item.ID).OrderBy(i => i.FATHER_ID).ThenBy(i => i.SEX).ThenBy(i => i.LEVEL_ID).ToList();
+                item.AllUser = allBooks.Where(x => x.elderId == item.ID).OrderBy(i => i.fatherId).ThenBy(i => i.sex).ThenBy(i => i.levelId).ToList();
                 foreach (var tmpUser in item.AllUser)
                 {
        
-                    if (tmpUser.SEX == "男" || tmpUser.BIRTHDAY_TIME != null)
+                    if (tmpUser.sex == "男" || tmpUser.birthdayTime != null)
                     {
-                        var msg = string.Format("行{1}", tmpUser.NAME, tmpUser.LEVEL_ID);
-                        msg += (tmpUser.BIRTHDAY_TIME != null) ? string.Format("，生于{0}", Fun.FormatLunlarTime(tmpUser.BIRTHDAY_TIME)) : "，生庚未详";
+                        var msg = string.Format("行{1}", tmpUser.name, tmpUser.levelId);
+                        msg += (tmpUser.birthdayTime != null) ? string.Format("，生于{0}", Fun.FormatLunlarTime(tmpUser.birthdayTime)) : "，生庚未详";
 
-                        if (!string.IsNullOrEmpty(tmpUser.EDUCATION)) msg += string.Format("，毕业于{0}", tmpUser.EDUCATION);
-                        if (!string.IsNullOrEmpty(tmpUser.INDUSTRY)) msg += string.Format("，从事{0}", tmpUser.INDUSTRY);
-                        if (tmpUser.DIED_TIME != null) msg += string.Format("，殁于{0}", Fun.FormatLunlarTime(tmpUser.DIED_TIME));
-                        if (!string.IsNullOrEmpty(tmpUser.DIED_PLACE)) msg += string.Format("，殁葬{0}", tmpUser.DIED_PLACE);
+                        if (!string.IsNullOrEmpty(tmpUser.education)) msg += string.Format("，毕业于{0}", tmpUser.education);
+                        if (!string.IsNullOrEmpty(tmpUser.industry)) msg += string.Format("，从事{0}", tmpUser.industry);
+                        if (tmpUser.diedTime != null) msg += string.Format("，殁于{0}", Fun.FormatLunlarTime(tmpUser.diedTime));
+                        if (!string.IsNullOrEmpty(tmpUser.diedPlace)) msg += string.Format("，殁葬{0}", tmpUser.diedPlace);
 
-                        if (string.IsNullOrEmpty(tmpUser.REMARK))
+                        if (string.IsNullOrEmpty(tmpUser.remark))
                         {
-                            if (tmpUser.CoupleName != null)
+                            if (tmpUser.coupleName != null)
                             {
-                                msg += string.Format("，{0}{1}", (tmpUser.SEX == "男") ? "妻" : "夫", tmpUser.CoupleName);
-                                msg += (tmpUser.CoupleBirthday != null) ? string.Format("，生于{0}", Fun.FormatLunlarTime(tmpUser.CoupleBirthday)) : "，生庚未详";
-                                if (tmpUser.CoupleDiedTime != null) msg += string.Format("，殁于{0}", Fun.FormatLunlarTime(tmpUser.CoupleDiedTime));
-                                if (!string.IsNullOrEmpty(tmpUser.CoupleDiedPlace)) msg += string.Format("，殁葬{0}", tmpUser.CoupleDiedPlace);
+                                msg += string.Format("，{0}{1}", (tmpUser.sex == "男") ? "妻" : "夫", tmpUser.coupleName);
+                                msg += (tmpUser.coupleBirthday != null) ? string.Format("，生于{0}", Fun.FormatLunlarTime(tmpUser.coupleBirthday)) : "，生庚未详";
+                                if (tmpUser.coupleDiedTime != null) msg += string.Format("，殁于{0}", Fun.FormatLunlarTime(tmpUser.coupleDiedTime));
+                                if (!string.IsNullOrEmpty(tmpUser.coupleDiedPlace)) msg += string.Format("，殁葬{0}", tmpUser.coupleDiedPlace);
                             }
-                            if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",", "，"));
-                            if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",", "，"));
+                            if (tmpUser.childSons != null) msg += string.Format("，生子{0}", tmpUser.childSons.Replace(",", "，"));
+                            if (tmpUser.childDaughters != null) msg += string.Format("，生女{0}", tmpUser.childDaughters.Replace(",", "，"));
                         }
-                        else if(tmpUser.REMARK.IndexOf("生子")>0 || tmpUser.REMARK.IndexOf("生女")>0)
+                        else if(tmpUser.remark.IndexOf("生子")>0 || tmpUser.remark.IndexOf("生女")>0)
                         {
-                            msg += tmpUser.REMARK;
+                            msg += tmpUser.remark;
                         }
                         else
                         {
-                            msg += tmpUser.REMARK;
-                            if (tmpUser.ChildSons != null) msg += string.Format("，生子{0}", tmpUser.ChildSons.Replace(",", "，"));
-                            if (tmpUser.ChildDaughters != null) msg += string.Format("，生女{0}", tmpUser.ChildDaughters.Replace(",", "，"));
+                            msg += tmpUser.remark;
+                            if (tmpUser.childSons != null) msg += string.Format("，生子{0}", tmpUser.childSons.Replace(",", "，"));
+                            if (tmpUser.childDaughters != null) msg += string.Format("，生女{0}", tmpUser.childDaughters.Replace(",", "，"));
                         }
 
-                        tmpUser.MsgFormat = msg;
+                        tmpUser.msgFormat = msg;
                     }
                 }
             }
@@ -171,8 +171,8 @@ namespace Repository
 
             reObj.msg = userInfo.name;
             DapperHelper<FaFamilyBooksEntity> dapperFb = new DapperHelper<FaFamilyBooksEntity>();
-            var page = await dapperFb.Single(i => i.UserID == userInfo.id && i.TYPE_ID == 2);
-            reObj.code = (page == null) ? "10" : page.SORT.ToString();
+            var page = await dapperFb.Single(i => i.userID == userInfo.id && i.typeId == 2);
+            reObj.code = (page == null) ? "10" : page.sort.ToString();
             return reObj;
         }
 
@@ -218,7 +218,7 @@ namespace Repository
         private async Task<bool> AddFatherItem(IList<RelativeItem> mainList, FaUserInfoEntityView inSon, int levelId, int maxLevelId, XYZ xyz, int toLeft, int toRigth)
         {
             if (levelId > maxLevelId) return true;
-            if (inSon.fatherId == null) return true;
+            if (inSon.fatherId == 0) return true;
 
             List<FaUserInfoEntityView> allSon = (await this.userInfo.FindAll(x => x.fatherId == inSon.fatherId && x.id == inSon.id)).OrderBy(x => x.levelId).ToList();
 
@@ -283,7 +283,7 @@ namespace Repository
         public async Task<List<FaFamilyBooksEntity>> GetUserBooks()
         {
             DapperHelper<FaFamilyBooksEntity> dapper = new DapperHelper<FaFamilyBooksEntity>();
-            var reObj = await dapper.FindAll(x => x.TYPE_ID == 2);
+            var reObj = await dapper.FindAll(x => x.typeId == 2);
             return reObj.ToList();
         }
     }

@@ -4,6 +4,11 @@
         <name>ApiSms</name>
     </assembly>
     <members>
+        <member name="T:ApiSms.Controllers.SmsController">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:ApiSms.Controllers.SmsController.SendValidSms(Models.DtoKey)">
             <summary>
             发送短信
@@ -18,6 +23,11 @@
             <param name="inObj"></param>
             <returns></returns>
         </member>
+        <member name="T:ApiSms.Controllers.ValidSmsDto">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:ApiSms.Controllers.ValidSmsDto.msgId">
             <summary>
             短信ID
@@ -26,6 +36,11 @@
         <member name="P:ApiSms.Controllers.ValidSmsDto.code">
             <summary>
             短信代码
+            </summary>
+        </member>
+        <member name="T:ApiSms.Controllers.TestController">
+            <summary>
+            
             </summary>
         </member>
         <member name="M:ApiSms.Controllers.TestController.TestUser(Models.DtoKey)">
@@ -48,6 +63,59 @@
             </summary>
             <param name="inEnt"></param>
             <returns></returns>
+        </member>
+        <member name="T:ApiSms.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiSms.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:ApiSms.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiSms.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ApiSms.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ApiSms.Startup.WebHostEnvironment">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiSms.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+            <param name="webHostEnvironment"></param>
+        </member>
+        <member name="M:ApiSms.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:ApiSms.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
         </member>
     </members>
 </doc>

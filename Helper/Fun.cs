@@ -1006,7 +1006,7 @@ namespace Helper
             }
             catch (Exception e)
             {
-
+                LogHelper.WriteErrorLog(typeof(Fun), e.ToString());
                 return "";
             }
 

@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface ILoginController
     {
         /// <summary>
@@ -20,18 +23,36 @@ namespace ApiUser.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         Task<ResultObj<string>> UserCodeLogin(UserCodeLoginDto inEnt);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
         Task<ResultObj<int>> loginReg(LogingDto inEnt);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
         Task<Result> resetPassword(ResetPasswordDto inEnt);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         Task<Result> deleteUser(DtoKey userName);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inEnt"></param>
+        /// <returns></returns>
         Task<ResultObj<bool>> userEditPwd(EditPwdDto inEnt);
 
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class UserCodeLoginDto
     {
         /// <summary>

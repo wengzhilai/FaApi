@@ -9,9 +9,7 @@ using System.Reflection;
 
 namespace WebApi.Comon
 {
-    /// <summary>
-    /// 
-    /// </summary>
+
     //public class HttpHeaderOperation : IOperationFilter
     //{
     //    /// <summary>

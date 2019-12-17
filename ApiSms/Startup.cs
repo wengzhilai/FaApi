@@ -16,11 +16,24 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace ApiSms
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public IConfiguration Configuration { get; }
+        /// <summary>
+        /// 
+        /// </summary>
         public IWebHostEnvironment WebHostEnvironment { get; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="webHostEnvironment"></param>
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
@@ -29,7 +42,10 @@ namespace ApiSms
         }
 
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             Configuration.Bind("JpushCfg", AppSettingsManager.self.JpushCfg);
@@ -83,7 +99,11 @@ namespace ApiSms
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -105,13 +125,14 @@ namespace ApiSms
             app.UseAuthentication();//认证
             app.UseAuthorization();//授权
 
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
+                // 访问Swagger的路由后缀
+                options.RoutePrefix = "sw";
+            });
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    context.Response.Redirect("swagger/index.html");
-                    //await context.Response.WriteAsync("Hello World!");
-                });
                 endpoints.MapControllers();
             });
         }

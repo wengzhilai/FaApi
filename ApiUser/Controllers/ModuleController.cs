@@ -12,6 +12,9 @@ using Models.Entity;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]/[action]")]
     [ApiController]
     [EnableCors]
@@ -19,12 +22,18 @@ namespace ApiUser.Controllers
     public class ModuleController : ControllerBase, IModuleController
     {
         IModuleRepository _respoitory;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="module"></param>
         public ModuleController(IModuleRepository module)
         {
             this._respoitory = module;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         async public Task<ResultObj<FaModuleEntity>> getUserMenu()
         {

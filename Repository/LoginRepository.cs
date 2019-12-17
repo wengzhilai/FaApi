@@ -92,7 +92,7 @@ namespace Repository
             {
                 reObj.success = false;
                 reObj.code = "-2";
-                reObj.msg = string.Format("密码复杂度不够：{0}");
+                reObj.msg = string.Format("密码复杂度不够：{0}", AppSettingsManager.self.BaseConfig.PwdComplexity);
                 return reObj;
             }
             #endregion
@@ -386,7 +386,7 @@ namespace Repository
             {
                 reObj.success = false;
                 reObj.code = "-2";
-                reObj.msg = string.Format("密码复杂度不够：{0}");
+                reObj.msg = string.Format("密码复杂度不够：{0}", AppSettingsManager.self.BaseConfig.PwdComplexity);
                 return reObj;
             }
             DapperHelper<FaLoginEntity> dapper = new DapperHelper<FaLoginEntity>();

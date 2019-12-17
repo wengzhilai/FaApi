@@ -22,13 +22,18 @@ namespace Idsvr4.IdentityServerExtensions
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
-            var smsCode = context.Request.Raw.Get("smsCode");
-            var phoneNumber = context.Request.Raw.Get("phoneNumber");
-
-            if (string.IsNullOrEmpty(smsCode) || string.IsNullOrEmpty(phoneNumber))
+            await Task.Run(() =>
             {
-                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
-            }
+                var smsCode = context.Request.Raw.Get("smsCode");
+                var phoneNumber = context.Request.Raw.Get("phoneNumber");
+
+                if (string.IsNullOrEmpty(smsCode) || string.IsNullOrEmpty(phoneNumber))
+                {
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant);
+                }
+            });
+
+            
 
             //var result = await smsSend.Count(phoneNumber, smsCode);
             ////表示验证码有效

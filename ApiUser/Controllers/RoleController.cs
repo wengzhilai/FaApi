@@ -12,6 +12,9 @@ using Models.Entity;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]/[action]")]
     [ApiController]
     [EnableCors]
@@ -19,7 +22,10 @@ namespace ApiUser.Controllers
     public class RoleController : ControllerBase, IRoleController
     {
         IRoleRepository _respoitory;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Role"></param>
         public RoleController(IRoleRepository Role)
         {
             this._respoitory = Role;

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IQueryController
     {
         /**
@@ -15,7 +18,11 @@ namespace ApiUser.Controllers
         * @return
         */
         Task<ResultObj<FaQueryEntity>> getSingleQuery(DtoKey inObj);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="querySearchModel"></param>
+        /// <returns></returns>
         Task<ResultObj<Dictionary<String, Object>>> getListData(QuerySearchDto querySearchModel);
 
         /**

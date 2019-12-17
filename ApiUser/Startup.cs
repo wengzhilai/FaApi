@@ -17,11 +17,24 @@ using System;
 
 namespace ApiUser
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public IConfiguration Configuration { get; }
+        /// <summary>
+        /// 
+        /// </summary>
         public IWebHostEnvironment WebHostEnvironment { get; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="webHostEnvironment"></param>
         public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             Configuration = configuration;
@@ -41,7 +54,10 @@ namespace ApiUser
             Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
             builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
  
@@ -110,14 +126,13 @@ namespace ApiUser
 
             #endregion
 
-            //
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSameDomain",
                     builder =>
                     {
                         builder
-                            //.WithOrigins("http://localhost:8100")
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowAnyOrigin();
@@ -126,7 +141,11 @@ namespace ApiUser
 
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
@@ -148,8 +167,6 @@ namespace ApiUser
                 });
                 endpoints.MapControllers();
             });
-
-
             #region 使用SwaggerUI
 
             app.UseSwagger();
@@ -157,7 +174,7 @@ namespace ApiUser
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
                 // 访问Swagger的路由后缀
-                options.RoutePrefix = "swagger";
+                options.RoutePrefix = "sw";
             });
 
             #endregion

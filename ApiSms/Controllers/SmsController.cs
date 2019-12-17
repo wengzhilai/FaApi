@@ -13,6 +13,9 @@ using Newtonsoft.Json.Linq;
 
 namespace ApiSms.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]/[action]")]
     [ApiController]
     [EnableCors]
@@ -90,6 +93,9 @@ namespace ApiSms.Controllers
         }
 
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class ValidSmsDto
     {
         /// <summary>

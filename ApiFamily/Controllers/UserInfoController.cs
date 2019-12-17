@@ -9,13 +9,14 @@ using Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Models.EntityView;
+using System.Security.Claims;
 
 namespace ApiFamily.Controllers
 {
     /// <summary>
     /// 授权管理
     /// </summary>
-    [EnableCors]
+    [EnableCors("AllowSameDomain")]
     [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]
@@ -27,10 +28,7 @@ namespace ApiFamily.Controllers
         /// 
         /// </summary>
         /// <param name="userInfo"></param>
-        /// <param name="_mapper"></param>
-        /// <param name="_login"></param>
-        /// <param name="_user"></param>
-        /// <param name="pub"></param>
+
         public UserInfoController(
             IUserInfoRepository userInfo
             )
@@ -44,40 +42,45 @@ namespace ApiFamily.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [AllowAnonymous]
         public async Task<ResultObj<FaUserInfoEntityView>> Single(DtoKey inEnt)
         {
             ResultObj<FaUserInfoEntityView> reObj = new ResultObj<FaUserInfoEntityView>();
             int key = Convert.ToInt32(inEnt.Key);
             FaUserInfoEntityView user = await _userInfo.SingleByKey(key);
-            if (user.birthdayTime != null)
+            if (user != null)
             {
-                if (user.yearsType==("阴历") || user.yearsType==("国号"))
+                if (user.birthdayTime != null)
                 {
-                    user.birthdaysolarDate = TypeChange.DateToSolar(user.birthdayTime.Value).ToString("yyyy-MM-dd HH:mm");
-                    user.birthdaylunlarDate = user.birthdayTime.Value.ToString("yyyy-MM-dd HH:mm");
-                    
-                }
-                else
-                {
-                    user.birthdaylunlarDate = TypeChange.DateToLunar(user.birthdayTime.Value).ToString("yyyy-MM-dd HH:mm");
-                    user.birthdaysolarDate = user.birthdayTime.Value.ToString("yyyy-MM-dd HH:mm");
-                }
-            }
-            if (user.diedTime != null && user.isLive == 0)
-            {
-                if (user.yearsType==("阴历") || user.yearsType==("国号"))
-                {
-                    user.diedlunlarDate = TypeChange.DateToSolar(user.diedTime.Value).ToString("yyyy-MM-dd HH:mm");
-                    user.diedlunlarDate = user.diedTime.Value.ToString("yyyy-MM-dd HH:mm");
-                }
-                else
-                {
-                    user.diedlunlarDate = TypeChange.DateToLunar(user.diedTime.Value).ToString("yyyy-MM-dd HH:mm");
-                    user.diedsolarDate = user.diedTime.Value.ToString("yyyy-MM-dd HH:mm");
-                }
-            }
+                    if (user.yearsType == ("阴历") || user.yearsType == ("国号"))
+                    {
+                        user.birthdaysolarDate = TypeChange.DateToSolar(user.birthdayTime.Value).ToString("yyyy-MM-dd HH:mm");
+                        user.birthdaylunlarDate = user.birthdayTime.Value.ToString("yyyy-MM-dd HH:mm");
 
+                    }
+                    else
+                    {
+                        user.birthdaylunlarDate = TypeChange.DateToLunar(user.birthdayTime.Value).ToString("yyyy-MM-dd HH:mm");
+                        user.birthdaysolarDate = user.birthdayTime.Value.ToString("yyyy-MM-dd HH:mm");
+                    }
+                }
+                if (user.diedTime != null && user.isLive == 0)
+                {
+                    if (user.yearsType == ("阴历") || user.yearsType == ("国号"))
+                    {
+                        user.diedlunlarDate = TypeChange.DateToSolar(user.diedTime.Value).ToString("yyyy-MM-dd HH:mm");
+                        user.diedlunlarDate = user.diedTime.Value.ToString("yyyy-MM-dd HH:mm");
+                    }
+                    else
+                    {
+                        user.diedlunlarDate = TypeChange.DateToLunar(user.diedTime.Value).ToString("yyyy-MM-dd HH:mm");
+                        user.diedsolarDate = user.diedTime.Value.ToString("yyyy-MM-dd HH:mm");
+                    }
+                }
+            }
+            else
+            {
+                user = new FaUserInfoEntityView();
+            }
             reObj.data = user;
             reObj.success = true;
             return reObj;
@@ -163,7 +166,11 @@ namespace ApiFamily.Controllers
             var reObj = new ResultObj<bool>();
             try
             {
-                reObj = await this._userInfo.Save(inEnt, User.Identity.Name, 1);
+                ClaimsIdentity claimsIden = (ClaimsIdentity)User.Identity;
+                var name = claimsIden.Claims.SingleOrDefault(x => x.Type == "name");
+                var id = claimsIden.Claims.SingleOrDefault(x => x.Type == "id");
+
+                reObj = await this._userInfo.Save(inEnt, name == null ? "" : name.Value, id == null ? 0 : Convert.ToInt32(id.Value));
             }
             catch (ExceptionExtend e)
             {

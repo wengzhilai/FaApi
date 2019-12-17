@@ -54,7 +54,7 @@ select
 from etc_staff a where OpenId='{0}'
 ";
                 sql = string.Format(sql, inObj.Key);
-                reObj.dataList=dapper.Query<ClientReportResult>(sql).ToList();
+                reObj.dataList=(await dapper.QueryAsync<ClientReportResult>(sql)).ToList();
                 if (reObj.dataList.Count() > 0) reObj.data = reObj.dataList[0];
                 reObj.success = true;
             }

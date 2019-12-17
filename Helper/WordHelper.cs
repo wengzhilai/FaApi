@@ -9,12 +9,7 @@ using NPOI.XWPF.UserModel;
 
 public class WordHelper
 {
-    private static int SHEET_NUM = 0;
-    private static int ROW_NUM = 0;
-    private static int CELL_NUM = 0;
-    private static double NEW_VALUE = 100.98D;
-    private static String BINARY_EXTENSION = "xls";
-    private static String OPENXML_EXTENSION = "xlsx";
+
 
     public WordHelper()
     {

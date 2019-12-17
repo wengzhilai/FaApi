@@ -161,11 +161,11 @@ namespace ApiEtc
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
+                app.UseSwaggerUI(options =>
                 {
-                    context.Response.Redirect("swagger/index.html");
-                    //await context.Response.WriteAsync("Hello World!");
-
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
+                    // 访问Swagger的路由后缀
+                    options.RoutePrefix = "sw";
                 });
                 endpoints.MapControllers();
             });

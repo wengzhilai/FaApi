@@ -85,10 +85,10 @@ namespace Models
         /// <summary>
         /// 将查询表达式。转成数据,用于获取保存字段使用
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T1"></typeparam>
         /// <param name="expression"></param>
         /// <returns></returns>
-        private List<string> LamdbToList<T>(Expression<Func<T, object[]>> expression)
+        private List<string> LamdbToList<T1>(Expression<Func<T1, object[]>> expression)
         {
             List<string> reList = new List<string>();
 

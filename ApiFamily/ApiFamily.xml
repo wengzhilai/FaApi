@@ -13,7 +13,6 @@
             <summary>
             
             </summary>
-            <param name="module"></param>
         </member>
         <member name="M:ApiFamily.Controllers.FamilyBooksController.Single(Models.DtoDo{System.Int32})">
             <summary>
@@ -129,10 +128,6 @@
             
             </summary>
             <param name="userInfo"></param>
-            <param name="_mapper"></param>
-            <param name="_login"></param>
-            <param name="_user"></param>
-            <param name="pub"></param>
         </member>
         <member name="M:ApiFamily.Controllers.UserInfoController.Single(Models.DtoKey)">
             <summary>
@@ -176,6 +171,11 @@
             <param name="inEnt"></param>
             <returns></returns>
         </member>
+        <member name="T:ApiFamily.Interface.IFamily">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:ApiFamily.Interface.IFamily.Relative(Models.DtoDo{System.Int32})">
             <summary>
             获取关系图
@@ -217,6 +217,59 @@
             <summary>
             
             </summary>
+        </member>
+        <member name="T:ApiFamily.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiFamily.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:ApiFamily.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiFamily.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ApiFamily.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ApiFamily.Startup.WebHostEnvironment">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiFamily.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+            <param name="webHostEnvironment"></param>
+        </member>
+        <member name="M:ApiFamily.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:ApiFamily.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
         </member>
     </members>
 </doc>

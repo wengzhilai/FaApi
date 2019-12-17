@@ -4,6 +4,11 @@
         <name>ApiUser</name>
     </assembly>
     <members>
+        <member name="T:ApiUser.Controllers.ILoginController">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:ApiUser.Controllers.ILoginController.userLogin(Models.LogingDto)">
             <summary>
             密码登录
@@ -18,6 +23,39 @@
             <param name="inEnt"></param>
             <returns></returns>
         </member>
+        <member name="M:ApiUser.Controllers.ILoginController.loginReg(Models.LogingDto)">
+            <summary>
+            
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.ILoginController.resetPassword(Models.ResetPasswordDto)">
+            <summary>
+            
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.ILoginController.deleteUser(Models.DtoKey)">
+            <summary>
+            
+            </summary>
+            <param name="userName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.ILoginController.userEditPwd(Models.EditPwdDto)">
+            <summary>
+            
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiUser.Controllers.UserCodeLoginDto">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:ApiUser.Controllers.UserCodeLoginDto.LoginName">
             <summary>
             登录名
@@ -26,6 +64,11 @@
         <member name="P:ApiUser.Controllers.UserCodeLoginDto.Code">
             <summary>
             验证码
+            </summary>
+        </member>
+        <member name="T:ApiUser.Controllers.IModuleController">
+            <summary>
+            
             </summary>
         </member>
         <member name="M:ApiUser.Controllers.IModuleController.singleByKey(Models.DtoDo{System.Int32})">
@@ -47,10 +90,22 @@
             获取菜单
             @return
         </member>
+        <member name="T:ApiUser.Controllers.IQueryController">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:ApiUser.Controllers.IQueryController.getSingleQuery(Models.DtoKey)">
             根据代码查询Query
             @param inObj
             @return
+        </member>
+        <member name="M:ApiUser.Controllers.IQueryController.getListData(Models.Entity.QuerySearchDto)">
+            <summary>
+            
+            </summary>
+            <param name="querySearchModel"></param>
+            <returns></returns>
         </member>
         <member name="M:ApiUser.Controllers.IQueryController.singleByKey(Models.DtoDo{System.Int32})">
             查询单个Query
@@ -72,6 +127,11 @@
             @param postJson
             @return
         </member>
+        <member name="T:ApiUser.Controllers.IRoleController">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:ApiUser.Controllers.IRoleController.singleByKey(Models.DtoDo{System.Int32})">
             查询单条
             @param inObj
@@ -87,6 +147,11 @@
             @param inEnt
             @return
         </member>
+        <member name="T:ApiUser.Controllers.IUserController">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="M:ApiUser.Controllers.IUserController.singleByKey(Models.DtoDo{System.Int32})">
             查询单条
             @param inObj
@@ -101,6 +166,18 @@
             保存基本信息
             @param inEnt
             @return
+        </member>
+        <member name="T:ApiUser.Controllers.LoginController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiUser.Controllers.LoginController.#ctor(System.Net.Http.IHttpClientFactory,IRepository.ILoginRepository)">
+            <summary>
+            
+            </summary>
+            <param name="clientFactory"></param>
+            <param name="login"></param>
         </member>
         <member name="M:ApiUser.Controllers.LoginController.userLogin(Models.LogingDto)">
             <summary>
@@ -123,9 +200,30 @@
             <param name="inEnt"></param>
             <returns></returns>
         </member>
+        <member name="M:ApiUser.Controllers.LoginController.loginReg(Models.LogingDto)">
+            <summary>
+            注册
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
         <member name="M:ApiUser.Controllers.LoginController.resetPassword(Models.ResetPasswordDto)">
             <summary>
             重设置密码
+            </summary>
+            <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.LoginController.deleteUser(Models.DtoKey)">
+            <summary>
+            删除用户
+            </summary>
+            <param name="userName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ApiUser.Controllers.LoginController.userEditPwd(Models.EditPwdDto)">
+            <summary>
+            修改用户 名
             </summary>
             <param name="inEnt"></param>
             <returns></returns>
@@ -135,6 +233,23 @@
             更新账号
             </summary>
             <param name="inEnt"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiUser.Controllers.ModuleController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiUser.Controllers.ModuleController.#ctor(IRepository.IModuleRepository)">
+            <summary>
+            
+            </summary>
+            <param name="module"></param>
+        </member>
+        <member name="M:ApiUser.Controllers.ModuleController.getUserMenu">
+            <summary>
+            
+            </summary>
             <returns></returns>
         </member>
         <member name="M:ApiUser.Controllers.ModuleController.save(Models.DtoSave{Models.Entity.FaModuleEntity})">
@@ -157,6 +272,11 @@
             </summary>
             <param name="inEnt"></param>
             <returns></returns>
+        </member>
+        <member name="T:ApiUser.Controllers.QueryController">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:ApiUser.Controllers.QueryController.#ctor(IRepository.IQueryRepository)">
             <summary>
@@ -220,6 +340,17 @@
             <param name="inEnt"></param>
             <returns></returns>
         </member>
+        <member name="T:ApiUser.Controllers.RoleController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiUser.Controllers.RoleController.#ctor(IRepository.IRoleRepository)">
+            <summary>
+            
+            </summary>
+            <param name="Role"></param>
+        </member>
         <member name="M:ApiUser.Controllers.RoleController.save(Models.DtoSave{Models.Entity.FaRoleEntity})">
             <summary>
             保存Query
@@ -240,6 +371,11 @@
             </summary>
             <param name="inEnt"></param>
             <returns></returns>
+        </member>
+        <member name="T:ApiUser.Controllers.TestController">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:ApiUser.Controllers.TestController.TestUser(Models.DtoKey)">
             <summary>
@@ -262,6 +398,17 @@
             <param name="inEnt"></param>
             <returns></returns>
         </member>
+        <member name="T:ApiUser.Controllers.UserController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiUser.Controllers.UserController.#ctor(IRepository.IUserRepository)">
+            <summary>
+            
+            </summary>
+            <param name="User"></param>
+        </member>
         <member name="M:ApiUser.Controllers.UserController.save(Models.DtoSave{Models.Entity.FaUserEntity})">
             <summary>
             保存Query
@@ -283,11 +430,64 @@
             <param name="inEnt"></param>
             <returns></returns>
         </member>
+        <member name="T:ApiUser.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiUser.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:ApiUser.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ApiUser.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ApiUser.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:ApiUser.Startup.WebHostEnvironment">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ApiUser.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+            <param name="webHostEnvironment"></param>
+        </member>
         <member name="M:ApiUser.Startup.ConfigureContainer(Autofac.ContainerBuilder)">
             <summary>
             配置autofac
             </summary>
             <param name="builder"></param>
+        </member>
+        <member name="M:ApiUser.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:ApiUser.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
         </member>
     </members>
 </doc>

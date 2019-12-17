@@ -12,6 +12,9 @@ using Models.Entity;
 
 namespace ApiUser.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("[controller]/[action]")]
     [ApiController]
     [EnableCors]
@@ -19,7 +22,10 @@ namespace ApiUser.Controllers
     public class UserController : ControllerBase, IUserController
     {
         IUserRepository _respoitory;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="User"></param>
         public UserController(IUserRepository User)
         {
             this._respoitory = User;

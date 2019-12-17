@@ -163,56 +163,56 @@ namespace ApiFamily.Controllers
                     // }
                     foreach (var user in item.AllUser)
                     {
-                        if (user.NAME == "翁定学")
+                        if (user.name == "翁定学")
                         {
-                            user.NAME = "翁定学";
+                            user.name = "翁定学";
                         }
 
-                        if (string.IsNullOrEmpty(user.MsgFormat)) continue;
+                        if (string.IsNullOrEmpty(user.msgFormat)) continue;
 
                         if (clm > maxCum * 3 - titleNum) cell = cell4;
                         else if (clm >= maxCum * 2 - titleNum) cell = cell3;
                         else if (clm >= maxCum * 1 - titleNum) cell = cell2;
 
-                        word.AddName(cell, user.NAME);
+                        word.AddName(cell, user.name);
                         //判断加了姓名是否该换行
                         clm = clm + titleNum;
 
-                        var msgCNum = user.MsgFormat.Length / 8;
-                        msgCNum += (user.MsgFormat.Length % 8 == 0) ? 0 : 1;
+                        var msgCNum = user.msgFormat.Length / 8;
+                        msgCNum += (user.msgFormat.Length % 8 == 0) ? 0 : 1;
                         if (clm > maxCum * 3)
                         {
-                            word.AddRemark(cell4, Helper.Fun.FormatNumToChinese(user.MsgFormat));
+                            word.AddRemark(cell4, Helper.Fun.FormatNumToChinese(user.msgFormat));
                         }
                         else if ((clm + msgCNum) > maxCum * 3)
                         {
-                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum * 3 - clm));
+                            var tmpMsg = user.msgFormat.Substring(0, 8 * (maxCum * 3 - clm));
                             word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(tmpMsg));
-                            word.AddRemark(cell4, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum * 3 - clm))));
+                            word.AddRemark(cell4, Helper.Fun.FormatNumToChinese(user.msgFormat.Substring(8 * (maxCum * 3 - clm))));
                         }
                         else if (clm > maxCum * 2)
                         {
-                            word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(user.MsgFormat));
+                            word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(user.msgFormat));
                         }
                         else if ((clm + msgCNum) > maxCum * 2)
                         {
-                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum * 2 - clm));
+                            var tmpMsg = user.msgFormat.Substring(0, 8 * (maxCum * 2 - clm));
                             word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(tmpMsg));
-                            word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum * 2 - clm))));
+                            word.AddRemark(cell3, Helper.Fun.FormatNumToChinese(user.msgFormat.Substring(8 * (maxCum * 2 - clm))));
                         }
                         else if (clm > maxCum * 1)
                         {
-                            word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(user.MsgFormat));
+                            word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(user.msgFormat));
                         }
                         else if ((clm + msgCNum) > maxCum * 1)
                         {
-                            var tmpMsg = user.MsgFormat.Substring(0, 8 * (maxCum * 1 - clm));
+                            var tmpMsg = user.msgFormat.Substring(0, 8 * (maxCum * 1 - clm));
                             word.AddRemark(cell, Helper.Fun.FormatNumToChinese(tmpMsg));
-                            word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(user.MsgFormat.Substring(8 * (maxCum * 1 - clm))));
+                            word.AddRemark(cell2, Helper.Fun.FormatNumToChinese(user.msgFormat.Substring(8 * (maxCum * 1 - clm))));
                         }
                         else if ((clm + msgCNum) <= maxCum * 1)
                         {
-                            word.AddRemark(cell, Helper.Fun.FormatNumToChinese(user.MsgFormat));
+                            word.AddRemark(cell, Helper.Fun.FormatNumToChinese(user.msgFormat));
                         }
 
                         clm += msgCNum;

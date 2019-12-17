@@ -25,6 +25,8 @@ namespace Idsvr4.Configuration
             
             resources.Add(new ApiResource("FileUpService", "文件上传服务API"));
             resources.Add(new ApiResource("QuartzService", "任务服务API"));
+            resources.Add(new ApiResource("FamilyService", "前端服务API"));
+            
             return resources;
         }
 
@@ -67,6 +69,7 @@ namespace Idsvr4.Configuration
                         "FileUpService",
                         "SmsService",
                         "QuartzService",
+                        "FamilyService",
                     }
                 },
                 new Client
@@ -79,6 +82,7 @@ namespace Idsvr4.Configuration
                         "FileUpService",
                         "SmsService",
                         "QuartzService",
+                        "FamilyService",
                     }
                 },
                 

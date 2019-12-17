@@ -229,7 +229,7 @@ namespace Repository
             try
             {
                 var father = await dapperUserInfo.Single(x => x.id == inEnt.data.fatherId);
-                if (father == null && (inEnt.data.coupleId == null || inEnt.data.coupleId == 0))
+                if (father == null && inEnt.data.coupleId == 0)
                 {
                     reObj.success = false;
                     reObj.msg = "ID有误";
@@ -245,7 +245,7 @@ namespace Repository
                     #region 保存配
 
                     var userId = await new SequenceRepository().GetNextID<FaUserEntity>();
-                    if (inEnt.data.coupleId != null)
+                    if (inEnt.data.coupleId != 0)
                     {
                         var coupleEnt = await dapperUserInfo.Single(i => i.id == inEnt.data.coupleId);
                         if (coupleEnt == null)
@@ -336,10 +336,10 @@ namespace Repository
                             id = userId,
                             levelId = inEnt.data.levelId,
                             coupleId = inEnt.data.coupleId,
-                            birthdayTime = inEnt.data.birthdayTime.Value,
+                            birthdayTime = inEnt.data.birthdayTime == null ? DateTime.MinValue : inEnt.data.birthdayTime.Value,
                             birthdayPlace = inEnt.data.birthdayPlace,
                             isLive = inEnt.data.isLive,
-                            diedTime = inEnt.data.diedTime.Value,
+                            diedTime = inEnt.data.diedTime == null ? DateTime.MinValue : inEnt.data.diedTime.Value,
                             diedPlace = inEnt.data.diedPlace,
                             sex = inEnt.data.sex,
                             yearsType = inEnt.data.yearsType,
@@ -357,7 +357,7 @@ namespace Repository
                             createTime = DateTime.Now,
                             authority = 0,
                             status = "正常",
-                            elderId = father.elderId + 1
+                            elderId = (father == null) ? 0 : father.elderId + 1
                         }
                     });
                     if (addUserInfoId < 1)
@@ -550,7 +550,7 @@ namespace Repository
                     var addUserInfoNum = await dapperUserInfo.Update(new DtoSave<FaUserInfoEntity>
                     {
                         data = userInfo,
-                        whereListExp = x => new object[] {
+                        saveFieldListExp = x => new object[] {
                             x.levelId,
                             x.coupleId,
                             x.birthdayTime,
