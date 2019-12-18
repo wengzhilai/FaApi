@@ -100,34 +100,66 @@ namespace ApiEtc.Controllers
             return reObj;
         }
 
+        /// <summary>
+        /// 生成JSapi对象
+        /// </summary>
+        /// <param name="inObj"></param>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<Result> MakeAllTicket(XmlModel inObj)
+        public ResultObj<JsApiModel> GetJsApi(DtoKey inObj)
         {
-            var reObj = new Result();
-            var allUser = await staff.getStaffList();
-            var token= RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN");
+            var reObj = new ResultObj<JsApiModel>();
+
+            var token = RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN");
             if (string.IsNullOrEmpty(token))
             {
                 token = Helper.WeiChat.Utility.GetAccessToken(AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret);
-                RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token,new TimeSpan(2,0,0));
+                RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token, new TimeSpan(2, 0, 0));
             }
-
-
-
-            if (!string.IsNullOrEmpty(token))
+            var jsapiTicket = RedisReadHelper.StringGet("WECHA_JSAPI_TICKET"); ;
+            if (string.IsNullOrEmpty(jsapiTicket))
             {
-                allUser.dataList = allUser.dataList.Where(x => !string.IsNullOrEmpty(x.phone) && string.IsNullOrEmpty(x.ticket)).ToList();
-                foreach (var item in allUser.dataList)
-                {
-                    if (string.IsNullOrEmpty(item.etcNo)) item.etcNo = "87000073";
-                    string postStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + item.etcNo + "|" + item.phone + "\"}}}";
-                    item.ticket = Helper.WeiChat.Utility.GetQrCodeTicket(token, postStr);
-
-                    await staff.updateTicket(item);
-                }
+                jsapiTicket = Helper.WeiChat.Utility.GetJsapiTicket(token);
+                RedisWriteHelper.SetString("WECHA_JSAPI_TICKET", jsapiTicket, new TimeSpan(2, 0, 0));
             }
+            reObj.data = new JsApiModel();
+            reObj.data.noncestr = Guid.NewGuid().ToString("n").Substring(10);
+            reObj.data.timestamp = TypeChange.DateToInt64().ToString().Substring(0,10);
+            reObj.data.url = inObj.Key;
+            reObj.data.appid = AppConfig.WeiXin.Appid;
+
+            reObj.data.signature = CheckSignature.GetSignature(new List<string> { "noncestr=" + reObj.data.noncestr, "timestamp=" + reObj.data.timestamp, "url=" + reObj.data.url, "jsapi_ticket="+jsapiTicket },"&");
             return reObj;
         }
+
+        //[HttpPost]
+        //public async Task<Result> MakeAllTicket(XmlModel inObj)
+        //{
+        //    var reObj = new Result();
+        //    var allUser = await staff.getStaffList();
+        //    var token= RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN");
+        //    if (string.IsNullOrEmpty(token))
+        //    {
+        //        token = Helper.WeiChat.Utility.GetAccessToken(AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret);
+        //        RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token,new TimeSpan(2,0,0));
+        //    }
+
+
+
+        //    if (!string.IsNullOrEmpty(token))
+        //    {
+        //        allUser.dataList = allUser.dataList.Where(x => !string.IsNullOrEmpty(x.phone) && string.IsNullOrEmpty(x.ticket)).ToList();
+        //        foreach (var item in allUser.dataList)
+        //        {
+        //            if (string.IsNullOrEmpty(item.etcNo)) item.etcNo = "87000073";
+        //            string postStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + item.etcNo + "|" + item.phone + "\"}}}";
+        //            item.ticket = Helper.WeiChat.Utility.GetQrCodeTicket(token, postStr);
+
+        //            await staff.updateTicket(item);
+        //        }
+        //    }
+        //    return reObj;
+        //}
 
     }
 }

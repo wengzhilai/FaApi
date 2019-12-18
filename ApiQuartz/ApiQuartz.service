@@ -1,0 +1,14 @@
+﻿[Unit]
+Description=ApiQuartz .core
+
+[Service]
+WorkingDirectory=/home/www/ApiQuartz/
+ExecStart=dotnet ApiQuartz.dll
+RestartSec=20
+SyslogIdentifier=dotnet-ApiQuartz
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://*:9101
+
+[Install]
+WantedBy=multi-user.target

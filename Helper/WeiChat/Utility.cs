@@ -46,5 +46,24 @@ namespace Helper.WeiChat
 
             return ticket;
         }
+
+        /// <summary>
+        /// jsapi_ticket是公众号用于调用微信JS接口的临时票据
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <returns></returns>
+        public static string GetJsapiTicket(string accessToken)
+        {
+            var ticket = "";
+            
+            ticket = Fun.HttpGetJson("https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token="+ accessToken + "&type=jsapi");
+            var ticketDict = TypeChange.JsonToObject<Dictionary<string, string>>(ticket);
+            if (ticketDict.ContainsKey("ticket"))
+            {
+                ticket = ticketDict["ticket"];
+            }
+
+            return ticket;
+        }
     }
 }

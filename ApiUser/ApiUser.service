@@ -1,0 +1,14 @@
+﻿[Unit]
+Description=ApiUser .core
+
+[Service]
+WorkingDirectory=/home/www/ApiUser/
+ExecStart=dotnet ApiUser.dll
+RestartSec=20
+SyslogIdentifier=dotnet-ApiUser
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://*:9100
+
+[Install]
+WantedBy=multi-user.target

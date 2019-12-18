@@ -9,12 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="hosts.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\UpFiles\" />
   </ItemGroup>
 

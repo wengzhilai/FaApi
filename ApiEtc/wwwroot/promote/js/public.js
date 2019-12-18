@@ -1,7 +1,7 @@
 
 window.globalConfig = {
-    api:'' //本地
-}
+    api:'http://192.168.2.34:100/' //本地
+};
 
 //rem 单位换算
 function window_width() {

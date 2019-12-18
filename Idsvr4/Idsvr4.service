@@ -1,0 +1,14 @@
+﻿[Unit]
+Description=Idsvr4 .core
+
+[Service]
+WorkingDirectory=/home/www/Idsvr4/
+ExecStart=dotnet Idsvr4.dll
+RestartSec=20
+SyslogIdentifier=dotnet-Idsvr4
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://*:9001
+
+[Install]
+WantedBy=multi-user.target

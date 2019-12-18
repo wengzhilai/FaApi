@@ -15,9 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="hosts.json" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\IRepository\IRepository.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>

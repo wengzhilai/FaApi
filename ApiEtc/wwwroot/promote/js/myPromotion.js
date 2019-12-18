@@ -8,6 +8,7 @@ $(function () {
      var newText = '数据更新至'+yesterday
     $('.dateTime').text(newText)
 
+    $('#toSharePage').attr('href',`sharePage.html?id=${sessionStorage.getItem('id')}`)
     getClientReport()
     getQrCode()
 })
@@ -58,4 +59,9 @@ getQrCode = ()=>{
         }
     })
 }
+
+
+
+
+
 

@@ -12,8 +12,8 @@ var httpsState = true; //设置第一次请求的状态来控制是否展示没�
 getWalletList=()=>{
     var Data = {
         Key : sessionStorage.getItem('id'),
-        page : 1,
-        rows : 15
+        page : page,
+        rows : 10
     };
     $.ajax({
         type : "post",
@@ -23,7 +23,7 @@ getWalletList=()=>{
         contentType: "application/json; charset=utf-8",
         success:(res)=>{
 
-            if (res.dataList.length<15){
+            if (res.dataList.length<10){
                 off_on = false
             }
             else {
@@ -46,8 +46,8 @@ getWalletList=()=>{
                     $('.content').append(dom)
                 }
                 var stateList = $('.state')
-                for(var k=(page-1)*15;k<stateList.length;k++){
-                    if(res.dataList[(k/15)-page+1].Status=='已发放'){
+                for(var k=(page-1)*10;k<stateList.length;k++){
+                    if(res.dataList[k-(page-1)*10].Status=='已发放'){
                         stateList[k].style.color = '#00C160'
                     }
                     else {
@@ -56,11 +56,14 @@ getWalletList=()=>{
                 }
             }
             else {
+                off_on = false;
                 if (httpsState==true){
                     var dom = `<div class="noList"><p>暂无提现记录</p></div>`
                     $('.content').append(dom)
                 }
             }
+
+            $('.loading').hide()
         },
         error:(err)=>{
             alert('请求服务器失败')
@@ -72,10 +75,11 @@ getWalletList=()=>{
 //滚动加载方法1
 $(document).scroll(function() {
     if($(window).height()+$(document).scrollTop()>=$(document.body).height()){
-        if (off_on) {
+        if (off_on==true) {
             off_on=false
             setTimeout(function(){
-                page++
+                page++;
+                $('.loading').show()
                 getWalletList(); //上拉加载更多请求数据，不是第一次请求数据，不需要传参，采用默认参数
             },500)
         }

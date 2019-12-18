@@ -60,8 +60,15 @@ namespace Helper.WeiChat
         public static string GetSignature(string timestamp, string nonce, string token = null)
         {
             token = token ?? Token;
-            var arr = new[] { token, timestamp, nonce }.OrderBy(z => z).ToArray();
-            var arrString = string.Join("", arr);
+            var arr = new[] { token, timestamp, nonce };
+            return GetSignature(arr.ToList());
+        }
+
+
+        public static string GetSignature(List<string> arr, string split = "")
+        {
+            arr = arr.OrderBy(z => z).ToList();
+            var arrString = string.Join(split, arr);
             var sha1 = SHA1.Create();
             var sha1Arr = sha1.ComputeHash(Encoding.UTF8.GetBytes(arrString));
             StringBuilder enText = new StringBuilder();
@@ -72,5 +79,7 @@ namespace Helper.WeiChat
 
             return enText.ToString();
         }
+
+
     }
 }

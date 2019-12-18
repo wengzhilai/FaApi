@@ -78,8 +78,9 @@ getClientList=()=>{
                 else {
                     off_on = true; //设置上拉加载状态
                 }
-                for (var i=0;i<res.dataList.length;i++) {
-                    var dom = `
+                if (res.dataList.length>0){
+                    for (var i=0;i<res.dataList.length;i++) {
+                        var dom = `
                 <div class="recordModules">
                     <div class="recordModules_top">
                     <div class="carNum">
@@ -102,41 +103,47 @@ getClientList=()=>{
                 </div>
             `;
 
-                    $('.allRecordList').append(dom)
-                }
-                var stateList = $('.state')
-                //已结算未结算状态展示
-                for (var k = (page-1)*10;k<stateList.length;k++){
-                    if (tagType==3){
-                        stateList[k].style.color = '#FE4E41';
-                        $('.money').hide();  //绑定列表隐藏金额显示
-                        $('.recordModules_foot').css({webkitJustifyContent:'flex-start'});//调整flex布局方式
-                        if (res.dataList[k-(page-1)*10].Status=='已绑定') {
-                            $('.recordModules_top').css({height:'7rem'});//调整高度
-                            $('.carNum').hide();//隐藏车牌号
-                            $('.createTime').hide()//时间隐藏
+                        $('.allRecordList').append(dom)
+                    }
+                    var stateList = $('.state')
+                    //已结算未结算状态展示
+                    for (var k = (page-1)*10;k<stateList.length;k++){
+                        if (tagType==3){
+                            stateList[k].style.color = '#FE4E41';
+                            $('.money').hide();  //绑定列表隐藏金额显示
+                            $('.recordModules_foot').css({webkitJustifyContent:'flex-start'});//调整flex布局方式
+                            if (res.dataList[k-(page-1)*10].Status=='已绑定') {
+                                $('.recordModules_top').css({height:'7rem'});//调整高度
+                                $('.carNum').hide();//隐藏车牌号
+                                $('.createTime').hide()//时间隐藏
+                            }
                         }
-                    }
-                    else if (tagType==2) {
-                        stateList[k].style.color = '#FE4E41';
-                    }
-                    else if (tagType==1){
-                        stateList[k].style.color = '#00C160';
-                    }
-                    else if (tagType==0){
-                        if (res.dataList[k-(page-1)*10].Status=='待结算') {
+                        else if (tagType==2) {
                             stateList[k].style.color = '#FE4E41';
                         }
-                        else  {
+                        else if (tagType==1){
                             stateList[k].style.color = '#00C160';
                         }
-                    }
+                        else if (tagType==0){
+                            if (res.dataList[k-(page-1)*10].Status=='待结算') {
+                                stateList[k].style.color = '#FE4E41';
+                            }
+                            else  {
+                                stateList[k].style.color = '#00C160';
+                            }
+                        }
 
+                    }
                 }
+                else {
+                    off_on = false;
+                }
+
             }
             else {
                 alert(res.msg)
             }
+            $('.loading').hide()
         },
         error:(err)=>{
             alert('请求服务器失败')
@@ -173,11 +180,12 @@ getClientReport=()=>{
 //滚动加载方法1
 $(document).scroll(function() {
     if($(window).height()+$(document).scrollTop()>=$(document.body).height()){
-        if (off_on) {
+        if (off_on==true) {
             off_on=false;
             setTimeout(function(){
                 page++;
-                getWalletList(); //上拉加载更多请求数据，不是第一次请求数据，不需要传参，采用默认参数
+                $('.loading').show()
+                getClientList(); //上拉加载更多请求数据，不是第一次请求数据，不需要传参，采用默认参数
             },500)
         }
     }

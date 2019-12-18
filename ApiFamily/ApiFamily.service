@@ -1,0 +1,14 @@
+﻿[Unit]
+Description=ApiFamily .core
+
+[Service]
+WorkingDirectory=/home/www/ApiFamily/
+ExecStart=dotnet ApiFamily.dll
+RestartSec=20
+SyslogIdentifier=dotnet-ApiFamily
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://*:9102
+
+[Install]
+WantedBy=multi-user.target

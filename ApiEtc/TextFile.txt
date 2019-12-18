@@ -1,0 +1,14 @@
+﻿[Unit]
+Description=ApiEtc dotnet core
+
+[Service]
+WorkingDirectory=/home/www/publish/
+ExecStart=dotnet ApiEtc.dll
+RestartSec=20
+SyslogIdentifier=dotnet-EtcApi
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://*:9200
+
+[Install]
+WantedBy=multi-user.target

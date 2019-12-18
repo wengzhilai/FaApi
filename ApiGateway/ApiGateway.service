@@ -1,0 +1,14 @@
+﻿[Unit]
+Description=ApiGateway .core
+
+[Service]
+WorkingDirectory=/home/www/Gateway/
+ExecStart=dotnet ApiGateway.dll
+RestartSec=20
+SyslogIdentifier=dotnet-ApiGateway
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://*:9000
+
+[Install]
+WantedBy=multi-user.target

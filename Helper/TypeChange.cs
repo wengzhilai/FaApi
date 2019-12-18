@@ -348,14 +348,20 @@ namespace Helper
             return reObj;
         }
 
-        public static Int64 DateToInt64(DateTime dateTime)
+        public static Int64 DateToInt64(DateTime? now=null)
         {
-            return dateTime.Ticks - Convert.ToDateTime("1970-1-1").Ticks;
+            if (now == null)
+            {
+                now = DateTime.Now;
+            }
+            DateTime DateStart = new DateTime(1970, 1, 1, 8, 0, 0);
+            return Convert.ToInt64((Convert.ToDateTime(now) - DateStart).TotalMilliseconds);//TotalSeconds
         }
 
-        public static DateTime Int64ToDate(Int64 inInt)
+        public static DateTime Int64ToDate(Int64 timeStamp)
         {
-            return Convert.ToDateTime("1970-1-1").AddMilliseconds(inInt);
+            DateTime DateStart = new DateTime(1970, 1, 1, 8, 0, 0);
+            return DateStart.AddMilliseconds(timeStamp);
         }
 
 

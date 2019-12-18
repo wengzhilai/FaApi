@@ -39,8 +39,6 @@ submitCustomerInfo=()=>{
                 success:(res)=>{
                     flag = true
                     if (res.success==true){
-                        // $('#name').val('');
-                        // $('#phone').val('');
                         window.location.href = `http://ssl.hltgz.com/web/qtk/etc/applyOpenCard/v3/main/selectPage?promoterNum=${res.code}&promoterChannelNum=fkn00001`
                     }
                     else {

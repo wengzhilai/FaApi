@@ -113,3 +113,24 @@ body{
 .havePay,.notPay{
     display: none;
 }
+.loading{
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(51, 51, 51, 0.25);
+    z-index: 999;
+    display: none;
+}
+.loading img{
+    width: 6.5rem;
+    height: 6.5rem;
+}
+.loading>div{
+    width: 6.5rem;
+    height: 6.5rem;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

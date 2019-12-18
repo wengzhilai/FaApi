@@ -20,10 +20,6 @@
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="hosts.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+
 
 </Project>
