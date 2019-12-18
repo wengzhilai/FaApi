@@ -232,7 +232,7 @@ namespace Models.EntityView
         /// </summary>
         [Display(Name = "头像图片")]
         [Column("b.`ICON_FILES`")]
-        public int iconiFles { get; set; }
+        public string iconiFles { get; set; }
 
 
         /// <summary>

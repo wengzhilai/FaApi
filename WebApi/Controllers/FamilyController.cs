@@ -168,10 +168,10 @@ namespace WebApi.Controllers
                     int clm = 0;
                     // if (elder < 100)
                     // {
-                        word.AddElder(cell, "第" + Helper.Fun.NumberToChinese(item.ID) + "世");
+                        word.AddElder(cell, "第" + Helper.Fun.NumberToChinese(item.id) + "世");
                         clm += titleNum;
                     // }
-                    foreach (var user in item.AllUser)
+                    foreach (var user in item.allUser)
                     {
                         if (user.name == "翁定学")
                         {

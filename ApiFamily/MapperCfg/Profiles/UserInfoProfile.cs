@@ -62,7 +62,7 @@ namespace ApiFamily.MapperCfg.Profiles
             CreateMap<FaUserInfoEntity, RelativeItem>()
                 .ForMember(d => d.ElderId, opt => { opt.MapFrom(m =>m.elderId); })
                 .ForMember(d => d.ElderName, opt => { opt.MapFrom(m =>
-                elder.SingleByKey(m.elderId).Result.NAME
+                elder.SingleByKey(m.elderId).Result.name
                 ); })
                 .ForMember(d => d.FatherId, opt => { opt.MapFrom(m =>m.fatherId); })
                 .ForMember(d => d.IcoUrl, opt => { opt.MapFrom(m =>

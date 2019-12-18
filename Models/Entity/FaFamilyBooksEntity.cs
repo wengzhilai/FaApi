@@ -52,7 +52,7 @@ namespace Models
         /// </summary>
         [Display(Name = "用户ID")]
         [Column("UserID")]
-        public int userID { get; set; }
+        public int userId { get; set; }
         /// <summary>
         /// 文件地址
         /// </summary>

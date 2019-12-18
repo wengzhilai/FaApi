@@ -125,8 +125,8 @@ namespace Repository
             var allElder = await dappElder.FindAll(string.Format("ID IN ({0}) ORDER BY ID", string.Join(",", elderList)));
             foreach (var item in allElder)
             {
-                item.AllUser = allBooks.Where(x => x.elderId == item.ID).OrderBy(i => i.fatherId).ThenBy(i => i.sex).ThenBy(i => i.levelId).ToList();
-                foreach (var tmpUser in item.AllUser)
+                item.allUser = allBooks.Where(x => x.elderId == item.id).OrderBy(i => i.fatherId).ThenBy(i => i.sex).ThenBy(i => i.levelId).ToList();
+                foreach (var tmpUser in item.allUser)
                 {
        
                     if (tmpUser.sex == "男" || tmpUser.birthdayTime != null)
@@ -171,7 +171,7 @@ namespace Repository
 
             reObj.msg = userInfo.name;
             DapperHelper<FaFamilyBooksEntity> dapperFb = new DapperHelper<FaFamilyBooksEntity>();
-            var page = await dapperFb.Single(i => i.userID == userInfo.id && i.typeId == 2);
+            var page = await dapperFb.Single(i => i.userId == userInfo.id && i.typeId == 2);
             reObj.code = (page == null) ? "10" : page.sort.ToString();
             return reObj;
         }

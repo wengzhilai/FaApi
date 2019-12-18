@@ -127,7 +127,7 @@ namespace WebApi.Controllers
             // FaUserInfoEntity, RelativeItem
             List<KeyValuePair<string, object>> listSqlParaModel = new List<KeyValuePair<string, object>>();
             List<int> tt = new List<int>() { 1, 2, 4 };
-            var testEnt = Helper.LambdaToSqlHelper.GetWhereSql<FaElderEntity>(x => x.NAME.IndexOf("34") > 1 || x.ID < 10, listSqlParaModel);
+            var testEnt = Helper.LambdaToSqlHelper.GetWhereSql<FaElderEntity>(x => x.name.IndexOf("34") > 1 || x.id < 10, listSqlParaModel);
             return testEnt + "\n\r" + TypeChange.ObjectToStr(listSqlParaModel);
         }
 

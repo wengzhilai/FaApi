@@ -167,6 +167,7 @@ from etc_staff a where OpenId='{0}'
                         clientPhone = inObj.phone,
                         clientName = inObj.name,
                         bindTime = DateTime.Now,
+                        submitTime=DateTime.Now,
                         money = AppConfig.WebConfig.ClientPrice,
                         status = "已绑定"
                     };
