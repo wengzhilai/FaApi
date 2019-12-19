@@ -2,8 +2,8 @@
 Description=ApiFamily .core
 
 [Service]
-WorkingDirectory=/home/www/ApiFamily/
-ExecStart=dotnet ApiFamily.dll
+WorkingDirectory=/home/www/FaApi/ApiFamily/
+ExecStart=/home/www/FaApi/ApiFamily/ApiFamily
 RestartSec=20
 SyslogIdentifier=dotnet-ApiFamily
 User=root

@@ -19,6 +19,12 @@
     <ProjectReference Include="..\Helper\Helper.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="ApiSms.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 
 

@@ -113,11 +113,13 @@ namespace ApiSms
             #region 使用SwaggerUI
 
             app.UseSwagger();
+
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
+                options.SwaggerEndpoint("../swagger/v1/swagger.json", "SMS接口文档");
+                // 访问Swagger的路由后缀
+                options.RoutePrefix = "sw";
             });
-
             #endregion
             app.UseRouting();
             app.UseCors("AllowSameDomain");
@@ -125,12 +127,7 @@ namespace ApiSms
             app.UseAuthentication();//认证
             app.UseAuthorization();//授权
 
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
-                // 访问Swagger的路由后缀
-                options.RoutePrefix = "sw";
-            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

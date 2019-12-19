@@ -2,8 +2,8 @@
 Description=ApiUser .core
 
 [Service]
-WorkingDirectory=/home/www/ApiUser/
-ExecStart=dotnet ApiUser.dll
+WorkingDirectory=/home/www/FaApi/ApiUser/
+ExecStart=/home/www/FaApi/ApiUser/ApiUser
 RestartSec=20
 SyslogIdentifier=dotnet-ApiUser
 User=root

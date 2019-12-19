@@ -1,5 +1,3 @@
-
-using Autofac;
 using Helper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,11 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Reflection;
-using Swashbuckle.AspNetCore.Filters;
 using Microsoft.OpenApi.Models;
-using System.IO;
-using System;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using IRepository;
+using Repository;
 
 namespace ApiUser
 {
@@ -44,23 +41,23 @@ namespace ApiUser
 
         }
 
-        /// <summary>
-        /// 配置autofac
-        /// </summary>
-        /// <param name="builder"></param>
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
-            Assembly assemblys = Assembly.LoadFrom(WebHostEnvironment.ContentRootPath + "/bin/Debug/netcoreapp3.0/Repository.dll");
-            builder.RegisterAssemblyTypes(assemblys).AsImplementedInterfaces();
-        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
- 
+
+            #region 注入
+            services.TryAddSingleton<ILoginRepository, LoginRepository>();
+            services.TryAddSingleton<IModuleRepository, ModuleRepository>();
+            services.TryAddSingleton<IQueryRepository, QueryRepository>();
+            services.TryAddSingleton<IRoleRepository, RoleRepository>();
+            services.TryAddSingleton<IUserRepository, UserRepository>();
+
+            #endregion
+
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
                 options.RequireHttpsMetadata = false;

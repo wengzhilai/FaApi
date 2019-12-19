@@ -2,8 +2,8 @@
 Description=ApiUpFile .core
 
 [Service]
-WorkingDirectory=/home/www/ApiUpFile/
-ExecStart=dotnet ApiUpFile.dll
+WorkingDirectory=/home/www/FaApi/ApiUpFile/
+ExecStart=/home/www/FaApi/ApiUpFile/ApiUpFile
 RestartSec=20
 SyslogIdentifier=dotnet-ApiUpFile
 User=root

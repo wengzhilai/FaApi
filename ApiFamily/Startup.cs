@@ -169,7 +169,7 @@ namespace ApiFamily
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC接口文档");
+                options.SwaggerEndpoint("../swagger/v1/swagger.json", "ApiFamily接口文档");
                 // 访问Swagger的路由后缀
                 options.RoutePrefix = "sw";
             });

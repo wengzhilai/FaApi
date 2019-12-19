@@ -2,8 +2,8 @@
 Description=ApiSms .core
 
 [Service]
-WorkingDirectory=/home/www/ApiSms/
-ExecStart=dotnet ApiSms.dll
+WorkingDirectory=/home/www/FaApi/ApiSms/
+ExecStart=/home/www/FaApi/ApiSms/ApiSms
 RestartSec=20
 SyslogIdentifier=dotnet-ApiSms
 User=root

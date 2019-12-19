@@ -2,8 +2,8 @@
 Description=ApiGateway .core
 
 [Service]
-WorkingDirectory=/home/www/Gateway/
-ExecStart=dotnet ApiGateway.dll
+WorkingDirectory=/home/www/FaApi/Gateway/
+ExecStart=/home/www/FaApi/Gateway/ApiGateway
 RestartSec=20
 SyslogIdentifier=dotnet-ApiGateway
 User=root

@@ -30,7 +30,7 @@ namespace ApiEtc
                     });
 
                     webBuilder.UseStartup<Startup>()
-                    .UseUrls("http://*:19200")
+                    //.UseUrls("http://*:19200")
                     ;
                 });
     }

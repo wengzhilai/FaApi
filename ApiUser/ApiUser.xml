@@ -470,12 +470,6 @@
             <param name="configuration"></param>
             <param name="webHostEnvironment"></param>
         </member>
-        <member name="M:ApiUser.Startup.ConfigureContainer(Autofac.ContainerBuilder)">
-            <summary>
-            配置autofac
-            </summary>
-            <param name="builder"></param>
-        </member>
         <member name="M:ApiUser.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             

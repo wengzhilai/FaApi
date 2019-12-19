@@ -31,35 +31,45 @@ namespace ApiSms.Controllers
         public async Task<ResultObj<bool>> SendValidSms(DtoKey inObj)
         {
             var reObj = new ResultObj<bool>();
-            var code = PicFunHelper.ValidateMake(4);
+            try
+            {
+                var code = PicFunHelper.ValidateMake(4);
 
-            JSMSClient jp = new JSMSClient(AppSettingsManager.self.JpushCfg.AppKey, AppSettingsManager.self.JpushCfg.MasterSecret);
-            //var senEnt = new TemplateMessage();
-            //senEnt.Type = 1;
-            //senEnt.Mobile = inObj.Key;
-            //senEnt.TemplateId = 1;
-            //senEnt.ValidDuration = 60 * 10;
-            //senEnt.TemplateParameters = new Dictionary<string, string>();
-            //senEnt.TemplateParameters.Add("code", code);
-            //var jpReObj = await jp.SendTemplateMessageAsync(senEnt);
-            var jpReObj = await jp.SendCodeAsync(inObj.Key,1,null);
-            // jpReObj.Content=
-            // {\"error\":{\"code\":50051,\"message\":\"signatures not exist\"}}
-            Console.WriteLine(jpReObj);
+                JSMSClient jp = new JSMSClient(AppSettingsManager.self.JpushCfg.AppKey, AppSettingsManager.self.JpushCfg.MasterSecret);
+                //var senEnt = new TemplateMessage();
+                //senEnt.Type = 1;
+                //senEnt.Mobile = inObj.Key;
+                //senEnt.TemplateId = 1;
+                //senEnt.ValidDuration = 60 * 10;
+                //senEnt.TemplateParameters = new Dictionary<string, string>();
+                //senEnt.TemplateParameters.Add("code", code);
+                //var jpReObj = await jp.SendTemplateMessageAsync(senEnt);
+                var jpReObj = await jp.SendCodeAsync(inObj.Key, 1, null);
+                // jpReObj.Content=
+                // {\"error\":{\"code\":50051,\"message\":\"signatures not exist\"}}
+                Console.WriteLine(jpReObj);
 
-            JObject jb = TypeChange.JsonToObject(jpReObj.Content);
-            var msg_id = jb.Value<string>("msg_id");
-            var errorObj = jb.Value<JObject>("error");
-            if (string.IsNullOrEmpty(msg_id) || errorObj != null)
+                JObject jb = TypeChange.JsonToObject(jpReObj.Content);
+                var msg_id = jb.Value<string>("msg_id");
+                var errorObj = jb.Value<JObject>("error");
+                if (string.IsNullOrEmpty(msg_id) || errorObj != null)
+                {
+                    reObj.success = false;
+                    reObj.msg = errorObj.Value<string>("message");
+                }
+                else
+                {
+                    reObj.success = true;
+                    reObj.code = msg_id;
+                    reObj.msg = Fun.HashEncrypt(inObj.Key + "|" + code + "|" + TypeChange.DateToInt64(DateTime.Now));
+                }
+            }
+            catch (Exception e)
             {
                 reObj.success = false;
-                reObj.msg = errorObj.Value<string>("message");
-            }else
-            {
-                reObj.success = true;
-                reObj.code = msg_id;
-                reObj.msg = Fun.HashEncrypt(inObj.Key + "|" + code + "|" + TypeChange.DateToInt64(DateTime.Now));
+                reObj.msg = e.Message;
             }
+            
             
             return reObj;
 

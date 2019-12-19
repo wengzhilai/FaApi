@@ -2,8 +2,8 @@
 Description=ApiQuartz .core
 
 [Service]
-WorkingDirectory=/home/www/ApiQuartz/
-ExecStart=dotnet ApiQuartz.dll
+WorkingDirectory=/home/www/FaApi/ApiQuartz/
+ExecStart=/home/www/FaApi/ApiQuartz/ApiQuartz
 RestartSec=20
 SyslogIdentifier=dotnet-ApiQuartz
 User=root
