@@ -38,6 +38,9 @@ namespace ApiEtc.Controllers
             Result reEnt = new Result();
             reEnt.success = true;
             reEnt.msg = "接口测试成功";
+            LogHelper.WriteLog<TestController>("接口测试成功");
+            LogHelper.WriteErrorLog<TestController>("接口测试失败调用",new System.Exception("11111111111111"));
+            LogHelper.WriteDebugLog<TestController>("接口测试调试");
             return reEnt;
         }
         /// <summary>

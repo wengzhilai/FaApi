@@ -71,17 +71,20 @@ namespace ApiEtc.Repository
             var reObj = new Result();
             try
             {
+                LogHelper.WriteDebugLog(this.GetType(), string.Format("submitWallet：请求{0}", TypeChange.ObjectToStr(inObj)));
                 if (inObj.clientNum < 1)
                 {
                     reObj.success = false;
                     reObj.msg = "提现数不能小于1";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("submitWallet：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
-                if(string.IsNullOrEmpty( inObj.walletaAcount) || string.IsNullOrEmpty(inObj.walletAccountName))
+                if (string.IsNullOrEmpty(inObj.walletaAcount) || string.IsNullOrEmpty(inObj.walletAccountName))
                 {
                     reObj.success = false;
                     reObj.msg = "提现账户有误";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("submitWallet：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -90,6 +93,7 @@ namespace ApiEtc.Repository
                 {
                     reObj.success = false;
                     reObj.msg = "获取员工资料有误";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("submitWallet：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -100,7 +104,8 @@ namespace ApiEtc.Repository
                 if (inObj.clientNum > waitList.Count())
                 {
                     reObj.success = false;
-                    reObj.msg =string.Format("提现数有误最多提现{0}，当前提现为{1}", waitList.Count(), inObj.clientNum);
+                    reObj.msg = string.Format("提现数有误最多提现{0}，当前提现为{1}", waitList.Count(), inObj.clientNum);
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("submitWallet：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -135,8 +140,8 @@ namespace ApiEtc.Repository
                     }
 
                     dapperClient = new DapperHelper<EtcClientEntity>(dapper.GetConnection(), dapper.GetTransaction());
-                    var opNum= await dapperClient.Update("status='已结算',walletId="+ wallet.id, "Id in ("+string.Join(",", waitList.Select(x=>x.id)) +")");
-                    if(opNum!= waitList.Count())
+                    var opNum = await dapperClient.Update("status='已结算',walletId=" + wallet.id, "Id in (" + string.Join(",", waitList.Select(x => x.id)) + ")");
+                    if (opNum != waitList.Count())
                     {
                         reObj.success = false;
                         reObj.msg = "更新客户状态失败";
@@ -159,6 +164,7 @@ namespace ApiEtc.Repository
                 reObj.success = false;
                 reObj.msg = e.Message;
             }
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("submitWallet：返回{0}", TypeChange.ObjectToStr(reObj)));
             return reObj;
         }
 
@@ -167,11 +173,13 @@ namespace ApiEtc.Repository
             var reObj = new ResultObj<int>();
             try
             {
+                LogHelper.WriteDebugLog(this.GetType(), string.Format("saveWallet：请求{0}", TypeChange.ObjectToStr(inEnt)));
                 var client = await dapper.SingleByKey(inEnt.data.id);
                 if (client == null)
                 {
                     reObj.success = false;
                     reObj.msg = "Id有误";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("saveWallet：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -179,6 +187,7 @@ namespace ApiEtc.Repository
                 {
                     reObj.success = false;
                     reObj.msg = "该用户已经结算，不可修改";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("saveWallet：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -196,6 +205,7 @@ namespace ApiEtc.Repository
                 reObj.success = false;
                 reObj.msg = e.Message;
             }
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("saveWallet：返回{0}", TypeChange.ObjectToStr(reObj)));
             return reObj;
         }
     }

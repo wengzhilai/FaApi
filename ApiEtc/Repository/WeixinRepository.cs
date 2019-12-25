@@ -17,12 +17,14 @@ namespace ApiEtc.Repository
         public async Task<ResultObj<int>> save(EtcWeixinEntity inEnt)
         {
             var reObj = new ResultObj<int>();
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("saveWeixin：请求{0}", TypeChange.ObjectToStr(inEnt)));
             if (string.IsNullOrEmpty(inEnt.openid))
             {
                 reObj.success = false;
+                LogHelper.WriteDebugLog(this.GetType(), string.Format("saveWeixin：返回{0}", TypeChange.ObjectToStr(reObj)));
                 return reObj;
             }
-            var ent =await dapper.Single(x => x.openid == inEnt.openid);
+            var ent = await dapper.Single(x => x.openid == inEnt.openid);
             if (ent == null)
             {
                 inEnt.createTime = DateTime.Now;
@@ -53,6 +55,7 @@ namespace ApiEtc.Repository
                     await dapper.Update(upEnt);
                 }
             }
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("saveWeixin：返回{0}", TypeChange.ObjectToStr(reObj)));
             return reObj;
         }
     }

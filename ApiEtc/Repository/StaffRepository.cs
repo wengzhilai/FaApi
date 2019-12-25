@@ -28,17 +28,20 @@ namespace ApiEtc.Repository
             var reObj = new Result();
             try
             {
+                LogHelper.WriteDebugLog(this.GetType(), string.Format("bindUser：请求{0}", TypeChange.ObjectToStr(inObj)));
                 if (string.IsNullOrEmpty(inObj.Key))
                 {
                     reObj.success = false;
                     reObj.msg = "openid不能为空";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("bindUser：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
-                if(string.IsNullOrEmpty(inObj.name) || string.IsNullOrEmpty(inObj.phone) || string.IsNullOrEmpty(inObj.idNo))
+                if (string.IsNullOrEmpty(inObj.name) || string.IsNullOrEmpty(inObj.phone) || string.IsNullOrEmpty(inObj.idNo))
                 {
                     reObj.success = false;
                     reObj.msg = "绑定的用户不能为空";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("bindUser：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -107,6 +110,7 @@ namespace ApiEtc.Repository
                     {
                         reObj.success = false;
                         reObj.msg = "该用户已绑定";
+                        LogHelper.WriteDebugLog(this.GetType(), string.Format("bindUser：返回{0}", TypeChange.ObjectToStr(reObj)));
                         return reObj;
                     }
 
@@ -140,6 +144,7 @@ namespace ApiEtc.Repository
                 reObj.success = false;
                 reObj.msg = e.Message;
             }
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("bindUser：返回{0}", TypeChange.ObjectToStr(reObj)));
             return reObj;
         }
 
@@ -197,13 +202,13 @@ namespace ApiEtc.Repository
                 }
 
                 var staff = await dapper.Single(x => x.openid == inObj.Key);
-                if(staff == null)
+                if (staff == null)
                 {
-                    staff = new EtcStaffEntity { openid = inObj.Key,createTime=DateTime.Now };
-                    staff.id=await dapper.Save(new DtoSave<EtcStaffEntity>
+                    staff = new EtcStaffEntity { openid = inObj.Key, createTime = DateTime.Now };
+                    staff.id = await dapper.Save(new DtoSave<EtcStaffEntity>
                     {
                         data = staff,
-                        ignoreFieldList=null
+                        ignoreFieldList = null
                     });
                 }
 
@@ -249,7 +254,7 @@ namespace ApiEtc.Repository
             var reObj = new ResultObj<EtcStaffEntity>();
             try
             {
-                var staff = await dapper.FindAll(x=>x.id>0);
+                var staff = await dapper.FindAll(x => x.id > 0);
                 reObj.dataList = staff.ToList();
                 reObj.success = true;
             }
@@ -267,10 +272,11 @@ namespace ApiEtc.Repository
             var reObj = new ResultObj<EtcStaffEntity>();
             try
             {
+                LogHelper.WriteDebugLog(this.GetType(), string.Format("updateTicket：请求{0}", TypeChange.ObjectToStr(inObj)));
                 var opNum = await dapper.Update(new DtoSave<EtcStaffEntity>
                 {
                     data = inObj,
-                    saveFieldList = new List<string> { "ticket"},
+                    saveFieldList = new List<string> { "ticket" },
                     whereList = new List<string> { "id" }
                 });
                 reObj.success = true;
@@ -281,6 +287,7 @@ namespace ApiEtc.Repository
                 reObj.success = false;
                 reObj.msg = e.Message;
             }
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("updateTicket：返回{0}", TypeChange.ObjectToStr(reObj)));
             return reObj;
         }
 
@@ -326,18 +333,20 @@ namespace ApiEtc.Repository
             var reObj = new ResultObj<int>();
             try
             {
+                LogHelper.WriteDebugLog(this.GetType(), string.Format("saveStaff：请求{0}", TypeChange.ObjectToStr(inEnt)));
                 var client = await dapper.SingleByKey(inEnt.data.id);
                 if (client == null)
                 {
                     reObj.success = false;
                     reObj.msg = "Id有误";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("saveStaff：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
-                if (!string.IsNullOrEmpty(inEnt.data.etcNoPic) && inEnt.data.etcNoPic.IndexOf('.')>0)
+                if (!string.IsNullOrEmpty(inEnt.data.etcNoPic) && inEnt.data.etcNoPic.IndexOf('.') > 0)
                 {
                     inEnt.data.etcNo1 = inEnt.data.etcNoPic.Substring(0, inEnt.data.etcNoPic.IndexOf('.'));
-                    if(inEnt.saveFieldList!=null) inEnt.saveFieldList.Add("etcNo1");
+                    if (inEnt.saveFieldList != null) inEnt.saveFieldList.Add("etcNo1");
                 }
 
                 //inEnt.saveFieldList = new List<string> { "remark", "carNum", "carType", "submitTime", "status", "opuserName" };
@@ -352,6 +361,7 @@ namespace ApiEtc.Repository
                 reObj.success = false;
                 reObj.msg = e.Message;
             }
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("saveStaff：返回{0}", TypeChange.ObjectToStr(reObj)));
             return reObj;
         }
     }

@@ -135,10 +135,12 @@ from etc_staff a where OpenId='{0}'
             var reObj = new Result();
             try
             {
-                if(string.IsNullOrEmpty(inObj.name) || string.IsNullOrEmpty(inObj.phone) || (string.IsNullOrEmpty(inObj.Key) && string.IsNullOrEmpty(inObj.ticket)))
+                LogHelper.WriteDebugLog(this.GetType(), string.Format("Etc申请：请求{0}", TypeChange.ObjectToStr(inObj)));
+                if (string.IsNullOrEmpty(inObj.name) || string.IsNullOrEmpty(inObj.phone) || (string.IsNullOrEmpty(inObj.Key) && string.IsNullOrEmpty(inObj.ticket)))
                 {
                     reObj.success = false;
                     reObj.msg = "输入有误";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("Etc申请：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
                 var staff = (await staffDal.getStaff(inObj)).data;
@@ -150,6 +152,7 @@ from etc_staff a where OpenId='{0}'
                 {
                     reObj.success = false;
                     reObj.msg = "获取员工资料有误";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("Etc申请：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -196,18 +199,19 @@ from etc_staff a where OpenId='{0}'
                 {
                     reObj.success = false;
                     reObj.msg = "该用户已经绑定";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("Etc申请：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
             }
             catch (Exception e)
             {
-                LogHelper.WriteErrorLog(this.GetType(), e.ToString());
+                LogHelper.WriteDebugLog(this.GetType(), e.ToString());
                 reObj.success = false;
                 reObj.msg = e.Message;
             }
 
-
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("Etc申请：返回{0}", TypeChange.ObjectToStr(reObj)));
             return reObj;
         }
 
@@ -216,11 +220,13 @@ from etc_staff a where OpenId='{0}'
             var reObj = new ResultObj<int>();
             try
             {
+                LogHelper.WriteDebugLog(this.GetType(), string.Format("修改客户资料：请求{0}", TypeChange.ObjectToStr(inEnt)));
                 var client = await dapper.SingleByKey(inEnt.data.id);
                 if (client == null)
                 {
                     reObj.success = false;
                     reObj.msg = "Id有误";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("修改客户资料：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -228,6 +234,7 @@ from etc_staff a where OpenId='{0}'
                 {
                     reObj.success = false;
                     reObj.msg = "该用户已经结算，不可修改";
+                    LogHelper.WriteDebugLog(this.GetType(), string.Format("修改客户资料：返回{0}", TypeChange.ObjectToStr(reObj)));
                     return reObj;
                 }
 
@@ -245,6 +252,7 @@ from etc_staff a where OpenId='{0}'
                 reObj.success = false;
                 reObj.msg = e.Message;
             }
+            LogHelper.WriteDebugLog(this.GetType(), string.Format("修改客户资料：返回{0}", TypeChange.ObjectToStr(reObj)));
             return reObj;
         }
 
