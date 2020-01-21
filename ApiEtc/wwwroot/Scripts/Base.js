@@ -8,14 +8,8 @@
 })
 
 function GetRootPath() {
-    try{
-
-        return parent.getBasePath();
-    }
-    catch(e){
-        return parent.parent.getBasePath();
-
-    }
+    console.log(bootPATH);
+    return bootPATH;
 }
 
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>推广赚钱</title>
     <link rel="stylesheet" href="css/paidPromote.css">
+    <script src="js/jquery-1.8.2.min.js"></script>
     <script src="js/public.js"></script>
 </head>
 <body>
@@ -48,12 +49,16 @@
             <p>2、办理成功：指司机完成在线申办资料填写，并且成功安装激活 ETC设备。仅完成在线申办资料填写，未安装激活无佣金。</p>
         </div>
         <div class="content_goBtn">
-            <a href="promoteCode.html">
+            <a id="goBtn">
                 <p>去推广</p>
             </a>
         </div>
     </div>
 </div>
-
+<script>
+    $(function () {
+        $('#goBtn').attr('href','promoteCode.html?id='+sessionStorage.getItem('id'))
+    })
+</script>
 </body>
 </html>

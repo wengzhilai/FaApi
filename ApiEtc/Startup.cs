@@ -82,6 +82,7 @@ namespace ApiEtc
             services.TryAddSingleton<IClient, ClientRepository>();
             services.TryAddSingleton<IWeixin, WeixinRepository>();
             services.TryAddSingleton<IWallet, WalletRepository>();
+            services.TryAddSingleton<IApplicants, ApplicantsRepository>();
             services.TryAddSingleton<Helper.Query.IQuery, Helper.Query.QueryRepository>();
             #endregion
 

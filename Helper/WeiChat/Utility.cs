@@ -6,6 +6,18 @@ namespace Helper.WeiChat
 {
     public static class Utility
     {
+        public static string ReadAccessToken(string appid=null, string secret=null)
+        {
+            var token = RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN_BUS");
+            if (string.IsNullOrEmpty(token))
+            {
+                token = Helper.WeiChat.Utility.GetAccessToken(appid, secret);
+                RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN_BUS", token, new TimeSpan(2, 0, 0));
+            }
+            return token;
+        }
+
+
         /// <summary>
         /// 获取微信的token
         /// </summary>
@@ -64,6 +76,17 @@ namespace Helper.WeiChat
             }
 
             return ticket;
+        }
+
+        public static string SetMenu(string accessToken,string menuStr)
+        {
+            var msgStr = Fun.HttpPostJson("https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + accessToken, menuStr);
+            var ticketDict = TypeChange.JsonToObject<Dictionary<string, string>>(msgStr);
+            if (ticketDict.ContainsKey("errcode"))
+            {
+                msgStr = ticketDict["errcode"];
+            }
+            return msgStr;
         }
     }
 }

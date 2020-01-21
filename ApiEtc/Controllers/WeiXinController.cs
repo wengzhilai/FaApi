@@ -49,7 +49,7 @@ namespace ApiEtc.Controllers
         }
 
         [HttpPost]
-        public async System.Threading.Tasks.Task<string> index()
+        public async Task<string> index()
         {
             PostModel postModel = TypeChange.UrlToEntities<PostModel>(Request.QueryString.Value);
             if (!CheckSignature.Check(postModel.Signature, postModel.Timestamp, postModel.Nonce, AppConfig.WeiXin.Token))
@@ -65,11 +65,61 @@ namespace ApiEtc.Controllers
                 {
                     var body =await reader.ReadToEndAsync();
                     var xml = TypeChange.XmlToDict(body);
+                    String toUserName = xml.GetValueOrDefault("ToUserName");
+                    String fromUserName = xml.GetValueOrDefault("FromUserName");
+                    String msgType = xml.GetValueOrDefault("MsgType");
+                    String content = xml.GetValueOrDefault("Content");
+                    String eventType = xml.GetValueOrDefault("Event");
+                    String eventKey = xml.GetValueOrDefault("EventKey");
+                    String ticket = xml.GetValueOrDefault("Ticket");
+
+
+                    if (MessageUtil.MESSAGE_EVENT.Equals(msgType))
+                    {
+                        switch (eventType.ToLower())
+                        {
+                            case "subscribe": //订阅
+                                if (!string.IsNullOrEmpty(ticket) && !string.IsNullOrEmpty(fromUserName))
+                                {
+                                    var saveEnt = new EtcWeixinEntity()
+                                    {
+                                        openid = fromUserName,
+                                        createTime = DateTime.Now,
+                                        parentTicket = ticket,
+                                        eventKey = eventKey,
+                                    };
+                                    var t= weixin.save(saveEnt);
+                                }
+                                break;
+                            case "unsubscribe": //取消订阅
+                                break;
+                            case "click": //点击事件
+                                String replay = "";
+                                switch (eventKey)
+                                {
+                                    case MessageUtil.CLICK_DOWNURL:
+                                        replay = MessageUtil.downloadApp();
+                                        break;
+      
+                                    case MessageUtil.CLICK_ETC_INSTALL:
+                                        replay = MessageUtil.etcInstallPlace();
+                                        break;
+                                    case MessageUtil.CLICK_GetMoney:
+                                        replay = MessageUtil.etcGetMoney(fromUserName);
+                                        break;
+                                }
+                                string message = MessageUtil.initText(toUserName, fromUserName, replay);
+                                return message;
+                            case "view": //url类型
+                                break;
+                        }
+
+                    }
 
                     // Do some processing with body…
                     // Reset the request body stream position so the next middleware can read it
                     Request.Body.Position = 0;
-                    return body;
+                    return "";
 
                 }
 
@@ -110,12 +160,8 @@ namespace ApiEtc.Controllers
         {
             var reObj = new ResultObj<JsApiModel>();
 
-            var token = RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN");
-            if (string.IsNullOrEmpty(token))
-            {
-                token = Helper.WeiChat.Utility.GetAccessToken(AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret);
-                RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token, new TimeSpan(2, 0, 0));
-            }
+            var token = Utility.ReadAccessToken(AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret);
+
             var jsapiTicket = RedisReadHelper.StringGet("WECHA_JSAPI_TICKET"); ;
             if (string.IsNullOrEmpty(jsapiTicket))
             {
@@ -132,34 +178,75 @@ namespace ApiEtc.Controllers
             return reObj;
         }
 
-        //[HttpPost]
-        //public async Task<Result> MakeAllTicket(XmlModel inObj)
-        //{
-        //    var reObj = new Result();
-        //    var allUser = await staff.getStaffList();
-        //    var token= RedisReadHelper.StringGet("WECHA_ACCESS_TOKEN");
-        //    if (string.IsNullOrEmpty(token))
-        //    {
-        //        token = Helper.WeiChat.Utility.GetAccessToken(AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret);
-        //        RedisWriteHelper.SetString("WECHA_ACCESS_TOKEN", token,new TimeSpan(2,0,0));
-        //    }
+
+        [HttpPost]
+        public Result MakeMenu()
+        {
+            String token = Utility.ReadAccessToken(AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret);
+            MenuModel makeMenu = new MenuModel();
+            makeMenu.button = new LinkedList<MenuNodeModel>();
+            //makeMenu.button.AddLast(new MenuNodeModel()
+            //{
+            //    name = "ETC免费办理",
+            //    sub_button = new LinkedList<MenuNodeModel>(new[] { 
+            //        new MenuNodeModel(){
+            //            key=MessageUtil.CLICK_ETC_BIND,
+            //            name="绑定申办ETC"
+            //        },new MenuNodeModel(){
+            //            key=MessageUtil.CLICK_ETC,
+            //            name="申办ETC"
+            //        },new MenuNodeModel(){
+            //            key=MessageUtil.CLICK_ETC_INSTALL,
+            //            name="ETC安装激活点"
+            //        }
+            //    })
+            //});
+
+            makeMenu.button.AddLast(new MenuNodeModel()
+            {
+                name = "ETC安装激活点",
+                type= "click",
+                key = MessageUtil.CLICK_ETC_INSTALL,
+            });
+            makeMenu.button.AddLast(new MenuNodeModel()
+            {
+                name = "推广赚钱",
+                type= "click",
+                key = MessageUtil.CLICK_GetMoney,
+            });
+            makeMenu.button.AddLast(new MenuNodeModel()
+            {
+                name = "获取物流帮手",
+                type= "click",
+                key = MessageUtil.CLICK_DOWNURL,
+            });
+            Result result = new Result();
+            result.msg = Utility.SetMenu(token, TypeChange.ObjectToStr(makeMenu));
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<Result> MakeAllTicket()
+        {
+            var reObj = new Result();
+            var allUser = await staff.getStaffList();
+            var token = Utility.ReadAccessToken(AppConfig.WeiXin.Appid, AppConfig.WeiXin.Secret);
 
 
+            if (!string.IsNullOrEmpty(token))
+            {
+                allUser.dataList = allUser.dataList.Where(x => !string.IsNullOrEmpty(x.phone) && string.IsNullOrEmpty(x.ticket)).ToList();
+                foreach (var item in allUser.dataList)
+                {
+                    if (string.IsNullOrEmpty(item.etcNo)) item.etcNo = "87000073";
+                    string postStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + item.etcNo + "|" + item.phone + "\"}}}";
+                    item.ticket = Helper.WeiChat.Utility.GetQrCodeTicket(token, postStr);
 
-        //    if (!string.IsNullOrEmpty(token))
-        //    {
-        //        allUser.dataList = allUser.dataList.Where(x => !string.IsNullOrEmpty(x.phone) && string.IsNullOrEmpty(x.ticket)).ToList();
-        //        foreach (var item in allUser.dataList)
-        //        {
-        //            if (string.IsNullOrEmpty(item.etcNo)) item.etcNo = "87000073";
-        //            string postStr = "{\"action_name\": \"QR_LIMIT_STR_SCENE\", \"action_info\": {\"scene\": {\"scene_str\": \"etc_" + item.etcNo + "|" + item.phone + "\"}}}";
-        //            item.ticket = Helper.WeiChat.Utility.GetQrCodeTicket(token, postStr);
-
-        //            await staff.updateTicket(item);
-        //        }
-        //    }
-        //    return reObj;
-        //}
+                    await staff.updateTicket(item);
+                }
+            }
+            return reObj;
+        }
 
     }
 }

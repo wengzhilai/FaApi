@@ -164,6 +164,7 @@ from etc_staff a where OpenId='{0}'
                 var client =await dapper.Single(x => x.clientPhone == inObj.phone);
                 if (client == null)
                 {
+
                     client = new EtcClientEntity
                     {
                         staffId = staff.id,

@@ -1111,7 +1111,6 @@ function ShowRowBtn(value, row, index) {
             }
         }
 
-
         var tmp = '[<a  href="#" ';
         if (btn.width == '') btn.width = '0';
         if (btn.heigth == '') btn.heigth = '0';
@@ -1123,22 +1122,22 @@ function ShowRowBtn(value, row, index) {
                 tmp += ' onclick="OpenLook(' + i + ',' + index + ')">';
                 break;
             case "PromptAjax":
-                tmp += ' onclick="PromptAjaxUrl(\'' + btn.Name + '\',\'' + btn.url + paraStr + '\')">';
+                tmp += ' onclick="PromptAjaxUrl(\'' + btn.title + '\',\'' + btn.url + paraStr + '\')">';
                 break;
             case "Ajax":
-                tmp += ' onclick="DelAjaxUrl(\'' + btn.Name + '\',\'' + btn.url + paraStr + '\')">';
+                tmp += ' onclick="DelAjaxUrl(\'[' + btn.title + ']\',\'' + btn.url + paraStr + '\')">';
                 break;
             case "Div":
-                tmp += ' onclick="DivEditDialog(\'' + btn.url + paraStr + '\',\'' + btn.Name + '\',' + btn.width + ',' + btn.heigth + ')"> '
+                tmp += ' onclick="DivEditDialog(\'' + btn.url + paraStr + '\',\'' + btn.title + '\',' + btn.width + ',' + btn.heigth + ')"> '
                 break;
             case "WinOpen":
-                tmp += ' onclick="WindowOpen(\'' + btn.url + paraStr + '\',\'' + btn.Name + '\',' + btn.width + ',' + btn.heigth + ')"> '
+                tmp += ' onclick="WindowOpen(\'' + btn.url + paraStr + '\',\'' + btn.title + '\',' + btn.width + ',' + btn.heigth + ')"> '
                 break;
             case "DivDialog":
-                tmp += ' onclick="DivDialog(\'' + btn.url + paraStr + '\',\'' + btn.Name + '\',' + btn.width + ',' + btn.heigth + ')"> '
+                tmp += ' onclick="DivDialog(\'' + btn.url + paraStr + '\',\'' + btn.title + '\',' + btn.width + ',' + btn.heigth + ')"> '
                 break;
             case "TopDiv":
-                tmp += ' onclick="parent.DivOpen(\'' + btn.url + paraStr + '\',\'' + btn.Name + '\',' + btn.width + ',' + btn.heigth + ')"> '
+                tmp += ' onclick="parent.DivOpen(\'' + btn.url + paraStr + '\',\'' + btn.title + '\',' + btn.width + ',' + btn.heigth + ')"> '
                 break;
             case "JsFun":
                 tmp += ' onclick="' + btn.url + '"> '

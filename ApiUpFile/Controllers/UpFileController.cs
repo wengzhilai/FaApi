@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Cors;
 using Models;
 using Models.Entity;
+using System.Linq;
 
 namespace WebApi.Controllers
 {

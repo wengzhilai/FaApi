@@ -1,10 +1,12 @@
 using Helper;
+using log4net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MSTest
 {
@@ -179,16 +181,44 @@ namespace MSTest
         [TestMethod]
         public void TestPwd()
         {
-            string txt = ";fg;(&*?>\":;dSnUoMO,3zy6";
-            
-            string pwd = "lfi8&%9lJYU6^%\"?>KR";
+            log4net.Repository.ILoggerRepository repository = log4net.LogManager.CreateRepository("NETCoreRepository");
 
-            string pwdStr= Fun.HashEncrypt(txt, pwd);
+            try
+            {
 
-            string reOjb = Fun.HashDecrypt(pwdStr, pwd);
-            Console.WriteLine(reOjb);
+                string pwdStr = Fun.HashEncrypt("{\"password\":\"12345678.\",\"username\":\"13028165793\"}");
+
+                //string reOjb = Fun.HashDecrypt(pwdStr, pwd);
+                Console.WriteLine(pwdStr);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                throw e;
+            }
+
         }
 
 
+
+        [TestMethod]
+        public async Task HttpPost()
+        {
+            string postStr = @"
+
+{
+  ""account"": ""18180770313"",
+  ""imgUrl"": ""3333"",
+  ""nickName"": ""Ãÿ…œÀ˚"",
+  ""pcName"": ""pc-sklfj""
+}";
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            headers.Add("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6IjE4MTgwNzcwMzEzIiwiZXhwIjoxNTc5NDg1NjM5LCJ1c2VySWQiOjQyLCJ0aW1lc3RhbXAiOjE1Nzk0ODU2Mzl9.4URx8gpBL3YBVVDJqdkjj9hHPk2cJo8Ld7VznsgDQfo");
+            string reStr= await HttpHelper.HttpPost("http://192.168.2.34:9300/api/WechatInfo/addWechatLogin", postStr, "application/json",3, headers);
+            Console.WriteLine(reStr);
+            Console.WriteLine(11);
+
+        }
     }
 }

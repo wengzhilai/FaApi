@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>ETC合伙人招募</title>
+    <script>
+
+    </script>
+    <style type="text/css">
+        *{ margin: 0; padding: 0; }
+        .clearfix:before, .clearfix:after { content: '.'; display: block; visibility: hidden; font-size: 0; line-height: 0; width: 0; height: 0; }
+        .clearfix:after { clear: both; }
+        .clearfix { zoom: 1; }
+        .container  {width: 100%;position: relative}
+        .content {z-index: 9;display: -webkit-flex;-webkit-justify-content: center;-webkit-align-items: center;position: absolute;bottom: 25.3vw;width: 100%}
+        .content>div{width: 85.5vw}
+        #bgImg {width: 100vw;height: auto}
+        .userInfoList {width:85.5vw;height:auto;padding:5.3vw 0;background:rgba(255,255,255,1);box-shadow:0rem 0rem 1rem 0rem rgba(202,30,7,0.36);opacity:0.9;border-radius:3rem}
+        .userInfoList>div{display: -webkit-flex;-webkit-justify-content: center;-webkit-align-items: center;margin-bottom: 3.2vw}
+        .userInfoList p{font-size:1.4rem;font-family:Alibaba PuHuiTi;font-weight:bold;color:#1A1A1A;padding-right: 0.8rem}
+        /*.info_2 {margin: 1.2rem 0}*/
+        .input_border {border-bottom: 1px solid #E6E6E6}
+        input {width: 20rem;border: none;outline: none;height: 10.6vw;color: #808080;font-size: 1.4rem;padding: 0 10px; color: black}
+        li { display: list-item; }
+        .w600 {width: 22rem; display: -webkit-flex;-webkit-justify-content: flex-start;-webkit-align-items: center }
+        .f15 { font-size: 1.2rem; color: #808080}
+        .index_mask_select_all { width: 8.5rem; height: 10.6vw; display: -webkit-flex; -webkit-align-items: center ; border-bottom: 0.05rem solid #dddddd; background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAHCAMAAAAPmYwrAAAAS1BMVEUAAACvr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6/3il+gAAAAGXRSTlMA/tgSvzTn5WJIIR8J9PLMxsSzrpyNgHY5DIV4XwAAAEZJREFUCNdFjEcOgDAQA70tnV7//1IUIogv9kjWYNrx51BctJYGZaMTCDRLJVko1I4jZyDzENvLnLfbO/sUiYk4daWoyjseZBoBkjjWZkkAAAAASUVORK5CYII=);background-repeat: no-repeat; background-position: 10.9rem center; cursor: pointer; }
+        .rel { position: relative; }
+        .index_mask_select { width: 8rem;  padding: 0 0.5rem; word-wrap:break-word}
+        .select_box{ width: 17rem;height: 70vw;padding: 1.5rem 0;position: absolute;left: -3.5rem; top: -30rem;display:none;background:rgba(255,255,255,1);box-shadow:0px 0px 16px 0px rgba(253,197,181,0.80);border-radius:20px;}
+        .index_mask_list { width: 17rem;   height: 70vw; overflow-y: scroll; }
+        .abs { position: absolute; }
+        .index_mask_li { padding: 0 10px; height: 35px; line-height: 35px; background-color: #fff; }
+        ul::-webkit-scrollbar {display: none;}
+        .selectIcon {width: 1.4rem ; margin-left: 0.45rem}
+        .selectIcon>img {width: 1.4rem; height: 0.8rem}
+        .Icon_1 {margin-right:  1.3rem }
+        .joinBtn_border{display: -webkit-flex;justify-content: center;align-items: center;}
+        .joinBtn {width:24.5rem; height:12vw; margin: 8vw 6.5rem 0 6.5rem;}
+        .joinBtn img {width:24.5rem; height:12vw;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <img id="bgImg" src="./images/bg.png" alt="" onclick="return false">
+    <div class="content">
+        <div>
+            <div class="userInfoList">
+                <div>
+                    <p>您的姓名</p>
+                    <div class="input_border">
+                        <input id="userName" type="text" maxlength="10" placeholder="请输入您的姓名">
+                    </div>
+                </div>
+                <div>
+                    <p>您的电话</p>
+                    <div class="input_border info_2">
+                        <input id="userPhone" type="tel" maxlength="11" placeholder="请输入电话号码">
+                    </div>
+                </div>
+                <div>
+                    <p>您的城市</p>
+                    <div class="clearfix f15 mt30 h40 w600">
+                        <div class="index_mask_select_all rel fl">
+                            <div class="index_mask_select" id="index_mask_select_city">请选择</div>
+                            <div class="select_box select_province">
+                                <ul class="index_mask_list abs index_mask_list_city">
+                                    <!--            <li class="index_mask_li" selectedindex="0">北京市</li>-->
+                                    <!--            <li class="index_mask_li" selectedindex="1">天津市</li>-->
+                                </ul>
+                            </div>
+
+                        </div>
+                        <div class="selectIcon Icon_1">
+                            <img class="provinceIcon" src="./images/down.png" alt="" onclick="return false">
+                        </div>
+                        <div class="index_mask_select_all rel fr">
+                            <div class="index_mask_select" id="index_mask_select_area">请选择</div>
+                            <div class="select_box select_city">
+                                <ul class="index_mask_list abs index_mask_list_area">
+                                    <!--            <li class="index_mask_li"></li>-->
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="selectIcon">
+                            <img class="cityIcon" src="./images/down.png" alt="" onclick="return false">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="joinBtn_border" >
+                <div class="joinBtn">
+                    <img src="./images/btn.png" alt="" onclick="return false">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="./js/jquery-1.8.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="./js/province.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var url = '';
+    //rem 单位换算
+    function window_width() {
+        var myHtml = document.documentElement;
+        var VisualWindow = myHtml.getBoundingClientRect().width;
+        // var VisualWindow = myHtml.clientWidth;
+        rem = VisualWindow / 37.5;
+        myHtml.style.fontSize = rem + "px"
+    }
+    window_width();
+    window.addEventListener("resize", function() {
+        window_width()
+    }, false);
+
+    //一进入页面立马渲染城市和地区
+    var city_str = '';
+    for(var i = 0; i < provinceArr.length; i++) {
+        city_str += '<li class="index_mask_li" selectedIndex=' + i + '>' + provinceArr[i] + '</li>';
+
+    }
+    //放到相应的位置
+    $(".index_mask_list_city").html(city_str);
+
+    //省
+    $("#index_mask_select_city").on("click", function(e) {
+        $('.provinceIcon').css({'transform':'rotate(-180deg)',"transition": "0.5s"});
+        $('.cityIcon').css({'transform':'rotate(0deg)',"transition": "0.5s"});
+        $('.select_city').hide()
+        $(".select_province").css({ "display": "block" });
+        //阻止默认事件
+        stopPropagation(e);
+    });
+    //市
+    $("#index_mask_select_area").on("click", function(e) {
+        $('.select_province').hide()
+        if ($('#index_mask_select_city').text()!='请选择') {
+            $('.cityIcon').css({'transform':'rotate(-180deg)',"transition": "0.5s"});
+            $('.provinceIcon').css({'transform':'rotate(0deg)',"transition": "0.5s"});
+            $(".select_city").css({ "display": "block" });
+        }
+        else {
+            alert('请选择省')
+        }
+
+        stopPropagation(e);
+    });
+
+    //省份点击select时进行选择(同时进行模拟,select的onchange事件)
+    $(".index_mask_list_city li").on("click", function() {
+        $("#index_mask_select_area").html("请选择");
+        var key_value = $(this).attr("selectedindex");
+        $("#index_mask_select_city").html($(this).html());
+        $("#index_mask_select_city").css({color:'black'})
+        $(".select_province").css({ "display": "none" });
+        $('.provinceIcon').css({'transform':'rotate(0deg)',"transition": "0.5s"});
+        var html = '';
+        $.each(cityArr[key_value], function(i, n) {
+            html += '<li class="index_mask_li" selectedIndex=' + i + '>' + n + '</li>';
+
+        })
+        $(".index_mask_list_area").html(html);
+
+    });
+    //市点击，赋值到相应位置，同时进行显示隐藏操作（li是新生成元素，需要使用事件委托进行书写）
+    $(".index_mask_list_area").on("click", "li", function() {
+        $("#index_mask_select_area").html($(this).html());
+        $("#index_mask_select_area").css({color:'black'})
+        $('.cityIcon').css({'transform':'rotate(0deg)',"transition": "0.5s"});
+        //console.log($(this).html())
+        $(".select_city").css({ "display": "none" });
+
+    });
+
+    //点击空白处，下拉框收起
+    $(document).bind("click", function() {
+        $('.provinceIcon').css({'transform':'rotate(0deg)',"transition": "0.5s"});
+        $('.cityIcon').css({'transform':'rotate(0deg)',"transition": "0.5s"});
+        $(".select_province").css({ "display": "none" });
+        $(".select_city").css({ "display": "none" });
+    });
+
+    //阻止默认事件
+    function stopPropagation(e) {
+        if(e.stopPropagation) {
+            e.stopPropagation();
+        } else {
+            e.cancelBubble = true;
+        }
+    }
+    //信息提交
+    $('.joinBtn').on("click",function () {
+        throttle(clickHandler(), 1000);
+    });
+
+    // 对函数进行 节流
+    function throttle (fn, interval) {
+        let timer = null;
+        let firstTime = true;
+
+        return function (...args) {
+            if (firstTime) {
+                // 第一次加载
+                fn.apply(this, args);
+                return firstTime = false;
+            }
+            if (timer) {
+                // 定时器正在执行中，跳过
+                return;
+            }
+            timer = setTimeout(() => {
+                clearTimeout(timer);
+                timer = null;
+                fn.apply(this, args);
+            }, interval);
+        };
+    }
+    // 需要被节流的 函数
+    function clickHandler () {
+            var userName = $('#userName').val(),
+                userPhone = $('#userPhone').val(),
+                userAdress = $('#index_mask_select_city').text()+$('#index_mask_select_area').text();
+            if (userName!=''&&userPhone!=''&&userAdress!=''){
+                if (!(/^1[3456789]\d{9}$/.test(userPhone))) {
+                    return  alert('请正确输入手机号')
+                }
+                var data = {
+                    name:userName,
+                    phone:userPhone,
+                    city:userAdress
+                };
+
+                $.ajax({
+                    type : "post",
+                    async:false,
+                    url : url+'/Applicants/AddApplicants',
+                    data:JSON.stringify(data),
+                    datatype : 'json',
+                    contentType: "application/json; charset=utf-8",
+                    success:(res)=>{
+                        if (res.success==true){
+                            alert('加入成功');
+                            $('#userName').val('');
+                            $('#userPhone').val('');
+                            $('#index_mask_select_city').text('请选择').css({color:'#808080'});
+                            $('#index_mask_select_area').text('请选择').css({color:'#808080'});
+                        }
+                        else {
+                            alert(res.msg)
+                        }
+                    },
+                    error:(err)=>{
+                        alert('请求服务器失败')
+                    }
+                })
+            }
+            else {alert('请将信息填写完整')}
+    }
+
+</script>
+</body>
+</html>

@@ -49,12 +49,11 @@ namespace ApiEtc.Controllers
         /// <param name="inEnt"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize]
         public Result TestAuth(DtoKey inEnt)
         {
             Result reEnt = new Result();
             reEnt.success = true;
-            reEnt.msg = "权限接口测试成功";
+            reEnt.msg = Fun.HashEncrypt("{\"password\":\"12345678.\",\"username\":\"翁志来\"}");
             return reEnt;
         }
     }

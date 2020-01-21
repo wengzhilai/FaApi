@@ -16,12 +16,30 @@ namespace ApiUser.Controllers.Tests
 
         public UnitTest1()
         {
+  //          AppSettingsManager.self.MysqlSettings = TypeChange.ToJsonObject<MysqlSettings>(@"{
+  //  ""server"": ""dotnetapi.wjbjp.cn"",
+  //  ""userid"": ""fa"",
+  //  ""pwd"": ""fa"",
+  //  ""port"": ""3306"",
+  //  ""database"": ""study"",
+  //  ""sslmode"": ""none""
+  //}");
+
+  //          AppSettingsManager.self.MysqlSettings = TypeChange.ToJsonObject<MysqlSettings>(@"{
+  //  ""server"": ""localhost"",
+  //  ""userid"": ""etc"",
+  //  ""pwd"": ""etc"",
+  //  ""port"": ""3306"",
+  //  ""database"": ""etc"",
+  //  ""sslmode"": ""none""
+  //}");
+
             AppSettingsManager.self.MysqlSettings = TypeChange.ToJsonObject<MysqlSettings>(@"{
-    ""server"": ""dotnetapi.wjbjp.cn"",
-    ""userid"": ""fa"",
-    ""pwd"": ""fa"",
+    ""server"": ""192.168.2.71"",
+    ""userid"": ""root"",
+    ""pwd"": ""pl,okmijn"",
     ""port"": ""3306"",
-    ""database"": ""study"",
+    ""database"": ""wxka"",
     ""sslmode"": ""none""
   }");
 
@@ -75,7 +93,7 @@ namespace ApiUser.Controllers.Tests
             //        cfg.entityPath="D:\\IdeaProjects\\study_new\\study-dependencies\\src\\main\\java\\com\\wzl\\commons\\model\\entity\\";
             cfg.entityPath = "F:\\Study\\FaApi\\MSTest\\";
             //cfg.entityPath = "/Users/wengzhilai/Desktop/dotnet/FaApi/MSTest/FaModuleEntity.cs";
-            cfg.tableName = "fa_user_info";
+            cfg.tableName = "w_wechat_info";
             cfg.tableNameRmark = "用户";
             //        cfg.clumStr="" +
             //                "ID\tID\tint\t\t\tTRUE\tFALSE\tTRUE\n" +

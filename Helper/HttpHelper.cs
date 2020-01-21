@@ -15,7 +15,7 @@ namespace Helper
     {
         public static T HttpPostJson<T>(string url, object postEnt, int timeOut = 5, Dictionary<string, string> headers = null)
         {
-            string reStr = HttpPost(url, TypeChange.ObjectToStr(postEnt), "application/json", timeOut, headers);
+            string reStr = HttpPost(url, TypeChange.ObjectToStr(postEnt), "application/json", timeOut, headers).Result;
             return TypeChange.JsonToObject<T>(reStr);
         }
             /// <summary>
@@ -27,7 +27,7 @@ namespace Helper
             /// <param name="contentType">application/xml、application/json、application/text、application/x-www-form-urlencoded</param>
             /// <param name="headers">填充消息头</param>        
             /// <returns></returns>
-            public static string HttpPost(string url, string postData = null, string contentType = null, int timeOut = 30, Dictionary<string, string> headers = null)
+            public async static Task<string> HttpPost(string url, string postData = null, string contentType = null, int timeOut = 30, Dictionary<string, string> headers = null)
         {
             postData = postData ?? "";
             using (HttpClient client = new HttpClient())
@@ -43,7 +43,7 @@ namespace Helper
                         httpContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
 
                     HttpResponseMessage response = client.PostAsync(url, httpContent).Result;
-                    return response.Content.ReadAsStringAsync().Result;
+                    return await response.Content.ReadAsStringAsync();
                 }
             }
         }

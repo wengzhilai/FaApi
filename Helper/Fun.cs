@@ -239,6 +239,8 @@ namespace Helper
 
         public static DataTable JsonToDataTable(string strJson)
         {
+     
+
             //取出表名  
             Regex rg = new Regex(@"(?<={)[^:]+(?=:\[)", RegexOptions.IgnoreCase);
             string strName = rg.Match(strJson).Value;
@@ -945,11 +947,11 @@ namespace Helper
                 //sKey = HashEncrypt(Text, "lfi8&%9lJYU6^%\"?>KR");
             }
             DESCryptoServiceProvider des = new DESCryptoServiceProvider();
+            MemoryStream ms = new MemoryStream();
             byte[] inputByteArray;
-            inputByteArray = Encoding.Default.GetBytes(Text);
+            inputByteArray = Encoding.UTF8.GetBytes(Text);
             des.Key = ASCIIEncoding.ASCII.GetBytes(Fun.Md5Hash(sKey).ToUpper().Substring(0, 8));
             des.IV = des.Key;
-            System.IO.MemoryStream ms = new System.IO.MemoryStream();
             des.Mode = CipherMode.CBC;
             des.Padding = PaddingMode.PKCS7;
             CryptoStream cs = new CryptoStream(ms, des.CreateEncryptor(), CryptoStreamMode.Write);
@@ -1002,7 +1004,7 @@ namespace Helper
                 CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(), CryptoStreamMode.Write);
                 cs.Write(inputByteArray, 0, inputByteArray.Length);
                 cs.FlushFinalBlock();
-                return Encoding.Default.GetString(ms.ToArray());
+                return Encoding.UTF8.GetString(ms.ToArray());
             }
             catch (Exception e)
             {

@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Helper
 {
@@ -346,6 +347,13 @@ namespace Helper
                 reObj.Add(xnf.Name, xnf.InnerText);
             }
             return reObj;
+        }
+
+        public static string DictToXml(Dictionary<string, string> dict)
+        {
+            XElement el = new XElement("xml",dict.Select(kv => new XElement(kv.Key, kv.Value)));
+
+            return el.ToString();
         }
 
         public static Int64 DateToInt64(DateTime? now=null)

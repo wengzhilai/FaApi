@@ -15,6 +15,17 @@
         "stopAtEntry": false,
         "console": "internalConsole"
     },
+    {
+        "name": "ApiEtc",
+        "type": "coreclr",
+        "request": "launch",
+        "preLaunchTask": "build",
+        "program": "${workspaceFolder}/ApiEtc/bin/Debug/netcoreapp3.0/ApiEtc.dll",
+        "args": [],
+        "cwd": "${workspaceFolder}/ApiEtc/",
+        "stopAtEntry": false,
+        "console": "internalConsole"
+    },
         
         {
             "name": "WebApi(web)",
