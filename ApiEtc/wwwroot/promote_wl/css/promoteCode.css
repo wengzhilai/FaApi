@@ -1,0 +1,95 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html{
+    font-size: 62.5%;
+}
+body{
+    background-color: white;
+}
+.container{
+    width: 100vw;
+    min-height: 100vh;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+}
+.content{
+    width: 23.9rem;
+
+}
+.qrCode{
+    /*border:1px dashed #888888;*/
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+}
+#qrCode{
+    width: 23.9rem;
+    height: 23.9rem;
+
+}
+#qrCode_2{
+    width: 12.75rem;
+    height: 12.75rem;
+}
+.content>p{
+    margin-top: 1.2rem;
+    font-size:1.2rem;
+    font-family:PingFang SC;
+    font-weight:500;
+    line-height:2rem;
+    color:#999999;
+    /*text-align: center;*/
+}
+.content>p:nth-child(2){
+    text-align: center;
+}
+.btn{
+    margin-top: 2rem;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+}
+.btn>a{
+    text-decoration: none;
+}
+.btn>a>div{
+    width: 19rem;
+    height: 3.3rem;
+    font-size: 1.5rem;
+    text-align: center;
+    line-height: 3.3rem;
+    color: #FFFFFF;
+    background-color: #FE4E41;
+    border-radius: 1.65rem;
+}
+.tagBtn{
+    width: 100vw;
+    position: fixed;
+    bottom: 0;
+    z-index: 99;
+    display: -webkit-flex;
+    -webkit-justify-content: space-around;
+    -webkit-align-items: center;
+    border-top: 1px solid #CCCCCC;
+}
+.tagBtn p{
+    font-size: 1.5rem;
+    padding: 1.4rem 0;
+    width: 50vw;
+    text-align: center;
+    color: #333333;
+    background-color: #F5F5F5;
+}
+.btn_1{
+    border-right: 1px solid #CCCCCC;
+}
+.btn_1>p{
+    background-color: #FE4E41;
+    color: white;
+}
+.qrCode>img:nth-child(2){
+    display: none;
+}

@@ -51,7 +51,5 @@ namespace Repository
             }
             return single.current_val;
         }
-
-
     }
 }

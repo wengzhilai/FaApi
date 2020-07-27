@@ -1,0 +1,135 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html{
+    font-size: 62.5%;
+}
+body{
+    background-color: #F5F5F5;
+}
+.money{
+    margin: 1rem;
+    padding: 0 1.5rem;
+    height: 8.1rem;
+    background-color: #FFFFFF;
+    display: -webkit-flex;
+    flex-direction: column;
+   -webkit-justify-content: center;
+    border-radius: 0.4rem;
+}
+.money>div{
+    display: -webkit-flex;
+    -webkit-align-items: flex-start;
+    overflow: hidden;
+    height: 2rem;
+    line-height: 2rem;
+}
+.money>div:nth-child(2){
+    margin-top: 1rem;
+}
+.money span{
+    padding:0 1rem;
+    font-size: 1.4rem;
+}
+.money span:after{
+    content:"";
+    display:inline-block;
+    width:100%;
+}
+.money p{
+    padding-right: 1rem;
+    font-size:1.4rem;
+    font-family:PingFang SC;
+    font-weight:400;
+    /*line-height:3.5rem;*/
+    color:rgba(51,51,51,1);
+}
+.money p:after{
+    content:"";
+    display:inline-block;
+    width:100%;
+
+}
+.money>div>p{
+    width: 7rem;
+    padding-right: 0.5rem;
+    text-align: justify;
+}
+
+.money>div>span{
+    padding: 0 0.5rem;
+}
+ input{
+    width: 17.1rem;
+    height: 2rem;
+    border-bottom: 1px solid #E6E6E6;
+    border-right: none;
+    border-left: none;
+    border-top: none;
+    outline: none;
+    padding: 0 1rem;
+    font-size: 1.2rem;
+    color: #333333;
+}
+
+.withdrawalType{
+    margin: 0 1rem;
+    padding: 0 1.5rem;
+    height: 13.2rem;
+    background-color: #FFFFFF;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-justify-content: space-around;
+    border-radius: 0.4rem;
+}
+
+.withdrawalType p{
+    width: 7rem;
+    text-align: justify;
+    font-size:1.4rem;
+    font-family:PingFang SC;
+    font-weight:400;
+    color:rgba(51,51,51,1);
+}
+.withdrawalType>div>p:after{
+    content:"";
+    display:inline-block;
+    width:100%;
+}
+.withdrawalType>div{
+    height: 2.1rem;
+    overflow: hidden;
+}
+.withdrawalType div{
+    display: -webkit-flex;
+    line-height: 2rem;
+    -webkit-justify-content: flex-start;
+    /*-webkit-align-items: center;*/
+}
+.withdrawalType span{
+    padding: 0 0.5rem;
+}
+.submitBtn{
+    margin: 4rem 0 1.4rem 0;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    -webkit-align-items: center;
+}
+.submitBtn p {
+    font-size:1.5rem;
+    font-family:PingFang SC;
+    font-weight:500;
+    color:rgba(255,255,255,1);
+    background-color: #FE4E41;
+    border-radius: 1.65rem;
+    padding: 0.6rem 8rem;
+}
+.footExplain{
+    text-align: center;
+    color: #666666;
+    font-size:1.2rem;
+    font-family:PingFang SC;
+    font-weight:400;
+    line-height:1.65rem;
+}

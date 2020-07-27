@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -31,18 +31,18 @@ namespace ApiEtc
 
 
         /// <summary>
-        /// 
+        /// è¯»å–é…ç½®
         /// </summary>
         /// <value></value>
         public IConfiguration Configuration { get; }
 
         /// <summary>
-        /// ¼ÓÔØÈÕÖ¾×ÊÔ´
+        /// åŠ è½½æ—¥å¿—èµ„æº
         /// </summary>
         /// <value></value>
         public ILoggerRepository repository { get; set; }
         /// <summary>
-        /// »·¾³
+        /// ç¯å¢ƒ
         /// </summary>
         /// <value></value>
         public IWebHostEnvironment WebHostEnvironment { get; }
@@ -77,7 +77,7 @@ namespace ApiEtc
         public void ConfigureServices(IServiceCollection services)
         {
 
-            #region ×¢Èë
+            #region æ³¨å…¥
             services.TryAddSingleton<IStaff, StaffRepository>();
             services.TryAddSingleton<IClient, ClientRepository>();
             services.TryAddSingleton<IWeixin, WeixinRepository>();
@@ -86,25 +86,25 @@ namespace ApiEtc
             services.TryAddSingleton<Helper.Query.IQuery, Helper.Query.QueryRepository>();
             #endregion
 
-            #region  Ìí¼ÓSwaggerUI
+            #region  æ·»åŠ SwaggerUI
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "ETCÎÄµµ",
+                    Title = "ETCæ–‡æ¡£",
                     Version = "v1",
-                    Description = "ÓÃÓÚÇ°¶ËºÍºó¶Ëµ÷ÓÃ",
-                    Contact = new OpenApiContact { Name = "ÎÌÖ¾À´", Email = "3188894@qq.com" }
+                    Description = "ç”¨äºå‰ç«¯å’Œåç«¯è°ƒç”¨",
+                    Contact = new OpenApiContact { Name = "ç¿å¿—æ¥", Email = "3188894@qq.com" }
                 });
                 options.IgnoreObsoleteActions();
                 options.DocInclusionPredicate((docName, description) => true);
                 options.IncludeXmlComments(WebHostEnvironment.ContentRootPath + "/ApiEtc.xml");
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
-                options.AddSecurityDefinition("JWTÊÚÈ¨", new OpenApiSecurityScheme
+                options.AddSecurityDefinition("JWTæˆæƒ", new OpenApiSecurityScheme
                 {
-                    Description = "JWTÊÚÈ¨(Êı¾İ½«ÔÚÇëÇóÍ·ÖĞ½øĞĞ´«Êä) Ö±½ÓÔÚÏÂ¿òÖĞÊäÈëBearer {token}£¨×¢ÒâÁ½ÕßÖ®¼äÊÇÒ»¸ö¿Õ¸ñ£©\"",
-                    Name = "Authorization",//jwtÄ¬ÈÏµÄ²ÎÊıÃû³Æ
-                    In = ParameterLocation.Header,//jwtÄ¬ÈÏ´æ·ÅAuthorizationĞÅÏ¢µÄÎ»ÖÃ(ÇëÇóÍ·ÖĞ)
+                    Description = "JWTæˆæƒ(æ•°æ®å°†åœ¨è¯·æ±‚å¤´ä¸­è¿›è¡Œä¼ è¾“) ç›´æ¥åœ¨ä¸‹æ¡†ä¸­è¾“å…¥Bearer {token}ï¼ˆæ³¨æ„ä¸¤è€…ä¹‹é—´æ˜¯ä¸€ä¸ªç©ºæ ¼ï¼‰\"",
+                    Name = "Authorization",//jwté»˜è®¤çš„å‚æ•°åç§°
+                    In = ParameterLocation.Header,//jwté»˜è®¤å­˜æ”¾Authorizationä¿¡æ¯çš„ä½ç½®(è¯·æ±‚å¤´ä¸­)
                     Type = SecuritySchemeType.ApiKey
                 });
             });
@@ -125,12 +125,12 @@ namespace ApiEtc
             services.AddControllers()
             .AddNewtonsoftJson(options =>
             {
-                // ºöÂÔÑ­»·ÒıÓÃ
-                // ²»Ê¹ÓÃÍÕ·å
+                // å¿½ç•¥å¾ªç¯å¼•ç”¨
+                // ä¸ä½¿ç”¨é©¼å³°
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                // ÉèÖÃÊ±¼ä¸ñÊ½
+                // è®¾ç½®æ—¶é—´æ ¼å¼
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-                // Èç×Ö¶ÎÎªnullÖµ£¬¸Ã×Ö¶Î²»»á·µ»Øµ½Ç°¶Ë
+                // å¦‚å­—æ®µä¸ºnullå€¼ï¼Œè¯¥å­—æ®µä¸ä¼šè¿”å›åˆ°å‰ç«¯
             }).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
@@ -141,15 +141,15 @@ namespace ApiEtc
                 app.UseDeveloperExceptionPage();
             }
 
-            //Ìí¼Ó¾²Ì¬ÎÄ¼ş
+            //æ·»åŠ é™æ€æ–‡ä»¶
             app.UseStaticFiles();
 
-            #region Ê¹ÓÃSwaggerUI
+            #region ä½¿ç”¨SwaggerUI
 
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC½Ó¿ÚÎÄµµ");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETCæ¥å£æ–‡æ¡£");
             });
 
             #endregion
@@ -157,15 +157,15 @@ namespace ApiEtc
             //app.UseHttpsRedirection();
 
             app.UseRouting();
-            // ¿çÓò±ØĞëÒª routingºóÃæ
+            // è·¨åŸŸå¿…é¡»è¦ routingåé¢
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {
                 app.UseSwaggerUI(options =>
                 {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETC½Ó¿ÚÎÄµµ");
-                    // ·ÃÎÊSwaggerµÄÂ·ÓÉºó×º
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "ETCæ¥å£æ–‡æ¡£");
+                    // è®¿é—®Swaggerçš„è·¯ç”±åç¼€
                     options.RoutePrefix = "sw";
                 });
                 endpoints.MapControllers();
